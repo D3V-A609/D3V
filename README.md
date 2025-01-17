@@ -1,5 +1,7 @@
 # 프로젝트 소개
 
+![logo](d3v_logo-removebg-preview.png)
+
 > **SSAFY 공통 프로젝트**의 일환으로 진행되는 본 프로젝트는 취업 준비생 혹은 개발 학습자를 대상으로,  
 > **학습 질문 & 답변 관리**, **커뮤니티**, **AI 기반 맞춤형 질문 생성** 등의 기능을 제공하는 서비스입니다.  
 > 사용자가 매일 주어진 질문에 답변하면서 학습 성과를 기록하고, 커뮤니티를 통해 소통하며,  
@@ -7,17 +9,14 @@
 
 <br/>
 
-## 목차
-
 1. [주요 기능](#주요-기능)
    - [1.1. 매일 3개 질문 & 답변 관리 시스템](#매일-3개-질문--답변-관리-시스템)
    - [1.2. 커뮤니티](#커뮤니티)
    - [1.3. 자유게시판](#자유게시판)
    - [1.4. AI 활용 포트폴리오 기반 질문 & 피드백](#ai-활용-포트폴리오-기반-질문-생성-및-답변-피드백)
 2. [사용자 프로세스](#사용자-프로세스)
-3. [폴더 구조](#폴더-구조)
-4. [기여 방법](#기여-방법)
-5. [라이선스](#라이선스)
+3. [아키텍쳐 & 기술 스택](#아키텍쳐--기술스택)
+4. [기술적 고민](#기술적-고민)
 
 <br/>
 
@@ -107,3 +106,18 @@
 <br/>
 
 ---
+
+## 기술적 고민
+
+- 
+
+## 팀원
+	
+| Profile | Role | GitHub |
+|:---:|:---:|:---:|
+| <img src="https://avatars.githubusercontent.com/cup-wan" width="100"> | Backend | [@cupwan](https://github.com/cup-wan) |
+| <img src="https://avatars.githubusercontent.com/BOYOUNG-KANG" width="100"> | Backend | [@BOYOUNG-KANG](https://github.com/BOYOUNG-KANG) |
+| <img src="https://avatars.githubusercontent.com/imewuzin" width="100"> | Frontend | [@imewuzin](https://github.com/imewuzin) |
+| <img src="https://avatars.githubusercontent.com/waterhyun" width="100"> | Frontend | [@waterhyun](https://github.com/waterhyun) |
+| <img src="https://avatars.githubusercontent.com/HyeoOng" width="100"> | Frontend | [@HyeoOng](https://github.com/HyeoOng) |
+| <img src="https://avatars.githubusercontent.com/beegle98" width="100"> | Backend | [@beegle98](https://github.com/beegle98) |
