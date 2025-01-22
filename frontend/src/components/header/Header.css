@@ -1,0 +1,38 @@
+.header{
+    background-color: #9AA6B2; /* header 배경색 */
+    padding: 10px 0; /* 상하 패딩 */
+    height: 60px;
+    z-index: 10;
+    align-content: center;
+    align-items: center;
+    display: grid;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 1em; /* 아이콘과 로고 사이 간격 */
+    cursor: pointer;
+}
+
+.header-logo .header-hamburger{
+    width: 30px;
+}
+.header-logo .logo{
+    width: 80px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    flex-grow: 1;  /* 중앙으로 밀어넣기 */
+}
