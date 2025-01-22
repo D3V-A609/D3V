@@ -2,6 +2,7 @@ package com.ssafy.d3v.backend.bookmark;
 
 import com.ssafy.d3v.backend.common.AccessLevel;
 import com.ssafy.d3v.backend.member.domain.Member;
+import com.ssafy.d3v.backend.question.domain.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,10 @@ public class Bookmark {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question questionId;
 
     @NotBlank
     private String name;
