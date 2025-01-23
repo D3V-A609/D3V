@@ -1,0 +1,145 @@
+.navbar {
+    position: fixed;
+    top:60px;
+    width: 70px;
+    height: 100%;
+    background-color: #FCFCFC;
+    transition: width 0.3s ease; /*부드럽게 동작 수행*/
+    /* border-right: 1px #4d606e solid; */
+    box-shadow: 3px 0 10px rgba(77, 96, 110, 0.1); /* 오른쪽 그림자 */
+    /* padding-top: 15px; */
+    justify-items: center;
+}
+
+.navbar .navbar-position {
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    text-align: left;
+    width: 100%;
+}
+
+.navbar .navbar-position:hover{
+    cursor: pointer;
+}
+
+.navbar-position.active-link {
+    background-color: #EDF1F5; /* 하늘색 */
+}
+
+.navbar svg {
+    min-width: 25px;
+}
+
+.navbar span {
+    transition: width 0.3s ease;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none; /* 기본 밑줄 없애기 */
+}
+
+.navbar--open {
+    width: 250px;
+    transition: width 0.3s ease;
+    justify-items: start;
+}
+
+.navbar--open .navbar-position span {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: #000;
+    padding: 0 15px;
+}
+
+.navbar--open + .content {
+    margin-left: 250px; /* 사이드바 열림 상태 */
+    margin-right: 0px;
+    width: calc(100% - 250px); /* 남은 화면에 맞게 조정 */
+}
+
+.trigger {
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 12px 15px;
+}
+
+/* Nav Fire 부분 */
+.nav-fire-container {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* 이미지와 텍스트 간격 */
+    padding: 10px;
+    background-color: #EDF1F5; /* 배경색 (선택 사항) */
+    border-radius: 8px; /* 부드러운 모서리 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    margin: 10px;
+    padding: 5px 3px;
+    margin-top: 15px;
+    height: 5rem;
+}
+
+.nav-fire-container.nav-fire-container--close {
+    background-color: #FCFCFC;
+    box-shadow: none;
+    border-radius:0;
+    align-items: end;
+}
+
+.nav-fire-container.nav-fire-container--close .fire-img {
+    width: 35px;
+    height: 35px;
+}
+
+.fire-img-container {
+    flex-shrink: 0; /* 이미지 크기 고정 */
+    padding-left: 2px;
+}
+
+.fire-img {
+    width: 45px; /* 이미지 크기 */
+    height: 45px;
+}
+
+.fire-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    white-space: pre-line; /* 줄바꿈 허용 */
+    padding-right: 4px;
+}
+
+.fire-text {
+    font-size: 12px;
+    color: #333; /* 텍스트 색상 */
+    line-height: 1.5; /* 줄 간격 */
+    white-space: pre-wrap; /* \n를 인식하도록 작성 */
+    text-align: left;
+}
+
+.fire-text .bold-text {
+    font-weight: bolder;
+    color: black;
+    font-size: medium;
+    padding: 0;
+}
+
+.fire-text .red-text{
+    color: red;
+    font-size: small;
+    font-weight: 700;
+}
+
+/* Navbar List 부분 */
+.nav-icon{
+    width: 23px;
+    height: 23px;
+}
