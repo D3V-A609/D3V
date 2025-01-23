@@ -5,12 +5,17 @@ import "./NavProfile.css"
 import default_img from '../../assets/images/logo.png';
 import { FiLogOut } from "react-icons/fi";
 
-interface userProfile {
+interface ProfileProps {
     profileImage: string;
     nickname: string;
     job: string;
     onLogout: () => void;
-}
+  }
+  
+  interface NavProfileProps {
+    profile: ProfileProps; // profile 객체를 전달받음
+    isNavOpen: boolean;
+  }
 
 const defaultImgDiv = (
     <div className="default-img-bg">
@@ -18,25 +23,38 @@ const defaultImgDiv = (
     </div>
 )
 
-const NavProfile: React.FC<userProfile> = ({profileImage, nickname, job, onLogout}) => {
+const NavProfile: React.FC<NavProfileProps> = ({profile, isNavOpen}) => {
+    
     return(
-    <div className="nav-profile">
-        <div className="profile-img-col">
-            {
-                profileImage?
-                <img src={profileImage} alt='profile' className='user-profile-image' />
-                : defaultImgDiv
-            }
-        </div>
-        <div className='user-info-col'>
-            <div className='nickname'>{nickname}</div>
-            <div className="job">{job}</div>
-        </div>
-        <div className="logout-div-col">
-            <button onClick={onLogout} className="logout-btn">
-                <FiLogOut color="#535353"/>
-            </button>
-        </div>
+    <div className={`nav-profile ${!isNavOpen?'nav-profile--close': '' }`} >
+        {isNavOpen? 
+            <>
+                <div className="profile-img-col">
+                    {
+                        profile.profileImage?
+                        <img src={profile.profileImage} alt='profile' className='user-profile-image' />
+                        : defaultImgDiv
+                    }
+                </div>
+                <div className='user-info-col'>
+                    <div className='nickname'>{profile.nickname}</div>
+                    <div className="job">{profile.job}</div>
+                </div>
+                <div className="logout-div-col">
+                    <button onClick={profile.onLogout} className="logout-btn">
+                        <FiLogOut color="#535353"/>
+                    </button>
+                </div>
+            </>
+        : 
+            <div className="profile-img-col profile-img-col--close">
+                {
+                    profile.profileImage?
+                    <img src={profile.profileImage} alt='profile' className='user-profile-image' />
+                    : defaultImgDiv
+                }
+            </div> 
+        }
     </div>
     );
 };

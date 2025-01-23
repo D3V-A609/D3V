@@ -2,11 +2,24 @@
 display: flex;
 align-items: center;
 padding: 10px 10px;
+padding-top: 5px;
 overflow-x: initial;
+height: 7rem;
+}
+
+.nav-profile.nav-profile--close{
+    /* align-items: start; */
 }
 
 .profile-img-col {
 padding: 10px 5px;
+}
+
+.profile-img-col.profile-img-col--close { /* navbar를 닫은 경우 */
+    width: 45px;
+    height: 45px;
+    display: flex-box;
+    padding: 0;
 }
 
 .user-profile-image {
@@ -64,8 +77,18 @@ align-items: center;     /* 이미지를 세로로 중앙 정렬 */
 overflow: hidden;  /* 이미지가 원형 밖으로 벗어나지 않도록 */
 }
 
+.profile-img-col.profile-img-col--close .default-img-bg{ /* navbar가 close 되었을 경우 그 크기를 줄인다. */
+    width: 45px;
+    height: 45px;
+}
+
 .default-img {
-padding-left: 1px;
+/* padding-left: 1px; */
 width: 60px;  /* 이미지를 원형 안에 맞게 크기 설정 */
 object-fit: cover;  /* 이미지 비율에 맞춰 자르기 */
+}
+
+.profile-img-col.profile-img-col--close .default-img{ /* navbar가 close 되었을 경우 그 크기를 줄인다. */
+    width: 30px;
+    object-fit: cover;  /* 이미지 비율에 맞춰 자르기 */
 }
