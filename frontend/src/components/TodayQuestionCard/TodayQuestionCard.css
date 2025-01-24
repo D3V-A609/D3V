@@ -1,0 +1,129 @@
+/* components/TodayQuestionCard/TodayQuestionCard.css */
+.question-card {
+    background-color: #F8FAFC;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 400px;
+    height: 400x;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-date {
+    color: #555;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.calendar-icon {
+    font-size: 16px;
+}
+
+.bookmark-icon {
+    color: #1976D2;
+    font-size: 20px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.bookmark-icon:hover {
+    opacity: 1;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #333;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+    word-wrap: break-word;
+    text-align: left;
+    align-items: center;
+}
+
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0
+}
+
+.card-category {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: rgba(25, 118, 210, 0.1);
+    border-radius: 4px;
+    color: #1976D2;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.category-icon {
+    font-size: 16px;
+}
+
+.answer-link {
+    color: #555;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.answer-link:hover {
+    color: #1976D2;
+}
+
+.blur-content {
+    filter: blur(4px);
+    user-select: none;
+    pointer-events: none;
+}
+
+.question-card:hover .blur-content {
+    filter: blur(6px);
+}
+
+/* 로그인하지 않은 상태에서 커서 스타일 변경 */
+.question-card:has(.blur-content) {
+    cursor: not-allowed;
+}
+
+
+@media (max-width: 480px) {
+    .question-card {
+        width: 100%;
+        height: auto;
+        min-height: 180px;
+    }
+}
