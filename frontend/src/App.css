@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: 'NotoSansKR-VariableFont', sans-serif;
 }
 
 body {
@@ -36,4 +37,11 @@ body {
 .child-page.child-page--close{
   width: calc(100% - 70px);
   margin-left: 70px;
+}
+
+
+@font-face {
+  font-family: 'NotoSansKR-VariableFont';
+  src: url('./assets/fonts/NotoSansKR-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
 }
