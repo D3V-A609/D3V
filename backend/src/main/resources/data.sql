@@ -1,4 +1,4 @@
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     member_id      SERIAL PRIMARY KEY,
     nickname       TEXT      NULL,
@@ -11,7 +11,7 @@ CREATE TABLE member
     deleted_at     TIMESTAMP NULL
 );
 
-CREATE TABLE served_question
+CREATE TABLE IF NOT EXISTS served_question
 (
     served_question_id SERIAL PRIMARY KEY,
     member_id          INT       NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE served_question
     served_at          TIMESTAMP NULL
 );
 
-CREATE TABLE answer
+CREATE TABLE IF NOT EXISTS answer
 (
     answer_id    SERIAL PRIMARY KEY,
     member_id    BIGINT    NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE answer
     access_level TEXT      NULL
 );
 
-CREATE TABLE comment
+CREATE TABLE IF NOT EXISTS comment
 (
     comment_id SERIAL PRIMARY KEY,
     answer_id  INT       NOT NULL,
@@ -39,26 +39,26 @@ CREATE TABLE comment
     deleted_at TIMESTAMP NULL
 );
 
-CREATE TABLE job
+CREATE TABLE IF NOT EXISTS job
 (
     job_id           SERIAL PRIMARY KEY,
     development_role TEXT NULL
 );
 
-CREATE TABLE skill
+CREATE TABLE IF NOT EXISTS skill
 (
     skill_id SERIAL PRIMARY KEY,
     name     TEXT NULL
 );
 
-CREATE TABLE question_job
+CREATE TABLE IF NOT EXISTS question_job
 (
     question_job_id SERIAL PRIMARY KEY,
     question_id     INT NOT NULL,
     job_id          INT NOT NULL
 );
 
-CREATE TABLE bookmark
+CREATE TABLE IF NOT EXISTS bookmark
 (
     bookmark_id  SERIAL PRIMARY KEY,
     member_id    INT  NOT NULL,
@@ -67,14 +67,14 @@ CREATE TABLE bookmark
     access_level TEXT NULL
 );
 
-CREATE TABLE likes
+CREATE TABLE IF NOT EXISTS likes
 (
     like_id   SERIAL PRIMARY KEY,
     member_id BIGINT NOT NULL,
     answer_id BIGINT NOT NULL
 );
 
-CREATE TABLE history
+CREATE TABLE IF NOT EXISTS history
 (
     history_id SERIAL PRIMARY KEY,
     member_id  INT  NOT NULL,
@@ -82,21 +82,21 @@ CREATE TABLE history
     count      INT  NULL
 );
 
-CREATE TABLE question_skill
+CREATE TABLE IF NOT EXISTS question_skill
 (
     question_skill_id SERIAL PRIMARY KEY,
     question_id       INT NOT NULL,
     skill_id          INT NOT NULL
 );
 
-CREATE TABLE question
+CREATE TABLE IF NOT EXISTS question
 (
     question_id     SERIAL PRIMARY KEY,
     content         TEXT NULL,
     standard_answer TEXT NULL
 );
 
-CREATE TABLE job_skill
+CREATE TABLE IF NOT EXISTS job_skill
 (
     job_skill_id SERIAL PRIMARY KEY,
     job_id       INT NOT NULL,
@@ -106,11 +106,12 @@ CREATE TABLE job_skill
 -- Insert dummy data
 
 -- Member data
-INSERT INTO member (nickname, email, password, profile_img, github_url, max_streak, ongoing_streak, deleted_at)
-VALUES ('Alice', 'alice@example.com', 'password123', 'profile1.png', 'https://github.com/alice', 5, 3, NULL),
-       ('Bob', 'bob@example.com', 'password456', 'profile2.png', 'https://github.com/bob', 10, 7, '2025-01-01'),
-       ('Charlie', 'charlie@example.com', 'password789', 'profile3.png', 'https://github.com/charlie', 15, 5, NULL),
-       ('Diana', 'diana@example.com', 'password321', 'profile4.png', 'https://github.com/diana', 8, 6, '2025-02-01');
+INSERT INTO member (nickname, email, password, profile_img, github_url, max_streak, ongoing_streak, deleted_at, created_at, updated_at)
+VALUES ('test', 'test@example.com', '1234', 'profile1.png', 'https://github.com/test', 0, 0, NULL, '2025-01-01', '2025-01-01'),
+       ('Alice', 'alice@example.com', 'password123', 'profile1.png', 'https://github.com/alice', 5, 3, NULL, '2025-01-01', '2025-01-01'),
+       ('Bob', 'bob@example.com', 'password456', 'profile2.png', 'https://github.com/bob', 10, 7, '2025-01-01', '2025-01-01', '2025-01-01'),
+       ('Charlie', 'charlie@example.com', 'password789', 'profile3.png', 'https://github.com/charlie', 15, 5, NULL, '2025-01-01', '2025-01-01'),
+       ('Diana', 'diana@example.com', 'password321', 'profile4.png', 'https://github.com/diana', 8, 6, '2025-02-01', '2025-01-01', '2025-01-01');
 
 -- Question data
 INSERT INTO question (content, standard_answer)
@@ -395,10 +396,10 @@ VALUES ('Frontend'),
 
 -- Skill data
 INSERT INTO skill (name)
-VALUES ('JavaScript'),
+VALUES ('JAVASCRIPT'),
        ('SQL'),
-       ('Python'),
-       ('Docker');
+       ('PYTHON'),
+       ('DOCKER');
 
 -- Question-Job data
 INSERT INTO question_job (question_id, job_id)

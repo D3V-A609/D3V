@@ -35,5 +35,5 @@ public class ServedQuestion {
 
     private boolean isSolved;
 
-    private LocalDate solvedAt;
+    private LocalDate servedAt;
 }

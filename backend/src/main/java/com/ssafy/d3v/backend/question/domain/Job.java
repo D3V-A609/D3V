@@ -1,6 +1,8 @@
 package com.ssafy.d3v.backend.question.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,5 +21,6 @@ public class Job {
     private int jobId;
 
     @NotBlank
-    private DevelopmentRole name;
+    @Enumerated(EnumType.STRING)
+    private DevelopmentRole developmentRole;
 }

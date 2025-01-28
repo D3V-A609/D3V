@@ -1,6 +1,8 @@
 package com.ssafy.d3v.backend.question.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,5 +20,6 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int skillId;
     @NotBlank
+    @Enumerated(EnumType.STRING)
     private SkillType name;
 }

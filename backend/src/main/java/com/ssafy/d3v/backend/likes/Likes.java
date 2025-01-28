@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.like;
+package com.ssafy.d3v.backend.likes;
 
 import com.ssafy.d3v.backend.answer.Answer;
 import com.ssafy.d3v.backend.member.domain.Member;
@@ -18,11 +18,11 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Like {
+public class Likes {
     @Id
-    @Column(name = "like_id")
+    @Column(name = "likes_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likeId;
+    private int likesId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

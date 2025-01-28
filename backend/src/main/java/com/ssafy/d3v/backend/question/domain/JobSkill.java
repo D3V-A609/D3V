@@ -23,8 +23,8 @@ public class JobSkill {
     private int jobSkillId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    @JoinColumn(name = "job_id", nullable = false)
+    private Job jobId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id", nullable = false)

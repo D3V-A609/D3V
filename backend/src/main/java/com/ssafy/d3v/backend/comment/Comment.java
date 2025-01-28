@@ -36,5 +36,5 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @NotBlank
-    private Boolean isDeleted;
+    private LocalDateTime deletedAt;
 }

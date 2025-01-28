@@ -5,6 +5,8 @@ import com.ssafy.d3v.backend.member.domain.Member;
 import com.ssafy.d3v.backend.question.domain.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,5 +40,6 @@ public class Bookmark {
     private String name;
 
     @NotBlank
+    @Enumerated(EnumType.STRING)
     private AccessLevel accessLevel;
 }

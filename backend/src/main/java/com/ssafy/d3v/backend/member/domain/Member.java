@@ -1,11 +1,13 @@
 package com.ssafy.d3v.backend.member.domain;
 
+import com.ssafy.d3v.backend.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,7 +16,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "memberId_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +36,5 @@ public class Member {
 
     private int ongoingStreak;
 
-    private boolean isDeleted;
+    private LocalDateTime deletedAt;
 }
