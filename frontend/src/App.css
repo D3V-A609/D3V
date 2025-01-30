@@ -21,24 +21,6 @@ body {
   display: flex;
 }
 
-.child-page {
-  /*width: calc(100% - 50px); /* 기본: 사이드바 닫힘 상태 */
-  /*margin-left: 50px; /* 사이드바 닫힘 상태 */
-
-  width: calc(100% - 250px); /* 사이드바가 열려 있을 때 */
-  margin-left: 250px; /* 사이드바 열려 있을 때 */
-  margin-right: 0px;
-  padding: 15px;
-  height: 100%;
-  word-break: break-word;
-  transition: margin-left 0.3s ease, width 0.3s ease;
-}
-
-.child-page.child-page--close{
-  width: calc(100% - 70px);
-  margin-left: 70px;
-}
-
 
 @font-face {
   font-family: 'NotoSansKR-VariableFont';
