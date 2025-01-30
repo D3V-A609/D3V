@@ -1,28 +1,18 @@
 package com.ssafy.d3v.backend.question.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@Entity
-@ToString
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Question {
-    @Id
-    @Column(name = "question_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int questionId;
+    private final int questionId;
+    private final String content;
+    private final String standardAnswer;
 
-    @NotBlank
-    private String content;
-
-    @NotBlank
-    private String standardAnswer;
+    @Builder
+    public Question(int questionId, String content, String standardAnswer) {
+        this.questionId = questionId;
+        this.content = content;
+        this.standardAnswer = standardAnswer;
+    }
 }

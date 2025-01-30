@@ -1,7 +1,7 @@
-package com.ssafy.d3v.backend.question.controller;
+package com.ssafy.d3v.backend.question.presentation;
 
 import com.ssafy.d3v.backend.question.domain.Question;
-import com.ssafy.d3v.backend.question.service.QuestionService;
+import com.ssafy.d3v.backend.question.application.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/question")
