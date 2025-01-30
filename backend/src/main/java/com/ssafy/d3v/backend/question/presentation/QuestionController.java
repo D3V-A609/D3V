@@ -1,7 +1,7 @@
 package com.ssafy.d3v.backend.question.presentation;
 
 import com.ssafy.d3v.backend.question.domain.Question;
-import com.ssafy.d3v.backend.question.application.service.QuestionService;
+import com.ssafy.d3v.backend.question.application.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,8 +37,8 @@ public class QuestionController {
     @GetMapping("/{question_id}")
     public ResponseEntity<Question> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") int questionId) {
-        return questionService.getQuestionById(questionId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity
+                .ok()
+                .body(questionService.getById(questionId));
     }
 }

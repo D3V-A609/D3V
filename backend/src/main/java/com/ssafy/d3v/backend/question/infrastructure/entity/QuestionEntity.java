@@ -33,6 +33,13 @@ public class QuestionEntity {
     @NotBlank
     private String standardAnswer;
 
+    public static QuestionEntity from(Question question) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.questionId = question.getQuestionId();
+        questionEntity.content = question.getContent();
+        questionEntity.standardAnswer = question.getStandardAnswer();
+        return questionEntity;
+    }
     public Question toModel(){
         return Question.builder()
                 .questionId(questionId)

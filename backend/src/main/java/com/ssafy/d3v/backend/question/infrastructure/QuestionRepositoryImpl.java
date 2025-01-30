@@ -13,7 +13,12 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
     private final QuestionJpaRepository questionJpaRepository;
     @Override
-    public Optional<Question> findById(int questionId) {
+    public Optional<Question> findById(Integer questionId) {
         return questionJpaRepository.findById(questionId).map(QuestionEntity::toModel);
+    }
+
+    @Override
+    public Question save(Question question) {
+        return questionJpaRepository.save(QuestionEntity.from(question)).toModel();
     }
 }

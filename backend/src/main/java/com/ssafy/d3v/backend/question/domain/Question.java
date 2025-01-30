@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class Question {
-    private final int questionId;
+    private final Integer questionId;
     private final String content;
     private final String standardAnswer;
 
     @Builder
-    public Question(int questionId, String content, String standardAnswer) {
+    public Question(Integer questionId, String content, String standardAnswer) {
         this.questionId = questionId;
         this.content = content;
         this.standardAnswer = standardAnswer;
