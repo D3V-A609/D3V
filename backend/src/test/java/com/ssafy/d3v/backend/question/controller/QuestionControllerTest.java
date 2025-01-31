@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.presentation;
+package com.ssafy.d3v.backend.question.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

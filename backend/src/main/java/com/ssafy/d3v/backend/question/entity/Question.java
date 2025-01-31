@@ -1,6 +1,5 @@
-package com.ssafy.d3v.backend.question.infrastructure.entity;
+package com.ssafy.d3v.backend.question.entity;
 
-import com.ssafy.d3v.backend.question.domain.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +19,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@Table(name = "questions")
-public class QuestionEntity {
+public class Question {
     @Id
     @Column(name = "question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +31,8 @@ public class QuestionEntity {
     @NotBlank
     private String standardAnswer;
 
-    public static QuestionEntity from(Question question) {
-        QuestionEntity questionEntity = new QuestionEntity();
+    public static Question from(Question question) {
+        Question questionEntity = new Question();
         questionEntity.questionId = question.getQuestionId();
         questionEntity.content = question.getContent();
         questionEntity.standardAnswer = question.getStandardAnswer();

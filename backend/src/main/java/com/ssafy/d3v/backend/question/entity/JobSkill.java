@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.infrastructure.entity;
+package com.ssafy.d3v.backend.question.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

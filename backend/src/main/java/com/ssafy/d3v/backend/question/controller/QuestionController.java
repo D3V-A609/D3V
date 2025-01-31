@@ -1,7 +1,7 @@
-package com.ssafy.d3v.backend.question.presentation;
+package com.ssafy.d3v.backend.question.controller;
 
-import com.ssafy.d3v.backend.question.domain.Question;
-import com.ssafy.d3v.backend.question.application.QuestionService;
+import com.ssafy.d3v.backend.question.entity.Question;
+import com.ssafy.d3v.backend.question.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,5 +1,6 @@
-package com.ssafy.d3v.backend.question.infrastructure.entity;
+package com.ssafy.d3v.backend.question.entity;
 
+import com.ssafy.d3v.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,17 +19,21 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class QuestionJob {
+public class ServedQuestion {
     @Id
-    @Column(name = "question_job_id")
+    @Column(name = "servedQuestion_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int questionJobId;
+    private int servedQuestionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member memberId;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private QuestionEntity questionId;
+    private Question questionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id", nullable = false)
-    private Job jobId;
+    private boolean isSolved;
+
+    private LocalDate servedAt;
 }

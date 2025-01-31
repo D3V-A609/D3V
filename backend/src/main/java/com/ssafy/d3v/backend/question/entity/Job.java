@@ -1,6 +1,5 @@
-package com.ssafy.d3v.backend.question.infrastructure.entity;
+package com.ssafy.d3v.backend.question.entity;
 
-import com.ssafy.d3v.backend.question.domain.DevelopmentRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

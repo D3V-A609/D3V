@@ -2,7 +2,7 @@ package com.ssafy.d3v.backend.bookmark;
 
 import com.ssafy.d3v.backend.common.AccessLevel;
 import com.ssafy.d3v.backend.member.domain.Member;
-import com.ssafy.d3v.backend.question.infrastructure.entity.QuestionEntity;
+import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,7 +34,7 @@ public class Bookmark {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private QuestionEntity questionId;
+    private Question questionId;
 
     @NotBlank
     private String name;

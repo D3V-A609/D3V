@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.infrastructure.entity;
+package com.ssafy.d3v.backend.question.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +22,7 @@ public class QuestionSkill {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private QuestionEntity questionId;
+    private Question questionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skill_id", nullable = false)

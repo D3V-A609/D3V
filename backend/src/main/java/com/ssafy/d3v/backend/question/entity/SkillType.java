@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.question.entity;
 
 public enum SkillType {
     C, C_PLUS, C_SHARP, JAVA, JAVASCRIPT, HTML, CSS, PYTHON, GO,
