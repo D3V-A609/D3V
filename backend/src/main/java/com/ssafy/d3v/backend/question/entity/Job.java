@@ -1,7 +1,9 @@
-package com.ssafy.d3v.backend.member.domain;
+package com.ssafy.d3v.backend.question.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,25 +16,14 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Member {
+public class Job {
     @Id
-    @Column(name = "memberId_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int memberId;
+    @Column(name = "job_id")
+    private int jobId;
+
     @NotBlank
-    private String nickname;
-    @NotBlank
-    private String email;
-    @NotBlank
-    private String password;
-
-    private String profileImg;
-
-    private String githubUrl;
-
-    private int maxStreak;
-
-    private int ongoingStreak;
-
-    private boolean isDeleted;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "development_role")
+    private DevelopmentRole developmentRole;
 }

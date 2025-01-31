@@ -1,7 +1,6 @@
-package com.ssafy.d3v.backend.like;
+package com.ssafy.d3v.backend.question.entity;
 
-import com.ssafy.d3v.backend.answer.Answer;
-import com.ssafy.d3v.backend.member.domain.Member;
+import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,17 +19,23 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Like {
+public class ServedQuestion {
     @Id
-    @Column(name = "like_id")
+    @Column(name = "served_question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likeId;
+    private Integer servedQuestionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answerId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question questionId;
+
+    @Column(name = "is_solved")
+    private boolean isSolved;
+
+    @Column(name = "served_at")
+    private LocalDate solvedAt;
 }

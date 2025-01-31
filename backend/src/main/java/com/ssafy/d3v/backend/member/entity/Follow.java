@@ -1,6 +1,5 @@
-package com.ssafy.d3v.backend.comment;
+package com.ssafy.d3v.backend.member.entity;
 
-import com.ssafy.d3v.backend.answer.Answer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,8 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,22 +16,17 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Comment {
+public class Follow {
     @Id
-    @Column(name = "comment_id")
+    @Column(name = "follow_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private int followId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answerId;
+    @JoinColumn(name = "following_id", nullable = false)
+    private Member followingId;
 
-    @NotBlank
-    private String content;
-
-    @NotBlank
-    private LocalDateTime createdAt;
-
-    @NotBlank
-    private Boolean isDeleted;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "follower_id", nullable = false)
+    private Member followerId;
 }

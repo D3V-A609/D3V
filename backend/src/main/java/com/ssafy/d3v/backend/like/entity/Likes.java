@@ -1,5 +1,8 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.like.entity;
 
+import com.ssafy.d3v.backend.answer.entity.Answer;
+import com.ssafy.d3v.backend.member.entity.Member;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -15,16 +18,17 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class QuestionSkill {
+public class Likes {
     @Id
+    @Column(name = "like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionSkillId;
+    private int likeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skillId;
+    @JoinColumn(name = "answer_id", nullable = false)
+    private Answer answerId;
 }

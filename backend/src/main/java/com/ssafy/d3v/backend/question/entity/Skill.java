@@ -1,7 +1,9 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.question.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,15 +16,13 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Question {
+public class Skill {
     @Id
-    @Column(name = "question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int questionId;
+    @Column(name = "skill_id")
+    private Integer skillId;
 
     @NotBlank
-    private String content;
-
-    @NotBlank
-    private String standardAnswer;
+    @Enumerated(EnumType.STRING)
+    private SkillType name;
 }
