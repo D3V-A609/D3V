@@ -34,4 +34,17 @@ public class LikesServiceImpl implements LikesService {
         likesRepository.save(likes);
     }
 
+    @Override
+    public void delete(int answerId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
+
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변 입니다. 답변 ID: " + answerId));
+
+        Likes likes = likesRepository.findByAnswerIdAndMemberId(answer, member)
+                .orElseThrow(() -> new IllegalArgumentException("좋아요가 없습니다."));
+
+        likesRepository.delete(likes);
+    }
 }

@@ -36,4 +36,16 @@ public class LikesController {
         likesService.create(answerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @DeleteMapping("/answer/{answer_id}/like")
+    @Operation(summary = "좋아요 취소", description = "좋아요를 취소합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "성공적으로 좋아요 취소",
+                    content = @Content(schema = @Schema(implementation = Question.class))),
+            @ApiResponse(responseCode = "404", description = "좋아요를 찾을 수 없음")
+    })
+    public ResponseEntity delete(@PathVariable("answer_id") int answerId) {
+        likesService.delete(answerId);
+        return ResponseEntity.ok().build();
+    }
 }
