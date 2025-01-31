@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.member.entity;
 
+import com.ssafy.d3v.backend.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "memberId_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +34,6 @@ public class Member {
     private int maxStreak;
     @Column(name = "ongoing_streak")
     private int ongoingStreak;
-    @Column(name = "deleted_at")
-    private boolean deletedAt;
     @Column(name = "provider_type")
     private String providerType;
 }

@@ -1,117 +1,117 @@
-CREATE TABLE IF NOT EXISTS member
-(
-    member_id      SERIAL PRIMARY KEY,
-    nickname       TEXT      NULL,
-    email          TEXT      NULL,
-    password       TEXT      NULL,
-    profile_img    TEXT      NULL,
-    github_url     TEXT      NULL,
-    max_streak     INT       NULL,
-    ongoing_streak INT       NULL,
-    deleted_at     TIMESTAMP NULL
-);
-
-CREATE TABLE IF NOT EXISTS served_question
-(
-    served_question_id SERIAL PRIMARY KEY,
-    member_id          INT       NOT NULL,
-    question_id        INT       NOT NULL,
-    is_solved          BOOLEAN   NULL,
-    served_at          TIMESTAMP NULL
-);
-
-CREATE TABLE IF NOT EXISTS answer
-(
-    answer_id    SERIAL PRIMARY KEY,
-    member_id    BIGINT    NOT NULL,
-    question_id  BIGINT    NOT NULL,
-    content      TEXT      NULL,
-    created_at   TIMESTAMP NULL,
-    access_level TEXT      NULL
-);
-
-CREATE TABLE IF NOT EXISTS comment
-(
-    comment_id SERIAL PRIMARY KEY,
-    answer_id  INT       NOT NULL,
-    content    TEXT      NULL,
-    created_at TIMESTAMP NULL,
-    deleted_at TIMESTAMP NULL
-);
-
-CREATE TABLE IF NOT EXISTS job
-(
-    job_id           SERIAL PRIMARY KEY,
-    development_role TEXT NULL
-);
-
-CREATE TABLE IF NOT EXISTS skill
-(
-    skill_id SERIAL PRIMARY KEY,
-    name     TEXT NULL
-);
-
-CREATE TABLE IF NOT EXISTS question_job
-(
-    question_job_id SERIAL PRIMARY KEY,
-    question_id     INT NOT NULL,
-    job_id          INT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS bookmark
-(
-    bookmark_id  SERIAL PRIMARY KEY,
-    member_id    INT  NOT NULL,
-    question_id  INT  NOT NULL,
-    name         TEXT NULL,
-    access_level TEXT NULL
-);
-
-CREATE TABLE IF NOT EXISTS likes
-(
-    like_id   SERIAL PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    answer_id BIGINT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS history
-(
-    history_id SERIAL PRIMARY KEY,
-    member_id  INT  NOT NULL,
-    date       DATE NULL,
-    count      INT  NULL
-);
-
-CREATE TABLE IF NOT EXISTS question_skill
-(
-    question_skill_id SERIAL PRIMARY KEY,
-    question_id       INT NOT NULL,
-    skill_id          INT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS question
-(
-    question_id     SERIAL PRIMARY KEY,
-    content         TEXT NULL,
-    standard_answer TEXT NULL
-);
-
-CREATE TABLE IF NOT EXISTS job_skill
-(
-    job_skill_id SERIAL PRIMARY KEY,
-    job_id       INT NOT NULL,
-    skill_id     INT NOT NULL
-);
+-- CREATE TABLE IF NOT EXISTS member
+-- (
+--     member_id      SERIAL PRIMARY KEY,
+--     nickname       TEXT      NULL,
+--     email          TEXT      NULL,
+--     password       TEXT      NULL,
+--     profile_img    TEXT      NULL,
+--     github_url     TEXT      NULL,
+--     max_streak     INT       NULL,
+--     ongoing_streak INT       NULL,
+--     deleted_at     TIMESTAMP NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS served_question
+-- (
+--     served_question_id SERIAL PRIMARY KEY,
+--     member_id          INT       NOT NULL,
+--     question_id        INT       NOT NULL,
+--     is_solved          BOOLEAN   NULL,
+--     served_at          TIMESTAMP NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS answer
+-- (
+--     answer_id    SERIAL PRIMARY KEY,
+--     member_id    BIGINT    NOT NULL,
+--     question_id  BIGINT    NOT NULL,
+--     content      TEXT      NULL,
+--     created_at   TIMESTAMP NULL,
+--     access_level TEXT      NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS comment
+-- (
+--     comment_id SERIAL PRIMARY KEY,
+--     answer_id  INT       NOT NULL,
+--     content    TEXT      NULL,
+--     created_at TIMESTAMP NULL,
+--     deleted_at TIMESTAMP NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS job
+-- (
+--     job_id           SERIAL PRIMARY KEY,
+--     development_role TEXT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS skill
+-- (
+--     skill_id SERIAL PRIMARY KEY,
+--     name     TEXT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS question_job
+-- (
+--     question_job_id SERIAL PRIMARY KEY,
+--     question_id     INT NOT NULL,
+--     job_id          INT NOT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS bookmark
+-- (
+--     bookmark_id  SERIAL PRIMARY KEY,
+--     member_id    INT  NOT NULL,
+--     question_id  INT  NOT NULL,
+--     name         TEXT NULL,
+--     access_level TEXT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS likes
+-- (
+--     like_id   SERIAL PRIMARY KEY,
+--     member_id BIGINT NOT NULL,
+--     answer_id BIGINT NOT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS history
+-- (
+--     history_id SERIAL PRIMARY KEY,
+--     member_id  INT  NOT NULL,
+--     date       DATE NULL,
+--     count      INT  NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS question_skill
+-- (
+--     question_skill_id SERIAL PRIMARY KEY,
+--     question_id       INT NOT NULL,
+--     skill_id          INT NOT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS question
+-- (
+--     question_id     SERIAL PRIMARY KEY,
+--     content         TEXT NULL,
+--     standard_answer TEXT NULL
+-- );
+--
+-- CREATE TABLE IF NOT EXISTS job_skill
+-- (
+--     job_skill_id SERIAL PRIMARY KEY,
+--     job_id       INT NOT NULL,
+--     skill_id     INT NOT NULL
+-- );
 
 -- Insert dummy data
 
 -- Member data
 INSERT INTO member (nickname, email, password, profile_img, github_url, max_streak, ongoing_streak, deleted_at, created_at, updated_at)
 VALUES ('test', 'test@example.com', '1234', 'profile1.png', 'https://github.com/test', 0, 0, NULL, '2025-01-01', '2025-01-01'),
-       ('Alice', 'alice@example.com', 'password123', 'profile1.png', 'https://github.com/alice', 5, 3, NULL, '2025-01-01', '2025-01-01'),
-       ('Bob', 'bob@example.com', 'password456', 'profile2.png', 'https://github.com/bob', 10, 7, '2025-01-01', '2025-01-01', '2025-01-01'),
-       ('Charlie', 'charlie@example.com', 'password789', 'profile3.png', 'https://github.com/charlie', 15, 5, NULL, '2025-01-01', '2025-01-01'),
-       ('Diana', 'diana@example.com', 'password321', 'profile4.png', 'https://github.com/diana', 8, 6, '2025-02-01', '2025-01-01', '2025-01-01');
+       ('Alice', 'alice@example.com', 'password123', 'profile2.png', 'https://github.com/alice', 5, 3, NULL, '2025-01-01', '2025-01-01'),
+       ('Bob', 'bob@example.com', 'password456', 'profile3.png', 'https://github.com/bob', 10, 7, '2025-01-01', '2025-01-01', '2025-01-01'),
+       ('Charlie', 'charlie@example.com', 'password789', 'profile4.png', 'https://github.com/charlie', 15, 5, NULL, '2025-01-01', '2025-01-01'),
+       ('Diana', 'diana@example.com', 'password321', 'profile5.png', 'https://github.com/diana', 8, 6, '2025-02-01', '2025-01-01', '2025-01-01');
 
 -- Question data
 INSERT INTO question (content, standard_answer)
@@ -381,11 +381,11 @@ VALUES (1, 1, 'PostgreSQL is an open-source database.', '2025-01-20 10:00:00', '
        (4, 4, 'B-Tree is the default index type in PostgreSQL.', '2025-01-23 13:00:00', 'public');
 
 -- Comment data
-INSERT INTO comment (answer_id, content, created_at, deleted_at)
-VALUES (1, 'Great explanation!', '2025-01-20 10:15:00', NULL),
-       (2, 'Needs more details.', '2025-01-21 11:15:00', '2025-01-22'),
-       (3, 'This is very helpful!', '2025-01-22 12:30:00', NULL),
-       (4, 'Clear and concise.', '2025-01-23 13:30:00', NULL);
+INSERT INTO feedback (answer_id, member_id,  content, created_at, updated_at ,deleted_at)
+VALUES (1, 1, 'Great explanation!', '2025-01-20 10:15:00', '2025-01-20 10:15:00', NULL),
+       (2, 1, 'Needs more details.', '2025-01-21 11:15:00', '2025-01-21 11:15:00', '2025-01-22'),
+       (3, 2, 'This is very helpful!', '2025-01-22 12:30:00', '2025-01-22 12:30:00', NULL),
+       (4, 2, 'Clear and concise.', '2025-01-23 13:30:00', '2025-01-23 13:30:00', NULL);
 
 -- Job data
 INSERT INTO job (development_role)

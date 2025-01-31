@@ -23,6 +23,6 @@ public abstract class BaseEntity {
     @Column(nullable = false) // null 허용 안 함
     private LocalDateTime updatedAt;
 
-//    @Column // 삭제 시간을 기록하기 위한 필드
-//    private LocalDateTime deletedAt;
+    @Column // 삭제 시간을 기록하기 위한 필드
+    private LocalDateTime deletedAt;
 }

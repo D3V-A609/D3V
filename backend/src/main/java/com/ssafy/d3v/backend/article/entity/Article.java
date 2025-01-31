@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.article.entity;
 
+import com.ssafy.d3v.backend.common.BaseEntity;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Article {
+public class Article extends BaseEntity {
     @Id
     @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +39,4 @@ public class Article {
     private String content;
 
     private int view;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

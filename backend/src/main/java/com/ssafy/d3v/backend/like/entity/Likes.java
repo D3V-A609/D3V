@@ -1,8 +1,5 @@
-<<<<<<<< HEAD:backend/src/main/java/com/ssafy/d3v/backend/likes/Likes.java
-package com.ssafy.d3v.backend.likes;
-========
+
 package com.ssafy.d3v.backend.like.entity;
->>>>>>>> back-develop:backend/src/main/java/com/ssafy/d3v/backend/like/entity/Likes.java
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.member.entity.Member;

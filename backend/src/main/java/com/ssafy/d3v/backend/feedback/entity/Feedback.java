@@ -1,6 +1,7 @@
 package com.ssafy.d3v.backend.feedback.entity;
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
+import com.ssafy.d3v.backend.common.BaseEntity;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Feedback {
+public class Feedback extends BaseEntity {
     @Id
     @Column(name = "feedback_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +37,4 @@ public class Feedback {
 
     @NotBlank
     private String content;
-
-    @NotBlank
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @NotBlank
-    @Column(name = "deleted_at")
-    private Boolean deletedAt;
 }
