@@ -442,3 +442,20 @@ VALUES (1, 1),
        (2, 2),
        (3, 3),
        (4, 4);
+
+---
+INSERT INTO member (member_id, nickname, email, password, profile_img, github_url, max_streak, ongoing_streak, deleted_at, provider_type)
+VALUES
+    (1, 'dev_hong', 'dev_hong@example.com', 'securePass123', 'https://example.com/profiles/dev_hong.jpg', 'https://github.com/devhong', 50, 10, false, 'GITHUB'),
+    (2, 'jane_doe', 'jane_doe@example.com', 'securePass456', 'https://example.com/profiles/jane_doe.jpg', 'https://github.com/janedoe', 30, 5, false, 'GOOGLE'),
+    (3, 'john_smith', 'john_smith@example.com', 'securePass789', 'https://example.com/profiles/john_smith.jpg', 'https://github.com/johnsmith', 20, 2, true, 'LOCAL');
+
+INSERT INTO question (question_id, title, content)
+VALUES
+    (1, 'What is Spring Boot?', 'Can you explain what Spring Boot is?'),
+    (2, 'What is Java?', 'Explain what Java programming language is.');
+
+INSERT INTO answer (answer_id, member_id, question_id, content, created_at, access_level)
+VALUES
+    (1, 1, 1, 'Spring Boot is a framework that simplifies the process of building Java applications.', '2023-01-01 10:00:00', 'PUBLIC'),
+    (2, 2, 2, 'Java is a high-level, class-based, object-oriented programming language.', '2023-02-01 15:30:00', 'PRIVATE');
