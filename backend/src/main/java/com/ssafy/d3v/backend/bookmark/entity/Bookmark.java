@@ -1,10 +1,12 @@
-package com.ssafy.d3v.backend.bookmark;
+package com.ssafy.d3v.backend.bookmark.entity;
 
 import com.ssafy.d3v.backend.common.AccessLevel;
-import com.ssafy.d3v.backend.member.domain.Member;
-import com.ssafy.d3v.backend.question.domain.Question;
+import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,5 +40,8 @@ public class Bookmark {
     private String name;
 
     @NotBlank
-    private AccessLevel accessLevel;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
+    private
+    AccessLevel accessLevel;
 }
