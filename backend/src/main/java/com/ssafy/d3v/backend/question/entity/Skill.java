@@ -20,7 +20,7 @@ public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "skill_id")
-    private int skillId;
+    private Integer skillId;
 
     @NotBlank
     @Enumerated(EnumType.STRING)

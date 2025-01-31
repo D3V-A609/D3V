@@ -22,7 +22,7 @@ public class JobSkill {
     @Id
     @Column(name = "job_skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int jobSkillId;
+    private Integer jobSkillId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)

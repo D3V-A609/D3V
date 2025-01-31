@@ -22,7 +22,7 @@ public class QuestionSkill {
     @Id
     @Column(name = "question_skill")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionSkillId;
+    private Integer questionSkillId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)

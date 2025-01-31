@@ -23,7 +23,7 @@ public class ServedQuestion {
     @Id
     @Column(name = "served_question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int servedQuestionId;
+    private Integer servedQuestionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

@@ -26,7 +26,7 @@ public class Bookmark {
     @Id
     @Column(name = "bookmark_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookmarkId;
+    private Integer bookmarkId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
