@@ -36,6 +36,9 @@ public class ServedQuestion {
     @Column(name = "is_solved")
     private boolean isSolved;
 
+    @Column(name = "is_daily")
+    private boolean isDaily;
+
     @Column(name = "served_at")
-    private LocalDate solvedAt;
+    private LocalDate servedAt;
 }

@@ -24,7 +24,7 @@ public class Article extends BaseEntity {
     @Id
     @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int articleId;
+    private Integer articleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -38,5 +38,5 @@ public class Article extends BaseEntity {
 
     private String content;
 
-    private int view;
+    private Integer view;
 }

@@ -27,7 +27,7 @@ public class Answer {
     @Id
     @Column(name = "answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int answerId;
+    private Integer answerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

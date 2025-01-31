@@ -20,7 +20,7 @@ public class Follow {
     @Id
     @Column(name = "follow_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int followId;
+    private Integer followId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id", nullable = false)

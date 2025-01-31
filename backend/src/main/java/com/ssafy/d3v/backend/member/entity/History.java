@@ -22,7 +22,7 @@ public class History {
     @Id
     @Column(name = "history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int historyId;
+    private Integer historyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -32,5 +32,5 @@ public class History {
     private LocalDate date;
 
     @NotBlank
-    private int count;
+    private Integer count;
 }

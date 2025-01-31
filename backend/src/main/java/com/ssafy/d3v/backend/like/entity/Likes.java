@@ -23,7 +23,7 @@ public class Likes {
     @Id
     @Column(name = "likes_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likesId;
+    private Integer likesId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

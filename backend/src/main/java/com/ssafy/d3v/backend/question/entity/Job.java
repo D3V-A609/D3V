@@ -20,7 +20,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_id")
-    private int jobId;
+    private Integer jobId;
 
     @NotBlank
     @Enumerated(EnumType.STRING)

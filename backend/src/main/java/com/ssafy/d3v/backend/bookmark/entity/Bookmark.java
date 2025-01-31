@@ -39,6 +39,8 @@ public class Bookmark {
     @NotBlank
     private String name;
 
+    private String description;
+
     @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")

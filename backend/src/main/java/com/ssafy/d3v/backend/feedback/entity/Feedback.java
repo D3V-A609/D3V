@@ -25,7 +25,7 @@ public class Feedback extends BaseEntity {
     @Id
     @Column(name = "feedback_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long feedbackId;
+    private Integer feedbackId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id", nullable = false)

@@ -106,12 +106,12 @@
 -- Insert dummy data
 
 -- Member data
-INSERT INTO member (nickname, email, password, profile_img, github_url, max_streak, ongoing_streak, deleted_at, created_at, updated_at)
-VALUES ('test', 'test@example.com', '1234', 'profile1.png', 'https://github.com/test', 0, 0, NULL, '2025-01-01', '2025-01-01'),
-       ('Alice', 'alice@example.com', 'password123', 'profile2.png', 'https://github.com/alice', 5, 3, NULL, '2025-01-01', '2025-01-01'),
-       ('Bob', 'bob@example.com', 'password456', 'profile3.png', 'https://github.com/bob', 10, 7, '2025-01-01', '2025-01-01', '2025-01-01'),
-       ('Charlie', 'charlie@example.com', 'password789', 'profile4.png', 'https://github.com/charlie', 15, 5, NULL, '2025-01-01', '2025-01-01'),
-       ('Diana', 'diana@example.com', 'password321', 'profile5.png', 'https://github.com/diana', 8, 6, '2025-02-01', '2025-01-01', '2025-01-01');
+INSERT INTO member (nickname, email, password, status, profile_img, github_url, max_streak, ongoing_streak, deleted_at, created_at, updated_at)
+VALUES ('test', 'test@example.com', '1234', 'ACTIVE', 'profile1.png', 'https://github.com/test', 0, 0, NULL, '2025-01-01', '2025-01-01'),
+       ('Alice', 'alice@example.com', 'password123', 'ACTIVE','profile2.png', 'https://github.com/alice', 5, 3, NULL, '2025-01-01', '2025-01-01'),
+       ('Bob', 'bob@example.com', 'password456', 'ACTIVE', 'profile3.png', 'https://github.com/bob', 10, 7, '2025-01-01', '2025-01-01', '2025-01-01'),
+       ('Charlie', 'charlie@example.com', 'password789', 'ACTIVE', 'profile4.png', 'https://github.com/charlie', 15, 5, NULL, '2025-01-01', '2025-01-01'),
+       ('Diana', 'diana@example.com', 'password321', 'ACTIVE', 'profile5.png', 'https://github.com/diana', 8, 6, '2025-02-01', '2025-01-01', '2025-01-01');
 
 -- Question data
 INSERT INTO question (content, standard_answer)
@@ -367,11 +367,11 @@ VALUES ('Question 1', 'Standard answer for question 1'),
        ('Question 250', 'Standard answer for question 250');
 
 -- Served Question data
-INSERT INTO served_question (member_id, question_id, is_solved, served_at)
-VALUES (1, 1, TRUE, '2025-01-20'),
-       (2, 2, FALSE, '2025-01-21'),
-       (3, 3, TRUE, '2025-01-22'),
-       (4, 4, FALSE, '2025-01-23');
+INSERT INTO served_question (member_id, question_id, is_solved, is_daily, served_at)
+VALUES (1, 1, TRUE, FALSE, '2025-01-20'),
+       (2, 2, FALSE, FALSE, '2025-01-21'),
+       (3, 3, TRUE, FALSE, '2025-01-22'),
+       (4, 4, FALSE, FALSE, '2025-01-23');
 
 -- Answer data
 INSERT INTO answer (member_id, question_id, content, created_at, access_level)
@@ -409,11 +409,11 @@ VALUES (1, 1),
        (4, 4);
 
 -- Bookmark data
-INSERT INTO bookmark (member_id, question_id, name, access_level)
-VALUES (1, 1, 'My first bookmark', 'public'),
-       (2, 2, 'Important question', 'private'),
-       (3, 3, 'Reference question', 'public'),
-       (4, 4, 'To review later', 'protected');
+INSERT INTO bookmark (member_id, question_id, name, description, access_level)
+VALUES (1, 1, 'My first bookmark', '첫 북마크', 'public'),
+       (2, 2, 'Important question', '중요한 북마크', 'private'),
+       (3, 3, 'Reference question', '북마크 설명1', 'public'),
+       (4, 4, 'To review later', '북마크 설명2', 'protected');
 
 -- Likes data
 INSERT INTO likes (member_id, answer_id)
