@@ -85,4 +85,36 @@ public class LikesServiceTest {
         assertThrows(IllegalArgumentException.class, () -> likesService.create(answerId, request));
     }
 
+    @Test
+    @DisplayName("답변에 대한 좋아요를 취소한다.")
+    public void delete_success() {
+        int answerId = 1;
+        int memberId = 1;
+        Member mockMember = new Member("ollie", "by28287@gmail.com", "12343");
+        Question mockQuestion = new Question("질문1", "모범답변1");
+        Answer mockAnswer = new Answer(mockMember, mockQuestion, "내용", LocalDateTime.now(), AccessLevel.PRIVATE);
+        Likes mockLikes = new Likes(mockMember, mockAnswer);
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(mockMember));
+        when(answerRepository.findById(answerId)).thenReturn(Optional.of(mockAnswer));
+        when(likesRepository.findByAnswerIdAndMemberId(mockAnswer, mockMember)).thenReturn(Optional.of(mockLikes));
+
+        assertDoesNotThrow(() -> likesService.delete(answerId));
+
+        verify(likesRepository, times(1)).delete(mockLikes);
+    }
+    @Test
+    @DisplayName("answerId와 memberId에 대한 좋아요가 없는 경우 IllegalArgumentException 을 반환한다.")
+    public void delete_likesNotFound() {
+        int answerId = 1;
+        int memberId = 2;
+        Member mockMember = new Member("ollie", "by28287@gmail.com", "12343");
+        Answer mockAnswer = new Answer(mockMember, null, "내용", null, null);
+
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(mockMember));
+        when(answerRepository.findById(answerId)).thenReturn(Optional.of(mockAnswer));
+        when(likesRepository.findByAnswerIdAndMemberId(mockAnswer, mockMember)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> likesService.delete(answerId));
+    }
 }
