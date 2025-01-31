@@ -25,8 +25,8 @@ public class JobSkill {
     private Integer jobSkillId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    @JoinColumn(name = "job_id", nullable = false)
+    private Job jobId;
 
     @Enumerated(EnumType.STRING)
     @ManyToOne(fetch = FetchType.LAZY)

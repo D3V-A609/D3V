@@ -30,6 +30,6 @@ public class QuestionJob {
 
     @Enumerated(EnumType.STRING)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skillId;
+    @JoinColumn(name = "job_id", nullable = false)
+    private Job jobId;
 }
