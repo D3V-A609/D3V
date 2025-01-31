@@ -17,7 +17,7 @@ const NavList: React.FC<NavListProps> = ({ isNavOpen }) => {
 
     const links = [
         { to: '/', icon: home_icon, label: 'Home' },
-        { to: '/cs', icon: cs_icon, label: 'CS 질문 모음' },
+        { to: '/all_question', icon: cs_icon, label: 'CS 질문 모음' },
         { to: '/ai', icon: aipage_icon, label: 'AI 면접 연습' },
         { to: '/board', icon: board_icon, label: '자유게시판' },
         { to: '/video', icon: youtubepage_icon, label: '면접 영상 추천' },
