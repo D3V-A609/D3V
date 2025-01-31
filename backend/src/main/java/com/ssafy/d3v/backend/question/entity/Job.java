@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.question.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -18,9 +19,11 @@ import lombok.ToString;
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "job_id")
     private int jobId;
 
     @NotBlank
     @Enumerated(EnumType.STRING)
+    @Column(name = "development_role")
     private DevelopmentRole developmentRole;
 }

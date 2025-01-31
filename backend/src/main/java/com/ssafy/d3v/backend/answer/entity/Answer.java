@@ -1,7 +1,7 @@
-package com.ssafy.d3v.backend.answer;
+package com.ssafy.d3v.backend.answer.entity;
 
 import com.ssafy.d3v.backend.common.AccessLevel;
-import com.ssafy.d3v.backend.member.domain.Member;
+import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,9 +41,11 @@ public class Answer {
     private String content;
 
     @NotBlank
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @NotBlank
     @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
     private AccessLevel accessLevel;
 }

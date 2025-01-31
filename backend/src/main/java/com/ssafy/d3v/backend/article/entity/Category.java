@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.entity;
+package com.ssafy.d3v.backend.article.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,13 +15,12 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Skill {
+public class Category {
     @Id
+    @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "skill_id")
-    private Integer skillId;
+    private Integer categoryId;
 
-    @NotBlank
     @Enumerated(EnumType.STRING)
-    private SkillType name;
+    private CategoryName name;
 }

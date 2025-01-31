@@ -1,13 +1,11 @@
-package com.ssafy.d3v.backend.member.domain;
+package com.ssafy.d3v.backend.member.entity;
 
-import com.ssafy.d3v.backend.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,7 +14,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class Member {
     @Id
     @Column(name = "memberId_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +25,16 @@ public class Member extends BaseEntity {
     private String email;
     @NotBlank
     private String password;
-
+    @Column(name = "profile_img")
     private String profileImg;
-
+    @Column(name = "github_url")
     private String githubUrl;
-
+    @Column(name = "max_streak")
     private int maxStreak;
-
+    @Column(name = "ongoing_streak")
     private int ongoingStreak;
-
-    private LocalDateTime deletedAt;
+    @Column(name = "deleted_at")
+    private boolean deletedAt;
+    @Column(name = "provider_type")
+    private String providerType;
 }

@@ -1,19 +1,19 @@
-package com.ssafy.d3v.backend.bookmark;
+<<<<<<<< HEAD:backend/src/main/java/com/ssafy/d3v/backend/likes/Likes.java
+package com.ssafy.d3v.backend.likes;
+========
+package com.ssafy.d3v.backend.like.entity;
+>>>>>>>> back-develop:backend/src/main/java/com/ssafy/d3v/backend/like/entity/Likes.java
 
-import com.ssafy.d3v.backend.common.AccessLevel;
-import com.ssafy.d3v.backend.member.domain.Member;
-import com.ssafy.d3v.backend.question.entity.Question;
+import com.ssafy.d3v.backend.answer.entity.Answer;
+import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -22,24 +22,17 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Bookmark {
+public class Likes {
     @Id
-    @Column(name = "bookmark_id")
+    @Column(name = "likes_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookmarkId;
+    private int likesId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
-
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    @Enumerated(EnumType.STRING)
-    private AccessLevel accessLevel;
+    @JoinColumn(name = "answer_id", nullable = false)
+    private Answer answerId;
 }

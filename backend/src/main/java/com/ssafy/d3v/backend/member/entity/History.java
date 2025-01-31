@@ -1,13 +1,15 @@
-package com.ssafy.d3v.backend.question.entity;
+package com.ssafy.d3v.backend.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,13 +18,19 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Skill {
+public class History {
     @Id
+    @Column(name = "history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "skill_id")
-    private Integer skillId;
+    private int historyId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member memberId;
 
     @NotBlank
-    @Enumerated(EnumType.STRING)
-    private SkillType name;
+    private LocalDate date;
+
+    @NotBlank
+    private int count;
 }

@@ -1,16 +1,19 @@
-package com.ssafy.d3v.backend.question.entity;
+package com.ssafy.d3v.backend.bookmark.entity;
 
+import com.ssafy.d3v.backend.common.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,23 +22,26 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class ServedQuestion {
+public class Bookmark {
     @Id
-    @Column(name = "served_question_id")
+    @Column(name = "bookmark_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer servedQuestionId;
+    private Integer bookmarkId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question questionId;
 
-    @Column(name = "is_solved")
-    private boolean isSolved;
+    @NotBlank
+    private String name;
 
-    @Column(name = "served_at")
-    private LocalDate solvedAt;
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
+    private
+    AccessLevel accessLevel;
 }

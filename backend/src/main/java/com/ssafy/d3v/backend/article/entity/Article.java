@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.entity;
+package com.ssafy.d3v.backend.article.entity;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,23 +19,32 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class ServedQuestion {
+public class Article {
     @Id
-    @Column(name = "served_question_id")
+    @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer servedQuestionId;
+    private int articleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category categoryId;
 
-    @Column(name = "is_solved")
-    private boolean isSolved;
+    private String title;
 
-    @Column(name = "served_at")
-    private LocalDate solvedAt;
+    private String content;
+
+    private int view;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }
