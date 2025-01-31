@@ -1,0 +1,15 @@
+.skill-tag-container {
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: fit-content;
+  padding: 2px 15px 2px 10px;
+  gap: 10px;
+  font-size: 10px;
+}
+
+.skill-tag-container img {
+  width: 14px;
+  height: 14px;
+}

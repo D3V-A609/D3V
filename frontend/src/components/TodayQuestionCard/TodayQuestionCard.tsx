@@ -17,7 +17,7 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
   title,
   category,
   // 로그인 기능이 생기면 false 삭제하면 됨
-  isLoggedIn = false, 
+  isLoggedIn, 
   onClick,
 }) => {
   const TODAY_DATE = format(new Date(), 'MMM dd, yyyy');
