@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -26,4 +27,10 @@ public class Question {
     @NotBlank
     @Column(name = "standard_answer")
     private String standardAnswer;
+
+    @Builder
+    public Question(String content, String standardAnswer) {
+        this.content = content;
+        this.standardAnswer = standardAnswer;
+    }
 }

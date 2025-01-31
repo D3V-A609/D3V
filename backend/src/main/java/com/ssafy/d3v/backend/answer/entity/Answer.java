@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -48,4 +49,14 @@ public class Answer {
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
+
+    @Builder
+    public Answer(Member memberId, Question questionId, String content, LocalDateTime createdAt,
+                  AccessLevel accessLevel) {
+        this.memberId = memberId;
+        this.questionId = questionId;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.accessLevel = accessLevel;
+    }
 }
