@@ -1,9 +1,9 @@
-package com.ssafy.d3v.backend.like;
+package com.ssafy.d3v.backend.question.entity;
 
-import com.ssafy.d3v.backend.answer.Answer;
-import com.ssafy.d3v.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,17 +18,18 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Like {
+public class QuestionJob {
     @Id
-    @Column(name = "like_id")
+    @Column(name = "question_job_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int likeId;
+    private int questionJobId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question questionId;
 
+    @Enumerated(EnumType.STRING)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answerId;
+    @JoinColumn(name = "skill_id", nullable = false)
+    private Skill skillId;
 }

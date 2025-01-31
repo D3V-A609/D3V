@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.question.entity;
 
 import java.util.Arrays;
 import java.util.List;

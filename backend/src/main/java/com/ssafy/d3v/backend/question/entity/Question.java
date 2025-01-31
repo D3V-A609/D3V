@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.question.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,5 +24,6 @@ public class Question {
     private String content;
 
     @NotBlank
+    @Column(name = "standard_answer")
     private String standardAnswer;
 }

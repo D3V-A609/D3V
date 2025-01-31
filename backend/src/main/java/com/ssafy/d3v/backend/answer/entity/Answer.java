@@ -1,16 +1,20 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.answer.entity;
 
-import com.ssafy.d3v.backend.member.domain.Member;
+import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,21 +23,29 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class ServedQuestion {
+public class Answer {
     @Id
-    @Column(name = "servedQuestion_id")
+    @Column(name = "answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int servedQuestionId;
+    private int answerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member memberId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question questionId;
 
-    private boolean isSolved;
+    @NotBlank
+    private String content;
 
-    private LocalDate solvedAt;
+    @NotBlank
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access_level")
+    private AccessLevel accessLevel;
 }

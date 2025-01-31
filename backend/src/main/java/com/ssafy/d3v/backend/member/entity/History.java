@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.domain;
+package com.ssafy.d3v.backend.member.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,17 +18,19 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class QuestionJob {
+public class History {
     @Id
-    @Column(name = "question_job_id")
+    @Column(name = "history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int questionJobId;
+    private int historyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id", nullable = false)
-    private Skill skillId;
+    @NotBlank
+    private LocalDate date;
+
+    @NotBlank
+    private int count;
 }
