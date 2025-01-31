@@ -1,104 +1,38 @@
-/* 로고 설정 */
-.header-container_logo-svg {
-    width: 150px;
-    height: auto;
-    fill: white; /* SVG의 색상 변경 */
-    justify-content: start;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  /* 전체 Header 컨테이너 */
-  .header-container {
-    display: grid;
-    grid-template-columns: 3fr 9fr; /* 3:9 비율로 두 열을 설정 */
-    padding: 10px 210px;
-    border-bottom: 1px solid #ddd;
-    width: 100%;
-    height: 127px;
-  }
-  
-  /* 로고를 포함하는 첫 번째 열 */
-  .header-container_logo-div {
-    /*grid-row: span 2; /* 두 행을 모두 차지 */
-    display: flex;
-    align-items: center;
-  }
-  
-  /* Header 오른쪽 영역 */
-  .header-container_right {
-    display: grid;
-    grid-template-rows: auto auto; /* 두 행으로 나누기 */
-    gap: 10px; /* 두 행 간격 */
-  }
-  
-  /* 사용자 정보 (첫 번째 행 오른쪽 정렬) */
-  .header-container_user-info {
-    grid-row: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .header-container_user-info_text {
-    display: grid;
-    justify-items: end;
-    padding-right: 0.1em;
-    font-size: 12px;
-  }
-  
-  .header-container_user-role {
-    color: gray;
-  }
-  
-  .header-container_user-name {
-    font-size: 22px;
-  }
-  
-  .header-container_user-avatar {
-    width: 52px;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    background-color: white;
-    font-size: 14px;
-    font-weight: bold;
-    color: black;
-  }
-  
-  /* NavBar (두 번째 행, 아이템 space-between 배치) */
-  ..header-container_nav-section {
+.header{
+    background-color: #9AA6B2; /* header 배경색 */
+    padding: 10px 0; /* 상하 패딩 */
+    height: 60px;
+    z-index: 10;
     align-content: center;
-  }
-  
-  .header-container_nav-section ul {
-    grid-row: 2;
-    display: flex;
-    justify-content: space-between; /* 아이템 간격을 균등하게 */
     align-items: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+    display: grid;
+}
 
-  /* navbar-item 기본 스타일 */
-.header-container_nav-section .navbar-item {
-    font-size: 16px;
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 1em; /* 아이콘과 로고 사이 간격 */
     cursor: pointer;
-    color: black; /* 기본 텍스트 색상 */
-    text-decoration: none; /* 기본 underline 제거 */
 }
 
-/* navbar-item에 hover 시 색상 변경 */
-.header-container_nav-section .navbar-item:hover {
-    color: blue; /* 호버 시 색상 */
+.header-logo .header-hamburger{
+    width: 30px;
+}
+.header-logo .logo{
+    width: 80px;
 }
 
-/* active-link 상태에서 스타일 추가 */
-.header-container_nav-section .navbar-item.active-link {
-    color: blue; /* 현재 페이지에 해당하는 링크의 색상 */
+.header-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    flex-grow: 1;  /* 중앙으로 밀어넣기 */
 }

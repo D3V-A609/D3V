@@ -1,0 +1,84 @@
+/* pages/AllQuestionPage.css */
+.question-page {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.question-header {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 24px;
+}
+
+.page-description {
+  font-size: 16px;
+  color: #7d7d7e;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.question-header-icon {
+  width: 18px;
+  height: 18px;
+  color: white;
+  background-color: #9aa6b2;
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute; /* 추가 */
+  left: -25px; /* 추가 */
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin: 16px 0;
+  position: relative;
+  display: inline-block;
+}
+
+.page-title::before,
+.page-title::after {
+  content: "{";
+  color: #4fc1ff;
+  font-size: 36px;
+  position: absolute;
+  top: 43%;
+  transform: translateY(-50%);
+  font-weight: 900;
+  line-height: 1;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+.page-title::before {
+  left: -24px;
+}
+
+.page-title::after {
+  right: -24px;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.search-status-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.search-wrapper {
+  margin-left: auto;
+  width: fit-content;
+}

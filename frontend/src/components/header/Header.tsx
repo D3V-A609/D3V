@@ -1,29 +1,19 @@
 import React from "react";
-
-import { useNavigate } from "react-router-dom";
-
 import "./Header.css";
+import HeaderLogo from "./HeaderLogo.tsx";
+import HeaderTitle from "./HeaderTitle.tsx";
 
-import Logo from "../../assets/images/logo.svg";
+// handleNavOpen 함수의 타입을 명시
+interface HeaderProps {
+  handleNavOpen: () => void;  // handleNavOpen은 인자를 받지 않고 반환값도 없는 함수
+}
 
-import Nav from "./Nav.tsx";
-import SimpleUserInfo from "./SimpleUserInfo.tsx";
-
-const Header: React.FC = () => {
-
-  const navigate = useNavigate();
-
-  const handleLogoClick = () => { // 로고 클릭 시 home으로 이동
-    navigate("/");
-  }
+const Header: React.FC<HeaderProps> = ({ handleNavOpen }) => {
   return (
-    <header className="header-container">
-      <div className="header-container_logo-div">
-        <img src={Logo} className="header-container_logo-svg" onClick={() => { handleLogoClick() }} />
-      </div>
-      <div className="header-container_right">
-        <SimpleUserInfo />
-        <Nav />
+    <header className="header">
+      <div className="header-content">
+        <HeaderLogo handleNavOpen={handleNavOpen} />
+        <HeaderTitle />
       </div>
     </header>
   );

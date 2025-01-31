@@ -1,0 +1,135 @@
+/* TechIcon.css */
+.tech-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.tech-icon.react {
+    color: #61dafb;
+}
+.tech-icon.vue {
+    color: #4fc08d;
+}
+.tech-icon.angular {
+    color: #dd0031;
+}
+.tech-icon.typescript {
+    color: #3178c6;
+}
+.tech-icon.javascript {
+    color: #f7df1e;
+}
+.tech-icon.html {
+    color: #e34f26;
+}
+.tech-icon.nuxt {
+    color: #00dc82;
+}
+.tech-icon.java {
+    color: #007396;
+}
+.tech-icon.spring {
+    color: #6db33f;
+}
+.tech-icon.python {
+    color: #3776ab;
+}
+.tech-icon.django {
+    color: #092e20;
+}
+.tech-icon.nodejs {
+    color: #339933;
+}
+.tech-icon.kotlin {
+    color: #7f52ff;
+}
+.tech-icon.flutter {
+    color: #02569b;
+}
+.tech-icon.ios {
+    color: #000000;
+}
+.tech-icon.android {
+    color: #3ddc84;
+}
+.tech-icon.jetpack {
+    color: #3ddc84;
+}
+.tech-icon.dart {
+    color: #0175c2;
+}
+.tech-icon.react-native {
+    color: #61dafb;
+}
+.tech-icon.push-notifications {
+    color: #4a90e2;
+}
+.tech-icon.docker {
+    color: #2496ed;
+}
+.tech-icon.kubernetes {
+    color: #326ce5;
+}
+.tech-icon.aws {
+    color: #232f3e;
+}
+/* Azure - using the same color as before */
+.tech-icon.azure {
+    color: #0078d4;
+}
+.tech-icon.jenkins {
+    color: #d24939;
+}
+.tech-icon.terraform {
+    color: #7b42bc;
+}
+.tech-icon.git {
+    color: #f05032;
+}
+.tech-icon.cloud-computing {
+    color: #f38020;
+}
+.tech-icon.redis {
+    color: #dc382d;
+}
+.tech-icon.postgresql {
+    color: #336791;
+}
+.tech-icon.mysql {
+    color: #4479a1;
+}
+.tech-icon.mongodb {
+    color: #47a248;
+}
+.tech-icon.elasticsearch {
+    color: #005571;
+}
+.tech-icon.logstash {
+    color: #005571;
+}
+.tech-icon.kibana {
+    color: #005571;
+}
+/* Kafka - using the same color as before */
+.tech-icon.kafka {
+    color: #231f20;
+}
+.tech-icon.tensorflow {
+    color: #ff6f00;
+}
+.tech-icon.pandas {
+    color: #150458;
+}
+/* R - using the same color as before */
+.tech-icon.r {
+    color: #276dc3;
+}
+.tech-icon.spark {
+    color: #e25a1c;
+}
+.tech-icon.scikit-learn {
+    color: #f7931e;
+}
+.tech-icon.sql {
+    color: #336791;
+}

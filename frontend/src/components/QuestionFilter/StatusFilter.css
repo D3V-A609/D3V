@@ -1,0 +1,30 @@
+/* StatusFilter.css */
+.status-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .status-filter span {
+    cursor: pointer;
+    color: #535353;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    font-weight: normal;
+  }
+  
+  .status-filter .separator {
+    color: #e0e0e0;
+    cursor: default;
+  }
+  
+  .status-filter span.active {
+    color: #535353;
+    font-weight: bold;
+  }
+  
+  .status-filter span:not(.separator):hover {
+    color: #535353;
+    font-weight: bold;
+  }
+  
