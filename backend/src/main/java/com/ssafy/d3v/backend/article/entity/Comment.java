@@ -1,6 +1,6 @@
-package com.ssafy.d3v.backend.comment;
+package com.ssafy.d3v.backend.article.entity;
 
-import com.ssafy.d3v.backend.answer.Answer;
+import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,18 +22,21 @@ public class Comment {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private int commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answerId;
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article articleId;
 
-    @NotBlank
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member memberId;
+
     private String content;
 
-    @NotBlank
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @NotBlank
-    private Boolean isDeleted;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
