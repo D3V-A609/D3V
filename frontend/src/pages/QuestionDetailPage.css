@@ -1,0 +1,200 @@
+.question-detail-container {
+  padding: 1rem 210px;
+  width: 100%;
+}
+
+.question-detail_info-text {
+  justify-self: start;
+  font-size: 12px;
+  align-content: center;
+}
+
+.question-detail_footprint-img {
+  width: 30px;
+  height: 27px;
+}
+
+/* question content div */
+.question-detail_question-content {
+  padding: 1.5rem 2em 1rem 2rem;
+}
+
+/* content container 내의 date div 속성 설정 */
+.question-content_today-date-div {
+  justify-self: start;
+  padding-bottom: 0.5rem;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+}
+
+.question-content_today-date-div_date-icon {
+  color: #005a9c;
+  width: 13px;
+  height: 13px;
+}
+
+.question-content_today-date-div_date{
+  padding-left: 0.5em;
+}
+
+/* question content div의 질문 카드 */
+.question-content_question-card-body {
+  background-color: #f8fafc;
+  border-radius: 10px;
+  padding: 1rem 2em;
+  /* display: flex; */
+}
+
+.question-content_question-card-body_top {
+  width: 100%;
+  display: flex; /* Flexbox 활성화 */
+  justify-content: space-between;
+}
+
+.question-content_question-card-body_top .question-label {
+  font-weight: bolder;
+  font-size: 32px;
+  padding: 0 0.3em;
+}
+
+.question-content_question-card-body .question-text {
+  font-weight: bolder;
+  padding: 0 2.5em;
+  padding-bottom: 0.8rem;
+  width: 100%;
+  word-wrap: break-word; /* 단어가 끊기지 않도록 설정 */
+  white-space: normal;
+  overflow-wrap: break-word;
+  font-size: 24px;
+}
+
+/* 버튼 css 속성 설정 */
+.question-answer-btn-group {
+  display: flex;
+  justify-content: end;
+  padding: 0 2em;
+  gap: 0.5em;
+}
+
+.question-answer-btn-group div {
+  width: 125px;
+  height: 35px;
+  align-content: center;
+  justify-items: center;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.question-answer-btn-group .btn-question-answer {
+  background-color: #cfeaff;
+}
+
+.question-answer-btn-group .btn-question-answer-commu {
+  border-color: #cfeaff;
+  border-style: solid;
+}
+
+/* 답변 입력 부분 => AnswerInputComp style 정의 */
+.answer-input-container {
+  padding: 1rem 1em;
+}
+
+.answer-input-container .answer-title {
+  justify-self: start;
+  font-weight: bolder;
+  font-size: 24px;
+  align-self: center;
+}
+
+.answer-input-container .answer-subtitle {
+  padding-top: 0.8rem;
+  justify-self: start;
+  text-align: left;
+  font-weight: light;
+  font-size: 12px;
+}
+
+.anwer-input-container__input {
+  padding-top: 1rem;
+}
+
+.anwer-input-container__input .answer-setting {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+  align-items: center;
+}
+
+.anwer-input-container__input .answer-setting .timer-setting {
+  font-size: 12px;
+  color: #535353;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+}
+
+.anwer-input-container__input .answer-setting .timer-setting .timer-icon {
+  color: #ff0000;
+  width: 24px;
+  height: 24px;
+}
+
+.anwer-input-container__input .answer-input {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.anwer-input-container__input .answer-input-area {
+  width: 100%;
+  height: 200px;
+  padding: 2rem;
+  border: 1.3px solid #000000;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.anwer-input-container__input .answer-submit {
+  display: flex;
+  justify-content: space-between;
+}
+
+.anwer-input-container__input .answer-submit .voice-icon {
+  width: 25px;
+  height: 25px;
+  color: #49a0ff;
+}
+
+.anwer-input-container__input .answer-submit .answer-voice {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 0.2em;
+}
+
+.anwer-input-container__input .answer-submit .btn-answer-submit-group {
+  display: flex;
+  gap: 1em;
+}
+
+.anwer-input-container__input .answer-submit .btn-answer-submit-group div {
+  font-size: 14px;
+  width: 130px;
+  height: 35px;
+  align-content: center;
+}
+
+.anwer-input-container__input .answer-submit .btn-answer-submit-group .btn-IDK {
+  border: 1.3px solid #005a9c;
+  border-radius: 12px;
+}
+
+.anwer-input-container__input
+  .answer-submit
+  .btn-answer-submit-group
+  .btn-submit {
+  background-color: #005a9c;
+  color: white;
+  border-radius: 12px;
+}

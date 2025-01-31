@@ -2,9 +2,32 @@
     color: #1E9FFF;
 }
 
+.text-blue2{
+    color: #007ACC;
+}
+
 .text-blue3{
     color: #005A9C;
 }
+
+.text-blue4{
+    color: #1F9CF0;
+}
+
+.text-blue5{
+    color: #CFEAFF;
+}
+
+.text-gray2{
+    color: #7D7D7E;
+}
+
+.text-brackets{
+    color: #4FC1FF;
+    font-size: 36px;
+    font-weight: bolder;
+}
+
 
 .text-bold{
     font-weight: bold;
