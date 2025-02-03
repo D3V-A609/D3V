@@ -7,10 +7,9 @@ import { useState } from 'react';
 import FootPrint from "../assets/images/footprint.png";
 import QuestionContentCard from '../components/QuestionDetail/Question/QuestionContentCard';
 
-import { Question } from '../types/question';
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
 
-import AnswerInputComp from '../components/QuestionDetail/Answer/AnswerInputComp';
+import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
 
 const QuestionDetailPage: React.FC = () => {
@@ -51,7 +50,7 @@ const QuestionDetailPage: React.FC = () => {
       <QuestionAnswerBtnGroup onShowAnswerInput={handleShowAnswerInput} onShowAnswerCommunity={handleShowCommunity} />
 
       {/* 조건부 렌더링 */}
-      {currentQuestionDetailView === "input" && <AnswerInputComp />}
+      {currentQuestionDetailView === "input" && <AnswerInput />}
       {currentQuestionDetailView === "community" && <AnswerCommunityComp />}
     </div>
   );

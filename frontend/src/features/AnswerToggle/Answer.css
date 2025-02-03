@@ -1,0 +1,41 @@
+.my-answer-records-container{
+  justify-items: start;
+}
+
+.my-answer-records-container .records-timeline{
+  padding: 1rem 0;
+}
+
+/* 내 답변 기록 타임라인의 툴바를 없앰 */
+.my-answer-records-container .records-timeline .fwRzpx{
+  display: none;
+}
+
+.my-answer-records-container .records-timeline .gJvBnh{
+  min-height: unset;
+  max-height: unset;
+  padding-left: 1.5em;
+  padding-bottom: 0;
+}
+
+.my-answer-records-container .records-timeline .iiIORr, /*나머지 카드*/
+.my-answer-records-container .records-timeline .bevYHo, /*최상단의 카드*/
+.my-answer-records-container .records-timeline .jLmrBu {/*길이가 너무 긴 경우 readmore 열었을 때의 카드*/
+  margin: 0;
+  padding-left: 0.5rem;
+  padding-bottom: 1rem;
+  padding-top: 0;
+}
+
+/* 타임라인 카드 스타일링 */
+.my-answer-records-container .chrono-card {
+  min-height: unset !important; /* 기본 min-height 제거 */
+  padding: 20px;
+  box-shadow: none;
+  border: none;
+}
+
+.my-answer-records-container .chrono-card-title,
+.chrono-card-detailed-text {
+  padding-left: 20px;
+}

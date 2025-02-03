@@ -68,12 +68,6 @@ const AnswerInputComp: React.FC = () => {
       <div className="anwer-input-container__input">
         <div className="answer-setting">
           <ToggleButton />
-          {/* <div className="timer-setting">
-            <div>타이머 설정 {selectedTime>0 && `(${selectedTime}초)`}</div>
-            <MdOutlineTimer className="timer-icon" />
-          </div> */}
-          
-            {/* TimerSetting 컴포넌트에 모든 상태와 함수를 props로 전달 */}
           <TimerSetting
             showTimerDropdown={showTimerDropdown}
             selectedTime={selectedTime}
