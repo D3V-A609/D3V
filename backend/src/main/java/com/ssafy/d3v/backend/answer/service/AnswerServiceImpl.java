@@ -46,4 +46,56 @@ public class AnswerServiceImpl implements AnswerService {
         return new StandardAnswerResponse(questionId, question.getContent(), question.getStandardAnswer(), isSolved);
     }
 
+    @Override
+    @Transactional
+    public List<AnswerResponse> create(long questionId, AnswerRequest answerRequest) {
+        Question question = getQuestionById(questionId);
+        Member member = getMemberById();
+
+        Answer answer = Answer.builder()
+                .member(member)
+                .question(question)
+                .content(answerRequest.content())
+                .createdAt(LocalDateTime.now())
+                .accessLevel(answerRequest.accessLevel())
+                .build();
+
+        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, true);
+        answerRepository.saveAndFlush(answer);
+
+        return getAnswerResponses(question, member);
+    }
+
+    @Override
+    public List<AnswerResponse> getMyAnswers(long questionId) {
+        Question question = getQuestionById(questionId);
+        Member member = getMemberById();
+
+        return getAnswerResponses(question, member);
+    }
+
+    private List<AnswerResponse> getAnswerResponses(Question question, Member member) {
+        return answerRepository.findByQuestionAndMember(question, member)
+                .stream()
+                .map(ele -> new AnswerResponse(
+                        ele.getQuestion().getId(),
+                        ele.getMember().getId(),
+                        ele.getAnswerId(),
+                        ele.getContent(),
+                        ele.getCreatedAt(),
+                        ele.getAccessLevel()))
+                .toList();
+    }
+
+    private Question getQuestionById(long questionId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문 입니다. 질문 ID: " + questionId));
+        return question;
+    }
+
+    private Member getMemberById() {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
+        return member;
+    }
 }

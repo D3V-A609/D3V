@@ -29,5 +29,14 @@ public class AnswerController {
         return ResponseEntity.ok().body(answerService.getStandardAnswer(questionId));
     }
 
+    @PostMapping("/question/{question_id}/answer")
+    public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId, AnswerRequest answerRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(answerService.create(questionId, answerRequest));
+    }
+
+    @GetMapping("/question/{question_id}/my_answer")
+    public ResponseEntity<List<AnswerResponse>> getMyAnswers(@PathVariable("question_id") long questionId) {
+        return ResponseEntity.ok().body(answerService.getMyAnswers(questionId));
+    }
 
 }

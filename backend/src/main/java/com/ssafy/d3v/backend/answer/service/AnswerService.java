@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AnswerService {
     StandardAnswerResponse getStandardAnswer(long questionId);
+    List<AnswerResponse> create(long questionId, AnswerRequest answerRequest);
+    List<AnswerResponse> getMyAnswers(long questionId);
 }
