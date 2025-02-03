@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +25,13 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Table(
+        name = "served_question",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"member_id", "question_id"})
+        }
+)
 public class ServedQuestion {
     @Id
     @Column(name = "served_question_id")
@@ -31,18 +40,23 @@ public class ServedQuestion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    private Question question;
 
     @Column(name = "is_solved")
-    private boolean isSolved;
+    private Boolean isSolved;
 
     @Column(name = "is_daily")
-    private boolean isDaily;
+    private Boolean isDaily;
 
     @Column(name = "served_at")
     private LocalDate servedAt;
+
+    public void updateDailyInfo(boolean isDaily, LocalDate servedAt) {
+        this.isDaily = isDaily;
+        this.servedAt = servedAt;
+    }
 }

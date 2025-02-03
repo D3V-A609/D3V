@@ -1,1 +1,1 @@
-delete from `question` where 1;
+delete from question where 1;

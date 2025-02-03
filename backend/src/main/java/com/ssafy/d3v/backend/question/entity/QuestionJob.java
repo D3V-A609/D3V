@@ -30,10 +30,9 @@ public class QuestionJob {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    private Question question;
 
-    @Enumerated(EnumType.STRING)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", nullable = false)
-    private Job jobId;
+    private Job job;
 }

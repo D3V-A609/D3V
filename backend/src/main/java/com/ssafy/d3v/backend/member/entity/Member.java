@@ -48,10 +48,10 @@ public class Member extends BaseEntity {
     private String githubUrl;
 
     @Column(name = "max_streak")
-    private Integer maxStreak;
+    private Long maxStreak;
 
     @Column(name = "ongoing_streak")
-    private Integer ongoingStreak;
+    private Long ongoingStreak;
 
     @Column(name = "provider_type")
     private String providerType;
