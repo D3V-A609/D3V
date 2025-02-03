@@ -1,0 +1,93 @@
+.answer-item {
+  padding: 24px 0;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar {
+  width: 52px;
+  height: 52px;
+  border: 1px solid #1E9FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  font-size: 14px;
+  color: #666;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-role {
+  font-size: 12px;
+  color: #666;
+}
+
+.role-name {
+  color: #1E9FFF;
+}
+
+.profile-name {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #333;
+}
+
+.suffix {
+  font-size: 12px;
+  color: #666;
+  margin-left: 4px;
+}
+
+.answer-content {
+  margin: 16px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.answer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.answer-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.answer-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-comment,
+.btn-like {
+  height: 30px;
+  padding: 0 16px;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -7,4 +7,5 @@ interface Answer {
   createdAt: string;
   accessLevel: "PUBLIC" | "PRIVATE" | "PROTECTED";
   answerLike: number;
+  commentCount: number;
 }
