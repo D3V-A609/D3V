@@ -12,7 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -20,20 +21,22 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Feedback extends BaseEntity {
     @Id
     @Column(name = "feedback_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer feedbackId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id", nullable = false)
-    private Answer answerId;
+    private Answer answer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
     @NotBlank
     private String content;

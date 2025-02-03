@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,16 +19,18 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class History {
     @Id
     @Column(name = "history_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer historyId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
     @NotBlank
     private LocalDate date;

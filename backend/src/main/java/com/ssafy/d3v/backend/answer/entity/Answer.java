@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,20 +24,22 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Answer {
     @Id
     @Column(name = "answer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer answerId;
+    private Long answerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    private Question question;
 
     @NotBlank
     private String content;
@@ -49,14 +52,4 @@ public class Answer {
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
-
-    @Builder
-    public Answer(Member memberId, Question questionId, String content, LocalDateTime createdAt,
-                  AccessLevel accessLevel) {
-        this.memberId = memberId;
-        this.questionId = questionId;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.accessLevel = accessLevel;
-    }
 }

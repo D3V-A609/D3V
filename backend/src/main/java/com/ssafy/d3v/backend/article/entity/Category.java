@@ -19,7 +19,7 @@ public class Category {
     @Id
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer categoryId;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private CategoryName name;

@@ -11,6 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,12 +20,14 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class ServedQuestion {
     @Id
     @Column(name = "served_question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer servedQuestionId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

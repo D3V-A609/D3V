@@ -2,7 +2,7 @@ package com.ssafy.d3v.backend.bookmark.entity;
 
 import com.ssafy.d3v.backend.common.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
-import com.ssafy.d3v.backend.question.entity.Question;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,7 +13,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -21,20 +26,18 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
+@Builder
+@AllArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Bookmark {
     @Id
     @Column(name = "bookmark_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer bookmarkId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question questionId;
+    private Member member;
 
     @NotBlank
     private String name;
@@ -44,6 +47,15 @@ public class Bookmark {
     @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
-    private
-    AccessLevel accessLevel;
+    private AccessLevel accessLevel;
+
+    @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookmarkQuestion> bookmarkQuestions = new ArrayList<>();
+
+
+    public void update(String name, String description, AccessLevel accessLevel) {
+        this.name = name;
+        this.description = description;
+        this.accessLevel = accessLevel;
+    }
 }
