@@ -23,15 +23,18 @@ public class LikesServiceImpl implements LikesService {
         Member member = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + request.memberId()));
 
-        Answer answer = answerRepository.findById(request.answerId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변 입니다. 답변 ID: " + request.answerId()));
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변 입니다. 답변 ID: " + answerId));
 
-        Likes likes = Likes.builder()
-                .memberId(member)
-                .answerId(answer)
-                .build();
+        boolean exists = likesRepository.findByAnswerIdAndMemberId(answer, member).isPresent();
 
-        likesRepository.save(likes);
+        if (!exists) {
+            Likes likes = Likes.builder()
+                    .memberId(member)
+                    .answerId(answer)
+                    .build();
+            likesRepository.save(likes);
+        }
     }
 
     @Override

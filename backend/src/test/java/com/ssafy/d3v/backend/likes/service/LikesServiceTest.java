@@ -48,7 +48,7 @@ public class LikesServiceTest {
     @DisplayName("memberId와 answerId가 존재하는 경우 좋아요를 생성한다.")
     public void create_success() {
         int answerId = 1;
-        LikesRequest request = new LikesRequest(1, 1);
+        LikesRequest request = new LikesRequest(1);
         Member mockMember = new Member("ollie", "by28287@gmail.com", "12343");
         Question mockQuestion = new Question("질문1", "모범답변1");
         Answer mockAnswer = new Answer(mockMember, mockQuestion, "내용", LocalDateTime.now(), AccessLevel.PRIVATE);
@@ -64,7 +64,7 @@ public class LikesServiceTest {
     @DisplayName("memberId에 대한 member가 존재하지 않는 경우 IllegalArgumentException 을 반환한다.")
     public void create_memberNotFound() {
         int answerId = 1;
-        LikesRequest request = new LikesRequest(1, 1);
+        LikesRequest request = new LikesRequest(1);
 
         when(memberRepository.findById(request.memberId())).thenReturn(Optional.empty());
 
@@ -74,7 +74,7 @@ public class LikesServiceTest {
     @DisplayName("answerId에 대한 answer가 존재하지 않는 경우 IllegalArgumentException 을 반환한다.")
     public void create_answerNotFound() {
         int answerId = 1;
-        LikesRequest request = new LikesRequest(1, 1);
+        LikesRequest request = new LikesRequest(1);
         Member mockMember = new Member("ollie", "by28287@gmail.com", "12343");
         Question mockQuestion = new Question("질문1", "모범답변1");
         Answer mockAnswer = new Answer(mockMember, mockQuestion, "내용", LocalDateTime.now(), AccessLevel.PRIVATE);
