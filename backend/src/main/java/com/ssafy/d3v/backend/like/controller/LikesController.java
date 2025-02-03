@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LikesController {
     private final LikesService likesService;
 
-    @PostMapping("/answer/{answer_id}/like")
+    @PostMapping("/{answer_id}/like")
     @Operation(summary = "좋아요", description = "답변에 대한 좋아요를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공적으로 좋아요 추가",
@@ -37,7 +37,7 @@ public class LikesController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/answer/{answer_id}/like")
+    @DeleteMapping("/{answer_id}/like")
     @Operation(summary = "좋아요 취소", description = "좋아요를 취소합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공적으로 좋아요 취소",
