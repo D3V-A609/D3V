@@ -1,6 +1,9 @@
 import React from 'react';
 import { Chrono } from 'react-chrono';
 import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
+import PageHeader from '../../components/PageHeader/PageHeader';
+
+import { FcCommandLine } from "react-icons/fc";
 
 const MyAnswerRecords: React.FC = () => {
   // 오늘 날짜를 가져와 시간을 00:00:00으로 초기화 (날짜 비교를 위해 필요)
@@ -49,10 +52,15 @@ const MyAnswerRecords: React.FC = () => {
   return (
     <div>
       <div className="my-answer-records-container">
-        <div className="title">{"{"} 내 답변 로그 {"}"}</div>
+        {/* <div className="title">{"{"} 내 답변 로그 {"}"}</div>
         <div className="sub-title">
           과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.
-        </div>
+        </div> */}
+        <PageHeader
+        title='내 답변 로그'
+        description='과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.' 
+        icon={<FcCommandLine />}
+        />
         <div className="records-timeline">
           <Chrono
             items={timelineItems} // 정렬 및 변환된 타임라인 아이템 전달
