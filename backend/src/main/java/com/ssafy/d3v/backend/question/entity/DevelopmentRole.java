@@ -18,7 +18,7 @@ public enum DevelopmentRole {
             SkillType.SOLIDITY, SkillType.ETHEREUM, SkillType.HYPERLEDGER, SkillType.WEB3_JS, SkillType.TRUFFLE, SkillType.GANACHE)),
     TESTING(Arrays.asList(SkillType.JUNIT, SkillType.SELENIUM, SkillType.CUCUMBER, SkillType.TESTNG, SkillType.APPIUM)),
     FULLSTACK(Arrays.asList(SkillType.REACT, SkillType.NODE_JS, SkillType.SPRING_BOOT, SkillType.DJANGO, SkillType.MYSQL, SkillType.MONGODB, SkillType.TYPESCRIPT, SkillType.GRAPHQL));
-
+    
     private final List<SkillType> techStack;
 
     DevelopmentRole(List<SkillType> techStack) {
