@@ -1,6 +1,7 @@
-import React from 'react';
-// import AnswerInputComp from './AnswerInputComp';
+import React, { useState } from 'react';
+import AnswerInputComp from './AnswerInputComp';
 import AnswerToggleSection from '../../../features/AnswerToggle/AnswerToggleSection';
+import { GoTriangleDown, GoTriangleRight } from "react-icons/go";
 
 import "./Answer.css"
 
@@ -13,10 +14,32 @@ const bestAnswerData: BestAnswer = {
 };
 
 const AnswerInput: React.FC = () => {
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
+
+  const btnToggleOpen = () => {
+    setIsToggleOpen(!isToggleOpen);
+  }
+
+
   return (
   <div>
-    {/* <AnswerInputComp /> */}
-    <AnswerToggleSection bestAnswer={bestAnswerData} />
+    <AnswerInputComp />
+    {
+      bestAnswerData.isSolved && (
+        isToggleOpen? <>
+        <div className="toggle-open-title text-gray2" onClick={btnToggleOpen}>
+          <GoTriangleDown />
+          정답 보기
+        </div>
+        <AnswerToggleSection bestAnswer={bestAnswerData} />
+        </> : 
+        <div className="toggle-close-title text-gray2" onClick={btnToggleOpen}>
+          <GoTriangleRight />
+          정답 보기
+        </div>
+      )
+    }
+    {/* <AnswerToggleSection bestAnswer={bestAnswerData} /> */}
   </div>);
 }
 

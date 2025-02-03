@@ -38,7 +38,7 @@
 
 /* 베스트 답변 컨테이너 */
 .best-answer-container{
-  padding: 3rem 0;
+  padding: 1rem 0 3rem 0;
 }
 
 .best-answer-container .best-answer-title {
@@ -71,4 +71,13 @@
   font-size: 16px;
   line-height: 1.6;
   color: #333;
+}
+
+/* 정답 토글부분 */
+.toggle-open-title, .toggle-close-title{
+  justify-self: start;
+  padding-left: 1em;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  cursor: pointer;
 }
