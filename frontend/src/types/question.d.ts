@@ -1,5 +1,5 @@
 // types/question.d.ts
-export interface Question {
+declare interface Question {
   id: number;
   status: "Solved" | "Unsolved";
   questionContent: string;
