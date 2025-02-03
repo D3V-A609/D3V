@@ -1,0 +1,11 @@
+package com.ssafy.d3v.backend.answer.service;
+
+import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
+import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
+import com.ssafy.d3v.backend.answer.dto.LatestQuestionResponse;
+import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
+import java.util.List;
+
+public interface AnswerService {
+    StandardAnswerResponse getStandardAnswer(long questionId);
+}
