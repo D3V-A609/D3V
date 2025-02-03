@@ -1,5 +1,6 @@
 // pages/AllQuestionPage.tsx
 import React, { useState } from "react";
+import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from "../features/QuestionList";
 import JobSkillFilter from "../components/QuestionFilter/JobSkillFilter";
 import StatusFilter from "../components/QuestionFilter/StatusFilter";
@@ -78,13 +79,12 @@ const AllQuestionPage: React.FC = () => {
   return (
     <div className="question-page">
       {/* 페이지 헤더 */}
-      <div className="question-header">
-        <p className="page-description">
-          <BiSearch className="question-header-icon" />
-          원하는 직무와 기술별로 모든 면접 질문을 검색해보세요!
-        </p>
-        <h1 className="page-title">면접 질문 모음</h1>
-      </div>
+      <PageHeader 
+        title="면접 질문 모음"
+        description="원하는 직무와 기술별로 모든 면접 질문을 검색해보세요!"
+        icon={<BiSearch />}
+        iconStyle="search-icon"
+      />
 
       {/* 필터 섹션 */}
       <div className="filter-container">

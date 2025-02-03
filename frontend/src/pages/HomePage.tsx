@@ -2,6 +2,8 @@
 import React from 'react';
 import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard';
 import './HomePage.css';
+import PageHeader from '../components/PageHeader/PageHeader';
+import { BsCheckLg } from 'react-icons/bs';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -21,6 +23,12 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="home-page">
+      <PageHeader 
+        title="오늘의 면접 질문"
+        description="D3V's pick"
+        icon={<BsCheckLg />}
+        iconStyle="yellow-check-icon"
+      />
       <section className="today-questions">
         <div className="question-cards">
           {todayQuestions.map((question) => (
