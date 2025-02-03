@@ -1,4 +1,4 @@
-INSERT INTO question (content, standard_answer)
+INSERT INTO `question` (content, standard_answer)
 VALUES ('Question 1', 'Standard answer for question 1'),
        ('Question 2', 'Standard answer for question 2'),
        ('Question 3', 'Standard answer for question 3'),

@@ -1,10 +1,6 @@
 spring:
   profiles:
     active: local
-  jpa:
-    hibernate:
-      ddl-auto: create
-
 ---
 spring:
   config:
@@ -19,7 +15,6 @@ spring:
     defer-datasource-initialization: true
     properties:
       hibernate:
-
         format_sql: true # SQL 로그 출력
     hibernate:
       ddl-auto: create-drop
@@ -37,6 +32,7 @@ logging:
 
 
 ---
+
 spring:
   config:
     activate:
@@ -50,3 +46,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
