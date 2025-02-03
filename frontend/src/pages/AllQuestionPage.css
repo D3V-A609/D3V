@@ -1,90 +1,21 @@
 /* pages/AllQuestionPage.css */
 /* 페이지 전체 컨테이너 스타일 */
 .question-page {
-  padding: 40px 40px;
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto; /* 페이지 중앙 정렬 */
-}
-
-/* 페이지 헤더 섹션 스타일 */
-.question-header {
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding-left: 32px; /* 왼쪽 여백 추가 */
-}
-
-/* 페이지 설명 텍스트 스타일 */
-.page-description {
-  font-size: 16px;
-  color: #7d7d7e;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-}
-
-/* 헤더 아이콘 스타일 */
-.question-header-icon {
-  width: 18px;
-  height: 18px;
-  color: white;
-  background-color: #9aa6b2;
-  border-radius: 4px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute; /* 절대 위치 설정 */
-  left: -25px; /* 왼쪽으로 이동 */
-}
-
-/* 페이지 제목 스타일 */
-.page-title {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin: 16px 0;
-  position: relative;
-  display: inline-block;
-}
-
-/* 페이지 제목 장식 (중괄호) 스타일 */
-.page-title::before,
-.page-title::after {
-  content: "{";
-  color: #4fc1ff;
-  font-size: 36px;
-  position: absolute;
-  top: 43%;
-  transform: translateY(-50%);
-  font-weight: 900;
-  line-height: 1;
-  height: 36px;
-  display: flex;
-  align-items: center;
-}
-
-/* 왼쪽 중괄호 위치 */
-.page-title::before {
-  left: -24px;
-}
-
-/* 오른쪽 중괄호 위치 (좌우 반전) */
-.page-title::after {
-  right: -24px;
-  transform: translateY(-50%) scaleX(-1);
+  margin: 0 auto;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 /* 필터 컨테이너 스타일 */
 .filter-container {
+  width: 100%;
+  box-sizing: border-box;
   flex-direction: column;
   display: flex;
   position: relative;
-  gap: 16px; /* 필터 요소들 사이 간격 */
+  gap: 16px;
 }
 
 /* 검색바와 상태 필터 섹션 스타일 */
@@ -103,4 +34,15 @@
   margin-left: auto;
   width: fit-content;
   flex-shrink: 0; /* 크기 축소 방지 */
+}
+
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
 }

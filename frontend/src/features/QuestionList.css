@@ -1,16 +1,18 @@
 /* QuestionList.css */
 /* 질문 목록 컨테이너 */
 .question-list {
-  max-width: 1200px;
+  width: 100%;
   margin: 24px auto;
+  box-sizing: border-box;
 }
 
 /* === 테이블 기본 스타일 === */
 table {
   width: 100%;
+  box-sizing: border-box;
   border-collapse: collapse;
   background-color: white;
-  table-layout: fixed; /* 테이블 열 너비 고정 */
+  table-layout: fixed;
 }
 
 /* 테이블 헤더 스타일 */
@@ -74,7 +76,7 @@ th {
   text-align: center;
 }
 
-/* === 질문 제목 스타일 === */
+/* === 질문 내용 스타일 === */
 .question-content {
   display: flex;
   align-items: center;
@@ -85,7 +87,7 @@ th {
   justify-content: flex-start; /* 왼쪽 정렬 추가 */
 }
 
-/* 질문 제목 텍스트 말줄임 처리 */
+/* 질문 내용용 텍스트 말줄임 처리 */
 .question-content span {
   white-space: nowrap;
   overflow: hidden;
@@ -151,7 +153,6 @@ input[type="checkbox"] {
   border-color: #4285f4;
 }
 
-/* === 페이지네이션 스타일 === */
 /* === 페이지네이션 스타일 === */
 .pagination {
   display: flex;
