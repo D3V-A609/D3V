@@ -2,6 +2,14 @@
 import React from "react";
 import "./JobSkillFilter.css";
 
+/**
+ * JobSkillFilter 컴포넌트의 props 인터페이스
+ * @param jobFilter 선택된 직무 필터 배열
+ * @param skillFilter 선택된 기술 필터 배열
+ * @param jobCategories 직무 카테고리 목록
+ * @param onJobFilterChange 직무 필터 변경 콜백
+ * @param onSkillFilterChange 기술 필터 변경 콜백
+ */
 interface JobSkillFilterProps {
   jobFilter: string[];
   skillFilter: string[];
@@ -10,6 +18,9 @@ interface JobSkillFilterProps {
   onSkillFilterChange: (skills: string[]) => void;
 }
 
+/**
+ * 직무와 기술 필터링을 위한 컴포넌트
+ */
 const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
   jobFilter,
   skillFilter,
@@ -17,6 +28,10 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
   onJobFilterChange,
   onSkillFilterChange,
 }) => {
+  /**
+   * 직무 선택/해제 핸들러
+   * @param jobName 선택/해제할 직무명
+   */
   const handleJobClick = (jobName: string) => {
     const newJobFilter = jobFilter.includes(jobName)
       ? jobFilter.filter((job) => job !== jobName)
@@ -24,7 +39,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
 
     onJobFilterChange(newJobFilter);
 
-    // 직무가 선택 해제되면 해당 직무의 스킬도 선택 해제
+    // 직무가 선택 해제되면 해당 직무의 기술도 선택 해제
     if (jobFilter.includes(jobName)) {
       const jobCategory = jobCategories.find((c) => c.name === jobName);
       const skillsToRemove = jobCategory?.skills || [];
@@ -34,6 +49,10 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
     }
   };
 
+  /**
+   * 기술 선택/해제 핸들러
+   * @param skillName 선택/해제할 기술명
+   */
   const handleSkillClick = (skillName: string) => {
     const newSkillFilter = skillFilter.includes(skillName)
       ? skillFilter.filter((skill) => skill !== skillName)
@@ -41,11 +60,18 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
     onSkillFilterChange(newSkillFilter);
   };
 
+  /**
+   * 필터 초기화 핸들러
+   */
   const handleReset = () => {
     onJobFilterChange([]);
     onSkillFilterChange([]);
   };
 
+  /**
+   * 선택된 직무에 해당하는 기술 목록 생성
+   * useMemo를 사용하여 성능 최적화
+   */
   const availableSkills = React.useMemo(() => {
     const skills = new Set<string>();
     jobFilter.forEach((job) => {
@@ -55,9 +81,9 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
     return Array.from(skills);
   }, [jobFilter, jobCategories]);
 
-  // components/QuestionFilter/JobSkillFilter.tsx
   return (
     <div className="filter-container">
+      {/* 직무 선택 섹션 */}
       <div className="filter-section">
         <div className="filter-buttons">
           {jobCategories.map((job) => (
@@ -74,6 +100,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
         </div>
       </div>
   
+      {/* 기술 선택 섹션 - 직무가 선택된 경우에만 표시 */}
       {jobFilter.length > 0 && (
         <div className="filter-section has-selected-job">
           <h3 className="skill-section-title">기술 선택란</h3>
@@ -93,6 +120,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
         </div>
       )}
       
+      {/* 필터 초기화 버튼 - 필터가 선택된 경우에만 표시 */}
       {(jobFilter.length > 0 || skillFilter.length > 0) && (
         <div className="filter-footer">
           <button className="reset-button" onClick={handleReset}>

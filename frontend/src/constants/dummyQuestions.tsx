@@ -2,7 +2,7 @@ const dummyQuestions = [
     {
       id: 1,
       status: "solved",
-      title: "React의 Virtual DOM 동작 원리",
+      questionContent: "React의 Virtual DOM 동작 원리",
       challengeCount: 1,
       answerCount: 7,
       jobCategory: ["Frontend"],
@@ -11,7 +11,7 @@ const dummyQuestions = [
     {
       id: 2,
       status: "unsolved",
-      title: "JavaScript 이벤트 루프와 비동기 처리",
+      questionContent: "JavaScript 이벤트 루프와 비동기 처리",
       challengeCount: 2,
       answerCount: 1,
       jobCategory: ["Frontend"],
@@ -20,7 +20,7 @@ const dummyQuestions = [
     {
       id: 3,
       status: "unsolved",
-      title: "Spring Security 인증 구현 방법",
+      questionContent: "Spring Security 인증 구현 방법",
       challengeCount: 3,
       answerCount: 2,
       jobCategory: ["Backend"],
@@ -29,7 +29,7 @@ const dummyQuestions = [
     {
       id: 4,
       status: "solved",
-      title: "TypeScript 제네릭 활용법",
+      questionContent: "TypeScript 제네릭 활용법",
       challengeCount: 4,
       answerCount: 0,
       jobCategory: ["Frontend"],
@@ -38,7 +38,7 @@ const dummyQuestions = [
     {
       id: 5,
       status: "unsolved",
-      title: "Docker 컨테이너 네트워킹",
+      questionContent: "Docker 컨테이너 네트워킹",
       challengeCount: 5,
       answerCount: 1,
       jobCategory: ["DevOps"],
@@ -47,7 +47,7 @@ const dummyQuestions = [
     {
       id: 6,
       status: "solved",
-      title: "React Native 성능 최적화",
+      questionContent: "React Native 성능 최적화",
       challengeCount: 6,
       answerCount: 2,
       jobCategory: ["Mobile"],
@@ -56,7 +56,7 @@ const dummyQuestions = [
     {
       id: 7,
       status: "unsolved",
-      title: "Node.js 메모리 누수 디버깅",
+      questionContent: "Node.js 메모리 누수 디버깅",
       challengeCount: 7,
       answerCount: 3,
       jobCategory: ["Backend"],
@@ -65,7 +65,7 @@ const dummyQuestions = [
     {
       id: 8,
       status: "solved",
-      title: "Vue.js 상태 관리 패턴",
+      questionContent: "Vue.js 상태 관리 패턴",
       challengeCount: 2,
       answerCount: 0,
       jobCategory: ["Frontend"],
@@ -74,7 +74,7 @@ const dummyQuestions = [
     {
       id: 9,
       status: "unsolved",
-      title: "Kubernetes 파드 스케줄링",
+      questionContent: "Kubernetes 파드 스케줄링",
       challengeCount: 3,
       answerCount: 4,
       jobCategory: ["DevOps"],
@@ -83,7 +83,7 @@ const dummyQuestions = [
     {
       id: 10,
       status: "solved",
-      title: "Flutter 위젯 라이프사이클",
+      questionContent: "Flutter 위젯 라이프사이클",
       challengeCount: 5,
       answerCount: 5,
       jobCategory: ["Mobile"],
@@ -92,7 +92,7 @@ const dummyQuestions = [
     {
       id: 11,
       status: "unsolved",
-      title: "Django REST framework 인증",
+      questionContent: "Django REST framework 인증",
       challengeCount: 1,
       answerCount: 0,
       jobCategory: ["Backend"],
@@ -101,7 +101,7 @@ const dummyQuestions = [
     {
       id: 12,
       status: "solved",
-      title: "Angular 의존성 주입",
+      questionContent: "Angular 의존성 주입",
       challengeCount: 3,
       answerCount: 3,
       jobCategory: ["Frontend"],
@@ -110,7 +110,7 @@ const dummyQuestions = [
     {
       id: 13,
       status: "unsolved",
-      title: "iOS 앱 배포 프로세스",
+      questionContent: "iOS 앱 배포 프로세스",
       challengeCount: 2,
       answerCount: 1,
       jobCategory: ["Mobile"],
@@ -119,7 +119,7 @@ const dummyQuestions = [
     {
       id: 14,
       status: "solved",
-      title: "AWS Lambda 함수 최적화",
+      questionContent: "AWS Lambda 함수 최적화",
       challengeCount: 6,
       answerCount: 1,
       jobCategory: ["DevOps"],
@@ -128,7 +128,7 @@ const dummyQuestions = [
     {
       id: 15,
       status: "unsolved",
-      title: "Spring Boot JPA 성능 튜닝",
+      questionContent: "Spring Boot JPA 성능 튜닝",
       challengeCount: 4,
       answerCount: 4,
       jobCategory: ["Backend"],
@@ -137,7 +137,7 @@ const dummyQuestions = [
     {
       id: 16,
       status: "solved",
-      title: "React Query 캐시 전략",
+      questionContent: "React Query 캐시 전략",
       challengeCount: 5,
       answerCount: 0,
       jobCategory: ["Frontend"],
@@ -146,7 +146,7 @@ const dummyQuestions = [
     {
       id: 17,
       status: "unsolved",
-      title: "Jenkins 파이프라인 구축",
+      questionContent: "Jenkins 파이프라인 구축",
       challengeCount: 2,
       answerCount: 2,
       jobCategory: ["DevOps"],
@@ -155,7 +155,7 @@ const dummyQuestions = [
     {
       id: 18,
       status: "solved",
-      title: "Android 백그라운드 처리",
+      questionContent: "Android 백그라운드 처리",
       challengeCount: 1,
       answerCount: 6,
       jobCategory: ["Mobile"],
@@ -164,7 +164,7 @@ const dummyQuestions = [
     {
       id: 19,
       status: "unsolved",
-      title: "TypeScript 타입 추론",
+      questionContent: "TypeScript 타입 추론",
       challengeCount: 3,
       answerCount: 1,
       jobCategory: ["Frontend"],
@@ -173,7 +173,7 @@ const dummyQuestions = [
     {
       id: 20,
       status: "solved",
-      title: "Python FastAPI 비동기 처리",
+      questionContent: "Python FastAPI 비동기 처리",
       challengeCount: 4,
       answerCount: 2,
       jobCategory: ["Backend"],
@@ -182,7 +182,7 @@ const dummyQuestions = [
     {
       id: 21,
       status: "unsolved",
-      title: "Docker Compose 구성",
+      questionContent: "Docker Compose 구성",
       challengeCount: 1,
       answerCount: 5,
       jobCategory: ["DevOps"],
@@ -191,7 +191,7 @@ const dummyQuestions = [
     {
       id: 22,
       status: "solved",
-      title: "React Native 네비게이션",
+      questionContent: "React Native 네비게이션",
       challengeCount: 7,
       answerCount: 4,
       jobCategory: ["Mobile"],
@@ -200,7 +200,7 @@ const dummyQuestions = [
     {
       id: 23,
       status: "unsolved",
-      title: "Node.js 마이크로서비스",
+      questionContent: "Node.js 마이크로서비스",
       challengeCount: 2,
       answerCount: 3,
       jobCategory: ["Backend"],
@@ -209,7 +209,7 @@ const dummyQuestions = [
     {
       id: 24,
       status: "solved",
-      title: "Vue.js 컴포지션 API",
+      questionContent: "Vue.js 컴포지션 API",
       challengeCount: 6,
       answerCount: 0,
       jobCategory: ["Frontend"],
@@ -218,7 +218,7 @@ const dummyQuestions = [
     {
       id: 25,
       status: "unsolved",
-      title: "AWS ECS 클러스터 관리",
+      questionContent: "AWS ECS 클러스터 관리",
       challengeCount: 5,
       answerCount: 2,
       jobCategory: ["DevOps"],
@@ -227,7 +227,7 @@ const dummyQuestions = [
     {
       id: 26,
       status: "solved",
-      title: "Flutter 상태 관리",
+      questionContent: "Flutter 상태 관리",
       challengeCount: 1,
       answerCount: 0,
       jobCategory: ["Mobile"],
@@ -236,7 +236,7 @@ const dummyQuestions = [
     {
       id: 27,
       status: "unsolved",
-      title: "Spring WebFlux 리액티브",
+      questionContent: "Spring WebFlux 리액티브",
       challengeCount: 3,
       answerCount: 1,
       jobCategory: ["Backend"],
@@ -245,7 +245,7 @@ const dummyQuestions = [
     {
       id: 28,
       status: "solved",
-      title: "Angular 변화 감지",
+      questionContent: "Angular 변화 감지",
       challengeCount: 2,
       answerCount: 2,
       jobCategory: ["Frontend"],
@@ -254,7 +254,7 @@ const dummyQuestions = [
     {
       id: 29,
       status: "unsolved",
-      title: "iOS 푸시 알림 구현",
+      questionContent: "iOS 푸시 알림 구현",
       challengeCount: 4,
       answerCount: 0,
       jobCategory: ["Mobile"],
@@ -263,7 +263,7 @@ const dummyQuestions = [
     {
       id: 30,
       status: "solved",
-      title: "Kubernetes 볼륨 관리",
+      questionContent: "Kubernetes 볼륨 관리",
       challengeCount: 6,
       answerCount: 3,
       jobCategory: ["DevOps"],
@@ -272,7 +272,7 @@ const dummyQuestions = [
     {
       id: 31,
       status: "solved",
-      title: "Django 캐시 전략",
+      questionContent: "Django 캐시 전략",
       challengeCount: 6,
       answerCount: 3,
       jobCategory: ["Backend"],
@@ -281,7 +281,7 @@ const dummyQuestions = [
     {
       id: 32,
       status: "unsolved",
-      title: "Python과 R을 활용한 데이터 분석 기법 비교",
+      questionContent: "Python과 R을 활용한 데이터 분석 기법 비교",
       challengeCount: 2,
       answerCount: 1,
       jobCategory: ["Backend", "Data Science"],
@@ -290,7 +290,7 @@ const dummyQuestions = [
     {
       id: 33,
       status: "solved",
-      title: "Terraform을 활용한 클라우드 인프라 코드 관리",
+      questionContent: "Terraform을 활용한 클라우드 인프라 코드 관리",
       challengeCount: 3,
       answerCount: 2,
       jobCategory: ["DevOps"],
@@ -299,7 +299,7 @@ const dummyQuestions = [
     {
       id: 34,
       status: "unsolved",
-      title: "React와 Vue.js의 상태 관리 비교",
+      questionContent: "React와 Vue.js의 상태 관리 비교",
       challengeCount: 5,
       answerCount: 0,
       jobCategory: ["Frontend"],
@@ -308,7 +308,7 @@ const dummyQuestions = [
     {
       id: 35,
       status: "solved",
-      title: "Java로 대용량 트랜잭션 처리 구현",
+      questionContent: "Java로 대용량 트랜잭션 처리 구현",
       challengeCount: 4,
       answerCount: 4,
       jobCategory: ["Backend"],
@@ -317,7 +317,7 @@ const dummyQuestions = [
     {
       id: 36,
       status: "unsolved",
-      title: "Docker Swarm과 Kubernetes 비교",
+      questionContent: "Docker Swarm과 Kubernetes 비교",
       challengeCount: 6,
       answerCount: 1,
       jobCategory: ["DevOps"],
@@ -326,7 +326,7 @@ const dummyQuestions = [
     {
       id: 37,
       status: "solved",
-      title: "iOS와 Android에서 푸시 알림 동작 비교",
+      questionContent: "iOS와 Android에서 푸시 알림 동작 비교",
       challengeCount: 2,
       answerCount: 3,
       jobCategory: ["Mobile"],
@@ -335,7 +335,7 @@ const dummyQuestions = [
     {
       id: 38,
       status: "unsolved",
-      title: "Django ORM 최적화 전략",
+      questionContent: "Django ORM 최적화 전략",
       challengeCount: 3,
       answerCount: 2,
       jobCategory: ["Backend", "Data Science"],
@@ -344,7 +344,7 @@ const dummyQuestions = [
     {
       id: 39,
       status: "solved",
-      title: "Angular와 React의 성능 최적화 전략",
+      questionContent: "Angular와 React의 성능 최적화 전략",
       challengeCount: 7,
       answerCount: 2,
       jobCategory: ["Frontend"],
@@ -353,7 +353,7 @@ const dummyQuestions = [
     {
       id: 40,
       status: "unsolved",
-      title: "Azure와 AWS 클라우드 비교",
+      questionContent: "Azure와 AWS 클라우드 비교",
       challengeCount: 5,
       answerCount: 0,
       jobCategory: ["DevOps"],
@@ -362,7 +362,7 @@ const dummyQuestions = [
     {
       id: 41,
       status: "solved",
-      title: "Flutter로 멀티플랫폼 앱 개발",
+      questionContent: "Flutter로 멀티플랫폼 앱 개발",
       challengeCount: 6,
       answerCount: 5,
       jobCategory: ["Mobile"],
@@ -371,7 +371,7 @@ const dummyQuestions = [
     {
       id: 42,
       status: "unsolved",
-      title: "Kafka를 활용한 실시간 데이터 처리",
+      questionContent: "Kafka를 활용한 실시간 데이터 처리",
       challengeCount: 4,
       answerCount: 2,
       jobCategory: ["Database", "Backend"],
@@ -380,7 +380,7 @@ const dummyQuestions = [
     {
       id: 43,
       status: "solved",
-      title: "CI/CD 파이프라인 구축 사례",
+      questionContent: "CI/CD 파이프라인 구축 사례",
       challengeCount: 5,
       answerCount: 4,
       jobCategory: ["DevOps", "Backend"],
@@ -389,7 +389,7 @@ const dummyQuestions = [
     {
       id: 44,
       status: "unsolved",
-      title: "머신러닝 모델 성능 개선을 위한 하이퍼파라미터 튜닝",
+      questionContent: "머신러닝 모델 성능 개선을 위한 하이퍼파라미터 튜닝",
       challengeCount: 8,
       answerCount: 3,
       jobCategory: ["Data Science", "Machine Learning"],
@@ -398,7 +398,7 @@ const dummyQuestions = [
     {
       id: 45,
       status: "solved",
-      title: "TypeScript로 대규모 프로젝트 관리",
+      questionContent: "TypeScript로 대규모 프로젝트 관리",
       challengeCount: 6,
       answerCount: 4,
       jobCategory: ["Frontend"],
@@ -407,7 +407,7 @@ const dummyQuestions = [
     {
       id: 46,
       status: "unsolved",
-      title: "Kotlin을 사용한 Android 앱 최적화",
+      questionContent: "Kotlin을 사용한 Android 앱 최적화",
       challengeCount: 3,
       answerCount: 1,
       jobCategory: ["Mobile"],
@@ -416,7 +416,7 @@ const dummyQuestions = [
     {
       id: 47,
       status: "solved",
-      title: "Redis를 활용한 캐싱 전략",
+      questionContent: "Redis를 활용한 캐싱 전략",
       challengeCount: 4,
       answerCount: 3,
       jobCategory: ["Backend", "Database"],
@@ -425,7 +425,7 @@ const dummyQuestions = [
     {
       id: 48,
       status: "unsolved",
-      title: "PostgreSQL과 MySQL의 성능 비교",
+      questionContent: "PostgreSQL과 MySQL의 성능 비교",
       challengeCount: 5,
       answerCount: 2,
       jobCategory: ["Database", "Backend"],
@@ -434,7 +434,7 @@ const dummyQuestions = [
     {
       id: 49,
       status: "solved",
-      title: "Vue.js와 Nuxt.js를 활용한 SSR 구현",
+      questionContent: "Vue.js와 Nuxt.js를 활용한 SSR 구현",
       challengeCount: 6,
       answerCount: 5,
       jobCategory: ["Frontend"],
@@ -443,7 +443,7 @@ const dummyQuestions = [
     {
       id: 50,
       status: "unsolved",
-      title: "Elasticsearch를 활용한 로그 분석",
+      questionContent: "Elasticsearch를 활용한 로그 분석",
       challengeCount: 3,
       answerCount: 1,
       jobCategory: ["Database", "DevOps"],
@@ -452,7 +452,7 @@ const dummyQuestions = [
     {
       id: 51,
       status: "solved",
-      title: "GraphQL API 설계 패턴",
+      questionContent: "GraphQL API 설계 패턴",
       challengeCount: 4,
       answerCount: 2,
       jobCategory: ["Backend", "Frontend"],
@@ -461,7 +461,7 @@ const dummyQuestions = [
     {
       id: 52,
       status: "unsolved",
-      title: "WebAssembly 성능 최적화",
+      questionContent: "WebAssembly 성능 최적화",
       challengeCount: 5,
       answerCount: 3,
       jobCategory: ["Frontend"],
@@ -470,7 +470,7 @@ const dummyQuestions = [
     {
       id: 53,
       status: "solved",
-      title: "Unity 3D 게임 최적화",
+      questionContent: "Unity 3D 게임 최적화",
       challengeCount: 7,
       answerCount: 4,
       jobCategory: ["Game Development"],
@@ -479,7 +479,7 @@ const dummyQuestions = [
     {
       id: 54,
       status: "unsolved",
-      title: "IoT 디바이스 보안",
+      questionContent: "IoT 디바이스 보안",
       challengeCount: 3,
       answerCount: 1,
       jobCategory: ["Embedded", "Cyber Security"],
@@ -488,7 +488,7 @@ const dummyQuestions = [
     {
       id: 55,
       status: "solved",
-      title: "스마트 컨트랙트 개발과 테스팅",
+      questionContent: "스마트 컨트랙트 개발과 테스팅",
       challengeCount: 4,
       answerCount: 2,
       jobCategory: ["Blockchain"],
@@ -497,7 +497,7 @@ const dummyQuestions = [
     {
       id: 56,
       status: "unsolved",
-      title: "마이크로프론트엔드 아키텍처",
+      questionContent: "마이크로프론트엔드 아키텍처",
       challengeCount: 6,
       answerCount: 3,
       jobCategory: ["Frontend"],
@@ -506,7 +506,7 @@ const dummyQuestions = [
     {
       id: 57,
       status: "solved",
-      title: "자연어 처리를 위한 BERT 모델 활용",
+      questionContent: "자연어 처리를 위한 BERT 모델 활용",
       challengeCount: 5,
       answerCount: 2,
       jobCategory: ["Machine Learning"],
@@ -515,7 +515,7 @@ const dummyQuestions = [
     {
       id: 58,
       status: "unsolved",
-      title: "모바일 앱 자동화 테스트",
+      questionContent: "모바일 앱 자동화 테스트",
       challengeCount: 4,
       answerCount: 1,
       jobCategory: ["Mobile", "Testing"],
@@ -524,7 +524,7 @@ const dummyQuestions = [
     {
       id: 59,
       status: "solved",
-      title: "서버리스 아키텍처 구현",
+      questionContent: "서버리스 아키텍처 구현",
       challengeCount: 3,
       answerCount: 4,
       jobCategory: ["Backend", "DevOps"],
@@ -533,7 +533,7 @@ const dummyQuestions = [
     {
       id: 60,
       status: "unsolved",
-      title: "실시간 데이터 시각화",
+      questionContent: "실시간 데이터 시각화",
       challengeCount: 5,
       answerCount: 2,
       jobCategory: ["Frontend", "Data Science"],
@@ -542,7 +542,7 @@ const dummyQuestions = [
     {
       id: 61,
       status: "solved",
-      title: "임베디드 리눅스 커널 최적화",
+      questionContent: "임베디드 리눅스 커널 최적화",
       challengeCount: 6,
       answerCount: 3,
       jobCategory: ["Embedded"],
@@ -551,7 +551,7 @@ const dummyQuestions = [
     {
       id: 62,
       status: "unsolved",
-      title: "풀스택 JAMstack 웹 개발",
+      questionContent: "풀스택 JAMstack 웹 개발",
       challengeCount: 4,
       answerCount: 1,
       jobCategory: ["Fullstack"],
