@@ -28,6 +28,26 @@ const dummyUsers: User[] = [
     provider_type: "LOCAL",
     status: "ACTIVE",
     jobField: "Back-end"
-  }
+  },
+  {
+    memberId: 4,
+    nickname: "나혜원",
+    email: "user4@example.com",
+    maxStreak: 11,
+    ongoingStreak: 5,
+    provider_type: "LOCAL",
+    status: "ACTIVE",
+    jobField: "Front-end"
+  },
+  {
+    memberId: 5,
+    nickname: "임유진",
+    email: "user5@example.com",
+    maxStreak: 7,
+    ongoingStreak: 5,
+    provider_type: "LOCAL",
+    status: "ACTIVE",
+    jobField: "Back-end"
+  },
 ];
 export default dummyUsers;

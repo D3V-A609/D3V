@@ -7,7 +7,7 @@ const dummyOtherAnswers: Answer[] = [
     createdAt: "2024-01-28",
     accessLevel: "PUBLIC",
     answerLike: 3,
-    commentCount: 1
+    commentCount: 3  // answerId: 2인 댓글이 3개 있음
   },
   {
     questionId: 1,
@@ -17,7 +17,7 @@ const dummyOtherAnswers: Answer[] = [
     createdAt: "2024-01-24",
     accessLevel: "PUBLIC",
     answerLike: 2,
-    commentCount: 9
+    commentCount: 2  // answerId: 3인 댓글이 2개 있음
   }
 ];
 export default dummyOtherAnswers;

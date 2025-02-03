@@ -2,11 +2,15 @@ import React from 'react';
 import BestAnswer from './BestAnswer';
 import MyAnswerRecords from './MyAnswerRecords';
 
-const AfterAnswerComp:React.FC = () => {
+interface BestAnswerProps {
+  bestAnswer: BestAnswer;
+}
+
+const AnswerToggleSection:React.FC<BestAnswerProps> = ({bestAnswer}) => {
   return(<div>
-    <BestAnswer />
+    <BestAnswer bestAnswer={bestAnswer} />
     <MyAnswerRecords />
   </div>);
 }
 
-export default AfterAnswerComp;
+export default AnswerToggleSection;

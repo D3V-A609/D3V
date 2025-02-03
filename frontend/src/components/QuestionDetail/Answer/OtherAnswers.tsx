@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import AnswerItem from './AnswerItem';
 import "./OtherAnswers.css";
+import PageHeader from '../../PageHeader/PageHeader';
+import { FcBinoculars } from "react-icons/fc";
 
 interface OtherAnswersProps {
   answers: Answer[];
@@ -40,11 +42,14 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
   return (
     <div className="other-answers-container">
       <div className="other-answers-header">
-        <div className="title">
+        {/* <div className="title">
           <span className="text-brackets">{"{"}</span>
           다른 사람들의 답변 보기
           <span className="text-brackets">{"}"}</span>
-        </div>
+        </div> */}
+        <PageHeader
+        title='다른 사람들의 답변 보기' description='다양한 면접 답변과 의견을 한 눈에 보며 인사이트를 얻어보세요.' 
+        icon={ <FcBinoculars /> }/>
         <select 
           className="sort-select"
           value={sortType}
@@ -54,9 +59,6 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
           <option value="comments">댓글순</option>
           <option value="likes">추천순</option>
         </select>
-      </div>
-      <div className="answer-description">
-        다양한 면접 답변과 의견을 한눈에 보며 인사이트를 얻어보세요.
       </div>
       <div className="answers-list">
         {currentAnswers.map((answer) => (

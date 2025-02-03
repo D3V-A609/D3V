@@ -1,6 +1,8 @@
 .answer-item {
-  padding: 24px 0;
+  width: 100%;
+  padding: 12px 0;
   border-bottom: 1px solid #E5E5E5;
+  text-align: left;
 }
 
 .profile {
@@ -55,7 +57,7 @@
 }
 
 .answer-content {
-  margin: 16px 0;
+  margin: 10px 0;
   font-size: 16px;
   line-height: 1.6;
   color: #333;
