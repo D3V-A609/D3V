@@ -1,30 +1,33 @@
 /* QuestionList.css */
+/* 질문 목록 컨테이너 */
 .question-list {
-  padding: 20px;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 24px auto;
 }
 
-/* Table Styles */
+/* === 테이블 기본 스타일 === */
 table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
-  table-layout: fixed;
+  table-layout: fixed; /* 테이블 열 너비 고정 */
 }
 
+/* 테이블 헤더 스타일 */
 thead tr {
   background-color: #d9e6f0;
   border-top: 1px solid #e5e5e5;
   border-bottom: 1px solid #e5e5e5;
 }
 
+/* 테이블 셀 공통 스타일 */
 th,
 td {
   border-bottom: 1px solid #e5e5e5;
   vertical-align: middle;
 }
 
+/* 테이블 데이터 셀 스타일 */
 td {
   color: #333;
   font-size: 14px;
@@ -34,18 +37,21 @@ td {
   vertical-align: middle;
 }
 
-/* Column Widths */
+/* === 열 너비 설정 === */
+/* 체크박스 열 */
 th:first-child,
 td:first-child {
   width: 48px;
   padding: 8px 12px;
 }
 
+/* 질문 제목 열 */
 th:nth-child(2),
 td:nth-child(2) {
   width: auto;
 }
 
+/* 도전 수와 답변 수 열 */
 th:nth-child(3),
 td:nth-child(3),
 th:nth-child(4),
@@ -53,7 +59,8 @@ td:nth-child(4) {
   width: 100px;
 }
 
-/* Text Styles */
+/* === 텍스트 스타일 === */
+/* 테이블 헤더 텍스트 */
 th {
   color: #666;
   font-weight: 700;
@@ -62,20 +69,33 @@ th {
   padding: 8px 16px;
 }
 
+/* 중앙 정렬 클래스 */
 .center {
   text-align: center;
 }
 
-/* Question Title */
-.question-title {
+/* === 질문 제목 스타일 === */
+.question-content {
   display: flex;
   align-items: center;
   min-height: 40px;
   padding-right: 16px;
   line-height: 1.4;
+  width: 100%;
+  justify-content: flex-start; /* 왼쪽 정렬 추가 */
 }
 
-/* Tech Icons */
+/* 질문 제목 텍스트 말줄임 처리 */
+.question-content span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: left; /* 텍스트 왼쪽 정렬 추가 */
+}
+
+
+/* === 기술 아이콘 스타일 === */
 .tech-icons {
   display: flex;
   align-items: center;
@@ -87,10 +107,10 @@ th {
 .tech-icon {
   width: 16px;
   height: 16px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* 아이콘 크기 고정 */
 }
 
-/* Checkbox Style */
+/* === 체크박스 스타일 === */
 input[type="checkbox"] {
   width: 16px;
   height: 16px;
@@ -99,7 +119,7 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
-/* Bookmark Button */
+/* === 북마크 버튼 스타일 === */
 .selected-actions {
   margin: 16px 0;
   display: flex;
@@ -120,43 +140,80 @@ input[type="checkbox"] {
   transition: all 0.2s ease;
 }
 
+/* 북마크 아이콘 색상 */
 .bookmark-button svg {
   color: #4285f4;
 }
 
+/* 북마크 버튼 호버 효과 */
 .bookmark-button:hover {
   background-color: #f8f9fa;
   border-color: #4285f4;
 }
 
-/* Pagination */
+/* === 페이지네이션 스타일 === */
+/* === 페이지네이션 스타일 === */
 .pagination {
   display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 20px;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 8px; /* 버튼 사이 간격 */
+  margin-top: 24px;
 }
 
+/* 페이지네이션 버튼 공통 스타일 */
 .pagination button {
-  padding: 8px 12px;
-  border: 1px solid #e5e5e5;
-  background-color: white;
+  min-width: 32px; /* 버튼 최소 너비 */
+  height: 32px; /* 버튼 높이 */
+  padding: 0;
+  border: none;
+  background-color: transparent;
   color: #666;
-  cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease; /* 부드러운 상태 변화 효과 */
 }
 
+/* 활성화된 페이지 버튼 스타일 */
+.pagination button.active {
+  background-color: #666;
+  color: white;
+  border-radius: 4px;
+}
+
+/* 비활성화된 버튼 스타일 (이전/다음 버튼이 비활성화될 때) */
 .pagination button:disabled {
-  background-color: #f8f9fa;
+  color: #ccc;
   cursor: not-allowed;
 }
 
-.pagination button:hover:not(:disabled) {
-  background-color: #f8f9fa;
+/* 호버 효과 (활성화되지 않은 버튼에만 적용) */
+.pagination button:not(.active):not(:disabled):hover {
+  background-color: #f5f5f5;
+  border-radius: 4px;
 }
 
-/* Hover Effect */
+/* 말줄임표(...) 스타일 */
+.pagination .ellipsis {
+  color: #666;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* 이전/다음 화살표 버튼 스타일 */
+.pagination .arrow-button {
+  font-weight: bold;
+}
+
+
+/* === 행 호버 효과 === */
 tbody tr:hover {
   background-color: #f8f9fa;
 }

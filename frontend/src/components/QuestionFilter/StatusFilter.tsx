@@ -2,11 +2,20 @@
 import React from "react";
 import "./StatusFilter.css";
 
+/**
+ * StatusFilter 컴포넌트의 props 인터페이스
+ * @param statusFilter 현재 선택된 필터 상태
+ * @param onStatusFilterChange 필터 변경 시 호출될 콜백 함수
+ */
 interface StatusFilterProps {
   statusFilter: "all" | "solved" | "unsolved";
   onStatusFilterChange: (status: "all" | "solved" | "unsolved") => void;
 }
 
+/**
+ * 문제 상태 필터 컴포넌트
+ * 전체/푼 문제/안 푼 문제를 필터링하는 기능 제공
+ */
 const StatusFilter: React.FC<StatusFilterProps> = ({
   statusFilter,
   onStatusFilterChange,
