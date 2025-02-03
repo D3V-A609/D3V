@@ -25,7 +25,6 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(
         name = "served_question",
         uniqueConstraints = {

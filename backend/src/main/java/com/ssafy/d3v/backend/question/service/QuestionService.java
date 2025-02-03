@@ -38,6 +38,7 @@ public class QuestionService {
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
 
+    @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
         Member member = memberRepository.findById(memberId)
