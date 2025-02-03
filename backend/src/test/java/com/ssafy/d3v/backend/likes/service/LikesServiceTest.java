@@ -13,7 +13,6 @@ import com.ssafy.d3v.backend.like.dto.LikesRequest;
 import com.ssafy.d3v.backend.like.entity.Likes;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.like.service.LikesServiceImpl;
-import com.ssafy.d3v.backend.member.MemberRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.question.entity.Question;
 import java.time.LocalDateTime;

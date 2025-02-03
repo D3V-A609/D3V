@@ -9,6 +9,7 @@ import com.ssafy.d3v.backend.common.message.SuccessMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 수정", description = "북마크 이름, 설명, 접근권한 수정")
     @PatchMapping("/{bookmarkId}")
     public ResponseEntity<?> update(
-            @PathVariable("bookmarkId") Long bookmarkId,
+            @PathVariable("bookmarkId") long bookmarkId,
             @RequestBody BookmarkCreateDto request
     ) {
         bookmarkService.update(bookmarkId, request);
@@ -53,7 +54,7 @@ public class BookmarkController {
 
     // 북마크 삭제
     @Operation(summary = "북마크 삭제", description = "북마크 id로 삭제")
-    @PatchMapping("/{bookmarkId}")
+    @DeleteMapping("/{bookmarkId}")
     public ResponseEntity<?> delete(@PathVariable("bookmarkId") Long bookmarkId) {
         bookmarkService.delete(bookmarkId);
         BaseResponse response = BaseResponse.builder()

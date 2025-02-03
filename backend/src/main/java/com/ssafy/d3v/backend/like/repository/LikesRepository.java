@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LikesRepository extends JpaRepository<Likes, Integer> {
-    Optional<Likes> findByAnswerIdAndMemberId(Answer answerId, Member memberId);
+public interface LikesRepository extends JpaRepository<Likes, Long> {
+    Optional<Likes> findByAnswerAndMember(Answer answerId, Member memberId);
 }

@@ -9,6 +9,8 @@ import com.ssafy.d3v.backend.bookmark.entity.BookmarkQuestion;
 import com.ssafy.d3v.backend.bookmark.repository.BookmarkQuestionRepository;
 import com.ssafy.d3v.backend.bookmark.repository.BookmarkRepository;
 import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import java.util.List;
@@ -19,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BookmarkServiceImpl implements BookmarkService {
-
+    private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkQuestionRepository bookmarkQuestionRepository;
     private final QuestionRepository questionRepository;
@@ -63,7 +65,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     public BookmarkDetailResponse get(Long id) {
         Bookmark bookmark = bookmarkRepository.findById(id)
                 .orElseThrow();
-        List<BookmarkQuestion> bookmarkQuestions = bookmarkQuestionRepository.findByBookmark_BookmarkId(id);
+
+        List<BookmarkQuestion> bookmarkQuestions = bookmarkQuestionRepository.findByBookmark(bookmark);
         List<QuestionInfo> questionInfoList = bookmarkQuestions.stream()
                 .map(bq -> {
                     Question question = bq.getQuestion();
@@ -86,7 +89,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     public BookmarkResponse getAll(Long memberId) {
         // TODO: 로그인 구현 후 ACCESS LEVEL 에 따른 필터 로직 구현
         memberId = 1L;
-        List<Bookmark> bookmarks = bookmarkRepository.findByMemberId(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다."));
+        List<Bookmark> bookmarks = bookmarkRepository.findByMember(member);
 
         // DTO 변환
         List<BookmarkResponse.BookmarkDto> bookmarkDtos = bookmarks.stream()
