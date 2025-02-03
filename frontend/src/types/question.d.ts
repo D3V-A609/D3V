@@ -1,5 +1,5 @@
 // types/question.d.ts
-declare interface Question {
+interface Question {
   id: number;
   status: "Solved" | "Unsolved";
   questionContent: string;
@@ -7,4 +7,4 @@ declare interface Question {
   answerCount: number;
   jobCategory: string[];
   skills: string[];
-};
+}
