@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chrono } from 'react-chrono';
-import dummyMyAnswerRecords from '../../../../constants/dummyMyAnswerRecords';
+import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 
 const MyAnswerRecords: React.FC = () => {
   // 오늘 날짜를 가져와 시간을 00:00:00으로 초기화 (날짜 비교를 위해 필요)
