@@ -2,7 +2,6 @@ package com.ssafy.d3v.backend.answer.controller;
 
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
-import com.ssafy.d3v.backend.answer.dto.LatestQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.service.AnswerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
