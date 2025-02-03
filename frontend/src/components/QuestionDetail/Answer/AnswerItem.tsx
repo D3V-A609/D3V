@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dummyUsers from '../../../constants/dummyUsers';
+import CommentModal from './CommentModal';
 import "./AnswerItem.css";
 
 interface AnswerItemProps {
@@ -7,6 +8,7 @@ interface AnswerItemProps {
 }
 
 const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = dummyUsers.find(user => user.memberId === answer.memberId);
 
   const formatDate = (dateString: string) => {
@@ -21,28 +23,37 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   if (!user) return null;
 
   return (
-    <div className="answer-item">
-      <div className="profile">
-        <div className="profile-avatar">D3V</div>
-        <div className="profile-info">
-          <div className="profile-role">
-            [<span className="role-name">{user.jobField}</span>] D3V
+    <>
+      <div className="answer-item">
+        <div className="profile">
+          <div className="profile-avatar">D3V</div>
+          <div className="profile-info">
+            <div className="profile-role">
+              [<span className="role-name">{user.jobField}</span>] D3V
+            </div>
+            <div className="profile-name">
+              <span className="name">{user.nickname}</span>
+              <span className="suffix">님</span>
+            </div>
           </div>
-          <div className="profile-name">
-            <span className="name">{user.nickname}</span>
-            <span className="suffix">님</span>
+        </div>
+        <div className="answer-content">{answer.answer}</div>
+        <div className="answer-footer">
+          <div className="answer-date">{formatDate(answer.createdAt)}</div>
+          <div className="answer-buttons">
+            <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
+              댓글 보기 ({answer.commentCount})
+            </button>
+            <button className="btn-like">추천하기 ({answer.answerLike})</button>
           </div>
         </div>
       </div>
-      <div className="answer-content">{answer.answer}</div>
-      <div className="answer-footer">
-        <div className="answer-date">{formatDate(answer.createdAt)}</div>
-        <div className="answer-buttons">
-          <button className="btn-comment">댓글 보기 ({answer.commentCount})</button>
-          <button className="btn-like">추천하기 ({answer.answerLike})</button>
-        </div>
-      </div>
-    </div>
+      <CommentModal 
+        answer={answer}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 };
 
