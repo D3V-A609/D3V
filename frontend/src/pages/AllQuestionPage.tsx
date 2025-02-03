@@ -1,7 +1,7 @@
 // pages/AllQuestionPage.tsx
 import React, { useState } from "react";
 import PageHeader from "../components/PageHeader/PageHeader"
-import QuestionList from "../features/QuestionList";
+import QuestionList from "../features/QuestionList/QuestionList";
 import JobSkillFilter from "../components/QuestionFilter/JobSkillFilter";
 import StatusFilter from "../components/QuestionFilter/StatusFilter";
 import SearchBar from "../components/SearchBar/SearchBar";

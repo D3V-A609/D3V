@@ -1,6 +1,6 @@
 // features/QuestionList.tsx
 import React, { useState } from "react";
-import TechIcon from "../components/TechIcon/TechIcon";
+import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
 
