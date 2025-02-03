@@ -1,0 +1,54 @@
+/* Pages/BoardPage.css */
+/* 페이지 전체 레이아웃 */
+.board-page {
+  padding: 40px 40px;
+  max-width: 1200px; 
+  margin: 0 auto;
+}
+
+/* 섹션 간 간격 */
+.today-question-section,
+.board-section {
+  margin-bottom: 60px;
+}
+
+/* 질문 카드 컨테이너 레이아웃 */
+.question-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2em; 
+  margin-top: 24px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1280px) {
+  .question-cards {
+    gap: 1.5em;
+  }
+}
+
+@media (max-width: 1024px) {
+  .board-page {
+    padding: 40px 20px;
+  }
+  
+  .question-cards {
+    gap: 1em;
+  }
+
+  .today-question-section,
+  .board-section {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .board-page {
+    padding: 20px 16px;
+  }
+  
+  .question-cards {
+    gap: 1.5em;
+  }
+}

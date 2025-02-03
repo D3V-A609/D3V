@@ -1,20 +1,29 @@
-/* Pages/HomePage.css */
 .home-page {
-  padding: 40px 20px;
-  max-width: 1400px;
+  padding: 40px 40px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .question-cards {
   display: flex;
-  flex-wrap: wrap; /* 화면 크기가 작아지면 자동으로 줄바꿈 */
-  justify-content: center; /* 중앙 정렬 */
-  gap: 4em;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2em; /* 4em에서 2em으로 갭 축소 */
 }
 
-/* 반응형 디자인 */
-@media (max-width: 1024px) {
+/* 반응형 디자인 개선 */
+@media (max-width: 1280px) {
   .question-cards {
-    justify-content: center;
+    gap: 1.5em;
+  }
+}
+
+@media (max-width: 1024px) {
+  .home-page {
+    padding: 40px 20px;
+  }
+  
+  .question-cards {
+    gap: 1em;
   }
 }

@@ -6,8 +6,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 400px;
-    height: 400x;
+    width: 340px;
+    height: 300x;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -50,8 +50,8 @@
 }
 
 .card-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 500;
     line-height: 1.5;
     color: #333;
     overflow: hidden;
