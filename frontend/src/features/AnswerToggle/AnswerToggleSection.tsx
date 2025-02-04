@@ -3,13 +3,14 @@ import BestAnswer from './BestAnswer';
 import MyAnswerRecords from './MyAnswerRecords';
 
 interface BestAnswerProps {
-  bestAnswer: BestAnswer;
+  bestAnswer: string;
+  myAnswers: Answer[];
 }
 
-const AnswerToggleSection:React.FC<BestAnswerProps> = ({bestAnswer}) => {
+const AnswerToggleSection:React.FC<BestAnswerProps> = ({bestAnswer, myAnswers}) => {
   return(<div>
     <BestAnswer bestAnswer={bestAnswer} />
-    <MyAnswerRecords />
+    <MyAnswerRecords myAnswers={myAnswers} />
   </div>);
 }
 

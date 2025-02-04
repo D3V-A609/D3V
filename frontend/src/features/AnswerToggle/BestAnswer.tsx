@@ -3,7 +3,7 @@ import React from 'react';
 import ThugUpImg from "../../assets/images/Thumbs-Up.png";
 
 interface BestAnswerProps {
-  bestAnswer: BestAnswer;
+  bestAnswer: string;
 }
 
 const BestAnswer:React.FC<BestAnswerProps> = ({bestAnswer}) => {
@@ -16,7 +16,7 @@ const BestAnswer:React.FC<BestAnswerProps> = ({bestAnswer}) => {
           </div>
           <div className="best-answer-content">
             <div className="answer-label">A.</div>
-            <div className="answer-text">{bestAnswer.standardAnswer}</div>
+            <div className="answer-text">{bestAnswer}</div>
           </div>
         </div>
   </div>

@@ -11,6 +11,7 @@ import QuestionContentCard from '../components/QuestionDetail/Question/QuestionC
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
 import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
+import { fetchAllMyAnswersByQID } from '../store/slices/answerSlice';
 
 const QuestionDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,25 +25,24 @@ const QuestionDetailPage: React.FC = () => {
   const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
     state => state.questions
   );
+  const { myAnswerArr } = useAppSelector(
+    state => state.answers
+  );
+  console.log('questions:', questions)
 
   // 컴포넌트 마운트 시 질문 상세 데이터를 fetch
   useEffect(() => {
     if (selectedQuestionId !== null) {
-      dispatch(fetchQuestionById(selectedQuestionId));
-    }
-  }, [dispatch, selectedQuestionId]);  // selectedQuestionId가 변경될 때마다 실행
-
-  // 질문 상세 데이터 fetch 및 성공 여부 확인
-  useEffect(() => {
-    if (selectedQuestionId !== null) {
       dispatch(fetchQuestionById(selectedQuestionId))
-        .unwrap()
+      .unwrap()
         .catch(() => {
           alert("죄송합니다. 잠시 후 다시 시도해주세요.") // question 로드 실패 시 홈으로 리다이렉트  
           navigate('/')
-        });  // fetch 실패 시 리다이렉트
+        });  // fetch 실패 시 리다이렉트;
+      dispatch(fetchAllMyAnswersByQID(selectedQuestionId))
     }
-  }, [dispatch, selectedQuestionId, navigate]);
+  }, [dispatch, selectedQuestionId]);  // selectedQuestionId가 변경될 때마다 실행
+
   
   // 일일 질문인지 확인
   const isTodayQ = dailyQuestions.some(q => q.questionId === selectedQuestionId);
@@ -81,7 +81,7 @@ const QuestionDetailPage: React.FC = () => {
         onShowAnswerCommunity={handleShowCommunity} 
       />
 
-      {currentQuestionDetailView === "input" && <AnswerInput />}
+      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} />}
       {currentQuestionDetailView === "community" && <AnswerCommunityComp />}
       </>}
       
