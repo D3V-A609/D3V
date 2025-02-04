@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/question")
+@RequestMapping("/api")
 @Tag(name = "질문", description = "질문 관련 API")
 public class QuestionController {
 
@@ -37,7 +37,7 @@ public class QuestionController {
                     content = @Content(schema = @Schema(implementation = Question.class))),
             @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
     })
-    @GetMapping("/{question_id}")
+    @GetMapping("/question/{question_id}")
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
@@ -49,12 +49,11 @@ public class QuestionController {
                 .body(QuestionResponse.from(question, skills, jobs));
     }
 
-    // GET "/question?page=0&size=10"
-    @GetMapping
+    @GetMapping("/question")
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "15") int size) {
         Page<Question> questionsPage = questionService.getAllQuestions(page, size);
 
         Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
@@ -66,7 +65,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionResponsesPage);
     }
 
-    @GetMapping("/daily")
+    @GetMapping("/question/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
         List<Question> questions = questionService.getDailyQuestions();
