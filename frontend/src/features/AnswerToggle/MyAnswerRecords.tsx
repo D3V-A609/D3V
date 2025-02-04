@@ -1,18 +1,21 @@
 import React from 'react';
 import { Chrono } from 'react-chrono';
-import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
+// import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 import PageHeader from '../../components/PageHeader/PageHeader';
 
 import { FcCommandLine } from "react-icons/fc";
 
-const MyAnswerRecords: React.FC = () => {
+interface MyAnswerRecordsProps{
+  myAnswers: Answer[];
+}
+const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
   // 오늘 날짜를 가져와 시간을 00:00:00으로 초기화 (날짜 비교를 위해 필요)
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분 초기화
   let todayFlag = false; // 오늘 날짜가 첫 번째로 나타나는지 체크하는 플래그
 
   // 더미 데이터를 날짜 기준으로 내림차순 정렬하고, Chrono에 맞게 변환
-  const timelineItems = [...dummyMyAnswerRecords]
+  const timelineItems = [...myAnswers]
     .sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() // 최신 날짜가 위로 오도록 정렬
     )
@@ -45,7 +48,7 @@ const MyAnswerRecords: React.FC = () => {
       return {
         title: title, // "Today" 또는 빈 문자열
         cardTitle: formattedDate, // 포맷된 날짜
-        cardDetailedText: record.answer, // 답변 내용을 카드의 상세 내용으로 설정
+        cardDetailedText: record.content, // 답변 내용을 카드의 상세 내용으로 설정
       };
     });
 
