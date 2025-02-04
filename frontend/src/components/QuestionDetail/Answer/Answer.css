@@ -72,6 +72,11 @@
   line-height: 1.6;
   color: #333;
 }
+/* 답변 등록 시 공개 범위 설정 */
+.select-public-btn-container{
+  display: flex;
+  gap: 1em;
+}
 
 /* 정답 토글부분 */
 .toggle-open-title, .toggle-close-title{

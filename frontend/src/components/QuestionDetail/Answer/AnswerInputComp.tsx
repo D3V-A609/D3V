@@ -1,20 +1,31 @@
 import React, { useRef } from "react";
 
-import ToggleButton from "./ToggleSwitch";
-
 import { useState, useEffect } from 'react';
 
 import { CiMicrophoneOn } from "react-icons/ci";
 import TimerSetting from "./TimerSetting";
+import SelectPublicBtn from "../../../features/Answer/SelectPublicBtn";
 
 const AnswerInputComp: React.FC = () => {
 
   const [showTimerDropdown, setShowTimerDropdown] = useState(false); // 타이머 선택 드롭다운 상태
-  const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: 30초)
+  const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: null(타이머를 선택하지 않음))
   const [isRunning, setIsRunning] = useState(false); // 타이머 실행 여부
 
   const remainingTimeRef = useRef<number | null>(null); //useRef로 타이머 시간 상태 관리 (useEffect로 관리 시 클로서 문제 발생 -> 값이 변경되더라도 클로저에 저장된 이전 값이 사용되어 타이머 종료 알림이 중복 발생)
-  const [displayTime, setDisplayTime] = useState<number | null>(null); // 렌더링용 상태태
+  const [displayTime, setDisplayTime] = useState<number | null>(null); // 렌더링용 상태
+
+  const [selectedPublicOption, setPublicOption] = useState("PUBLIC"); // 답변 공개 범위 설정 상태(default: "PUBLIC(전체공개)" => "PUBLIC", "PRIVATE", "PROTECTED")
+  const [isIDK, setIsIDK] = useState(false); // 모르겠어요 체크박스 버튼 상태(default: 알고 있어요(모르겠어요X))
+  // 모르겠어요 버튼 변경 핸들러
+  const handleIDKBtnChange = () =>{
+    setIsIDK(!isIDK);
+  }
+
+  // 공개 범위 옵션 변경 핸들러
+  const handlePublicOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPublicOption(e.target.value);
+  };
 
   // timer 드롭다운 열기/닫기
   const handleDropdownToggle = () => setShowTimerDropdown(!showTimerDropdown); 
@@ -35,7 +46,7 @@ const AnswerInputComp: React.FC = () => {
     setDisplayTime(selectedTime);  // 타이머 초기화
   };
 
-  // 타이머 동작 관리
+  // 타이머 동작 관리(변경 필요)
   useEffect(() => {
     if (!isRunning || remainingTimeRef.current === null) return;
 
@@ -67,7 +78,7 @@ const AnswerInputComp: React.FC = () => {
       </div>
       <div className="anwer-input-container__input">
         <div className="answer-setting">
-          <ToggleButton />
+          <SelectPublicBtn selectedOption={selectedPublicOption} onChange={handlePublicOptionChange} />
           <TimerSetting
             showTimerDropdown={showTimerDropdown}
             selectedTime={selectedTime}
@@ -89,7 +100,16 @@ const AnswerInputComp: React.FC = () => {
             <div>음성으로 입력하기</div>
           </div>
           <div className="btn-answer-submit-group">
-             <div className="btn-IDK">모르겠어요</div>
+             {/* <div className="checkbox-IDK">모르겠어요</div> */}
+             <div className="checkbox-IDK">
+              <input
+                type="checkbox"
+                id="idk"
+                checked={isIDK}
+                onChange={handleIDKBtnChange}
+              />
+              <label htmlFor="idk">모르겠어요</label>
+            </div>
              <div className="btn-submit">저장하기</div>
           </div>
         </div>
