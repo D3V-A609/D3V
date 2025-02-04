@@ -1,10 +1,10 @@
-// src/store/index.ts
+// src/store/index.tsx
 import { configureStore } from '@reduxjs/toolkit';
+import dailyQuestionReducer from './slices/dailyQuestionSlice';
 
-// 
 export const store = configureStore({
   reducer: {
-    // 여기에 리듀서들이 추가될 예정
+    dailyQuestions: dailyQuestionReducer,
   },
 });
 

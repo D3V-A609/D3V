@@ -13,12 +13,14 @@
 .tech-icon.angular { color: #dd0031; }
 .tech-icon.typescript { color: #3178c6; }
 .tech-icon.sass { color: #cc6699; }
+.tech-icon.webassembly { color: #654ff0; }
+.tech-icon.next\.js { color: #000000; }
 
 /* Backend */
 .tech-icon.java { color: #007396; }
 .tech-icon.spring { color: #6db33f; }
-.tech-icon.spring-boot { color: #6db33f; }
-.tech-icon.nodejs { color: #339933; }
+.tech-icon.spring\.boot { color: #6db33f; }
+.tech-icon.node\.js { color: #339933; }
 .tech-icon.express { color: #000000; }
 .tech-icon.python { color: #3776ab; }
 .tech-icon.django { color: #092e20; }
@@ -29,7 +31,7 @@
 .tech-icon.swift { color: #fa7343; }
 .tech-icon.kotlin { color: #7f52ff; }
 .tech-icon.flutter { color: #02569b; }
-.tech-icon.react-native { color: #61dafb; }
+.tech-icon.react\.native { color: #61dafb; }
 .tech-icon.objective-c { color: #438eff; }
 
 /* Database */
@@ -44,7 +46,7 @@
 /* DevOps */
 .tech-icon.docker { color: #2496ed; }
 .tech-icon.kubernetes { color: #326ce5; }
-.tech-icon.aws { color: #232f3e; }
+.tech-icon.aws { color: #ff9900; }
 .tech-icon.azure { color: #0089d6; }
 .tech-icon.gcp { color: #4285f4; }
 .tech-icon.terraform { color: #7b42bc; }
@@ -62,15 +64,15 @@
 .tech-icon.spark { color: #e25a1c; }
 .tech-icon.keras { color: #d00000; }
 .tech-icon.opencv { color: #5c3ee8; }
-.tech-icon.nltk { color: #3776ab; } /* Python 색상 사용 */
+.tech-icon.nltk { color: #3776ab; }
 .tech-icon.mllib { color: #e25a1c; }
 .tech-icon.r { color: #276dc3; }
 
 /* Game Development */
 .tech-icon.unity { color: #000000; }
-.tech-icon.unreal-engine { color: #313131; }
-.tech-icon.csharp { color: #239120; }
-.tech-icon.cpp { color: #00599c; }
+.tech-icon.unreal\.engine { color: #313131; }
+.tech-icon.c\# { color: #239120; }
+.tech-icon.c\+\+ { color: #00599c; }
 .tech-icon.godot { color: #478cbf; }
 .tech-icon.blender { color: #f5792a; }
 
@@ -82,21 +84,21 @@
 .tech-icon.iot { color: #00b4f0; }
 
 /* Cyber Security */
-.tech-icon.kali-linux { color: #557c94; }
+.tech-icon.kali\.linux { color: #557c94; }
 .tech-icon.wireshark { color: #1679a7; }
 .tech-icon.metasploit { color: #2a0871; }
-.tech-icon.burp-suite { color: #ff6633; }
-.tech-icon.nmap { color: #557c94; } /* Kali Linux 색상 사용 */
+.tech-icon.burp\.suite { color: #ff6633; }
+.tech-icon.nmap { color: #557c94; }
 .tech-icon.owasp { color: #000000; }
 .tech-icon.encryption { color: #ffb13b; }
 
 /* Blockchain */
 .tech-icon.solidity { color: #363636; }
 .tech-icon.ethereum { color: #3c3c3d; }
-.tech-icon.hyperledger { color: #3c3c3d; } /* Ethereum 색상 사용 */
-.tech-icon.web3js { color: #f16822; }
-.tech-icon.truffle { color: #3c3c3d; } /* Ethereum 색상 사용 */
-.tech-icon.ganache { color: #3c3c3d; } /* Ethereum 색상 사용 */
+.tech-icon.hyperledger { color: #3c3c3d; }
+.tech-icon.web3\.js { color: #f16822; }
+.tech-icon.truffle { color: #3c3c3d; }
+.tech-icon.ganache { color: #3c3c3d; }
 
 /* Testing */
 .tech-icon.junit { color: #25a162; }
