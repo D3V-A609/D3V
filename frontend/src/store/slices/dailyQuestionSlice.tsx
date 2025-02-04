@@ -6,12 +6,14 @@ interface DailyQuestionState {
   dailyQuestions: Question[];
   loading: boolean;
   error: string | null;
+  selectedQuestionId: number | null;
 }
 
 const initialState: DailyQuestionState = {
   dailyQuestions: [],
   loading: false,
   error: null,
+  selectedQuestionId: null,
 };
 
 export const fetchDailyQuestions = createAsyncThunk(
@@ -25,7 +27,14 @@ export const fetchDailyQuestions = createAsyncThunk(
 const dailyQuestionSlice = createSlice({
   name: 'dailyQuestions',
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedQuestionId: (state, action) => {
+      state.selectedQuestionId = action.payload;
+    },
+    clearSelectedQuestionId: (state) => {
+      state.selectedQuestionId = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchDailyQuestions.pending, (state) => {
@@ -43,4 +52,5 @@ const dailyQuestionSlice = createSlice({
   },
 });
 
+export const { setSelectedQuestionId, clearSelectedQuestionId } = dailyQuestionSlice.actions;
 export default dailyQuestionSlice.reducer;

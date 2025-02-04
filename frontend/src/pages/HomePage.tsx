@@ -2,15 +2,15 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
-import { fetchDailyQuestions } from '../store/slices/dailyQuestionSlice';
+import { fetchDailyQuestions, setSelectedQuestionId } from '../store/slices/dailyQuestionSlice';
 import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard';
 import PageHeader from '../components/PageHeader/PageHeader';
 import { BsCheckLg } from 'react-icons/bs';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   // Redux store에서 일일 질문 관련 상태를 가져옴
   const { dailyQuestions, loading, error } = useAppSelector((state) => state.dailyQuestions);
   // 로그인 상태 (추후 실제 인증 상태로 대체 예정)
@@ -21,11 +21,13 @@ const HomePage: React.FC = () => {
     dispatch(fetchDailyQuestions());
   }, [dispatch]);
 
-  // 질문 카드 클릭 시 상세 페이지로 이동하는 핸들러
-  const QuestionCardClick = (question: Question) => {
-    navigate(`/question/${question.questionId}`, {
-      state: { question }, // 질문 데이터를 라우터 state로 전달
-    });
+  // 질문 카드 클릭 시 선택된 질문 ID를 저장하는 핸들러
+  const QuestionCardClick = (questionId : number) => {
+    console.log('Before dispatch:', questionId);
+    dispatch(setSelectedQuestionId(questionId));
+    navigate('/question')
+    // 상태 변화 확인을 위한 로그
+    console.log('After dispatch');
   };
 
   // 로딩 상태 처리
@@ -50,9 +52,9 @@ const HomePage: React.FC = () => {
             <TodayQuestionCard
               key={question.questionId}
               title={question.content}
-              category={question.skillList[0]} // 직무 목록을 문자열로 결합
+              category={question.skillList[0]}
               isLoggedIn={isLoggedIn}
-              onClick={() => QuestionCardClick(question)}
+              onClick={() => QuestionCardClick(question.questionId)}
             />
           ))}
         </div>
@@ -62,4 +64,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
