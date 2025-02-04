@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long>, QuerydslPredicateExecutor<Answer> {
-    boolean existsByQuestionAndMemberAndCreatedAtAfter(Question question, Member member, LocalDateTime today);
+    boolean existsByQuestionAndMember(Question question, Member member);
     List<Answer> findByQuestionAndMember(Question question, Member member);
 }
