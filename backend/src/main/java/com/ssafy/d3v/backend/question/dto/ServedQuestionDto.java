@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.question.service.dto;
+package com.ssafy.d3v.backend.question.dto;
 
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import java.time.LocalDate;
