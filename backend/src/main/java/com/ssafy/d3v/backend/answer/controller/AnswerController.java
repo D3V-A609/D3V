@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,7 +28,8 @@ public class AnswerController {
     }
 
     @PostMapping("/question/{question_id}/answer")
-    public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId, AnswerRequest answerRequest) {
+    public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId,
+                                                       AnswerRequest answerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(answerService.create(questionId, answerRequest));
     }
 

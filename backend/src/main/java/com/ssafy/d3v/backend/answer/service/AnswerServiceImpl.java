@@ -27,12 +27,14 @@ public class AnswerServiceImpl implements AnswerService {
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
     private final MemberRepository memberRepository;
     private final Long memberId = 1L;
+
     @Override
     public StandardAnswerResponse getStandardAnswer(long questionId) {
         Question question = getQuestionById(questionId);
         Member member = getMemberById();
 
-        boolean hasAnswerToday = answerRepository.existsByQuestionAndMemberAndCreatedAtAfter(question, member, LocalDateTime.now().toLocalDate().atStartOfDay());
+        boolean hasAnswerToday = answerRepository.existsByQuestionAndMemberAndCreatedAtAfter(question, member,
+                LocalDateTime.now().toLocalDate().atStartOfDay());
 
         if (!hasAnswerToday) {
             throw new IllegalStateException("오늘 작성한 답변이 없습니다. 질문 ID: " + questionId);
