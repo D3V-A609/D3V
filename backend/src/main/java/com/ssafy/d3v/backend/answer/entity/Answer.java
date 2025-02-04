@@ -52,4 +52,14 @@ public class Answer {
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
+
+    @Builder
+    public Answer(Member member, Question question, String content, LocalDateTime createdAt,
+                  AccessLevel accessLevel) {
+        this.member = member;
+        this.question = question;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.accessLevel = accessLevel;
+    }
 }
