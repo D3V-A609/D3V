@@ -9,7 +9,6 @@ interface QuestionState {
   loading: boolean;
   error: string | null;
   selectedQuestionId: number | null;
-  question: Question | null ; // 질문 상세(1개)
 }
 
 const initialState: QuestionState = { 
@@ -18,7 +17,6 @@ const initialState: QuestionState = {
   loading: false,
   error: null,
   selectedQuestionId: null,
-  question: null,
 };
 
 export const fetchQuestions = createAsyncThunk(
@@ -90,9 +88,9 @@ const questionSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchQuestionById.fulfilled, (state, action) => { // 비동기 작업 성공공
+      .addCase(fetchQuestionById.fulfilled, (state, action) => { // 비동기 작업 성공
         state.loading = false;
-        state.question = action.payload;
+        state.questions[0] = action.payload;
       })
       .addCase(fetchQuestionById.rejected, (state, action) => {
         state.loading = false;

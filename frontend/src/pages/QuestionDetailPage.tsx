@@ -21,7 +21,7 @@ const QuestionDetailPage: React.FC = () => {
   >("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
-  const { selectedQuestionId, question, dailyQuestions, loading, error } = useAppSelector(
+  const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
     state => state.questions
   );
 
@@ -74,8 +74,8 @@ const QuestionDetailPage: React.FC = () => {
         />
         취뽀의 길로 한 발자국 더 !
       </div>
-      {question && <>
-        <QuestionContentCard question={question} isToday={isTodayQ} />
+      {questions[0] && <>
+        <QuestionContentCard question={questions[0]} isToday={isTodayQ} />
       <QuestionAnswerBtnGroup 
         onShowAnswerInput={handleShowAnswerInput} 
         onShowAnswerCommunity={handleShowCommunity} 
