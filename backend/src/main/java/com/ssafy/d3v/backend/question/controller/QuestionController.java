@@ -15,10 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,13 +48,22 @@ public class QuestionController {
                 .ok()
                 .body(QuestionResponse.from(question, skills, jobs));
     }
-    @GetMapping()
-    @Operation(summary = "질문 전체 조회", description = "전체 질문을 조회합니다")
-    public ResponseEntity<List<QuestionResponse>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
 
-        // QuestionResponse를 만드는 로직이 겹쳐서 from 메소드로 따로 빼면 좋을듯
-        return getListResponseEntity(questions);
+    // GET "/question?page=0&size=10"
+    @GetMapping
+    @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
+    public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Question> questionsPage = questionService.getAllQuestions(page, size);
+
+        Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
+            List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
+            List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
+            return QuestionResponse.from(q, skills, jobs);
+        });
+
+        return ResponseEntity.ok(questionResponsesPage);
     }
 
     @GetMapping("/daily")

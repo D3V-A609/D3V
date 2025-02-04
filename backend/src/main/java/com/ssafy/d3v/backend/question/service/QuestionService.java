@@ -17,6 +17,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +38,9 @@ public class QuestionService {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public Page<Question> getAllQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return questionRepository.findAll(pageable);
     }
     @Transactional
     public List<Question> getDailyQuestions() {
@@ -66,6 +71,7 @@ public class QuestionService {
     private List<Question> CreateRandomQuestions(Member member) {
 
         // 데일리 생성 로직이 현재는 로그인 시 생성하는 방식인데 스케줄러 써서 개선할 수 있을 것 같다.
+        // 추가로 개인별 맞춤으로 다른 가중치도 추가할 예정
         // 현재 날짜
         LocalDate currentDate = LocalDate.now();
 
