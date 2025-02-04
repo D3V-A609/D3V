@@ -4,6 +4,7 @@ import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.service.AnswerService;
+import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,8 +33,7 @@ public class AnswerController {
 
     @Operation(summary = "답변 생성")
     @PostMapping("/question/{question_id}/answer")
-    public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId,
-                                                       AnswerRequest answerRequest) {
+    public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId, AnswerRequest answerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(answerService.create(questionId, answerRequest));
     }
 
@@ -43,8 +44,10 @@ public class AnswerController {
     }
 
     @Operation(summary = "답변 전체 조회(다른 사용자 답변 보기)")
-    @GetMapping("/question/{question_id}/answer")
-    public ResponseEntity<List<AnswerResponse>> getTotalAnswers(@PathVariable("question_id") long questionId) {
-        return ResponseEntity.ok().body(answerService.getTotalAnswers(questionId));
+    @GetMapping("/api/question/{question_id}/answer")
+    public ResponseEntity<PagedResponse<AnswerResponse>> getTotalAnswers(@PathVariable("question_id") long questionId,
+                                                                         @RequestParam(value = "size", defaultValue = "15") int size,
+                                                                         @RequestParam(value = "page", defaultValue = "1") int page){
+        return ResponseEntity.ok().body(answerService.getTotalAnswers(questionId, size, page));
     }
 }
