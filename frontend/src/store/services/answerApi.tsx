@@ -22,6 +22,16 @@ export const answerApi = {
   // 한 질문에 대한 모든 내 답변 조회
   getMyAllAnswerByQId : (questionId: number) => {return api.get<Answer[]>(`/question/${questionId}/my_answer`);
   },
+
+  // 답변 등록 
+  registAnswer: (payload:{ questionId:number; memberId: number; content: string; accessLevel: string; 
+    // isSolved: boolean 
+  }) => {
+    const {questionId, ...bodyPayload} = payload;
+    return api.post<Answer[]>(`/question/${questionId}/answer`, bodyPayload)},
+
+  // 첫 답변 등록 시 보내는 요청(servedquestion)
+  registServedAnswer: (payload: { memberId: number; questionId:number; isSolved: boolean;}) => {return api.post<ServedAnswer>(`/servedquestion`, payload)},
   
 
   unlikeAnswer: async (answerId: number) => {
