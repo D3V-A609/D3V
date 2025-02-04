@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.question.controller;
 
-import com.ssafy.d3v.backend.question.controller.dto.QuestionResponse;
+import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
@@ -41,17 +41,10 @@ public class QuestionController {
         Question question = questionService.getById(questionId);
         List<Skill> skills = questionQueryService.getSkillsByQuestionId(question.getId());
         List<Job> jobs = questionQueryService.getJobsByQuestionId(question.getId());
-        QuestionResponse questionResponse =  QuestionResponse.builder()
-                .questionId(question.getId())
-                .content(question.getContent())
-                .standardAnswer(question.getStandardAnswer())
-                .skillList(skills.stream().map(Skill::getName).toList())
-                .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                .build();
 
         return ResponseEntity
                 .ok()
-                .body(questionResponse);
+                .body(QuestionResponse.from(question, skills, jobs));
     }
     @GetMapping()
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 조회합니다")
@@ -59,39 +52,23 @@ public class QuestionController {
         List<Question> questions = questionService.getAllQuestions();
 
         // QuestionResponse를 만드는 로직이 겹쳐서 from 메소드로 따로 빼면 좋을듯
-        List<QuestionResponse> questionResponseList = questions.stream()
-                .map(q ->{
-                    List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
-                    List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.builder()
-                            .questionId(q.getId())
-                            .content(q.getContent())
-                            .standardAnswer(q.getStandardAnswer())
-                            .skillList(skills.stream().map(Skill::getName).toList())
-                            .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                            .build();
-                })
-                .toList();
-        return ResponseEntity
-                .ok()
-                .body(questionResponseList);
+        return getListResponseEntity(questions);
     }
+
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
         List<Question> questions = questionService.getDailyQuestions();
 
+        return getListResponseEntity(questions);
+    }
+
+    private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
                 .map(q ->{
                     List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
                     List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.builder()
-                            .questionId(q.getId())
-                            .content(q.getContent())
-                            .standardAnswer(q.getStandardAnswer())
-                            .skillList(skills.stream().map(Skill::getName).toList())
-                            .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                            .build();
+                    return QuestionResponse.from(q, skills, jobs);
                 })
                 .toList();
         return ResponseEntity
