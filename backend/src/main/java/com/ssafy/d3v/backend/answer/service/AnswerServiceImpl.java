@@ -34,11 +34,11 @@ public class AnswerServiceImpl implements AnswerService {
         Question question = getQuestionById(questionId);
         Member member = getMemberById();
 
-        boolean hasAnswerToday = answerRepository.existsByQuestionAndMemberAndCreatedAtAfter(question, member, LocalDateTime.now().toLocalDate().atStartOfDay());
-
-        if (!hasAnswerToday) {
-            throw new IllegalStateException("오늘 작성한 답변이 없습니다. 질문 ID: " + questionId);
-        }
+//        boolean hasAnswerToday = answerRepository.existsByQuestionAndMemberAndCreatedAtAfter(question, member, LocalDateTime.now().toLocalDate().atStartOfDay());
+//
+//        if (!hasAnswerToday) {
+//            throw new IllegalStateException("오늘 작성한 답변이 없습니다. 질문 ID: " + questionId);
+//        }
 
         boolean isSolved = servedQuestionRepository.findByMemberAndQuestion(member, question)
                 .map(ServedQuestion::getIsSolved)
