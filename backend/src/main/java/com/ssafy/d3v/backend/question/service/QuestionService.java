@@ -8,6 +8,7 @@ import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import com.ssafy.d3v.backend.question.service.dto.QuestionDto;
+import com.ssafy.d3v.backend.question.service.dto.ServedQuestionDto;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -37,7 +38,9 @@ public class QuestionService {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
-
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
+    }
     @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
