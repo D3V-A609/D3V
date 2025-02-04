@@ -9,6 +9,7 @@ interface QuestionState {
   loading: boolean;
   error: string | null;
   selectedQuestionId: number | null;
+  question: Question | null ; // 질문 상세(1개)
 }
 
 const initialState: QuestionState = { 
@@ -17,6 +18,7 @@ const initialState: QuestionState = {
   loading: false,
   error: null,
   selectedQuestionId: null,
+  question: null,
 };
 
 export const fetchQuestions = createAsyncThunk(
@@ -34,6 +36,14 @@ export const fetchDailyQuestions = createAsyncThunk(
     return response.data;
   }
 );
+
+export const fetchQuestionById = createAsyncThunk(
+  'question/fetchQuestion',
+  async (questionId: number) => {
+    const response = await questionApi.getQuestionById(questionId);
+    return response.data;
+  }
+)
 
 const questionSlice = createSlice({
   name: 'questions',
@@ -73,7 +83,21 @@ const questionSlice = createSlice({
       .addCase(fetchDailyQuestions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '일일 질문을 불러오는데 실패했습니다.';
-      });
+      })
+
+      // 질문 상세 조회
+      .addCase(fetchQuestionById.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchQuestionById.fulfilled, (state, action) => { // 비동기 작업 성공공
+        state.loading = false;
+        state.question = action.payload;
+      })
+      .addCase(fetchQuestionById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
   },
 });
 

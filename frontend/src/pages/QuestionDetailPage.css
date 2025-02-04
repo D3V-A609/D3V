@@ -69,6 +69,11 @@
   font-size: 24px;
 }
 
+.question-content_question-card-body .skill-tags-group{
+  display: flex;
+  gap: 0.5em;
+}
+
 /* 버튼 css 속성 설정 */
 .question-answer-btn-group {
   display: flex;
