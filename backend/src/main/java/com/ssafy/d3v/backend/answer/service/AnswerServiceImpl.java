@@ -34,6 +34,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final ServedQuestionRepository servedQuestionRepository;
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
     private final MemberRepository memberRepository;
+    private final FeedbackCustomRepository feedbackCustomRepository;
     private final Long memberId = 1L;
 
     @Override
@@ -90,7 +91,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getAnswerId(),
                         ele.getContent(),
                         ele.getCreatedAt(),
-                        ele.getAccessLevel()))
+                        ele.getAccessLevel(),
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele)))
                 .toList();
     }
 
