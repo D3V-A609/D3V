@@ -17,6 +17,7 @@ interface AnswerState  {
   error: string | null;
   // 추가한 부분
   myAnswerArr: Answer[];
+  servedAnswer: ServedAnswer | null;
 };
 
 const initialState: AnswerState = {
@@ -25,7 +26,8 @@ const initialState: AnswerState = {
   loading: false,
   error: null,
   // 추가한 부분
-  myAnswerArr: []
+  myAnswerArr: [],
+  servedAnswer: null
 };
 
 export const fetchMyAnswer = createAsyncThunk(
@@ -60,6 +62,27 @@ export const fetchAllMyAnswersByQID = createAsyncThunk(
   'answers/fetchMyAllAnswerByQID',
   async (questionId:number) => {
     const response = await answerApi.getMyAllAnswerByQId(questionId);
+    return response.data;
+  }
+)
+
+// 첫 질문 등록 시 보내는 요청 (servedquestion)
+export const registServedAnswer = createAsyncThunk(
+  'answer/registServedAnswer',
+  async (payload: { questionId:number, memberId: number; isSolved: boolean 
+  }) => {
+    const response = await answerApi.registServedAnswer(payload);
+    return response.data;
+  }
+)
+
+// 질문 등록하기
+export const registAnswer = createAsyncThunk(
+  'answer/registAnswer',
+  async (payload: { questionId:number, memberId: number; content: string; accessLevel: string; 
+    // isSolved: boolean 
+  }) => {
+    const response = await answerApi.registAnswer(payload);
     return response.data;
   }
 )
@@ -135,6 +158,34 @@ const answerSlice = createSlice({
       .addCase(fetchAllMyAnswersByQID.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
+
+      // 답변 등록 
+      .addCase(registAnswer.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.myAnswerArr = action.payload;
+      })
+      .addCase(registAnswer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '답변 등록을 실패했습니다.';
+      })
+
+      // 첫 답변의 경우(servedAnswer)
+      .addCase(registServedAnswer.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registServedAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.servedAnswer = action.payload;
+      })
+      .addCase(registServedAnswer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '답변 등록을 실패했습니다.';
       });
   },
 });

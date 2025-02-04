@@ -81,7 +81,7 @@ const QuestionDetailPage: React.FC = () => {
         onShowAnswerCommunity={handleShowCommunity} 
       />
 
-      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} />}
+      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
       {currentQuestionDetailView === "community" && <AnswerCommunityComp />}
       </>}
       
