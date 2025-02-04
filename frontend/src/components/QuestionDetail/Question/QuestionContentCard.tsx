@@ -1,14 +1,12 @@
 import React from 'react';
 import "../../../pages/QuestionDetailPage.css";
 
-import { Question } from "../../../types/question";
-
 import { MdCalendarToday } from "react-icons/md";
 import { RiBookmarkLine } from "react-icons/ri";
 import QuestionSkillTag from './QuestionSkillTag';
 
 interface QuestionContentCardProps {
-  question: Partial<Question>;
+  question: Question;
   isToday: boolean;
 }
 const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isToday}) => {
@@ -34,10 +32,10 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
         <RiBookmarkLine size={20} />
       </div>
       <div className="question-text">
-        {question.questionContent}
+        {question.content}
       </div>
       <div className="skill-tags-group">
-        {question.skills?.map(skill => (
+        {question.skillList?.map(skill => (
           <QuestionSkillTag skill={skill} key={skill} />
         ))}
       </div>

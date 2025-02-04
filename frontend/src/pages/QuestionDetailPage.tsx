@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./QuestionDetailPage.css";
-import { Navigate } from 'react-router-dom';
-import { useAppSelector } from '../store/hooks/useRedux';
+
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from '../store/hooks/useRedux';
+
+import { fetchQuestionById } from '../store/slices/questionSlice';
+
 import FootPrint from "../assets/images/footprint.png";
 import QuestionContentCard from '../components/QuestionDetail/Question/QuestionContentCard';
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
@@ -9,39 +13,56 @@ import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
 
 const QuestionDetailPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [currentQuestionDetailView, setQuestionDetailView] = useState<
     "input" | "community"
   >("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
-  const { selectedQuestionId, questions, dailyQuestions } = useAppSelector(
+  const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
     state => state.questions
   );
 
-  // selectedQuestionId를 사용하여 모든 질문 목록에서 해당 질문 찾기
-  const question = [...questions, ...dailyQuestions].find(
-    q => q.questionId === selectedQuestionId
-  );
+  // 컴포넌트 마운트 시 질문 상세 데이터를 fetch
+  useEffect(() => {
+    if (selectedQuestionId !== null) {
+      dispatch(fetchQuestionById(selectedQuestionId));
+    }
+  }, [dispatch, selectedQuestionId]);  // selectedQuestionId가 변경될 때마다 실행
+
+  // 질문 상세 데이터 fetch 및 성공 여부 확인
+  useEffect(() => {
+    if (selectedQuestionId !== null) {
+      dispatch(fetchQuestionById(selectedQuestionId))
+        .unwrap()
+        .catch(() => {
+          alert("죄송합니다. 잠시 후 다시 시도해주세요.") // question 로드 실패 시 홈으로 리다이렉트  
+          navigate('/')
+        });  // fetch 실패 시 리다이렉트
+    }
+  }, [dispatch, selectedQuestionId, navigate]);
   
   // 일일 질문인지 확인
   const isTodayQ = dailyQuestions.some(q => q.questionId === selectedQuestionId);
 
-  // 선택된 질문이 없으면 홈으로 리디렉션
-  if (!selectedQuestionId || !question) {
-    return <Navigate to="/" />;
-  }
-
+  // 답변 창, 답변 커뮤니티 창 이동함수
   const handleShowAnswerInput = () => {
     if (currentQuestionDetailView !== "input") {
       setQuestionDetailView("input");
     }
   };
-
   const handleShowCommunity = () => {
     if (currentQuestionDetailView !== "community") {
       setQuestionDetailView("community");
     }
   };
+
+  // 로딩 상태 처리
+  if (loading) return <div>Loading...</div>;
+  // 에러 상태 처리
+  if (error) return <div>Error: {error}</div>;
   
   return (
     <div className="question-detail-container">
@@ -53,7 +74,8 @@ const QuestionDetailPage: React.FC = () => {
         />
         취뽀의 길로 한 발자국 더 !
       </div>
-      <QuestionContentCard question={question} isToday={isTodayQ} />
+      {questions[0] && <>
+        <QuestionContentCard question={questions[0]} isToday={isTodayQ} />
       <QuestionAnswerBtnGroup 
         onShowAnswerInput={handleShowAnswerInput} 
         onShowAnswerCommunity={handleShowCommunity} 
@@ -61,6 +83,8 @@ const QuestionDetailPage: React.FC = () => {
 
       {currentQuestionDetailView === "input" && <AnswerInput />}
       {currentQuestionDetailView === "community" && <AnswerCommunityComp />}
+      </>}
+      
     </div>
   );
 }

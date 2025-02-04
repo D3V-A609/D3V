@@ -35,6 +35,14 @@ export const fetchDailyQuestions = createAsyncThunk(
   }
 );
 
+export const fetchQuestionById = createAsyncThunk(
+  'question/fetchQuestion',
+  async (questionId: number) => {
+    const response = await questionApi.getQuestionById(questionId);
+    return response.data;
+  }
+)
+
 const questionSlice = createSlice({
   name: 'questions',
   initialState,
@@ -73,7 +81,21 @@ const questionSlice = createSlice({
       .addCase(fetchDailyQuestions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '일일 질문을 불러오는데 실패했습니다.';
-      });
+      })
+
+      // 질문 상세 조회
+      .addCase(fetchQuestionById.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchQuestionById.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.questions[0] = action.payload;
+      })
+      .addCase(fetchQuestionById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
   },
 });
 
