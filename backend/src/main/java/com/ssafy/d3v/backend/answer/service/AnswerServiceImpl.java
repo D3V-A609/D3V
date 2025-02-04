@@ -67,7 +67,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .accessLevel(answerRequest.accessLevel())
                 .build();
 
-        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, true);
+        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
 
         return getAnswerResponses(question, member);
