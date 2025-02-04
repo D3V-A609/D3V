@@ -4,6 +4,7 @@ import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.entity.Answer;
+import com.ssafy.d3v.backend.answer.repository.AnswerCustomRepository;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
+    private final AnswerCustomRepository answerCustomRepository;
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
@@ -96,5 +98,21 @@ public class AnswerServiceImpl implements AnswerService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
         return member;
+    }
+
+    @Override
+    public List<AnswerResponse> getTotalAnswers(long questionId) {
+        Question question = getQuestionById(questionId);
+
+        return answerCustomRepository.findPublicAnswersByQuestion(question)
+                .stream()
+                .map(ele -> new AnswerResponse(
+                        ele.getQuestion().getId(),
+                        ele.getMember().getId(),
+                        ele.getAnswerId(),
+                        ele.getContent(),
+                        ele.getCreatedAt(),
+                        ele.getAccessLevel()))
+                .toList();
     }
 }
