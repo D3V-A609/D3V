@@ -29,6 +29,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
     private final MemberRepository memberRepository;
     private final Long memberId = 1L;
+
     @Override
     public StandardAnswerResponse getStandardAnswer(long questionId) {
         Question question = getQuestionById(questionId);
