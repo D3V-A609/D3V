@@ -1,11 +1,11 @@
-// types/answer.d.ts
-interface Answer {
+declare type Answer = {
   questionId: number;
   memberId: number;
   answerId: number;
-  answer: string;
+  content: string;
   createdAt: string;
   accessLevel: "PUBLIC" | "PRIVATE" | "PROTECTED";
-  answerLike: number;
+  like: number;
   commentCount: number;
-}
+  isLiked?: boolean; // 내가 추천했는지 여부
+};

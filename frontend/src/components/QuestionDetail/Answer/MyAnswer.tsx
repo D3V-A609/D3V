@@ -15,7 +15,7 @@ const MyAnswer: React.FC<MyAnswerProps> = ({ answer }) => {
       </div>
       <div className="my-answer-content">
         <div className="answer-label">A.</div>
-        <div className="answer-text">{answer.answer}</div>
+        <div className="answer-text">{answer.content}</div>
       </div>
     </div>
   );

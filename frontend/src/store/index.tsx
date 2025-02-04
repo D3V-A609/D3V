@@ -1,11 +1,14 @@
-// src/store/index.ts
 import { configureStore } from '@reduxjs/toolkit';
+import answerReducer from './slices/answerSlice';
 
-// 
 export const store = configureStore({
   reducer: {
-    // 여기에 리듀서들이 추가될 예정
+    answers: answerReducer
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false
+    })
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import dummyUsers from '../../../constants/dummyUsers';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import { toggleLike } from '../../../store/slices/answerSlice';
 import CommentModal from './CommentModal';
+import dummyUsers from '../../../constants/dummyUsers';
 import "./AnswerItem.css";
 
 interface AnswerItemProps {
@@ -8,43 +10,67 @@ interface AnswerItemProps {
 }
 
 const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
+  const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const user = dummyUsers.find(user => user.memberId === answer.memberId);
+  const [isLiked, setIsLiked] = useState(answer.isLiked || false);
 
+  // dummyUsers에서 멤버 데이터 조회
+  const member = dummyUsers.find(user => user.memberId === answer.memberId);
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('ko-KR', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     }).format(date);
   };
 
-  if (!user) return null;
+  const handleLikeClick = async () => {
+    try {
+      await dispatch(toggleLike(answer.answerId)).unwrap();
+      setIsLiked(!isLiked);  // 추천 상태 토글
+    } catch (error) {
+      console.error('추천 실패:', error);
+    }
+  };
+
+  if (!member) return null;  // 멤버 데이터가 없으면 렌더링 안 함
 
   return (
     <>
       <div className="answer-item">
         <div className="profile">
-          <div className="profile-avatar">D3V</div>
+          <div className="profile-avatar">
+            {member.profileImg ? (
+              <img src={member.profileImg} alt="profile" />
+            ) : (
+              <div className="avatar-fallback">{member.nickname[0].toUpperCase()}</div>
+            )}
+          </div>
           <div className="profile-info">
             <div className="profile-role">
-              [<span className="role-name">{user.jobField}</span>] D3V
+              [<span className="role-name">{member.jobField}</span>]
             </div>
             <div className="profile-name">
-              <span className="name">{user.nickname}</span>
+              <span className="name">{member.nickname}</span>
               <span className="suffix">님</span>
             </div>
           </div>
         </div>
-        <div className="answer-content">{answer.answer}</div>
+        <div className="answer-content">{answer.content}</div>
         <div className="answer-footer">
           <div className="answer-date">{formatDate(answer.createdAt)}</div>
           <div className="answer-buttons">
             <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
-              댓글 보기 ({answer.commentCount})
+              댓글 보기 ({answer.commentCount || 0})
             </button>
-            <button className="btn-like">추천하기 ({answer.answerLike})</button>
+            <button 
+              className={`btn-like ${isLiked ? 'liked' : ''}`}
+              onClick={handleLikeClick}
+            >
+              추천하기 ({answer.like || 0})
+            </button>
           </div>
         </div>
       </div>

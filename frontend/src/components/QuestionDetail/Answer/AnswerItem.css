@@ -93,3 +93,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.btn-like {
+  transition: all 0.2s ease;
+}
+
+.btn-like.liked {
+  background-color: #1E9FFF;
+  color: white;
+  border-color: #1E9FFF;
+}

@@ -49,9 +49,9 @@ const CommentModal: React.FC<CommentModalProps> = ({ answer, isOpen, onClose }) 
               </div>
             </div>
           </div>
-          <div className="answer-text">{answer.answer}</div>
+          <div className="answer-text">{answer.content}</div> {/* answer -> content로 변경 */}
           <div className="answer-actions">
-            <button className="like-button">추천하기 ({answer.answerLike})</button>
+            <button className="like-button">추천하기 ({answer.like})</button> {/* answerLike -> like로 변경 */}
           </div>
         </div>
 

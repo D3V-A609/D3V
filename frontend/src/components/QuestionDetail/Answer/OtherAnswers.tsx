@@ -21,7 +21,7 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
       if (sortType === 'comments') {
         return b.commentCount - a.commentCount;
       }
-      return b.answerLike - a.answerLike;
+      return b.like - a.like;
     });
   };
 
