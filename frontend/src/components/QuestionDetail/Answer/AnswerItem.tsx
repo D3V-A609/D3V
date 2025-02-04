@@ -4,6 +4,8 @@ import { toggleLike } from '../../../store/slices/answerSlice';
 import CommentModal from './CommentModal';
 import dummyUsers from '../../../constants/dummyUsers';
 import "./AnswerItem.css";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { IoChatboxOutline } from "react-icons/io5";
 
 interface AnswerItemProps {
   answer: Answer;
@@ -29,7 +31,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   const handleLikeClick = async () => {
     try {
       await dispatch(toggleLike(answer.answerId)).unwrap();
-      setIsLiked(!isLiked);  // 추천 상태 토글
+      setIsLiked(!isLiked);
     } catch (error) {
       console.error('추천 실패:', error);
     }
@@ -62,13 +64,19 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
         <div className="answer-footer">
           <div className="answer-date">{formatDate(answer.createdAt)}</div>
           <div className="answer-buttons">
-            <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
+          <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
+              <IoChatboxOutline className="button-icon" />
               댓글 보기 ({answer.commentCount || 0})
             </button>
             <button 
-              className={`btn-like ${isLiked ? 'liked' : ''}`}
+              className="btn-like"
               onClick={handleLikeClick}
             >
+              {isLiked ? (
+                <AiFillLike className="button-icon liked-icon" />
+              ) : (
+                <AiOutlineLike className="button-icon" />
+              )}
               추천하기 ({answer.like || 0})
             </button>
           </div>

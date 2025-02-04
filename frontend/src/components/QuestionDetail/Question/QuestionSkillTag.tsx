@@ -1,7 +1,7 @@
 import React from "react";
 import "./QuestionSkillTag.css";
 
-import skillStyles from "./skillTagStyle";
+import getSkillStyle from "./skillTagStyle";
 import TechIcon from "../../TechIcon/TechIcon";
 
 interface QuestionSkillProps {
@@ -9,7 +9,7 @@ interface QuestionSkillProps {
 }
 
 const QuestionSkillTag: React.FC<QuestionSkillProps> = ({ skill }) => {
-  const skillStyle = skillStyles[skill.toLowerCase()];
+  const skillStyle = getSkillStyle(skill.toLowerCase());
 
   // Hex 코드를 rgba로 변환하는 함수
   const hexToRgba = (hex: string, opacity: number) => {

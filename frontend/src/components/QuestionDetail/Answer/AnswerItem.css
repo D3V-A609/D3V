@@ -58,6 +58,7 @@
 
 .answer-content {
   margin: 10px 0;
+  padding-left: 10px;
   font-size: 16px;
   line-height: 1.6;
   color: #333;
@@ -67,6 +68,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 10px;
 }
 
 .answer-date {
@@ -79,8 +81,7 @@
   gap: 8px;
 }
 
-.btn-comment,
-.btn-like {
+.btn-comment {
   height: 30px;
   padding: 0 16px;
   border: 1px solid #E5E5E5;
@@ -95,11 +96,25 @@
 }
 
 .btn-like {
-  transition: all 0.2s ease;
+  height: 30px;
+  padding: 0 16px;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn-like.liked {
-  background-color: #1E9FFF;
-  color: white;
-  border-color: #1E9FFF;
+.button-icon {
+  margin-right: 10px;
+  vertical-align: middle;
+  color: #666; /* 기본 아이콘 색상 */
+}
+
+.liked-icon {
+  color: #1E9FFF; /* 추천된 상태의 아이콘 색상 */
 }

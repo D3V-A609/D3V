@@ -1,6 +1,6 @@
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import Header from './components/Header/Header.tsx';
+import Header from './components/header/Header';
 
 import HomePage from './pages/HomePage.tsx';
 import AllQuestionPage from './pages/AllQuestionPage.tsx';
@@ -34,7 +34,7 @@ function App() {
         { path: '/my', element: <MyPage /> },
         { path: '/board', element: <BoardPage /> },
         { path: '/video', element: <VideoPage /> },
-        { path: '/question/:id', element: <QuestionDetailPage />}
+        { path: '/question', element: <QuestionDetailPage />}
       ],
     },
   ]);

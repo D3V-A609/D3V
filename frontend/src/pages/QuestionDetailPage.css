@@ -69,6 +69,11 @@
   font-size: 24px;
 }
 
+.question-content_question-card-body .skill-tags-group{
+  display: flex;
+  gap: 0.5em;
+}
+
 /* 버튼 css 속성 설정 */
 .question-answer-btn-group {
   display: flex;
@@ -175,7 +180,6 @@
 
 .anwer-input-container__input .answer-submit .btn-answer-submit-group {
   display: flex;
-  gap: 1em;
 }
 
 .anwer-input-container__input .answer-submit .btn-answer-submit-group div {
@@ -183,11 +187,7 @@
   width: 130px;
   height: 35px;
   align-content: center;
-}
-
-.anwer-input-container__input .answer-submit .btn-answer-submit-group .btn-IDK {
-  border: 1.3px solid #005a9c;
-  border-radius: 12px;
+  align-items: center;
 }
 
 .anwer-input-container__input
@@ -198,3 +198,21 @@
   color: white;
   border-radius: 12px;
 }
+
+.anwer-input-container__input
+  .answer-submit
+  .btn-answer-submit-group
+  .checkbox-IDK{
+    display: inline-flex;
+    align-items: center; /* 수직 정렬 */
+    gap: 0.3em; /* 간격 설정 */
+  }
+
+  .anwer-input-container__input
+  .answer-submit
+  .btn-answer-submit-group
+  .checkbox-IDK label {
+    display: inline-block; /* 텍스트 길이만큼만 넓이 설정 */
+    cursor: pointer; /* 클릭 가능하도록 커서 변경 */
+    white-space: nowrap; /* 텍스트가 길어질 경우 줄바꿈 방지 */
+  }

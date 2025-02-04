@@ -2,7 +2,8 @@
 import {
   FaReact, FaHtml5, FaJsSquare, FaJava, FaPython, FaDocker, FaNode,
   FaVuejs, FaAngular, FaAws, FaCloud, FaChartBar, FaUnity,
-  FaLock, FaEthereum, FaCode, FaCss3Alt, FaSass, FaRProject, FaRobot
+  FaLock, FaEthereum, FaCode, FaCss3Alt, FaSass, FaRProject, FaRobot,
+  FaGitAlt
 } from "react-icons/fa";
 
 import {
@@ -14,8 +15,12 @@ import {
   SiKeras, SiOpencv, SiUnrealengine, SiGodotengine, SiBlender,
   SiCplusplus, SiC, SiArduino, SiKalilinux, SiWireshark, SiMetasploit,
   SiBurpsuite, SiOwasp, SiSolidity, SiWeb3Dotjs, SiSelenium, 
-  SiJunit5, SiCucumber, SiTestinglibrary, SiAppium, SiGraphql,
-  SiSpringboot, SiAssemblyscript, SiEthereum
+  SiJunit5, SiCucumber, SiAppium, SiGraphql,
+  SiSpringboot, SiAssemblyscript, SiWebassembly, SiNextdotjs,
+  SiApachekafka, SiNuxtdotjs, SiElasticsearch, SiLogstash, SiKibana,
+  SiApollographql, SiRust, SiWebpack, SiLinux, SiGatsby, SiIos, SiAndroid,
+  SiPushbullet, SiDart, SiJetpackcompose, SiThreedotjs,
+  SiAwslambda, SiServerless, SiD3Dotjs, SiSocketdotio, SiStoryblok
 } from "react-icons/si";
 
 import "./TechIcon.css";
@@ -31,119 +36,141 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, className }) => {
     return null;
   }
 
-  const normalizedTech = tech.trim().toLowerCase();
+  const normalizedTech = tech.trim().toLowerCase().replace(/[_-]/g, '.');
+  const baseClass = `tech-icon ${normalizedTech}`;
+  const combinedClassName = `${baseClass} ${className || ""}`.trim();
 
   const getIcon = (tech: string) => {
-    const baseClass = `tech-icon ${tech}`;
-
     switch (tech) {
       // Frontend
-      case "html": return <FaHtml5 className={`${baseClass} ${className || ""}`.trim()} />;
-      case "css": return <FaCss3Alt className={`${baseClass} ${className || ""}`.trim()} />;
-      case "javascript": return <FaJsSquare className={`${baseClass} ${className || ""}`.trim()} />;
-      case "react": return <FaReact className={`${baseClass} ${className || ""}`.trim()} />;
-      case "vue": return <FaVuejs className={`${baseClass} ${className || ""}`.trim()} />;
-      case "angular": return <FaAngular className={`${baseClass} ${className || ""}`.trim()} />;
-      case "typescript": return <SiTypescript className={`${baseClass} ${className || ""}`.trim()} />;
-      case "sass": return <FaSass className={`${baseClass} ${className || ""}`.trim()} />;
+      case "html": return <FaHtml5 className={combinedClassName} />;
+      case "css": return <FaCss3Alt className={combinedClassName} />;
+      case "javascript": return <FaJsSquare className={combinedClassName} />;
+      case "react": return <FaReact className={combinedClassName} />;
+      case "vue": return <FaVuejs className={combinedClassName} />;
+      case "angular": return <FaAngular className={combinedClassName} />;
+      case "typescript": return <SiTypescript className={combinedClassName} />;
+      case "sass": return <FaSass className={combinedClassName} />;
+      case "webassembly": return <SiWebassembly className={combinedClassName} />;
+      case "next.js": return <SiNextdotjs className={combinedClassName} />;
+      case "gatsby": return <SiGatsby className={combinedClassName} />;
+      case "webpack": return <SiWebpack className={combinedClassName} />;
+      case "nuxt": return <SiNuxtdotjs className={combinedClassName} />;
+      case "d3.js": return <SiD3Dotjs className={combinedClassName} />;
+      case "module.federation": return <SiWebpack className={combinedClassName} />;
 
       // Backend
-      case "java": return <FaJava className={`${baseClass} ${className || ""}`.trim()} />;
-      case "spring": return <SiSpring className={`${baseClass} ${className || ""}`.trim()} />;
-      case "spring boot": return <SiSpringboot className={`${baseClass} ${className || ""}`.trim()} />;
-      case "node.js": return <FaNode className={`${baseClass} ${className || ""}`.trim()} />;
-      case "express": return <SiExpress className={`${baseClass} ${className || ""}`.trim()} />;
-      case "python": return <FaPython className={`${baseClass} ${className || ""}`.trim()} />;
-      case "django": return <SiDjango className={`${baseClass} ${className || ""}`.trim()} />;
-      case "flask": return <SiFlask className={`${baseClass} ${className || ""}`.trim()} />;
-      case "ruby": return <SiRuby className={`${baseClass} ${className || ""}`.trim()} />;
+      case "java": return <FaJava className={combinedClassName} />;
+      case "spring": return <SiSpring className={combinedClassName} />;
+      case "spring boot": return <SiSpringboot className={combinedClassName} />;
+      case "node.js": return <FaNode className={combinedClassName} />;
+      case "express": return <SiExpress className={combinedClassName} />;
+      case "python": return <FaPython className={combinedClassName} />;
+      case "django": return <SiDjango className={combinedClassName} />;
+      case "flask": return <SiFlask className={combinedClassName} />;
+      case "ruby": return <SiRuby className={combinedClassName} />;
+      case "rust": return <SiRust className={combinedClassName} />;
+      case "websocket": return <SiSocketdotio className={combinedClassName} />;
 
-      // Mobile
-      case "swift": return <SiSwift className={`${baseClass} ${className || ""}`.trim()} />;
-      case "kotlin": return <SiKotlin className={`${baseClass} ${className || ""}`.trim()} />;
-      case "flutter": return <SiFlutter className={`${baseClass} ${className || ""}`.trim()} />;
-      case "react native": return <FaReact className={`${baseClass} ${className || ""}`.trim()} />;
-      case "objective-c": return <FaCode className={`${baseClass} ${className || ""}`.trim()} />;
+      // Mobile & Desktop
+      case "swift": return <SiSwift className={combinedClassName} />;
+      case "kotlin": return <SiKotlin className={combinedClassName} />;
+      case "flutter": return <SiFlutter className={combinedClassName} />;
+      case "react native": return <FaReact className={combinedClassName} />;
+      case "ios": return <SiIos className={combinedClassName} />;
+      case "android": return <SiAndroid className={combinedClassName} />;
+      case "jetpack": return <SiJetpackcompose className={combinedClassName} />;
+      case "dart": return <SiDart className={combinedClassName} />;
 
-      // Database
-      case "mysql": return <SiMysql className={`${baseClass} ${className || ""}`.trim()} />;
-      case "postgresql": return <SiPostgresql className={`${baseClass} ${className || ""}`.trim()} />;
-      case "mongodb": return <SiMongodb className={`${baseClass} ${className || ""}`.trim()} />;
-      case "oracle": return <SiOracle className={`${baseClass} ${className || ""}`.trim()} />;
-      case "sqlite": return <SiSqlite className={`${baseClass} ${className || ""}`.trim()} />;
-      case "redis": return <SiRedis className={`${baseClass} ${className || ""}`.trim()} />;
-      case "mariadb": return <SiMariadb className={`${baseClass} ${className || ""}`.trim()} />;
+      // Database & Cache
+      case "mysql": return <SiMysql className={combinedClassName} />;
+      case "postgresql": return <SiPostgresql className={combinedClassName} />;
+      case "mongodb": return <SiMongodb className={combinedClassName} />;
+      case "oracle": return <SiOracle className={combinedClassName} />;
+      case "sqlite": return <SiSqlite className={combinedClassName} />;
+      case "redis": return <SiRedis className={combinedClassName} />;
+      case "mariadb": return <SiMariadb className={combinedClassName} />;
+      case "elasticsearch": return <SiElasticsearch className={combinedClassName} />;
+      case "logstash": return <SiLogstash className={combinedClassName} />;
+      case "kibana": return <SiKibana className={combinedClassName} />;
 
-      // DevOps
-      case "docker": return <FaDocker className={`${baseClass} ${className || ""}`.trim()} />;
-      case "kubernetes": return <SiKubernetes className={`${baseClass} ${className || ""}`.trim()} />;
-      case "aws": return <FaAws className={`${baseClass} ${className || ""}`.trim()} />;
-      case "azure": return <FaCloud className={`${baseClass} ${className || ""}`.trim()} />;
-      case "gcp": return <SiGooglecloud className={`${baseClass} ${className || ""}`.trim()} />;
-      case "terraform": return <SiTerraform className={`${baseClass} ${className || ""}`.trim()} />;
-      case "ansible": return <SiAnsible className={`${baseClass} ${className || ""}`.trim()} />;
-      case "jenkins": return <SiJenkins className={`${baseClass} ${className || ""}`.trim()} />;
+      // DevOps & Cloud
+      case "docker": return <FaDocker className={combinedClassName} />;
+      case "kubernetes": return <SiKubernetes className={combinedClassName} />;
+      case "aws": return <FaAws className={combinedClassName} />;
+      case "aws.lambda": return <SiAwslambda className={combinedClassName} />;
+      case "azure": return <FaCloud className={combinedClassName} />;
+      case "gcp": return <SiGooglecloud className={combinedClassName} />;
+      case "terraform": return <SiTerraform className={combinedClassName} />;
+      case "ansible": return <SiAnsible className={combinedClassName} />;
+      case "jenkins": return <SiJenkins className={combinedClassName} />;
+      case "git": return <FaGitAlt className={combinedClassName} />;
+      case "linux": return <SiLinux className={combinedClassName} />;
+      case "linux.kernel": return <SiLinux className={combinedClassName} />;
+      case "kafka": return <SiApachekafka className={combinedClassName} />;
+      case "cloud.computing": return <FaAws className={combinedClassName} />;
+      case "serverless.framework": return <SiServerless className={combinedClassName} />;
 
-      // Data Science & Machine Learning
-      case "numpy": return <SiNumpy className={`${baseClass} ${className || ""}`.trim()} />;
-      case "pandas": return <SiPandas className={`${baseClass} ${className || ""}`.trim()} />;
-      case "tensorflow": return <SiTensorflow className={`${baseClass} ${className || ""}`.trim()} />;
-      case "pytorch": return <SiPytorch className={`${baseClass} ${className || ""}`.trim()} />;
-      case "matplotlib": return <FaPython className={`${baseClass} ${className || ""}`.trim()} />;
-      case "scikit-learn": return <SiScikitlearn className={`${baseClass} ${className || ""}`.trim()} />;
-      case "hadoop": return <SiApachehadoop className={`${baseClass} ${className || ""}`.trim()} />;
-      case "spark": return <SiApachespark className={`${baseClass} ${className || ""}`.trim()} />;
-      case "keras": return <SiKeras className={`${baseClass} ${className || ""}`.trim()} />;
-      case "opencv": return <SiOpencv className={`${baseClass} ${className || ""}`.trim()} />;
-      case "nltk": return <FaPython className={`${baseClass} ${className || ""}`.trim()} />;
-      case "mllib": return <FaChartBar className={`${baseClass} ${className || ""}`.trim()} />;
-      case "r": return <FaRProject className={`${baseClass} ${className || ""}`.trim()} />;
+      // Data Science & ML
+      case "numpy": return <SiNumpy className={combinedClassName} />;
+      case "pandas": return <SiPandas className={combinedClassName} />;
+      case "tensorflow": return <SiTensorflow className={combinedClassName} />;
+      case "pytorch": return <SiPytorch className={combinedClassName} />;
+      case "scikit.learn": return <SiScikitlearn className={combinedClassName} />;
+      case "hadoop": return <SiApachehadoop className={combinedClassName} />;
+      case "spark": return <SiApachespark className={combinedClassName} />;
+      case "keras": return <SiKeras className={combinedClassName} />;
+      case "opencv": return <SiOpencv className={combinedClassName} />;
+      case "r": return <FaRProject className={combinedClassName} />;
+      case "bert": return <FaCode className={combinedClassName} />;
 
-      // Game Development
-      case "unity": return <FaUnity className={`${baseClass} ${className || ""}`.trim()} />;
-      case "unreal engine": return <SiUnrealengine className={`${baseClass} ${className || ""}`.trim()} />;
-      case "c#": return <FaCode className={`${baseClass} ${className || ""}`.trim()} />;
-      case "c++": return <SiCplusplus className={`${baseClass} ${className || ""}`.trim()} />;
-      case "godot": return <SiGodotengine className={`${baseClass} ${className || ""}`.trim()} />;
-      case "blender": return <SiBlender className={`${baseClass} ${className || ""}`.trim()} />;
+      // Game Development & Graphics
+      case "unity": return <FaUnity className={combinedClassName} />;
+      case "unreal engine": return <SiUnrealengine className={combinedClassName} />;
+      case "godot": return <SiGodotengine className={combinedClassName} />;
+      case "blender": return <SiBlender className={combinedClassName} />;
+      case "3d.graphics": return <SiThreedotjs className={combinedClassName} />;
 
-      // Embedded
-      case "c": return <SiC className={`${baseClass} ${className || ""}`.trim()} />;
-      case "assembly": return <SiAssemblyscript className={`${baseClass} ${className || ""}`.trim()} />;
-      case "microcontrollers": return <SiArduino className={`${baseClass} ${className || ""}`.trim()} />;
-      case "rtos": return <FaRobot className={`${baseClass} ${className || ""}`.trim()} />;
-      case "iot": return <FaRobot className={`${baseClass} ${className || ""}`.trim()} />;
+      // Programming Languages
+      case "c": return <SiC className={combinedClassName} />;
+      case "c++": return <SiCplusplus className={combinedClassName} />;
+      case "c#": return <FaCode className={combinedClassName} />;
+      case "assembly": return <SiAssemblyscript className={combinedClassName} />;
 
-      // Cyber Security
-      case "kali linux": return <SiKalilinux className={`${baseClass} ${className || ""}`.trim()} />;
-      case "wireshark": return <SiWireshark className={`${baseClass} ${className || ""}`.trim()} />;
-      case "metasploit": return <SiMetasploit className={`${baseClass} ${className || ""}`.trim()} />;
-      case "burp suite": return <SiBurpsuite className={`${baseClass} ${className || ""}`.trim()} />;
-      case "nmap": return <SiKalilinux className={`${baseClass} ${className || ""}`.trim()} />;
-      case "owasp": return <SiOwasp className={`${baseClass} ${className || ""}`.trim()} />;
-      case "encryption": return <FaLock className={`${baseClass} ${className || ""}`.trim()} />;
+      // IoT & Embedded
+      case "iot": return <FaRobot className={combinedClassName} />;
+      case "microcontrollers": return <SiArduino className={combinedClassName} />;
+
+      // Security
+      case "kali linux": return <SiKalilinux className={combinedClassName} />;
+      case "wireshark": return <SiWireshark className={combinedClassName} />;
+      case "metasploit": return <SiMetasploit className={combinedClassName} />;
+      case "burp suite": return <SiBurpsuite className={combinedClassName} />;
+      case "owasp": return <SiOwasp className={combinedClassName} />;
+      case "encryption": return <FaLock className={combinedClassName} />;
 
       // Blockchain
-      case "solidity": return <SiSolidity className={`${baseClass} ${className || ""}`.trim()} />;
-      case "ethereum": return <FaEthereum className={`${baseClass} ${className || ""}`.trim()} />;
-      case "hyperledger": return <SiEthereum className={`${baseClass} ${className || ""}`.trim()} />;
-      case "web3.js": return <SiWeb3Dotjs className={`${baseClass} ${className || ""}`.trim()} />;
-      case "truffle": return <SiEthereum className={`${baseClass} ${className || ""}`.trim()} />;
-      case "ganache": return <SiEthereum className={`${baseClass} ${className || ""}`.trim()} />;
+      case "solidity": return <SiSolidity className={combinedClassName} />;
+      case "ethereum": return <FaEthereum className={combinedClassName} />;
+      case "web3.js": return <SiWeb3Dotjs className={combinedClassName} />;
 
       // Testing
-      case "junit": return <SiJunit5 className={`${baseClass} ${className || ""}`.trim()} />;
-      case "selenium": return <SiSelenium className={`${baseClass} ${className || ""}`.trim()} />;
-      case "cucumber": return <SiCucumber className={`${baseClass} ${className || ""}`.trim()} />;
-      case "testng": return <SiTestinglibrary className={`${baseClass} ${className || ""}`.trim()} />;
-      case "appium": return <SiAppium className={`${baseClass} ${className || ""}`.trim()} />;
+      case "junit": return <SiJunit5 className={combinedClassName} />;
+      case "selenium": return <SiSelenium className={combinedClassName} />;
+      case "cucumber": return <SiCucumber className={combinedClassName} />;
+      case "appium": return <SiAppium className={combinedClassName} />;
 
-      // Additional
-      case "graphql": return <SiGraphql className={`${baseClass} ${className || ""}`.trim()} />;
+      // API & GraphQL
+      case "graphql": return <SiGraphql className={combinedClassName} />;
+      case "apollo": return <SiApollographql className={combinedClassName} />;
+
+      // Others
+      case "push.notification": return <SiPushbullet className={combinedClassName} />;
+      case "headless.cms": return <SiStoryblok className={combinedClassName} />;
 
       default:
         console.warn(`No icon found for tech: ${tech}`);
-        return <FaCode className={`${baseClass} ${className || ""}`.trim()} />;
+        return <FaCode className={combinedClassName} />;
     }
   };
 

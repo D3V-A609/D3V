@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import dummyUsers from '../../../constants/dummyUsers';
 import dummyComments from '../../../constants/dummyComments';
 import './CommentModal.css';
+import { useAppDispatch } from '../../../store/hooks/useRedux';
+import { toggleLike } from '../../../store/slices/answerSlice';
 
 interface CommentModalProps {
   answer: Answer;
@@ -11,6 +14,8 @@ interface CommentModalProps {
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({ answer, isOpen, onClose }) => {
+  const dispatch = useAppDispatch();
+  const [isLiked, setIsLiked] = useState(answer.isLiked || false);
   const [currentPage, setCurrentPage] = useState(1);
   const [newComment, setNewComment] = useState('');
   const answerAuthor = dummyUsers.find(user => user.memberId === answer.memberId);
@@ -25,6 +30,15 @@ const CommentModal: React.FC<CommentModalProps> = ({ answer, isOpen, onClose }) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setNewComment('');
+  };
+
+  const handleLikeClick = async () => {
+    try {
+      await dispatch(toggleLike(answer.answerId)).unwrap();
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error('추천 실패:', error);
+    }
   };
 
   if (!isOpen) return null;
@@ -51,7 +65,15 @@ const CommentModal: React.FC<CommentModalProps> = ({ answer, isOpen, onClose }) 
           </div>
           <div className="answer-text">{answer.content}</div> {/* answer -> content로 변경 */}
           <div className="answer-actions">
-            <button className="like-button">추천하기 ({answer.like})</button> {/* answerLike -> like로 변경 */}
+            <button className="like-button" onClick={handleLikeClick}>
+              {isLiked ? (
+                <AiFillLike className="button-icon liked-icon" />
+              ) : (
+                <AiOutlineLike className="button-icon" />
+              )}
+              <span>추천하기</span>
+              <span style={{ marginLeft: '5px' }}>({answer.like})</span>
+            </button>
           </div>
         </div>
 

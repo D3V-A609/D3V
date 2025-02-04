@@ -1,14 +1,13 @@
+// src/store/index.tsx
 import { configureStore } from '@reduxjs/toolkit';
-import answerReducer from './slices/answerSlice';
+import questionReducer from './slices/questionSlice';
+import answerReducer from './slices/answerSlice'
 
 export const store = configureStore({
   reducer: {
-    answers: answerReducer
+    questions: questionReducer,
+    answers: answerReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false
-    })
 });
 
 export type RootState = ReturnType<typeof store.getState>;

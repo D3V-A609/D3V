@@ -1,18 +1,18 @@
 .my-answer-container {
-  margin-bottom: 48px;
+  margin-bottom: 60px;
 }
 
 .answer-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 500;
   margin-bottom: 16px;
 }
 
 .study-icon {
-  font-size: 20px;
+  margin-top: 2px;
 }
 
 .my-answer-content {
@@ -25,7 +25,7 @@
 }
 
 .answer-label {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bold;
   color: #333;
   line-height: 1;
@@ -36,4 +36,7 @@
   font-size: 16px;
   line-height: 1.6;
   color: #333;
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }

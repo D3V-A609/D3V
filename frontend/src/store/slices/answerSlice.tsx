@@ -1,18 +1,33 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { answerApi } from '../services/answerApi';
 
-type AnswerState = {
+// type AnswerState = {
+//   myAnswer: Answer | null;
+//   otherAnswers: Answer[];
+//   loading: boolean;
+//   error: string | null;
+//   // 추가한 부분
+//   myAnswerArr: Answer[];
+// };
+
+interface AnswerState  {
   myAnswer: Answer | null;
   otherAnswers: Answer[];
   loading: boolean;
   error: string | null;
+  // 추가한 부분
+  myAnswerArr: Answer[];
+  servedAnswer: ServedAnswer | null;
 };
 
 const initialState: AnswerState = {
   myAnswer: null,
   otherAnswers: [],
   loading: false,
-  error: null
+  error: null,
+  // 추가한 부분
+  myAnswerArr: [],
+  servedAnswer: null
 };
 
 export const fetchMyAnswer = createAsyncThunk(
@@ -41,19 +56,60 @@ export const fetchOtherAnswers = createAsyncThunk(
   }
 );
 
+// 추가한 부분
+// 질문에 대한 내 모든 답변 불러오기
+export const fetchAllMyAnswersByQID = createAsyncThunk(
+  'answers/fetchMyAllAnswerByQID',
+  async (questionId:number) => {
+    const response = await answerApi.getMyAllAnswerByQId(questionId);
+    return response.data;
+  }
+)
+
+// 첫 질문 등록 시 보내는 요청 (servedquestion)
+export const registServedAnswer = createAsyncThunk(
+  'answer/registServedAnswer',
+  async (payload: { questionId:number, memberId: number; isSolved: boolean 
+  }) => {
+    const response = await answerApi.registServedAnswer(payload);
+    return response.data;
+  }
+)
+
+// 질문 등록하기
+export const registAnswer = createAsyncThunk(
+  'answer/registAnswer',
+  async (payload: { questionId:number, memberId: number; content: string; accessLevel: string; 
+    // isSolved: boolean 
+  }) => {
+    const response = await answerApi.registAnswer(payload);
+    return response.data;
+  }
+)
+
 export const toggleLike = createAsyncThunk(
   'answers/toggleLike',
-  async (answerId: number, { dispatch, getState }) => {
+  async (answerId: number, { getState }) => {
     const state = getState() as { answers: AnswerState };
     const answer = state.answers.otherAnswers.find(a => a.answerId === answerId);
     if (!answer) throw new Error('Answer not found');
 
-    const response = answer.isLiked
-      ? await answerApi.unlikeAnswer(answerId)
-      : await answerApi.likeAnswer(answerId);
-    
-    dispatch(fetchOtherAnswers(response.questionId));
-    return response;
+    const memberId = 1; // 실제 사용자 ID로 교체해야 합니다
+
+    try {
+      const response = answer.isLiked
+        ? await answerApi.unlikeAnswer(answerId, memberId)
+        : await answerApi.likeAnswer(answerId, memberId);
+      
+      return { 
+        answerId, 
+        isLiked: !answer.isLiked, 
+        like: response.likeCount // 서버에서 반환하는 새로운 추천 수
+      };
+    } catch (error) {
+      console.error('Like/Unlike failed:', error);
+      throw error;
+    }
   }
 );
 
@@ -92,12 +148,54 @@ const answerSlice = createSlice({
         state.otherAnswers = [];
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
-        const updatedAnswer = action.payload;
-        state.otherAnswers = state.otherAnswers.map(answer => 
-          answer.answerId === updatedAnswer.answerId 
-            ? { ...answer, like: updatedAnswer.like, isLiked: updatedAnswer.isLiked }
-            : answer
-        );
+        const { answerId, isLiked, like } = action.payload;
+        const answerToUpdate = state.otherAnswers.find(answer => answer.answerId === answerId);
+        if (answerToUpdate) {
+          answerToUpdate.isLiked = isLiked;
+          answerToUpdate.like = like;
+        }
+      })
+
+      // 질문 상세 조회
+      .addCase(fetchAllMyAnswersByQID.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllMyAnswersByQID.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.myAnswerArr = action.payload;
+      })
+      .addCase(fetchAllMyAnswersByQID.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
+
+      // 답변 등록 
+      .addCase(registAnswer.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.myAnswerArr = action.payload;
+      })
+      .addCase(registAnswer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '답변 등록을 실패했습니다.';
+      })
+
+      // 첫 답변의 경우(servedAnswer)
+      .addCase(registServedAnswer.pending, (state) => { // 비동기 작업 시작
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registServedAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
+        state.loading = false;
+        state.servedAnswer = action.payload;
+      })
+      .addCase(registServedAnswer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '답변 등록을 실패했습니다.';
       });
   },
 });

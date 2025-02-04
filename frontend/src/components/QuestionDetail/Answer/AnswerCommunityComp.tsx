@@ -9,25 +9,58 @@ type AnswerCommunityCompProps = {
   questionId: number;
 };
 
+// const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
+//   const dispatch = useAppDispatch();
+//   const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
+
+//   useEffect(() => {
+//     if (questionId) {
+//       dispatch(fetchMyAnswer(questionId));
+//       dispatch(fetchOtherAnswers(questionId));
+//     }
+//   }, [dispatch, questionId]);
+
+//   console.log('questionId:', questionId);
+//   console.log('myAnswer:', myAnswer);
+//   console.log('otherAnswers:', otherAnswers);
+
+//   if (!questionId) return <div>Invalid question ID</div>;
+//   if (loading) return <div>Loading...</div>;
+//   if (error) return <div>Error: {error}</div>;
+
+//   return (
+//     <div className="answer-community-container">
+//       {myAnswer && <MyAnswer answer={myAnswer} />}
+//       <OtherAnswers answers={otherAnswers} />
+//     </div>
+//   );
+// };
+
+// export default AnswerCommunityComp;
+
 const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
   const dispatch = useAppDispatch();
   const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
 
-  useEffect(() => {
-    if (questionId) {
-      dispatch(fetchMyAnswer(questionId));
-      dispatch(fetchOtherAnswers(questionId));
-    }
-  }, [dispatch, questionId]);
+  // 항상 questionId를 1로 설정
+  const fixedQuestionId = 1;
 
-  if (!questionId) return <div>Invalid question ID</div>;
+  useEffect(() => {
+    dispatch(fetchMyAnswer(fixedQuestionId));
+    dispatch(fetchOtherAnswers(fixedQuestionId));
+  }, [dispatch]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="answer-community-container">
       {myAnswer && <MyAnswer answer={myAnswer} />}
-      <OtherAnswers answers={otherAnswers} />
+      {otherAnswers.length > 0 ? (
+        <OtherAnswers answers={otherAnswers} />
+      ) : (
+        <div>No other answers available</div>
+      )}
     </div>
   );
 };
