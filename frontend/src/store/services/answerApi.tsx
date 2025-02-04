@@ -12,17 +12,14 @@ export const answerApi = {
   },
 
   likeAnswer: async (answerId: number) => {
-    const response = await api.post(`/answer/${answerId}/like`, { 
-      params: { memberId: 1 }
-    });
+    // ✅ 쿼리 파라미터로 전송 (서버가 본문 대신 쿼리 파라미터를 요구하는 경우)
+    const response = await api.post(`/answer/${answerId}/like?memberId=1`);
     return response.data;
   },
-  
 
   unlikeAnswer: async (answerId: number) => {
-    const response = await api.delete(`/answer/${answerId}/like`, {
-      data: { memberId: 1 } // DELETE 요청 본문 처리
-    });
+    // ✅ 쿼리 파라미터로 전송
+    const response = await api.delete(`/answer/${answerId}/like?memberId=1`);
     return response.data;
   }
 };
