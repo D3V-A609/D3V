@@ -15,7 +15,7 @@ import {
   SiCplusplus, SiC, SiArduino, SiKalilinux, SiWireshark, SiMetasploit,
   SiBurpsuite, SiOwasp, SiSolidity, SiWeb3Dotjs, SiSelenium, 
   SiJunit5, SiCucumber, SiTestinglibrary, SiAppium, SiGraphql,
-  SiSpringboot, SiAssemblyscript, SiEthereum
+  SiSpringboot, SiAssemblyscript, SiEthereum, SiWebassembly, SiNextdotjs
 } from "react-icons/si";
 
 import "./TechIcon.css";
@@ -31,7 +31,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, className }) => {
     return null;
   }
 
-  const normalizedTech = tech.trim().toLowerCase();
+  const normalizedTech = tech.trim().toLowerCase().replace(/[_-]/g, '.');
 
   const getIcon = (tech: string) => {
     const baseClass = `tech-icon ${tech}`;
@@ -46,7 +46,9 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, className }) => {
       case "angular": return <FaAngular className={`${baseClass} ${className || ""}`.trim()} />;
       case "typescript": return <SiTypescript className={`${baseClass} ${className || ""}`.trim()} />;
       case "sass": return <FaSass className={`${baseClass} ${className || ""}`.trim()} />;
-
+      case "webassembly": return <SiWebassembly className={`${baseClass} ${className || ""}`.trim()} />;
+      case "next.js": return <SiNextdotjs className={`${baseClass} ${className || ""}`.trim()} />;
+      
       // Backend
       case "java": return <FaJava className={`${baseClass} ${className || ""}`.trim()} />;
       case "spring": return <SiSpring className={`${baseClass} ${className || ""}`.trim()} />;
