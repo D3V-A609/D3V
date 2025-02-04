@@ -108,15 +108,15 @@ const skillStyles: {
 };
 
 
-// 기본 값 정의
-const defaultSkillStyle = {
+// 기본 값 정의 (기본적으로 backgroundColor는 회색)
+const defaultSkillStyle = (key: string) => ({
   backgroundColor: "#B0B0B0",  // 회색
-  skillName: "Unknown",
-};
+  skillName: key ? key.charAt(0).toUpperCase() + key.slice(1) : "Unknown"  // 첫 글자 대문자 변환
+});
 
 // 함수로 스타일 가져오기
 const getSkillStyle = (key: string) => {
-  return skillStyles[key] || defaultSkillStyle;
+  return skillStyles[key] || defaultSkillStyle(key);
 };
 
 export default getSkillStyle;
