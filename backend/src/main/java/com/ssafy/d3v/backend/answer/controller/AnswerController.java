@@ -43,7 +43,7 @@ public class AnswerController {
     }
 
     @Operation(summary = "답변 전체 조회(다른 사용자 답변 보기)")
-    @GetMapping("/api/question/{question_id}/answer")
+    @GetMapping("/question/{question_id}/answer")
     public ResponseEntity<List<AnswerResponse>> getTotalAnswers(@PathVariable("question_id") long questionId) {
         return ResponseEntity.ok().body(answerService.getTotalAnswers(questionId));
     }
