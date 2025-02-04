@@ -30,4 +30,10 @@ public class Question {
     @NotBlank
     @Column(name = "standard_answer")
     private String standardAnswer;
+
+    @Builder
+    public Question(String content, String standardAnswer) {
+        this.content = content;
+        this.standardAnswer = standardAnswer;
+    }
 }

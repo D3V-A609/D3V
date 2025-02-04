@@ -55,4 +55,11 @@ public class Member extends BaseEntity {
 
     @Column(name = "provider_type")
     private String providerType;
+
+    @Builder
+    public Member(String nickname, String email, String password) {
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+    }
 }

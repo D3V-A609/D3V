@@ -1,4 +1,3 @@
-
 package com.ssafy.d3v.backend.like.entity;
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
@@ -36,4 +35,10 @@ public class Likes {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer answer;
+
+    @Builder
+    public Likes(Member member, Answer answer) {
+        this.member = member;
+        this.answer = answer;
+    }
 }
