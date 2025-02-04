@@ -1,10 +1,10 @@
 // src/store/index.tsx
 import { configureStore } from '@reduxjs/toolkit';
-import dailyQuestionReducer from './slices/dailyQuestionSlice';
+import questionReducer from './slices/questionSlice';
 
 export const store = configureStore({
   reducer: {
-    dailyQuestions: dailyQuestionReducer,
+    questions: questionReducer,
   },
 });
 

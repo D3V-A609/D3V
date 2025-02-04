@@ -1,14 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./QuestionDetailPage.css";
-
-import { useLocation, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-
+import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../store/hooks/useRedux';
 import FootPrint from "../assets/images/footprint.png";
 import QuestionContentCard from '../components/QuestionDetail/Question/QuestionContentCard';
-
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
-
 import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
 
@@ -17,39 +13,52 @@ const QuestionDetailPage: React.FC = () => {
     "input" | "community"
   >("input");
 
-  const location = useLocation();
-  const question = location.state?.question as Partial<Question> | undefined;
-  const isTodayQ = question? true: false; // today 질문인지 여부 확인
+  // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
+  const { selectedQuestionId, questions, dailyQuestions } = useAppSelector(
+    state => state.questions
+  );
 
-  // 만약 직접 URL을 입력해서 접근했다면, 홈으로 리디렉션
-  if(!question){
+  // selectedQuestionId를 사용하여 모든 질문 목록에서 해당 질문 찾기
+  const question = [...questions, ...dailyQuestions].find(
+    q => q.questionId === selectedQuestionId
+  );
+  
+  // 일일 질문인지 확인
+  const isTodayQ = dailyQuestions.some(q => q.questionId === selectedQuestionId);
+
+  // 선택된 질문이 없으면 홈으로 리디렉션
+  if (!selectedQuestionId || !question) {
     return <Navigate to="/" />;
   }
 
-  // 버튼 클릭 시 호출할 함수들 정의
-  // => 답변 입력 컴포넌트(default)
   const handleShowAnswerInput = () => {
     if (currentQuestionDetailView !== "input") {
       setQuestionDetailView("input");
     }
   };
-  // => 답변 커뮤니티 컴포넌트
+
   const handleShowCommunity = () => {
     if (currentQuestionDetailView !== "community") {
       setQuestionDetailView("community");
     }
   };
   
-  return(
+  return (
     <div className="question-detail-container">
-      <div className="question-detail_info-text  text-gray2">
-        <img src={FootPrint} className="question-detail_footprint-img" />
+      <div className="question-detail_info-text text-gray2">
+        <img 
+          src={FootPrint} 
+          className="question-detail_footprint-img" 
+          alt="footprint"
+        />
         취뽀의 길로 한 발자국 더 !
       </div>
       <QuestionContentCard question={question} isToday={isTodayQ} />
-      <QuestionAnswerBtnGroup onShowAnswerInput={handleShowAnswerInput} onShowAnswerCommunity={handleShowCommunity} />
+      <QuestionAnswerBtnGroup 
+        onShowAnswerInput={handleShowAnswerInput} 
+        onShowAnswerCommunity={handleShowCommunity} 
+      />
 
-      {/* 조건부 렌더링 */}
       {currentQuestionDetailView === "input" && <AnswerInput />}
       {currentQuestionDetailView === "community" && <AnswerCommunityComp />}
     </div>
