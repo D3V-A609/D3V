@@ -2,13 +2,13 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
-import com.ssafy.d3v.backend.question.controller.dto.ServedQuestionCreate;
-import com.ssafy.d3v.backend.question.controller.dto.ServedQuestionUpdate;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
-import com.ssafy.d3v.backend.question.service.dto.ServedQuestionDto;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +28,7 @@ public class ServedQuestionService{
     private final QuestionRepository questionRepository;
 
     @Transactional
-    public ServedQuestionDto createServedQuestion(ServedQuestionCreate dto, Boolean isDaily) {
+    public ServedQuestionDto createServedQuestion(ServedQuestionCreateRequest dto, Boolean isDaily) {
 
         Member member = memberRepository.findById(dto.memberId())
                 .orElseThrow(() -> new EntityNotFoundException("Member not found"));
@@ -62,7 +62,7 @@ public class ServedQuestionService{
     }
 
     @Transactional
-    public ServedQuestionDto updateServedQuestion(Long id, ServedQuestionUpdate dto) {
+    public ServedQuestionDto updateServedQuestion(Long id, ServedQuestionUpdateRequest dto) {
         ServedQuestion servedQuestion = servedQuestionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ServedQuestion not found"));
 
