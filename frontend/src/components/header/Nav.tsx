@@ -1,8 +1,9 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 const Nav: React.FC = () => {
-    const location = useLocation(); // 현재 경로 가져오기
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const links = [
         { to: '/', label: 'Home' },
@@ -13,23 +14,30 @@ const Nav: React.FC = () => {
         { to: '/my', label: '마이 페이지' },
     ];
 
-  return (
-    <nav className="header-container_nav-section">
-      <ul>
-        {
-            links.map((item) => (
-                <Link
-                    key={item.to}
-                    to={item.to}
-                    className={`navbar-item ${location.pathname === item.to ? 'active-link' : ''}`}
-                >
-                    <span>{item.label}</span>
-                </Link>
-             ))
+    const handleClick = (to: string) => {
+        if (to === '/AllQuestionPage' && location.pathname === to) {
+            // 현재 경로가 AllQuestionPage이고 다시 클릭했을 때
+            navigate(to, { replace: true });
+            window.location.reload();
         }
-      </ul>
-    </nav>
-  );
+    };
+
+    return (
+        <nav className="header-container_nav-section">
+            <ul>
+                {links.map((item) => (
+                    <Link
+                        key={item.to}
+                        to={item.to}
+                        className={`navbar-item ${location.pathname === item.to ? 'active-link' : ''}`}
+                        onClick={() => handleClick(item.to)}
+                    >
+                        <span>{item.label}</span>
+                    </Link>
+                ))}
+            </ul>
+        </nav>
+    );
 };
 
 export default Nav;
