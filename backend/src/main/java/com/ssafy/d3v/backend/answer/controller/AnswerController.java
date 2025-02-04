@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class AnswerController {
     @Operation(summary = "답변 생성")
     @PostMapping("/question/{question_id}/answer")
     public ResponseEntity<List<AnswerResponse>> create(@PathVariable("question_id") long questionId,
-                                                       AnswerRequest answerRequest) {
+                                                       @RequestBody AnswerRequest answerRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(answerService.create(questionId, answerRequest));
     }
 
