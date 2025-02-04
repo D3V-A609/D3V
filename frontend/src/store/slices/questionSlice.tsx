@@ -3,30 +3,46 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import questionApi from '../services/questionApi';
 import dailyQuestionApi from '../services/dailyQuestionApi';
 
+// 질문 관련 상태 타입 정의
 interface QuestionState {
   questions: Question[];         // 일반 질문 목록
   dailyQuestions: Question[];    // 일일 질문 목록
-  loading: boolean;
-  error: string | null;
-  selectedQuestionId: number | null;
+  loading: boolean;              // 로딩 상태
+  error: string | null;          // 에러 메시지
+  selectedQuestionId: number | null;  // 선택된 질문 ID
+  pagination: {                  // 페이지네이션 정보
+    currentPage: number;         // 현재 페이지
+    totalPages: number;          // 전체 페이지 수
+    totalElements: number;       // 전체 항목 수
+    size: number;               // 페이지당 항목 수
+  };
 }
 
-const initialState: QuestionState = { 
+// 초기 상태 정의
+const initialState: QuestionState = {
   questions: [],
   dailyQuestions: [],
   loading: false,
   error: null,
   selectedQuestionId: null,
+  pagination: {
+    currentPage: 0,
+    totalPages: 0,
+    totalElements: 0,
+    size: 15,
+  },
 };
 
+// 질문 목록 조회 비동기 액션
 export const fetchQuestions = createAsyncThunk(
   'questions/fetchAll',
-  async () => {
-    const response = await questionApi.getQuestions();
+  async ({ page = 0, size = 15 }: { page?: number; size?: number } = {}) => {
+    const response = await questionApi.getQuestions(page, size);
     return response.data;
   }
 );
 
+// 일일 질문 조회 비동기 액션
 export const fetchDailyQuestions = createAsyncThunk(
   'questions/fetchDaily',
   async () => {
@@ -35,6 +51,7 @@ export const fetchDailyQuestions = createAsyncThunk(
   }
 );
 
+// 개별 질문 조회 비동기 액션
 export const fetchQuestionById = createAsyncThunk(
   'question/fetchQuestion',
   async (questionId: number) => {
@@ -43,33 +60,40 @@ export const fetchQuestionById = createAsyncThunk(
   }
 )
 
+// 질문 관련 리듀서 정의
 const questionSlice = createSlice({
   name: 'questions',
   initialState,
   reducers: {
+    // 선택된 질문 ID 설정
     setSelectedQuestionId: (state, action) => {
       state.selectedQuestionId = action.payload;
     },
+    // 선택된 질문 ID 초기화
     clearSelectedQuestionId: (state) => {
       state.selectedQuestionId = null;
     }
   },
   extraReducers: (builder) => {
     builder
-      // 일반 질문 fetch 처리
-      .addCase(fetchQuestions.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // 일반 질문 목록 조회 처리
       .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.loading = false;
-        state.questions = action.payload;
+        state.questions = action.payload.content;
+        // 페이지네이션 정보 업데이트
+        state.pagination = {
+          currentPage: action.payload.number,
+          totalPages: action.payload.totalPages,
+          totalElements: action.payload.totalElements,
+          size: action.payload.size,
+        };
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
       })
-      // 일일 질문 fetch 처리
+
+      // 일일 질문 조회 처리
       .addCase(fetchDailyQuestions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -83,12 +107,12 @@ const questionSlice = createSlice({
         state.error = action.error.message || '일일 질문을 불러오는데 실패했습니다.';
       })
 
-      // 질문 상세 조회
-      .addCase(fetchQuestionById.pending, (state) => { // 비동기 작업 시작
+      // 개별 질문 조회 처리
+      .addCase(fetchQuestionById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchQuestionById.fulfilled, (state, action) => { // 비동기 작업 성공
+      .addCase(fetchQuestionById.fulfilled, (state, action) => {
         state.loading = false;
         state.questions[0] = action.payload;
       })
@@ -99,5 +123,6 @@ const questionSlice = createSlice({
   },
 });
 
+// 액션 생성자 내보내기
 export const { setSelectedQuestionId, clearSelectedQuestionId } = questionSlice.actions;
 export default questionSlice.reducer;
