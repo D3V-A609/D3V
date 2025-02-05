@@ -66,11 +66,6 @@ const QuestionDetailPage: React.FC = () => {
   return (
     <div className="question-detail-container">
       <div className="question-detail_info-text text-gray2">
-        <img 
-          src={FootPrint} 
-          className="question-detail_footprint-img" 
-          alt="footprint"
-        />
         <div className="question-detail_info-text text-gray2">
           <img 
             src={FootPrint} 

@@ -13,7 +13,10 @@ const QuestionAnswerBtnGroup: React.FC<QuestionAnswerBtnProps> = ({
 }) => {
   return (
     <div className="question-answer-btn-group">
-      <div className="btn-question-answer ${currentView === 'input' ? 'active' : ''}`}" onClick={onShowAnswerInput}>
+      <div 
+        className={`btn-question-answer ${currentView === 'input' ? 'active' : ''}`}
+        onClick={onShowAnswerInput}
+      >
         답변하기
       </div>
       <div
