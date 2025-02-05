@@ -38,9 +38,8 @@ public class QuestionService {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
-    public Page<Question> getAllQuestions(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return questionRepository.findAll(pageable);
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
     }
     @Transactional
     public List<Question> getDailyQuestions() {
