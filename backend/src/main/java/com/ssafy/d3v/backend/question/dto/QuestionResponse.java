@@ -11,29 +11,15 @@ import lombok.Builder;
 
 @Builder
 public record QuestionResponse(
-        Long questionId,
-        String content,
-        String standardAnswer,
+        Question question,
         String status,
-        Integer challengeCount,
-        Integer answerCount,
         List<SkillType> skillList,
         List<DevelopmentRole> jobList
 ) {
-    public  static QuestionResponse from(Question question, List<Skill> skills, List<Job> jobs) {
-        // 임시 랜덤값 생성 코드
-        Random random = new Random();
-        String tempStatus = random.nextBoolean() ? "solved" : "unsolved";
-        int tempChallengeCount = random.nextInt(21); // 0부터 20까지
-        int tempAnswerCount = tempChallengeCount + random.nextInt((51 - tempChallengeCount));
-
+    public  static QuestionResponse from(Question question, String Status, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
-                .questionId(question.getId())
-                .content(question.getContent())
-                .standardAnswer(question.getStandardAnswer())
-                .status(tempStatus)
-                .challengeCount(tempChallengeCount)
-                .answerCount(tempAnswerCount)
+                .question(question)
+                .status(Status)
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
                 .build();

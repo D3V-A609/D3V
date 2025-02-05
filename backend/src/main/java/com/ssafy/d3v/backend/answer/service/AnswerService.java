@@ -11,5 +11,6 @@ public interface AnswerService {
     List<AnswerResponse> create(long questionId, AnswerRequest answerRequest);
 
     List<AnswerResponse> getMyAnswers(long questionId);
+
     List<AnswerResponse> getTotalAnswers(long questionId);
 }
