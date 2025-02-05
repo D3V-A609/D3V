@@ -11,10 +11,13 @@ export const answerApi = {
     return response.data.filter(answer => answer.memberId !== 1);
   },
 
-  likeAnswer: async (answerId: number) => {
-    const response = await api.post(`/answer/${answerId}/like`, { 
-      params: { memberId: 1 }
-    });
+  likeAnswer: async (answerId: number, memberId: number) => {
+    const response = await api.post(`/answer/${answerId}/like`, { memberId });
+    return response.data;
+  },
+
+  unlikeAnswer: async (answerId: number, memberId: number) => {
+    const response = await api.delete(`/answer/${answerId}/like`, { params: { memberId } });
     return response.data;
   },
 
@@ -33,11 +36,4 @@ export const answerApi = {
   // 첫 답변 등록 시 보내는 요청(servedquestion)
   registServedAnswer: (payload: { memberId: number; questionId:number; isSolved: boolean;}) => {return api.post<ServedAnswer>(`/servedquestion`, payload)},
   
-
-  unlikeAnswer: async (answerId: number) => {
-    const response = await api.delete(`/answer/${answerId}/like`, {
-      data: { memberId: 1 } // DELETE 요청 본문 처리
-    });
-    return response.data;
-  }
 };

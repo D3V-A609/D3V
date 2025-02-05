@@ -1,7 +1,7 @@
-interface Comment {
-    commentId: number;
-    answerId: number;
-    memberId: number;
-    content: string;
-    createdAt: string;
-  }
+declare type Comment = {
+  commentId: number;
+  answerId: number;
+  memberId: number;
+  content: string;
+  createdAt: string;
+};

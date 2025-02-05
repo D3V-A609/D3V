@@ -89,19 +89,30 @@ export const registAnswer = createAsyncThunk(
 
 export const toggleLike = createAsyncThunk(
   'answers/toggleLike',
-  async (answerId: number, { dispatch, getState }) => {
+  async (answerId: number, { getState }) => {
     const state = getState() as { answers: AnswerState };
     const answer = state.answers.otherAnswers.find(a => a.answerId === answerId);
     if (!answer) throw new Error('Answer not found');
 
-    const response = answer.isLiked
-      ? await answerApi.unlikeAnswer(answerId)
-      : await answerApi.likeAnswer(answerId);
-    
-    dispatch(fetchOtherAnswers(response.questionId));
-    return response;
+    const memberId = 1; // 실제 사용자 ID로 교체
+
+    try {
+      const response = answer.isLiked
+        ? await answerApi.unlikeAnswer(answerId, memberId)
+        : await answerApi.likeAnswer(answerId, memberId);
+      
+      return { 
+        answerId, 
+        isLiked: !answer.isLiked,
+        like: answer.isLiked ? answer.like - 1 : answer.like + 1
+      };
+    } catch (error) {
+      console.error('Like/Unlike failed:', error);
+      throw error;
+    }
   }
 );
+
 
 const answerSlice = createSlice({
   name: 'answers',
@@ -138,13 +149,13 @@ const answerSlice = createSlice({
         state.otherAnswers = [];
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
-        const updatedAnswer = action.payload;
-        state.otherAnswers = state.otherAnswers.map(answer => 
-          answer.answerId === updatedAnswer.answerId 
-            ? { ...answer, like: updatedAnswer.like, isLiked: updatedAnswer.isLiked }
-            : answer
-        );
-      }) // ;
+        const { answerId, isLiked, like } = action.payload;
+        const answerToUpdate = state.otherAnswers.find(answer => answer.answerId === answerId);
+        if (answerToUpdate) {
+          answerToUpdate.isLiked = isLiked;
+          answerToUpdate.like = like;
+        }
+      })
 
       // 질문 상세 조회
       .addCase(fetchAllMyAnswersByQID.pending, (state) => { // 비동기 작업 시작
