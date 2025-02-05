@@ -24,7 +24,8 @@ const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, question
 
   // 글 등록 성공 시 Toggle 열기 및 스크롤 이동
   const handleSuccess = () => {
-    btnToggleOpen();
+    // btnToggleOpen();
+    setIsToggleOpen(true);
     toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 스크롤 이동
   };
 
