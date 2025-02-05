@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useState, useEffect } from 'react';
 
 import { CiMicrophoneOn } from "react-icons/ci";
-import TimerSetting from "./TimerSetting";
+import TimerSetting from "./Input/Timer/TimerSetting";
 import SelectPublicBtn from "../../../features/Answer/SelectPublicBtn";
 // import { useAppDispatch } from "react-redux";
 import { useAppDispatch } from "../../../store/hooks/useRedux";
@@ -22,8 +22,10 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({questionId, hasMyAnswe
   const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: null(타이머를 선택하지 않음))
   const [isRunning, setIsRunning] = useState(false); // 타이머 실행 여부
 
-  const remainingTimeRef = useRef<number | null>(null); //useRef로 타이머 시간 상태 관리 (useEffect로 관리 시 클로서 문제 발생 -> 값이 변경되더라도 클로저에 저장된 이전 값이 사용되어 타이머 종료 알림이 중복 발생)
-  const [displayTime, setDisplayTime] = useState<number | null>(null); // 렌더링용 상태
+  const remainingTimeRef = useRef<number | null>(null); // 실제 남은 시간 저장장 
+  //useRef로 타이머 시간 상태 관리 (useEffect로 관리 시 클로서 문제 발생 -> 값이 변경되더라도 클로저에 저장된 이전 값이 사용되어 타이머 종료 알림이 중복 발생)
+  const [displayTime, setDisplayTime] = useState<number | null>(null); // 화면 출력용 변수(default: 30초)
+  const startTimeRef = useRef<number | null>(null); // 타이머의 시작 시간
 
   const [selectedPublicOption, setPublicOption] = useState("PUBLIC"); // 답변 공개 범위 설정 상태(default: "PUBLIC(전체공개)" => "PUBLIC", "PRIVATE", "PROTECTED")
   const [isIDK, setIsIDK] = useState(false); // 모르겠어요 체크박스 버튼 상태(default: 알고 있어요(모르겠어요X))
@@ -92,27 +94,53 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({questionId, hasMyAnswe
   };
   
   // 타이머 시작
+  // const startTimer = () => {
+  //   if (isRunning || remainingTimeRef.current === null) return; // 이미 실행 중이면 무시
+  //   setIsRunning(true);
+  //   remainingTimeRef.current = selectedTime;
+  //   setDisplayTime(selectedTime);  // 타이머 초기화
+  // };
+
+  // 타이머 시작 / 재개
   const startTimer = () => {
-    if (isRunning || remainingTimeRef.current === null) return; // 이미 실행 중이면 무시
+    if(isRunning || remainingTimeRef.current === null) return; // 타이머를 이미 실행중이거나 설정하지 않은 경우 무시
     setIsRunning(true);
-    remainingTimeRef.current = selectedTime;
-    setDisplayTime(selectedTime);  // 타이머 초기화
+    startTimeRef.current = Date.now(); // timer의 시작 시점의 시간을 기록록
+  }
+
+  // 타이머 일시 정지
+  const pauseTimer = () => {
+    if(!isRunning || remainingTimeRef.current === null) return; // 실행 중이지 않으면 무시
+    setIsRunning(false);
+
+    // 남은 시간을 현재 시점 기준으로 업데이트
+    if(startTimeRef.current !== null){
+      const currentTime = Date.now();
+      const elapsedTime = Math.floor((currentTime-startTimeRef.current) / 1000); // 경과 시간 계산
+      remainingTimeRef.current = Math.max(remainingTimeRef.current - elapsedTime, 0); // 남은 시간 업데이트
+    }
   };
 
-  // 타이머 동작 관리(변경 필요)
+  // 타이머 동작 관리
   useEffect(() => {
-    if (!isRunning || remainingTimeRef.current === null) return;
+    if (!isRunning || remainingTimeRef.current === null || startTimeRef.current === null) return;
 
-    const timer = setInterval(() => {
-      if (remainingTimeRef.current !== null) {
-        remainingTimeRef.current -= 1;
-        setDisplayTime(remainingTimeRef.current);  // UI 업데이트
+      const timer = setInterval(() => {
+      const currentTime = Date.now();
 
-        if (remainingTimeRef.current <= 0) {
+      // startTimeRef와 remainingTimeRef가 null이 아닌지 안전하게 접근
+      if (startTimeRef.current !== null && remainingTimeRef.current !== null) {
+        const elapsedTime = Math.floor((currentTime - startTimeRef.current) / 1000);
+        const newRemainingTime = Math.max(remainingTimeRef.current - elapsedTime, 0);
+
+        setDisplayTime(newRemainingTime);
+
+        // 남은 시간이 0일 경우 타이머 종료
+        if (newRemainingTime <= 0) {
           clearInterval(timer);
-          alert("타이머 종료!");
           setIsRunning(false);
           remainingTimeRef.current = null;
+          alert("타이머 종료!");
         }
       }
     }, 1000);
@@ -140,6 +168,7 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({questionId, hasMyAnswe
             handleDropdownToggle={handleDropdownToggle}
             handleTimeSelect={handleTimeSelect}
             startTimer={startTimer}
+            pauseTimer={pauseTimer}
           />
 
         </div>
