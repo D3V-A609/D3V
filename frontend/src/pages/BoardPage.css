@@ -2,7 +2,7 @@
 /* 페이지 전체 레이아웃 */
 .board-page {
   padding: 40px 40px;
-  max-width: 1200px; 
+  width: 1200px; 
   margin: 0 auto;
 }
 
