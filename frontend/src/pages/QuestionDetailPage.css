@@ -90,15 +90,40 @@
   border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.question-answer-btn-group .btn-question-answer {
+
+.btn-question-answer {
+  border: 1px solid #cfeaff;
+  background-color: white;
+}
+
+.btn-question-answer.active {
   background-color: #cfeaff;
 }
 
-.question-answer-btn-group .btn-question-answer-commu {
-  border-color: #cfeaff;
-  border-style: solid;
+.btn-question-answer-commu {
+  border: 1px solid #cfeaff;
+  background-color: white;
+}
+
+.btn-question-answer-commu.active {
+  background-color: #cfeaff;
+}
+
+/* 호버 효과 */
+.btn-question-answer:hover:not(.active),
+.btn-question-answer-commu:hover:not(.active) {
+  background-color: #e8f3ff;
+}
+
+.btn-question-answer.active:hover,
+.btn-question-answer-commu.active:hover {
+  background-color: #b9dcff;
 }
 
 /* 답변 입력 부분 => AnswerInputComp style 정의 */

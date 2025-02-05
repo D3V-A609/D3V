@@ -30,12 +30,16 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
 
   const handleLikeClick = async () => {
     try {
-      await dispatch(toggleLike(answer.answerId)).unwrap();
-      setIsLiked(!isLiked);
+      const resultAction = await dispatch(toggleLike(answer.answerId));
+      if (toggleLike.fulfilled.match(resultAction)) {
+        const { like } = resultAction.payload;
+        setIsLiked(!isLiked);
+      }
     } catch (error) {
       console.error('추천 실패:', error);
     }
   };
+  
 
   if (!member) return null;  // 멤버 데이터가 없으면 렌더링 안 함
 

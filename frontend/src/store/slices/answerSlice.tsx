@@ -94,7 +94,7 @@ export const toggleLike = createAsyncThunk(
     const answer = state.answers.otherAnswers.find(a => a.answerId === answerId);
     if (!answer) throw new Error('Answer not found');
 
-    const memberId = 1; // 실제 사용자 ID로 교체해야 합니다
+    const memberId = 1; // 실제 사용자 ID로 교체
 
     try {
       const response = answer.isLiked
@@ -103,8 +103,8 @@ export const toggleLike = createAsyncThunk(
       
       return { 
         answerId, 
-        isLiked: !answer.isLiked, 
-        like: response.likeCount // 서버에서 반환하는 새로운 추천 수
+        isLiked: !answer.isLiked,
+        like: answer.isLiked ? answer.like - 1 : answer.like + 1
       };
     } catch (error) {
       console.error('Like/Unlike failed:', error);
@@ -112,6 +112,7 @@ export const toggleLike = createAsyncThunk(
     }
   }
 );
+
 
 const answerSlice = createSlice({
   name: 'answers',

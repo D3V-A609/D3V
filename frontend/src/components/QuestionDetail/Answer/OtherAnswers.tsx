@@ -42,11 +42,6 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
   return (
     <div className="other-answers-container">
       <div className="other-answers-header">
-        {/* <div className="title">
-          <span className="text-brackets">{"{"}</span>
-          다른 사람들의 답변 보기
-          <span className="text-brackets">{"}"}</span>
-        </div> */}
         <PageHeader
         title='다른 사람들의 답변 보기' description='다양한 면접 답변과 의견을 한 눈에 보며 인사이트를 얻어보세요.' 
         icon={ <FcBinoculars /> }/>

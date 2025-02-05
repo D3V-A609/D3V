@@ -2,6 +2,10 @@
   justify-items: start;
 }
 
+.my-answer-records-container .records-timeline{
+  width: 100%;
+  }
+
 /* 내 답변 기록 타임라인의 툴바를 없앰 */
 .my-answer-records-container .records-timeline .fwRzpx{
   display: none;

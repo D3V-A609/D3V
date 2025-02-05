@@ -76,10 +76,11 @@ const QuestionDetailPage: React.FC = () => {
       </div>
       {questions[0] && <>
         <QuestionContentCard question={questions[0]} isToday={isTodayQ} />
-      <QuestionAnswerBtnGroup 
-        onShowAnswerInput={handleShowAnswerInput} 
-        onShowAnswerCommunity={handleShowCommunity} 
-      />
+        <QuestionAnswerBtnGroup 
+          onShowAnswerInput={handleShowAnswerInput} 
+          onShowAnswerCommunity={handleShowCommunity}
+          currentView={currentQuestionDetailView}
+        />
 
       {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
       {/* {currentQuestionDetailView === "community" && selectedQuestionId !== null && (

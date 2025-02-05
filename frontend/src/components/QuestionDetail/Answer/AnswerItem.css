@@ -118,3 +118,22 @@
 .liked-icon {
   color: #1E9FFF; /* 추천된 상태의 아이콘 색상 */
 }
+
+.btn-comment,
+.btn-like {
+  transition: all 0.3s ease;
+}
+
+.btn-comment:hover,
+.btn-like:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.btn-like:hover .button-icon {
+  color: #0056b3;
+}
+
+.btn-like:hover .liked-icon {
+  color: #0056b3;
+}
