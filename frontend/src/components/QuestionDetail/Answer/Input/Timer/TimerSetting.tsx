@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MdOutlineTimer } from 'react-icons/md';
 import { FaRegCirclePlay } from "react-icons/fa6";
+import { FaPauseCircle } from "react-icons/fa";
 import "./TimerSetting.css";
 
 interface TimerSettingProps {
@@ -11,6 +12,7 @@ interface TimerSettingProps {
   handleDropdownToggle: () => void;
   handleTimeSelect: (time: number | null ) => void;
   startTimer: () => void;
+  pauseTimer: () => void;
 }
 
 const TimerSetting: React.FC<TimerSettingProps> = ({
@@ -20,7 +22,8 @@ const TimerSetting: React.FC<TimerSettingProps> = ({
   isRunning,
   handleDropdownToggle,
   handleTimeSelect,
-  startTimer
+  startTimer,
+  pauseTimer
 }) => {
   return(
     <div className="timer-setting-container">
@@ -50,11 +53,26 @@ const TimerSetting: React.FC<TimerSettingProps> = ({
             </div>
           </div>
         )}
-
+{/* 
       {remainingTime != null && (
+        isStart ? (
         <FaRegCirclePlay
           className={`play-icon ${isRunning ? "disabled" : ""}`}
-          onClick={!isRunning ? startTimer : undefined} />
+          onClick={
+            !isRunning && !isStart ? startTimer : clickTimerStart} /> ) : (
+        <FaPauseCircle 
+          className={`play-icon ${isRunning ? "disabled" : ""}`}
+          onClick={!isRunning && isStart ? pauseTimer : clickTimerStart } />)
+      )} */}
+
+      {remainingTime !== null && (
+        <div>
+          {isRunning ? (
+            <FaPauseCircle className="play-icon" onClick={pauseTimer} />
+          ) : (
+            <FaRegCirclePlay className="play-icon" onClick={startTimer} />
+          )}
+        </div>
       )}
     </div>
   );
