@@ -38,9 +38,11 @@ public class QuestionService {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public Page<Question> getAllQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return questionRepository.findAll(pageable);
     }
+
     @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함

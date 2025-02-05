@@ -51,10 +51,20 @@ public class QuestionController {
 
     @GetMapping("/question")
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
-    public ResponseEntity<List<QuestionResponse>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
-        return getListResponseEntity(questions);
+    public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        Page<Question> questionsPage = questionService.getAllQuestions(page, size);
+
+        Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
+            List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
+            List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
+            return QuestionResponse.from(q, skills, jobs);
+        });
+
+        return ResponseEntity.ok(questionResponsesPage);
     }
+
 
     @GetMapping("/question/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
