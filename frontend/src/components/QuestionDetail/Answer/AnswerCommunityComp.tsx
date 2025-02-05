@@ -43,7 +43,7 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
   const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
 
   // 항상 questionId를 1로 설정
-  const fixedQuestionId = 1;
+  const fixedQuestionId = questionId;
 
   useEffect(() => {
     dispatch(fetchMyAnswer(fixedQuestionId));

@@ -89,12 +89,12 @@ const QuestionDetailPage: React.FC = () => {
         />
 
       {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
-      {/* {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
+      {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
         <AnswerCommunityComp questionId={selectedQuestionId} />
-      )} */}
-      {currentQuestionDetailView === "community" && (
-        <AnswerCommunityComp questionId={1} />
       )}
+      {/* {currentQuestionDetailView === "community" && (
+        <AnswerCommunityComp questionId={1} />
+      )} */}
       </>}
       
     </div>
