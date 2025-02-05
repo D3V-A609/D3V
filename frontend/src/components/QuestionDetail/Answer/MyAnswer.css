@@ -25,7 +25,7 @@
 }
 
 .answer-label {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: #333;
   line-height: 1;
@@ -39,4 +39,14 @@
   text-align: center;
   display: flex;
   justify-content: center;
+}
+
+.no-answers-message {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+  font-size: 16px;
+  margin-top: 20px;
 }

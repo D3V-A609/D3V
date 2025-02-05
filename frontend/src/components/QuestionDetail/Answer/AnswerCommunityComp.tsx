@@ -42,13 +42,10 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
   const dispatch = useAppDispatch();
   const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
 
-  // 항상 questionId를 1로 설정
-  const fixedQuestionId = questionId;
-
   useEffect(() => {
-    dispatch(fetchMyAnswer(fixedQuestionId));
-    dispatch(fetchOtherAnswers(fixedQuestionId));
-  }, [dispatch]);
+    dispatch(fetchMyAnswer(questionId));
+    dispatch(fetchOtherAnswers(questionId));
+  }, [dispatch, questionId]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -59,10 +56,13 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
       {otherAnswers.length > 0 ? (
         <OtherAnswers answers={otherAnswers} />
       ) : (
-        <div>No other answers available</div>
+        <div className="no-answers-message">
+          아직 다른 사람들이 답변을 달지 않았어요!
+        </div>
       )}
     </div>
   );
 };
+
 
 export default AnswerCommunityComp;

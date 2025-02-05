@@ -148,6 +148,10 @@ const answerSlice = createSlice({
         state.error = action.payload as string;
         state.otherAnswers = [];
       })
+      .addCase(toggleLike.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(toggleLike.fulfilled, (state, action) => {
         const { answerId, isLiked, like } = action.payload;
         const answerToUpdate = state.otherAnswers.find(answer => answer.answerId === answerId);
@@ -155,6 +159,10 @@ const answerSlice = createSlice({
           answerToUpdate.isLiked = isLiked;
           answerToUpdate.like = like;
         }
+      })
+      .addCase(toggleLike.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '추천 처리 중 오류가 발생했습니다.';
       })
 
       // 질문 상세 조회
