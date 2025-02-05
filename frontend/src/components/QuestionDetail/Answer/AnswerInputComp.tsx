@@ -1,20 +1,84 @@
 import React, { useRef } from "react";
 
-import ToggleButton from "./ToggleSwitch";
-
 import { useState, useEffect } from 'react';
 
 import { CiMicrophoneOn } from "react-icons/ci";
 import TimerSetting from "./TimerSetting";
+import SelectPublicBtn from "../../../features/Answer/SelectPublicBtn";
+// import { useAppDispatch } from "react-redux";
+import { useAppDispatch } from "../../../store/hooks/useRedux";
+import { registAnswer, registServedAnswer } from "../../../store/slices/answerSlice";
+// import { setSelectedQuestionId } from "../../../store/slices/questionSlice";
 
-const AnswerInputComp: React.FC = () => {
+interface AnswerInputCompProps {
+  questionId: number; 
+  hasMyAnswers: boolean | undefined;
+  handleRegistAnswerSuccess: () => void;
+}
+
+const AnswerInputComp: React.FC<AnswerInputCompProps> = ({questionId, hasMyAnswers, handleRegistAnswerSuccess}) => {
 
   const [showTimerDropdown, setShowTimerDropdown] = useState(false); // 타이머 선택 드롭다운 상태
-  const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: 30초)
+  const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: null(타이머를 선택하지 않음))
   const [isRunning, setIsRunning] = useState(false); // 타이머 실행 여부
 
   const remainingTimeRef = useRef<number | null>(null); //useRef로 타이머 시간 상태 관리 (useEffect로 관리 시 클로서 문제 발생 -> 값이 변경되더라도 클로저에 저장된 이전 값이 사용되어 타이머 종료 알림이 중복 발생)
-  const [displayTime, setDisplayTime] = useState<number | null>(null); // 렌더링용 상태태
+  const [displayTime, setDisplayTime] = useState<number | null>(null); // 렌더링용 상태
+
+  const [selectedPublicOption, setPublicOption] = useState("PUBLIC"); // 답변 공개 범위 설정 상태(default: "PUBLIC(전체공개)" => "PUBLIC", "PRIVATE", "PROTECTED")
+  const [isIDK, setIsIDK] = useState(false); // 모르겠어요 체크박스 버튼 상태(default: 알고 있어요(모르겠어요X))
+
+  const answerContent = useRef<HTMLTextAreaElement | null>(null); // 입력값이 변경해도 UI는 달라지지 않으므로 useState 대시 useRef 사용용
+
+  const dispatch = useAppDispatch();
+
+  // 모르겠어요 버튼 변경 핸들러
+  const handleIDKBtnChange = () =>{
+    setIsIDK(!isIDK);
+  }
+
+  // 공개 범위 옵션 변경 핸들러
+  const handlePublicOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPublicOption(e.target.value);
+  };
+
+  // 답변 등록 함수
+  const handleRegistAnswer = async () => {
+    const content = answerContent.current?.value.trim() || '';
+    // POST할 데이터 생성
+    const answerPayload = {
+      memberId: 3,  // 예시 멤버 ID
+      content: content,
+      accessLevel: selectedPublicOption,  // 공개 설정
+      // isSolved: !isIDK,
+      questionId: questionId,
+    };
+
+    const solvedAnswerPayload = {
+      memberId: 3, 
+      questionId: questionId,
+      isSolved: !isIDK, // 풀었는지 여부이므로 반대로 주어야 함
+    }
+
+    try{
+
+      if(hasMyAnswers!=undefined && !hasMyAnswers){
+        await dispatch(registServedAnswer(solvedAnswerPayload)).unwrap();
+      }
+      await dispatch(registAnswer(answerPayload)).unwrap() // unwrap으로 감싸서 성공 실패를 쉽게 확인
+
+      // 성공적으로 등록되었을 경우, 입력 필드를 초기화
+      if (answerContent.current) {
+        answerContent.current.value = '';  // 입력 필드 비우기
+        handleRegistAnswerSuccess();
+      }
+    } catch(error){
+      alert("죄송합니다. 잠시 후 다시 시도해주세요.")
+      console.log("답변 등록 시 에러 : ", error); // 지워야 함
+    }
+    
+
+  }
 
   // timer 드롭다운 열기/닫기
   const handleDropdownToggle = () => setShowTimerDropdown(!showTimerDropdown); 
@@ -35,7 +99,7 @@ const AnswerInputComp: React.FC = () => {
     setDisplayTime(selectedTime);  // 타이머 초기화
   };
 
-  // 타이머 동작 관리
+  // 타이머 동작 관리(변경 필요)
   useEffect(() => {
     if (!isRunning || remainingTimeRef.current === null) return;
 
@@ -67,7 +131,7 @@ const AnswerInputComp: React.FC = () => {
       </div>
       <div className="anwer-input-container__input">
         <div className="answer-setting">
-          <ToggleButton />
+          <SelectPublicBtn selectedOption={selectedPublicOption} onChange={handlePublicOptionChange} />
           <TimerSetting
             showTimerDropdown={showTimerDropdown}
             selectedTime={selectedTime}
@@ -81,6 +145,7 @@ const AnswerInputComp: React.FC = () => {
         </div>
         <div className="answer-input">
           <textarea className="answer-input-area"
+          ref={answerContent}
           placeholder="답변을 입력해주세요." />
         </div>
         <div className="answer-submit">
@@ -89,8 +154,17 @@ const AnswerInputComp: React.FC = () => {
             <div>음성으로 입력하기</div>
           </div>
           <div className="btn-answer-submit-group">
-             <div className="btn-IDK">모르겠어요</div>
-             <div className="btn-submit">저장하기</div>
+             {/* <div className="checkbox-IDK">모르겠어요</div> */}
+             <div className="checkbox-IDK">
+              <input
+                type="checkbox"
+                id="idk"
+                checked={isIDK}
+                onChange={handleIDKBtnChange}
+              />
+              <label htmlFor="idk">모르겠어요</label>
+            </div>
+             <div className="btn-submit" onClick={handleRegistAnswer}>저장하기</div>
           </div>
         </div>
       </div>

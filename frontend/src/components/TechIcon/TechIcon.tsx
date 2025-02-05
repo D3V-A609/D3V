@@ -76,7 +76,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, className }) => {
       case "swift": return <SiSwift className={combinedClassName} />;
       case "kotlin": return <SiKotlin className={combinedClassName} />;
       case "flutter": return <SiFlutter className={combinedClassName} />;
-      case "react native": return <FaReact className={combinedClassName} />;
+      case "react.native": return <FaReact className={combinedClassName} />;
       case "ios": return <SiIos className={combinedClassName} />;
       case "android": return <SiAndroid className={combinedClassName} />;
       case "jetpack": return <SiJetpackcompose className={combinedClassName} />;
