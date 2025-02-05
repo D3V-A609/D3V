@@ -6,6 +6,7 @@ import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.answer.repository.AnswerCustomRepository;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
+import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -27,6 +28,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
+    private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final Long memberId = 1L;
 
@@ -76,6 +78,7 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     private List<AnswerResponse> getAnswerResponses(Question question, Member member) {
+
         return answerRepository.findByQuestionAndMember(question, member)
                 .stream()
                 .map(ele -> new AnswerResponse(
@@ -84,7 +87,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getAnswerId(),
                         ele.getContent(),
                         ele.getCreatedAt(),
-                        ele.getAccessLevel()))
+                        ele.getAccessLevel(),
+                        likesRepository.countByAnswer(ele)))
                 .toList();
     }
 
@@ -112,7 +116,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getAnswerId(),
                         ele.getContent(),
                         ele.getCreatedAt(),
-                        ele.getAccessLevel()))
+                        ele.getAccessLevel(),
+                        likesRepository.countByAnswer(ele)))
                 .toList();
     }
 }
