@@ -40,7 +40,7 @@ type AnswerCommunityCompProps = {
 
 const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
   const dispatch = useAppDispatch();
-  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
+  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers as AnswerState);
 
   useEffect(() => {
     dispatch(fetchMyAnswer(questionId));

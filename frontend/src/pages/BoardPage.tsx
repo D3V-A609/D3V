@@ -11,7 +11,7 @@ import './BoardPage.css';
 const BoardPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { dailyQuestions, loading, error } = useAppSelector((state) => state.questions);
+  const { dailyQuestions, loading, error } = useAppSelector((state) => state.questions as QuestionState);
   const isLoggedIn = true;
 
   useEffect(() => {
