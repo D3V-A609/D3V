@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Long> {
     Optional<Likes> findByAnswerAndMember(Answer answerId, Member memberId);
+    int countByAnswer(Answer answer);
 }
