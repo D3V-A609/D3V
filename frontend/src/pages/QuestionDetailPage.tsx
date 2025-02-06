@@ -28,8 +28,6 @@ const QuestionDetailPage: React.FC = () => {
     state => state.answers as AnswerState
   );
 
-  console.log('questions:', questions)
-
   // 컴포넌트 마운트 시 질문 상세 데이터를 fetch
   useEffect(() => {
     if (selectedQuestionId !== null) {

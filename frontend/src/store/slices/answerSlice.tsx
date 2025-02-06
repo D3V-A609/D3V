@@ -175,7 +175,7 @@ const answerSlice = createSlice({
       })
       .addCase(registAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
         state.loading = false;
-        state.myAnswerArr = action.payload;
+        state.myAnswerArr = [...action.payload];  // 불변성 보장(항상 새로운 배열로 할당해야 리렌더링 트리거 가능)
       })
       .addCase(registAnswer.rejected, (state, action) => {
         state.loading = false;

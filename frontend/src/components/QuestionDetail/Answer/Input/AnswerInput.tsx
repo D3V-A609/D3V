@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import AnswerInputComp from './AnswerInputComp';
 import AnswerToggleSection from '../../../../features/AnswerToggle/AnswerToggleSection';
 import { GoTriangleDown, GoTriangleRight } from "react-icons/go";
@@ -30,12 +30,6 @@ const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, question
       toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 토글이 열려 있는 경우 바로 스크롤 이동
     }
   };
-
-  // myAnswers가 업데이트될 때마다 상태 업데이트
-  useEffect(() => {
-  }, [myAnswers]);
-
-  console.log("내 답변이 제대로 왔나?", myAnswers);
 
   return (
   <div>
