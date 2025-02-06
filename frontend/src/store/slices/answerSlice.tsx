@@ -31,7 +31,7 @@ const answerSlice = createSlice({
       })
       .addCase(fetchMyAnswer.fulfilled, (state, action) => {
         state.loading = false;
-        state.myAnswer = action.payload || null;
+        state.myAnswer = action.payload[0] || null;
         state.error = null;
       })
       .addCase(fetchMyAnswer.rejected, (state, action) => {

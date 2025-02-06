@@ -59,7 +59,7 @@ const AllQuestionPage: React.FC = () => {
 
     // 상태 필터 적용
     if (statusFilter !== "all" && 
-        question.status.toLowerCase() !== statusFilter) {
+      (question.status?.toLowerCase() || "unsolved") !== statusFilter) {
       return false;
     }
 

@@ -53,7 +53,7 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
 
   return (
     <div className="answer-community-container">
-      {myAnswer && <MyAnswer answer={myAnswer} />}
+      {myAnswer && <MyAnswer />  } 
       {otherAnswers.length > 0 ? (
         <OtherAnswers answers={otherAnswers} />
       ) : (
