@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { answerApi } from '../services/answerApi';
 
-interface AnswerState  {
+export interface AnswerState  {
   myAnswer: Answer | null; // 내 답변 
   otherAnswers: Answer[];  // 다른 사람의 답변 (답변 커뮤)
   loading: boolean;
