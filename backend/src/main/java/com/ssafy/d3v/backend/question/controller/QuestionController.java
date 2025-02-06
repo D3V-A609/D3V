@@ -6,6 +6,7 @@ import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.service.QuestionQueryService;
 import com.ssafy.d3v.backend.question.service.QuestionService;
+import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final ServedQuestionService servedQuestionService;
     private final QuestionQueryService questionQueryService;
 
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
@@ -42,12 +44,13 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
+        String status = servedQuestionService.getIsSolvedStatus(question);
         List<Skill> skills = questionQueryService.getSkillsByQuestionId(question.getId());
         List<Job> jobs = questionQueryService.getJobsByQuestionId(question.getId());
 
         return ResponseEntity
                 .ok()
-                .body(QuestionResponse.from(question, skills, jobs));
+                .body(QuestionResponse.from(question, status, skills, jobs));
     }
     
     @GetMapping
@@ -58,9 +61,10 @@ public class QuestionController {
         Page<Question> questionsPage = questionService.getAllQuestions(page, size);
 
         Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
+            String status = servedQuestionService.getIsSolvedStatus(q);
             List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
             List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-            return QuestionResponse.from(q, skills, jobs);
+            return QuestionResponse.from(q, status, skills, jobs);
         });
 
         return ResponseEntity.ok(questionResponsesPage);
@@ -77,9 +81,10 @@ public class QuestionController {
     private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
                 .map(q -> {
+                    String status = servedQuestionService.getIsSolvedStatus(q);
                     List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
                     List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.from(q, skills, jobs);
+                    return QuestionResponse.from(q, status, skills, jobs);
                 })
                 .toList();
         return ResponseEntity

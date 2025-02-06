@@ -12,6 +12,7 @@ import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +27,7 @@ public class ServedQuestionService{
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
     private final QuestionRepository questionRepository;
+    private final Long tempMemeberId = 1L; // 임시 아이디
 
     @Transactional
     public ServedQuestionDto createServedQuestion(ServedQuestionCreateRequest dto, Boolean isDaily) {
@@ -92,6 +94,20 @@ public class ServedQuestionService{
         return servedQuestions.stream()
                 .map(ServedQuestionDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public String getIsSolvedStatus(Question question) {
+        Member member = memberRepository.findById(tempMemeberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+        Optional<ServedQuestion> servedQuestionOptional =
+                servedQuestionRepository.findByMemberAndQuestion(member, question);
+
+        if (servedQuestionOptional.isPresent()) {
+            Boolean isSolved = servedQuestionOptional.get().getIsSolved();
+            return isSolved ? "solved" : "unSolved";
+        } else {
+            return "notSolved";
+        }
     }
 
 
