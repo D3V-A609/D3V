@@ -63,4 +63,23 @@ public class CommentServiceImpl implements CommentService {
                 saved.getCreatedAt(),
                 saved.getUpdatedAt());
     }
+
+    @Override
+    @Transactional
+    public CommentResponse update(Long articleId, Long commentId, CommentRequest commentRequest) {
+        Member member = getMemberById(memberId);
+        Comment comment = getComment(commentId, member);
+
+        Comment updated = commentRepository.save(
+                comment.toBuilder()
+                .content(commentRequest.content())
+                .build());
+
+        return new CommentResponse(
+                updated.getId(),
+                updated.getArticle().getId(),
+                updated.getContent(),
+                updated.getCreatedAt(),
+                updated.getUpdatedAt());
+    }
 }

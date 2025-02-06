@@ -40,4 +40,11 @@ public class CommentController {
                                    @RequestBody CommentRequest commentRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(articleId, commentRequest));
     }
+    @Operation(summary = "댓글 수정")
+    @PatchMapping("/{article_id}/comment/{comment_id}")
+    public ResponseEntity<CommentResponse> update(@PathVariable("article_id") long articleId,
+                                                  @PathVariable("comment_id") long commentId,
+                                                  @RequestBody CommentRequest commentRequest) {
+        return ResponseEntity.ok().body(commentService.update(articleId, commentId, commentRequest));
+    }
 }
