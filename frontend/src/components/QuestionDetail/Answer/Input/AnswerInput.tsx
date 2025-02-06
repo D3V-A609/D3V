@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import AnswerInputComp from './AnswerInputComp';
 import AnswerToggleSection from '../../../../features/AnswerToggle/AnswerToggleSection';
 import { GoTriangleDown, GoTriangleRight } from "react-icons/go";
@@ -26,10 +26,15 @@ const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, question
   const handleSuccess = () => {
     if (!isToggleOpen) {
       setIsToggleOpen(true); // 토글이 닫혀 있다면 먼저 열기
-    } else {
-      toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 토글이 열려 있는 경우 바로 스크롤 이동
-    }
+    } 
   };
+
+  useEffect(() => {
+    if (isToggleOpen) {
+      toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [isToggleOpen]);
+  
 
   return (
   <div>
