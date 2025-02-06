@@ -9,7 +9,7 @@ import { fetchQuestionById, QuestionState } from '../store/slices/questionSlice'
 import FootPrint from "../assets/images/footprint.png";
 import QuestionContentCard from '../components/QuestionDetail/Question/QuestionContentCard';
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
-import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
+import AnswerInput from '../components/QuestionDetail/Answer/Input/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
 import { AnswerState, fetchAllMyAnswersByQID } from '../store/slices/answerSlice';
 

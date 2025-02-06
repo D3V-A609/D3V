@@ -3,11 +3,11 @@ import React, { useRef } from "react";
 import { useState, useEffect } from 'react';
 
 import { CiMicrophoneOn } from "react-icons/ci";
-import TimerSetting from "./Input/Timer/TimerSetting";
-import SelectPublicBtn from "../../../features/Answer/SelectPublicBtn";
+import TimerSetting from "../Input/Timer/TimerSetting";
+import SelectPublicBtn from "../../../../features/Answer/SelectPublicBtn";
 // import { useAppDispatch } from "react-redux";
-import { useAppDispatch } from "../../../store/hooks/useRedux";
-import { registAnswer, registServedAnswer } from "../../../store/slices/answerSlice";
+import { useAppDispatch } from "../../../../store/hooks/useRedux";
+import { registAnswer, registServedAnswer } from "../../../../store/slices/answerSlice";
 // import { setSelectedQuestionId } from "../../../store/slices/questionSlice";
 
 interface AnswerInputCompProps {
