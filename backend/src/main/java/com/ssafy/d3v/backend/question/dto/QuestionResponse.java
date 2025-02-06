@@ -6,20 +6,21 @@ import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import java.util.List;
-import java.util.Random;
 import lombok.Builder;
 
 @Builder
 public record QuestionResponse(
-        Question question,
-        String status,
+        Long questionId,
+        String content,
+        String standardAnswer,
         List<SkillType> skillList,
         List<DevelopmentRole> jobList
 ) {
-    public  static QuestionResponse from(Question question, String Status, List<Skill> skills, List<Job> jobs) {
+    public  static QuestionResponse from(Question question, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
-                .question(question)
-                .status(Status)
+                .questionId(question.getId())
+                .content(question.getContent())
+                .standardAnswer(question.getStandardAnswer())
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
                 .build();

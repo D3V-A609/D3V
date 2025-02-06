@@ -42,7 +42,6 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, size);
         return questionRepository.findAll(pageable);
     }
-
     @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함

@@ -1,11 +1,16 @@
 package com.ssafy.d3v.backend.answer.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.answer.repository.AnswerCustomRepository;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
+import com.ssafy.d3v.backend.common.dto.PagedResponse;
+import com.ssafy.d3v.backend.common.dto.PaginationInfo;
+import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
@@ -30,6 +35,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
     private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
+    private final FeedbackCustomRepository feedbackCustomRepository;
     private final Long memberId = 1L;
 
     @Override
@@ -63,7 +69,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .accessLevel(answerRequest.accessLevel())
                 .build();
 
-        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, true);
+        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
 
         return getAnswerResponses(question, member);
@@ -78,7 +84,6 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     private List<AnswerResponse> getAnswerResponses(Question question, Member member) {
-
         return answerRepository.findByQuestionAndMember(question, member)
                 .stream()
                 .map(ele -> new AnswerResponse(
@@ -88,6 +93,7 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getContent(),
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
                         likesRepository.countByAnswer(ele)))
                 .toList();
     }
@@ -105,11 +111,14 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<AnswerResponse> getTotalAnswers(long questionId) {
-        Question question = getQuestionById(questionId);
+    public PagedResponse<AnswerResponse> getTotalAnswers(long questionId, int size, int page) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다. ID: " + questionId));
 
-        return answerCustomRepository.findPublicAnswersByQuestion(question)
-                .stream()
+        List<Answer> answerList = answerCustomRepository.findPublicAnswersByQuestion(question, size, page);
+        long totalRecords = answerCustomRepository.countPublicAnswersByQuestion(question);
+
+        List<AnswerResponse> answerResponses = answerList.stream()
                 .map(ele -> new AnswerResponse(
                         ele.getQuestion().getId(),
                         ele.getMember().getId(),
@@ -117,7 +126,21 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getContent(),
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
                         likesRepository.countByAnswer(ele)))
-                .toList();
+                .collect(toList());
+
+        int totalPages = (int) Math.ceil((double) totalRecords / size);
+        Integer nextPage = (page < totalPages) ? page + 1 : null;
+        Integer prevPage = (page > 1) ? page - 1 : null;
+
+        PaginationInfo paginationInfo = new PaginationInfo(
+                totalRecords,
+                page,
+                totalPages,
+                nextPage,
+                prevPage
+        );
+        return new PagedResponse<>(answerResponses, paginationInfo);
     }
 }

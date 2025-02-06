@@ -3,11 +3,9 @@ package com.ssafy.d3v.backend.question.controller;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.Question;
-import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.service.QuestionQueryService;
 import com.ssafy.d3v.backend.question.service.QuestionService;
-import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,12 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/question")
 @Tag(name = "질문", description = "질문 관련 API")
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final ServedQuestionService servedQuestionService;
     private final QuestionQueryService questionQueryService;
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
@@ -40,38 +37,36 @@ public class QuestionController {
                     content = @Content(schema = @Schema(implementation = Question.class))),
             @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
     })
-    @GetMapping("/question/{question_id}")
+    @GetMapping("/{question_id}")
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
-        String status = servedQuestionService.getIsSolvedStatus(question);
         List<Skill> skills = questionQueryService.getSkillsByQuestionId(question.getId());
         List<Job> jobs = questionQueryService.getJobsByQuestionId(question.getId());
 
         return ResponseEntity
                 .ok()
-                .body(QuestionResponse.from(question, status, skills, jobs));
+                .body(QuestionResponse.from(question, skills, jobs));
     }
 
-    @GetMapping("/question")
+    // GET "/question?page=0&size=10"
+    @GetMapping
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         Page<Question> questionsPage = questionService.getAllQuestions(page, size);
 
         Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
-            String status = servedQuestionService.getIsSolvedStatus(q);
             List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
             List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-            return QuestionResponse.from(q, status, skills, jobs);
+            return QuestionResponse.from(q, skills, jobs);
         });
 
         return ResponseEntity.ok(questionResponsesPage);
     }
 
-
-    @GetMapping("/question/daily")
+    @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
         List<Question> questions = questionService.getDailyQuestions();
@@ -82,10 +77,9 @@ public class QuestionController {
     private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
                 .map(q ->{
-                    String status = servedQuestionService.getIsSolvedStatus(q);
                     List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
                     List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.from(q, status, skills, jobs);
+                    return QuestionResponse.from(q, skills, jobs);
                 })
                 .toList();
         return ResponseEntity
