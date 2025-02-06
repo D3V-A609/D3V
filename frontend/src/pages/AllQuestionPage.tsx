@@ -8,10 +8,12 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import dummyJobCategories from "../constants/dummyJobCategories";
 import "./AllQuestionPage.css";
 import { BiSearch } from "react-icons/bi";
+import { fetchQuestions } from "../store/actions/questionActions";
+import { QuestionState } from "../store/slices/questionSlice";
 
 const AllQuestionPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { questions, loading, error, pagination } = useAppSelector((state) => state.questions);
+  const { questions, loading, error, pagination } = useAppSelector((state) => state.questions as QuestionState);
   
   // 필터 상태들
   const [statusFilter, setStatusFilter] = useState<"all" | "solved" | "unsolved">("all");
