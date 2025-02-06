@@ -1,0 +1,9 @@
+package com.ssafy.d3v.backend.article.service;
+
+import com.ssafy.d3v.backend.article.dto.CommentRequest;
+import com.ssafy.d3v.backend.article.dto.CommentResponse;
+import com.ssafy.d3v.backend.common.dto.PagedResponse;
+
+public interface CommentService {
+    PagedResponse<CommentResponse> get(Long articleId, int page, int size);
+}
