@@ -2,11 +2,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
-import { fetchDailyQuestions, setSelectedQuestionId } from '../store/slices/questionSlice';
+import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
 import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard';
 import PageHeader from '../components/PageHeader/PageHeader';
 import { BsCheckLg } from 'react-icons/bs';
 import './HomePage.css';
+import { fetchDailyQuestions } from '../store/actions/questionActions';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();

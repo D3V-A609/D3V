@@ -1,4 +1,4 @@
-// store/services/dailyQuestionApi.ts
+// store/services/questionApi.ts
 import api from './api';
 
 export const questionApi = {

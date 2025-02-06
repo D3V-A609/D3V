@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchQuestions } from "../store/slices/questionSlice";
 import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from "../features/QuestionList/QuestionList";
 import JobSkillFilter from "../components/QuestionFilter/JobSkillFilter";

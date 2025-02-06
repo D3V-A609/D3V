@@ -7,7 +7,7 @@ import TimerSetting from "../Input/Timer/TimerSetting";
 import SelectPublicBtn from "../../../../features/Answer/SelectPublicBtn";
 // import { useAppDispatch } from "react-redux";
 import { useAppDispatch } from "../../../../store/hooks/useRedux";
-import { registAnswer, registServedAnswer } from "../../../../store/slices/answerSlice";
+import { registServedAnswer, registAnswer } from "../../../../store/actions/answerActions";
 // import { setSelectedQuestionId } from "../../../store/slices/questionSlice";
 
 interface AnswerInputCompProps {
