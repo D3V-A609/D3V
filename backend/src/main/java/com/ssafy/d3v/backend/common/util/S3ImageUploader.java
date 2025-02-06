@@ -94,4 +94,23 @@ public class S3ImageUploader {
         return amazonS3.getUrl(bucket, s3FileName).toString();
     }
 
+    public void deleteImageFromS3(String imageAddress){
+        String key = getKeyFromImageAddress(imageAddress);
+        try {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
+        } catch (Exception e){
+            throw new S3Exception("S3 이미지 삭제 중 오류가 발생했습니다.");
+        }
+    }
+
+    private String getKeyFromImageAddress(String imageAddress){
+        try{
+            URL url = new URL(imageAddress);
+            String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
+            
+            return decodingKey.substring(1);
+        }catch (MalformedURLException | UnsupportedEncodingException e){
+            throw new S3Exception("S3 이미지 주소를 가져오는 중 오류가 발생했습니다.");
+        }
+    }
 }
