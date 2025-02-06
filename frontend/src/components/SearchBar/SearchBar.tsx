@@ -56,7 +56,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, searchQuery }) => {
         className="search-bar-input"
       />
       {/* 검색 아이콘 */}
-      <BiSearch className="search-bar-icon" />
+      <BiSearch 
+        className="search-bar-icon" 
+        onClick={handleSearch}
+        style={{ cursor: 'pointer' }}
+      />
     </div>
   );
 };
