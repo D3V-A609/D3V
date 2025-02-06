@@ -1,5 +1,7 @@
 package com.ssafy.d3v.backend.answer.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
@@ -9,6 +11,7 @@ import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
 import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
+import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -19,10 +22,7 @@ import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +33,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
+    private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final FeedbackCustomRepository feedbackCustomRepository;
     private final Long memberId = 1L;
@@ -92,7 +93,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getContent(),
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
-                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele)))
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
+                        likesRepository.countByAnswer(ele)))
                 .toList();
     }
 
@@ -124,8 +126,9 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getContent(),
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
-                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele)))
-                .collect(Collectors.toList());
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
+                        likesRepository.countByAnswer(ele)))
+                .collect(toList());
 
         int totalPages = (int) Math.ceil((double) totalRecords / size);
         Integer nextPage = (page < totalPages) ? page + 1 : null;
