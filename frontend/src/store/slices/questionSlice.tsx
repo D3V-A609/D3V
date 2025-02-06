@@ -4,7 +4,7 @@ import questionApi from '../services/questionApi';
 import dailyQuestionApi from '../services/dailyQuestionApi';
 
 // 질문 관련 상태 타입 정의
-interface QuestionState {
+export interface QuestionState {
   questions: Question[];         // 일반 질문 목록
   dailyQuestions: Question[];    // 일일 질문 목록
   loading: boolean;              // 로딩 상태
@@ -19,7 +19,7 @@ interface QuestionState {
 }
 
 // 초기 상태 정의
-const initialState: QuestionState = {
+export const initialState: QuestionState = {
   questions: [],
   dailyQuestions: [],
   loading: false,
