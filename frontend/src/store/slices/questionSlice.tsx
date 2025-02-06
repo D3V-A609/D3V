@@ -7,6 +7,7 @@ import dailyQuestionApi from '../services/dailyQuestionApi';
 interface QuestionState {
   questions: Question[];         // 일반 질문 목록
   dailyQuestions: Question[];    // 일일 질문 목록
+  top10Questions: Question[];    // Top 10 질문 목록
   loading: boolean;              // 로딩 상태
   error: string | null;          // 에러 메시지
   selectedQuestionId: number | null;  // 선택된 질문 ID
@@ -22,6 +23,7 @@ interface QuestionState {
 const initialState: QuestionState = {
   questions: [],
   dailyQuestions: [],
+  top10Questions: [],
   loading: false,
   error: null,
   selectedQuestionId: null,
@@ -59,6 +61,15 @@ export const fetchQuestionById = createAsyncThunk(
     return response.data;
   }
 )
+
+// Top10 질문 조회 비동기 액션
+export const fetchTop10Questions = createAsyncThunk(
+  'questions/fetchTop10',
+  async (params: { month?: string; job: string }) => {
+    const response = await questionApi.getTop10Questions(params);
+    return response.data;
+  }
+);
 
 // 질문 관련 리듀서 정의
 const questionSlice = createSlice({
@@ -119,6 +130,22 @@ const questionSlice = createSlice({
       .addCase(fetchQuestionById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
+
+      // Top10 질문 조회 처리
+      .addCase(fetchTop10Questions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTop10Questions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.top10Questions = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchTop10Questions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'TOP 10 질문을 불러오는데 실패했습니다.';
+        state.top10Questions = [];
       })
   },
 });
