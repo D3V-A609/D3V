@@ -3,6 +3,7 @@ package com.ssafy.d3v.backend.common.util;
 import static java.util.UUID.*;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -66,9 +67,8 @@ public class S3ImageUploader {
     }
 
     private String uploadImageToS3(MultipartFile image) throws IOException {
-
         String originalFilename = image.getOriginalFilename();
-        String extention = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String extention = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String s3FileName = ARTICLE_IMAGE_PATH + randomUUID().toString().substring(0, 10) + originalFilename;
 
         InputStream is = image.getInputStream();
@@ -81,7 +81,8 @@ public class S3ImageUploader {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
         try{
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, s3FileName, byteArrayInputStream, metadata);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, s3FileName, byteArrayInputStream, metadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead);
 
             amazonS3.putObject(putObjectRequest);
         } catch (Exception e){
