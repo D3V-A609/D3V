@@ -28,6 +28,6 @@ public class Job {
 
     @NotBlank
     @Enumerated(EnumType.STRING)
-    @Column(name = "development_role")
-    private DevelopmentRole developmentRole;
+    @Column(name = "job_role")
+    private JobRole jobRole;
 }
