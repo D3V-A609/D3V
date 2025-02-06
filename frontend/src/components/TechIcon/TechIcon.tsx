@@ -169,7 +169,7 @@ const TechIcon: React.FC<TechIconProps> = ({ tech, className }) => {
       case "headless.cms": return <SiStoryblok className={combinedClassName} />;
 
       default:
-        console.warn(`No icon found for tech: ${tech}`);
+        // console.warn(`No icon found for tech: ${tech}`);
         return <FaCode className={combinedClassName} />;
     }
   };
