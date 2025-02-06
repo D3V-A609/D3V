@@ -1,6 +1,5 @@
 package com.ssafy.d3v.backend.question.repository;
 
-import com.ssafy.d3v.backend.question.entity.QuestionJob;
 import com.ssafy.d3v.backend.question.entity.QuestionSkill;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +11,7 @@ public interface QuestionSkillRepository extends JpaRepository<QuestionSkill, Lo
 
     @Query("SELECT qs FROM QuestionSkill qs " +
             "JOIN FETCH qs.skill " +  // Skill 엔티티 즉시 로딩
-            "WHERE qs.question.Id = :questionId")
+            "WHERE qs.question.id = :questionId")
     List<QuestionSkill> findAllByQuestionIdWithSkill(@Param("questionId") Long questionId);
 }
 

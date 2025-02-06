@@ -11,6 +11,6 @@ public interface QuestionJobRepository extends JpaRepository<QuestionJob, Long> 
 
     @Query("SELECT qj FROM QuestionJob qj " +
             "JOIN FETCH qj.job " +  // Job 엔티티 즉시 로딩
-            "WHERE qj.question.Id = :questionId")
+            "WHERE qj.question.id = :questionId")
     List<QuestionJob> findAllByQuestionIdWithJob(@Param("questionId") Long questionId);
 }

@@ -31,6 +31,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final QuestionQueryService questionQueryService;
+
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적으로 질문을 조회함",
@@ -48,13 +49,12 @@ public class QuestionController {
                 .ok()
                 .body(QuestionResponse.from(question, skills, jobs));
     }
-
-    // GET "/question?page=0&size=10"
+    
     @GetMapping
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "15") int size) {
         Page<Question> questionsPage = questionService.getAllQuestions(page, size);
 
         Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
@@ -76,7 +76,7 @@ public class QuestionController {
 
     private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
-                .map(q ->{
+                .map(q -> {
                     List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
                     List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
                     return QuestionResponse.from(q, skills, jobs);
