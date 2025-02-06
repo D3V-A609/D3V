@@ -82,4 +82,29 @@ public class CommentServiceImpl implements CommentService {
                 updated.getCreatedAt(),
                 updated.getUpdatedAt());
     }
+
+    @Override
+    @Transactional
+    public void delete(Long articleId, Long commentId) {
+        Member member = getMemberById(memberId);
+        Comment comment = getComment(commentId, member);
+
+        commentRepository.delete(comment);
+    }
+
+    private Comment getComment(Long commentId, Member member) {
+        return commentRepository.findByIdAndMember(commentId, member)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다." + commentId));
+    }
+
+    private Article getArticleById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다." + articleId));
+    }
+
+    private Member getMemberById(long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
+        return member;
+    }
 }

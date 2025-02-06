@@ -47,4 +47,12 @@ public class CommentController {
                                                   @RequestBody CommentRequest commentRequest) {
         return ResponseEntity.ok().body(commentService.update(articleId, commentId, commentRequest));
     }
+
+    @Operation(summary = "댓글 삭제")
+    @DeleteMapping("/{article_id}/comment/{comment_id}")
+    public ResponseEntity<Void> delete(@PathVariable("article_id") long articleId,
+                                       @PathVariable("comment_id") long commentId) {
+        commentService.delete(articleId, commentId);
+        return ResponseEntity.ok().build();
+    }
 }
