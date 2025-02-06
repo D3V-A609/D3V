@@ -43,4 +43,24 @@ public class CommentServiceImpl implements CommentService {
         return new PagedResponse<>(commentResponses, paginationInfo);
     }
 
+    @Override
+    @Transactional
+    public CommentResponse create(Long articleId, CommentRequest commentRequest) {
+        Member member = getMemberById(memberId);
+        Article article = getArticleById(articleId);
+
+        Comment comment = Comment.builder()
+                .article(article)
+                .member(member)
+                .content(commentRequest.content())
+                .build();
+
+        Comment saved = commentRepository.saveAndFlush(comment);
+        return new CommentResponse(
+                saved.getId(),
+                saved.getArticle().getId(),
+                saved.getContent(),
+                saved.getCreatedAt(),
+                saved.getUpdatedAt());
+    }
 }

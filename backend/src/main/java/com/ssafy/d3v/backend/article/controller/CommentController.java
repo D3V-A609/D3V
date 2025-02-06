@@ -34,4 +34,10 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.get(articleId, page, size));
     }
 
+    @Operation(summary = "댓글 생성")
+    @PostMapping("/{article_id}/comment")
+    public ResponseEntity<CommentResponse> create(@PathVariable("article_id") long articleId,
+                                   @RequestBody CommentRequest commentRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(articleId, commentRequest));
+    }
 }
