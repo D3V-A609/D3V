@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Chrono } from 'react-chrono';
 // import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 import PageHeader from '../../components/PageHeader/PageHeader';
@@ -12,11 +12,11 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
   // 오늘 날짜를 가져와 시간을 00:00:00으로 초기화 (날짜 비교를 위해 필요)
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분 초기화
-  let todayFlag = false; // 오늘 날짜가 첫 번째로 나타나는지 체크하는 플래그
 
   // 더미 데이터를 날짜 기준으로 내림차순 정렬하고, Chrono에 맞게 변환
-  const timelineItems = [...myAnswers]
-    .sort(
+  const timelineItems = useMemo(() => {
+    let todayFlag = false; // 오늘 날짜가 첫 번째로 나타나는지 체크하는 플래그
+    return [...myAnswers].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() // 최신 날짜가 위로 오도록 정렬
     )
     .map((record) => {
@@ -51,6 +51,7 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
         cardDetailedText: record.content, // 답변 내용을 카드의 상세 내용으로 설정
       };
     });
+  }, [myAnswers]);
 
   return (
     <div>
@@ -66,6 +67,7 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
         />
         <div className="records-timeline">
           <Chrono
+            key={JSON.stringify(timelineItems)} // 배열 변경 시마다 강제 리렌더링
             items={timelineItems} // 정렬 및 변환된 타임라인 아이템 전달
             mode="VERTICAL" // 세로 방향으로 타임라인 표시
             theme={{

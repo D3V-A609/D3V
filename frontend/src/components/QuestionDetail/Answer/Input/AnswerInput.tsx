@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import AnswerInputComp from './AnswerInputComp';
-import AnswerToggleSection from '../../../features/AnswerToggle/AnswerToggleSection';
+import AnswerToggleSection from '../../../../features/AnswerToggle/AnswerToggleSection';
 import { GoTriangleDown, GoTriangleRight } from "react-icons/go";
 
 import "./Answer.css"
@@ -24,36 +24,31 @@ const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, question
 
   // 글 등록 성공 시 Toggle 열기 및 스크롤 이동
   const handleSuccess = () => {
-    // btnToggleOpen();
-    setIsToggleOpen(true);
-    toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 스크롤 이동
+    if (!isToggleOpen) {
+      setIsToggleOpen(true); // 토글이 닫혀 있다면 먼저 열기
+    } 
   };
 
-  // myAnswers가 업데이트될 때마다 상태 업데이트
   useEffect(() => {
-  }, [myAnswers]);
-
-  console.log("내 답변이 제대로 왔나?", myAnswers);
+    if (isToggleOpen) {
+      toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [isToggleOpen]);
+  
 
   return (
   <div>
     {questionId  && <AnswerInputComp questionId={questionId} hasMyAnswers={hasMyAnswers} handleRegistAnswerSuccess={handleSuccess} />}
     {
-      hasMyAnswers && (
-        isToggleOpen? <>
+      hasMyAnswers && ( <>
         <div className="toggle-open-title text-gray2" onClick={btnToggleOpen}>
-          <GoTriangleDown />
+          { isToggleOpen ? <GoTriangleDown /> : <GoTriangleRight />}
           정답 보기
         </div>
-        <div ref={toggleRef}>
-          <AnswerToggleSection bestAnswer={standardAnswer} myAnswers={myAnswers} />
+        <div ref={toggleRef} className={isToggleOpen?'':'hidden'}>
+          <AnswerToggleSection bestAnswer={standardAnswer} myAnswers={myAnswers}  />
         </div>
-        </> : 
-        <div className="toggle-close-title text-gray2" onClick={btnToggleOpen}>
-          <GoTriangleRight />
-          정답 보기
-        </div>
-      )
+        </>)
     }
   </div>);
 }

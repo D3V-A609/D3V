@@ -1,23 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { answerApi } from '../services/answerApi';
 
-// type AnswerState = {
-//   myAnswer: Answer | null;
-//   otherAnswers: Answer[];
-//   loading: boolean;
-//   error: string | null;
-//   // 추가한 부분
-//   myAnswerArr: Answer[];
-// };
-
-interface AnswerState  {
-  myAnswer: Answer | null;
-  otherAnswers: Answer[];
+export interface AnswerState  {
+  myAnswer: Answer | null; // 내 답변 
+  otherAnswers: Answer[];  // 다른 사람의 답변 (답변 커뮤)
   loading: boolean;
   error: string | null;
-  // 추가한 부분
-  myAnswerArr: Answer[];
-  servedAnswer: ServedAnswer | null;
+  myAnswerArr: Answer[]; // 내 답변 기록들(답변 등록)
+  servedAnswer: ServedAnswer | null; // 첫 답변 등록 시 반환 값
 };
 
 const initialState: AnswerState = {
@@ -25,7 +15,6 @@ const initialState: AnswerState = {
   otherAnswers: [],
   loading: false,
   error: null,
-  // 추가한 부분
   myAnswerArr: [],
   servedAnswer: null
 };
@@ -97,9 +86,9 @@ export const toggleLike = createAsyncThunk(
     const memberId = 1; // 실제 사용자 ID로 교체
 
     try {
-      const response = answer.isLiked
-        ? await answerApi.unlikeAnswer(answerId, memberId)
-        : await answerApi.likeAnswer(answerId, memberId);
+      await (answer.isLiked 
+        ? answerApi.unlikeAnswer(answerId, memberId) 
+        : answerApi.likeAnswer(answerId, memberId));      
       
       return { 
         answerId, 
@@ -186,7 +175,7 @@ const answerSlice = createSlice({
       })
       .addCase(registAnswer.fulfilled, (state, action) => { // 비동기 작업 성공
         state.loading = false;
-        state.myAnswerArr = action.payload;
+        state.myAnswerArr = [...action.payload];  // 불변성 보장(항상 새로운 배열로 할당해야 리렌더링 트리거 가능)
       })
       .addCase(registAnswer.rejected, (state, action) => {
         state.loading = false;

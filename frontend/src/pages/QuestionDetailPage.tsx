@@ -4,14 +4,14 @@ import "./QuestionDetailPage.css";
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks/useRedux';
 
-import { fetchQuestionById } from '../store/slices/questionSlice';
+import { fetchQuestionById, QuestionState } from '../store/slices/questionSlice';
 
 import FootPrint from "../assets/images/footprint.png";
 import QuestionContentCard from '../components/QuestionDetail/Question/QuestionContentCard';
 import QuestionAnswerBtnGroup from '../components/QuestionDetail/Question/QuestionAnswerBtnGroup';
-import AnswerInput from '../components/QuestionDetail/Answer/AnswerInput';
+import AnswerInput from '../components/QuestionDetail/Answer/Input/AnswerInput';
 import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommunityComp';
-import { fetchAllMyAnswersByQID } from '../store/slices/answerSlice';
+import { AnswerState, fetchAllMyAnswersByQID } from '../store/slices/answerSlice';
 
 const QuestionDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,12 +22,11 @@ const QuestionDetailPage: React.FC = () => {
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
   const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
-    state => state.questions
+    state => state.questions as QuestionState // 타입 단언문 사용
   );
   const { myAnswerArr } = useAppSelector(
-    state => state.answers
+    state => state.answers as AnswerState
   );
-  console.log('questions:', questions)
 
   // 컴포넌트 마운트 시 질문 상세 데이터를 fetch
   useEffect(() => {
