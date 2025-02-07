@@ -52,7 +52,7 @@ public class QuestionController {
                 .ok()
                 .body(QuestionResponse.from(question, status, skills, jobs));
     }
-    
+
     @GetMapping
     @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
@@ -73,9 +73,16 @@ public class QuestionController {
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        List<Question> questions = questionService.getDailyQuestions();
+        return getListResponseEntity(questionService.getDailyQuestions());
+    }
 
-        return getListResponseEntity(questions);
+    // /api/question/top10?month={month}&job={job}
+    @GetMapping("/top10")
+    public ResponseEntity<List<QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
+                                                                    @RequestParam("job") String job) {
+
+        // QuestionService 호출
+        return getListResponseEntity(questionService.getTop10Questions(month, job));
     }
 
     private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {

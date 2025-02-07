@@ -1,11 +1,15 @@
 package com.ssafy.d3v.backend.question.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,9 +44,21 @@ public class Question {
     @ColumnDefault("0")// 기본값 = 0
     private Long challengeCount;
 
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<QuestionJob> questionJobs; // One-to-Many relationship with QuestionJob
+
     @Builder
     public Question(String content, String standardAnswer) {
         this.content = content;
         this.standardAnswer = standardAnswer;
+    }
+
+    @Builder
+    public Question(Long id, String content, String standardAnswer, Long answerCount, Long challengeCount) {
+        this.id = id;
+        this.content = content;
+        this.standardAnswer = standardAnswer;
+        this.answerCount = answerCount;
+        this.challengeCount = challengeCount;
     }
 }
