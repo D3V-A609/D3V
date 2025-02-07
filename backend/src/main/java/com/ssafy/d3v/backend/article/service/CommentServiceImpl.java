@@ -35,7 +35,13 @@ public class CommentServiceImpl implements CommentService {
         Page<Comment> commentsPage = commentRepository.findByArticle(article, pageable);
 
         List<CommentResponse> commentResponses = commentsPage.getContent().stream()
-                .map(c -> new CommentResponse(c.getId(), c.getArticle().getId(), c.getContent(), c.getCreatedAt(), c.getUpdatedAt()))
+                .map(c -> CommentResponse.builder()
+                        .id(c.getId())
+                        .articleId(c.getArticle().getId())
+                        .content(c.getContent())
+                        .createdAt(c.getCreatedAt())
+                        .updatedAt(c.getUpdatedAt())
+                        .build())
                 .toList();
 
         PaginationInfo paginationInfo = PaginationInfo.from(commentsPage);
@@ -56,12 +62,14 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         Comment saved = commentRepository.saveAndFlush(comment);
-        return new CommentResponse(
-                saved.getId(),
-                saved.getArticle().getId(),
-                saved.getContent(),
-                saved.getCreatedAt(),
-                saved.getUpdatedAt());
+
+        return CommentResponse.builder()
+                .id(saved.getId())
+                .articleId(saved.getArticle().getId())
+                .content(saved.getContent())
+                .createdAt(saved.getCreatedAt())
+                .updatedAt(saved.getUpdatedAt())
+                .build();
     }
 
     @Override
@@ -72,15 +80,16 @@ public class CommentServiceImpl implements CommentService {
 
         Comment updated = commentRepository.save(
                 comment.toBuilder()
-                .content(commentRequest.content())
-                .build());
+                        .content(commentRequest.content())
+                        .build());
 
-        return new CommentResponse(
-                updated.getId(),
-                updated.getArticle().getId(),
-                updated.getContent(),
-                updated.getCreatedAt(),
-                updated.getUpdatedAt());
+        return CommentResponse.builder()
+                .id(updated.getId())
+                .articleId(updated.getId())
+                .content(updated.getContent())
+                .createdAt(updated.getCreatedAt())
+                .updatedAt(updated.getUpdatedAt())
+                .build();
     }
 
     @Override
