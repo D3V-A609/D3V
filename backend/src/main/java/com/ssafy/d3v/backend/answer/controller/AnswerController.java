@@ -46,7 +46,7 @@ public class AnswerController {
     }
 
     @Operation(summary = "답변 전체 조회(다른 사용자 답변 보기)")
-    @GetMapping("/api/question/{question_id}/answer")
+    @GetMapping("/question/{question_id}/answer")
     public ResponseEntity<PagedResponse<AnswerResponse>> getTotalAnswers(@PathVariable("question_id") long questionId,
                                                                          @RequestParam(value = "size", defaultValue = "15") int size,
                                                                          @RequestParam(value = "page", defaultValue = "1") int page){

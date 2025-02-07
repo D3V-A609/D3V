@@ -10,17 +10,15 @@ import lombok.Builder;
 
 @Builder
 public record QuestionResponse(
-        Long questionId,
-        String content,
-        String standardAnswer,
+        Question question,
+        String status,
         List<SkillType> skillList,
         List<JobRole> jobList
 ) {
-    public static QuestionResponse from(Question question, List<Skill> skills, List<Job> jobs) {
+    public static QuestionResponse from(Question question, String Status, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
-                .questionId(question.getId())
-                .content(question.getContent())
-                .standardAnswer(question.getStandardAnswer())
+                .question(question)
+                .status(Status)
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getJobRole).toList())
                 .build();
