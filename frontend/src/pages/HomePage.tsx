@@ -2,17 +2,18 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
-import { fetchDailyQuestions, setSelectedQuestionId } from '../store/slices/questionSlice';
+import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
 import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard';
 import PageHeader from '../components/PageHeader/PageHeader';
 import { BsCheckLg } from 'react-icons/bs';
 import './HomePage.css';
+import { fetchDailyQuestions } from '../store/actions/questionActions';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   // Redux store에서 일일 질문 관련 상태를 가져옴
-  const { dailyQuestions, loading, error } = useAppSelector((state) => state.questions);
+  const { dailyQuestions, loading, error } = useAppSelector((state) => state.questions as QuestionState); // 타입 명시
   // 로그인 상태 (추후 실제 인증 상태로 대체 예정)
   const isLoggedIn = true;
 

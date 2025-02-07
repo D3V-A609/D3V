@@ -2,9 +2,10 @@ import React from 'react';
 import { FcViewDetails } from "react-icons/fc";
 import "./MyAnswer.css";
 import { useAppSelector } from '../../../store/hooks/useRedux';
+import { AnswerState } from '../../../store/slices/answerSlice';
 
 const MyAnswer: React.FC = () => {
-  const { myAnswerArr } = useAppSelector(state => state.answers);
+  const { myAnswerArr } = useAppSelector(state => state.answers as AnswerState);
 
   // 가장 최근 답변을 가져옵니다.
   const recentAnswer = myAnswerArr.length > 0 ? myAnswerArr[myAnswerArr.length - 1] : null;

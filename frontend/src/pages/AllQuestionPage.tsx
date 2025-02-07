@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchQuestions } from "../store/slices/questionSlice";
 import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from "../features/QuestionList/QuestionList";
 import JobSkillFilter from "../components/QuestionFilter/JobSkillFilter";
@@ -9,10 +8,12 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import dummyJobCategories from "../constants/dummyJobCategories";
 import "./AllQuestionPage.css";
 import { BiSearch } from "react-icons/bi";
+import { fetchQuestions } from "../store/actions/questionActions";
+import { QuestionState } from "../store/slices/questionSlice";
 
 const AllQuestionPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { questions, loading, error, pagination } = useAppSelector((state) => state.questions);
+  const { questions, loading, error, pagination } = useAppSelector((state) => state.questions as QuestionState);
   
   // 필터 상태들
   const [statusFilter, setStatusFilter] = useState<"all" | "solved" | "unsolved">("all");
@@ -58,7 +59,7 @@ const AllQuestionPage: React.FC = () => {
 
     // 상태 필터 적용
     if (statusFilter !== "all" && 
-        question.status.toLowerCase() !== statusFilter) {
+      (question.status?.toLowerCase() || "unsolved") !== statusFilter) {
       return false;
     }
 

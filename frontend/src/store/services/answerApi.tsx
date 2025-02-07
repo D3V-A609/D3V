@@ -3,12 +3,14 @@ import api from './api';
 export const answerApi = {
   getMyAnswer: async (questionId: number) => {
     const response = await api.get<Answer[]>(`/question/${questionId}/my_answer`);
-    return response.data.find(answer => answer.memberId === 1);
+    // return response.data.find(answer => answer.memberId === 1);
+    return response.data;
   },
 
   getOtherAnswers: async (questionId: number) => {
     const response = await api.get<Answer[]>(`/question/${questionId}/answer`);
-    return response.data.filter(answer => answer.memberId !== 1);
+    // return response.data.filter(answer => answer.memberId !== 1);
+    return response.data;
   },
 
   likeAnswer: async (answerId: number, memberId: number) => {
