@@ -10,18 +10,30 @@ import lombok.Builder;
 
 @Builder
 public record QuestionResponse(
-        Question question,
+        Long questionId,
+        String content,
+        String standardAnswer,
+        Long answerCount,
+        Long challengeCount,
+        Double answerAverage,
         String status,
         List<SkillType> skillList,
         List<JobRole> jobList
 ) {
     public static QuestionResponse from(Question q, String Status, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
-                .question(new Question(q.getId(), q.getContent(), q.getStandardAnswer(), q.getAnswerCount(),
-                        q.getChallengeCount()))
+                .questionId(q.getId())
+                .content(q.getContent())
+                .standardAnswer(q.getStandardAnswer())
+                .answerCount(q.getAnswerCount())
+                .challengeCount(q.getChallengeCount())
+                .answerAverage(q.getChallengeCount() == 0
+                        ? 0.0
+                        : Math.round((q.getAnswerCount() / (double) q.getChallengeCount()) * 1000) / 1000.0)
                 .status(Status)
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getJobRole).toList())
                 .build();
     }
+
 }

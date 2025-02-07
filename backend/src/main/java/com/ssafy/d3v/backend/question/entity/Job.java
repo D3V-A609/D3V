@@ -36,5 +36,8 @@ public class Job {
     private JobRole jobRole;
 
     @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<QuestionJob> questionJobs; // One-to-Many relationship with QuestionJob
+    private List<QuestionJob> questionJobs;
+
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<JobSkill> jobSkills;
 }
