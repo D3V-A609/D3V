@@ -2,12 +2,16 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +35,19 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
+    private final JobRoleService jobRoleService;
     private final Long TempMemeberId = 1L; // 임시 아이디
 
     public Question getById(Long questionId) {
         return questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
+
     public Page<Question> getAllQuestions(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return questionRepository.findAll(pageable);
     }
+
     @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
@@ -61,8 +67,7 @@ public class QuestionService {
             return dailyQuestions.stream()
                     .map(ServedQuestion::getQuestion) // ServedQuestion에서 Question 추출
                     .collect(Collectors.toList());
-        }
-        else if (dailyQuestions.size() > 0) {
+        } else if (dailyQuestions.size() > 0) {
             throw new IllegalStateException("오늘의 질문이 3개가 아닌 오류 발생");
         }
         return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
@@ -158,5 +163,20 @@ public class QuestionService {
             }
         }
         return selectedQuestions;
+    }
+
+    public List<Question> getTop10Questions(String month, String jobRoleString) {
+        // "yyyy-MM" 형식의 문자열을 YearMonth로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        YearMonth yearMonth = YearMonth.parse(month, formatter)
+                .minusMonths(1); // 이전 달 계산
+
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay(); // 월의 첫 번째 날 00:00:00
+        LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 월의 마지막 날 23:59:59
+
+        // Convert jobRoleString to JobRole enum
+        JobRole jobRole = jobRoleService.convertToJobRole(jobRoleString);
+
+        return questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate, jobRole);
     }
 }

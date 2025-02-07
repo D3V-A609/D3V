@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-// QuestionJobRepository.java
+
 public interface QuestionJobRepository extends JpaRepository<QuestionJob, Long> {
 
     @Query("SELECT qj FROM QuestionJob qj " +
