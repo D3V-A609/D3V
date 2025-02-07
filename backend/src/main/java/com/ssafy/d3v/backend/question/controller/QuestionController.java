@@ -4,7 +4,6 @@ import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
-import com.ssafy.d3v.backend.question.service.QuestionQueryService;
 import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,6 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final ServedQuestionService servedQuestionService;
-    private final QuestionQueryService questionQueryService;
 
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
@@ -44,13 +42,7 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
-        String status = servedQuestionService.getIsSolvedStatus(question);
-        List<Skill> skills = questionQueryService.getSkillsByQuestionId(question.getId());
-        List<Job> jobs = questionQueryService.getJobsByQuestionId(question.getId());
-
-        return ResponseEntity
-                .ok()
-                .body(QuestionResponse.from(question, status, skills, jobs));
+        return ResponseEntity.ok(createQuestionResponse(question));
     }
 
     @GetMapping
@@ -60,12 +52,7 @@ public class QuestionController {
             @RequestParam(defaultValue = "15") int size) {
         Page<Question> questionsPage = questionService.getAllQuestions(page, size);
 
-        Page<QuestionResponse> questionResponsesPage = questionsPage.map(q -> {
-            String status = servedQuestionService.getIsSolvedStatus(q);
-            List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
-            List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-            return QuestionResponse.from(q, status, skills, jobs);
-        });
+        Page<QuestionResponse> questionResponsesPage = questionsPage.map(this::createQuestionResponse);
 
         return ResponseEntity.ok(questionResponsesPage);
     }
@@ -78,24 +65,24 @@ public class QuestionController {
 
     // /api/question/top10?month={month}&job={job}
     @GetMapping("/top10")
+    @Operation(summary = "월간 TOP10 질문을 조회합니다", description = "선택한 직무에 대한 저번 달의 답변수 TOP10 질문을 조회합니다.")
     public ResponseEntity<List<QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
                                                                     @RequestParam("job") String job) {
-
-        // QuestionService 호출
         return getListResponseEntity(questionService.getTop10Questions(month, job));
     }
 
     private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
-                .map(q -> {
-                    String status = servedQuestionService.getIsSolvedStatus(q);
-                    List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
-                    List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.from(q, status, skills, jobs);
-                })
+                .map(this::createQuestionResponse)
                 .toList();
-        return ResponseEntity
-                .ok()
-                .body(questionResponseList);
+        return ResponseEntity.ok(questionResponseList);
+    }
+
+    private QuestionResponse createQuestionResponse(Question question) {
+        String status = servedQuestionService.getIsSolvedStatus(question);
+        List<Skill> skills = questionService.getSkillsByQuestionId(question.getId());
+        List<Job> jobs = questionService.getJobsByQuestionId(question.getId());
+        return QuestionResponse.from(question, status, skills, jobs);
     }
 }
+

@@ -45,7 +45,10 @@ public class Question {
     private Long challengeCount;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<QuestionJob> questionJobs; // One-to-Many relationship with QuestionJob
+    private List<QuestionJob> questionJobs;
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<QuestionSkill> questionSkills;
 
     @Builder
     public Question(String content, String standardAnswer) {

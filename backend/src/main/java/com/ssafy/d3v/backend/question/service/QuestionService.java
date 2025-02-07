@@ -2,9 +2,13 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
+import com.ssafy.d3v.backend.question.entity.QuestionJob;
+import com.ssafy.d3v.backend.question.entity.QuestionSkill;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
+import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
@@ -35,7 +39,6 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
-    private final JobRoleService jobRoleService;
     private final Long TempMemeberId = 1L; // 임시 아이디
 
     public Question getById(Long questionId) {
@@ -174,9 +177,25 @@ public class QuestionService {
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay(); // 월의 첫 번째 날 00:00:00
         LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 월의 마지막 날 23:59:59
 
-        // Convert jobRoleString to JobRole enum
-        JobRole jobRole = jobRoleService.convertToJobRole(jobRoleString);
+        return questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate,
+                JobRole.valueOf(jobRoleString.toUpperCase()));
+    }
 
-        return questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate, jobRole);
+    public List<Job> getJobsByQuestionId(Long questionId) {
+        // Question 엔티티에서 연관된 QuestionJob을 통해 Job 리스트를 추출
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
+        return question.getQuestionJobs().stream()
+                .map(QuestionJob::getJob)
+                .collect(Collectors.toList());
+    }
+
+    public List<Skill> getSkillsByQuestionId(Long questionId) {
+        // Question 엔티티에서 연관된 QuestionSkill을 통해 Skill 리스트를 추출
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
+        return question.getQuestionSkills().stream()
+                .map(QuestionSkill::getSkill)
+                .collect(Collectors.toList());
     }
 }

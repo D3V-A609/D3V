@@ -54,10 +54,10 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/dv3db
+    url: jdbc:postgresql://52.78.105.9:5432/d3vdb # jdbc:postgresql://localhost:5432/dv3db
     driver-class-name: org.postgresql.Driver
-    username: ${DEV_DATABASE_USER}
-    password: ${DEV_DATABASE_PASSWORD}
+    username: d3v3lop3rs # ${DEV_DATABASE_USER}
+    password: V:>3!wZgK%.YRa~m@deo # ${DEV_DATABASE_PASSWORD}
   jpa:
     properties:
       hibernate:
