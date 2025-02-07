@@ -23,7 +23,8 @@ const QuestionDetailPage: React.FC = () => {
   >("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
-  const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
+  // const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
+  const { selectedQuestionId, question, dailyQuestions, loading, error } = useAppSelector(
     state => state.questions as QuestionState // 타입 단언문 사용
   );
   const { myAnswerArr } = useAppSelector(
@@ -45,7 +46,7 @@ const QuestionDetailPage: React.FC = () => {
 
   
   // 일일 질문인지 확인
-  const isTodayQ = dailyQuestions.some(q => q.questionId === selectedQuestionId);
+  const isTodayQ = dailyQuestions.some(q => q.id === selectedQuestionId);
 
   // 답변 창, 답변 커뮤니티 창 이동함수
   const handleShowAnswerInput = () => {
@@ -76,15 +77,15 @@ const QuestionDetailPage: React.FC = () => {
           취뽀의 길로 한 발자국 더 !
         </div>
       </div>
-      {questions[0] && <>
-        <QuestionContentCard question={questions[0]} isToday={isTodayQ} />
+      {question && <>
+        <QuestionContentCard question={question} isToday={isTodayQ} />
         <QuestionAnswerBtnGroup 
           onShowAnswerInput={handleShowAnswerInput} 
           onShowAnswerCommunity={handleShowCommunity}
           currentView={currentQuestionDetailView}
         />
 
-      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={questions[0].standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
+      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={question.standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
       {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
         <AnswerCommunityComp questionId={selectedQuestionId} />
       )}

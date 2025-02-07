@@ -1,9 +1,9 @@
 // store/services/dailyQuestionApi.ts
 import api from './api';
 
-export const dailyQuestionApi = {
-  getDailyQuestions: () => api.get<Question[]>('/question/daily'),
+export const getDailyQuestions = async () => {
+  const response = await api.get<DailyQuestions>('/question/daily');
+  return response.data;
 };
 
-
-export default dailyQuestionApi;
+export default getDailyQuestions;
