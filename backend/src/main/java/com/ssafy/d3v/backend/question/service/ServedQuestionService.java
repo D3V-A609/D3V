@@ -3,15 +3,16 @@ package com.ssafy.d3v.backend.question.service;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
-import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,11 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ServedQuestionService{
+public class ServedQuestionService {
 
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
     private final QuestionRepository questionRepository;
+    private final Long tempMemeberId = 1L; // 임시 아이디
 
     @Transactional
     public ServedQuestionDto createServedQuestion(ServedQuestionCreateRequest dto, Boolean isDaily) {
@@ -94,5 +96,17 @@ public class ServedQuestionService{
                 .collect(Collectors.toList());
     }
 
+    public String getIsSolvedStatus(Question question) {
+        Member member = memberRepository.findById(tempMemeberId)
+                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+        Optional<ServedQuestion> servedQuestionOptional =
+                servedQuestionRepository.findByMemberAndQuestion(member, question);
 
+        if (servedQuestionOptional.isPresent()) {
+            Boolean isSolved = servedQuestionOptional.get().getIsSolved();
+            return isSolved ? "solved" : "unSolved";
+        } else {
+            return "notSolved";
+        }
+    }
 }
