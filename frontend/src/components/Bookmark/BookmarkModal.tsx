@@ -4,28 +4,15 @@ import { IoLockClosed, IoLockOpen } from "react-icons/io5";
 import AddBookmarkModal from './AddBookmarkModal';
 import './BookmarkModal.css';
 
-// 북마크 모달 컴포넌트의 props 타입 정의
-interface BookmarkModalProps {
-  questionId: number; // // 현재 질문 ID
-  onClose: () => void;  // 모달 닫기 함수
-}
-
-// 북마크 리스트 아이템의 타입 정의
-interface BookmarkList {
-  bookmarkId: number;     // 북마크 고유 ID
-  name: string;           // 북마크 이름
-  access_level: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';  // 북마크 공개 여부
-  question_count: number; // 북마크에 저장된 질문 수
-}
 
 const BookmarkModal: React.FC<BookmarkModalProps> = ({ onClose, questionId }) => {
   // 북마크 리스트 상태 관리
   const [bookmarks, setBookmarks] = useState<BookmarkList[]>([
-    { bookmarkId: 0, name: '북마크한 질문 모음', access_level: 'FRIENDS', question_count: 0 },
-    { bookmarkId: 1, name: '카카오 백앤드 기출 질문 모음', access_level: 'PRIVATE', question_count: 0 },
-    { bookmarkId: 2, name: '네이버 프론트 기출 질문 모음', access_level: 'PUBLIC', question_count: 0 },
-    { bookmarkId: 3, name: 'CSS 질문 모음', access_level: 'PUBLIC', question_count: 0 },
-    { bookmarkId: 4, name: '기타 질문 모음', access_level: 'PRIVATE', question_count: 0 }
+    { bookmarkId: 0, name: '북마크한 질문 모음', description: '', access_level: 'FRIENDS' },
+    { bookmarkId: 1, name: '카카오 백앤드 기출 질문 모음', description: '', access_level: 'PRIVATE' },
+    { bookmarkId: 2, name: '네이버 프론트 기출 질문 모음', description: '', access_level: 'PUBLIC' },
+    { bookmarkId: 3, name: 'CSS 질문 모음', description: '', access_level: 'PUBLIC' },
+    { bookmarkId: 4, name: '기타 질문 모음', description: '', access_level: 'PRIVATE' }
   ]);
 
   // 현재 질문이 저장된 북마크 ID 목록
@@ -120,12 +107,24 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ onClose, questionId }) =>
         </button>
       </div>
 
-      {showAddModal && (
+      {/* {showAddModal && (
         <AddBookmarkModal onClose={() => setShowAddModal(false)} />
-      )}
+      )} */}
 
-    </>
-    
+      {/* AddBookmarkModal에서 새로운 북마크 폴더를 생성하고 반영하기 위해 onSave 사용 */}
+      {showAddModal && (
+        <AddBookmarkModal 
+          onClose={() => setShowAddModal(false)} 
+          onSave={(bookmarkData: BookmarkData) => {
+            setBookmarks(prev => [...prev, {
+              bookmarkId: prev.length, // 임시 ID 나중에 API 사용시 변경할 예정(bookmarkId: response.id)
+              ...bookmarkData
+            }]);
+            setShowAddModal(false); // 저장 후 모달 닫기
+          }}
+        />
+      )}
+    </>    
   );
 };
 
