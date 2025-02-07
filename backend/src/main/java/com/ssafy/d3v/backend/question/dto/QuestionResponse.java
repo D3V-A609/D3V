@@ -15,9 +15,10 @@ public record QuestionResponse(
         List<SkillType> skillList,
         List<JobRole> jobList
 ) {
-    public static QuestionResponse from(Question question, String Status, List<Skill> skills, List<Job> jobs) {
+    public static QuestionResponse from(Question q, String Status, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
-                .question(question)
+                .question(new Question(q.getId(), q.getContent(), q.getStandardAnswer(), q.getAnswerCount(),
+                        q.getChallengeCount()))
                 .status(Status)
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getJobRole).toList())

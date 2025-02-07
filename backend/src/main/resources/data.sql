@@ -89,10 +89,10 @@ select *
 from served_question;
 
 INSERT INTO answer (member_id, question_id, content, created_at, access_level)
-VALUES (1, 1, 'PostgreSQL is an open-source database.', '2025-01-20 10:00:00', 'public'),
-       (2, 2, 'ACID ensures reliable transactions.', '2025-01-21 11:00:00', 'protected'),
-       (3, 3, 'Normalization reduces redundancy and improves efficiency.', '2025-01-22 12:00:00', 'private'),
-       (1, 4, 'B-Tree is the default index type in PostgreSQL.', '2025-01-23 13:00:00', 'public');
+VALUES (1, 1, 'PostgreSQL is an open-source database.', '2025-01-20 10:00:00', 'PUBLIC'),
+       (2, 2, 'ACID ensures reliable transactions.', '2025-01-21 11:00:00', 'PROTECTED'),
+       (3, 3, 'Normalization reduces redundancy and improves efficiency.', '2025-01-22 12:00:00', 'PRIVATE'),
+       (1, 4, 'B-Tree is the default index type in PostgreSQL.', '2025-01-23 13:00:00', 'PUBLIC');
 
 select *
 from answer;
@@ -120,8 +120,7 @@ VALUES ('FRONTEND'),
        ('BLOCKCHAIN'),
        ('CYBER_SECURITY'),
        ('TESTING');
-select *
-from job;
+select * from job;
 
 INSERT INTO skill (name)
 VALUES ('REACT'),
@@ -389,6 +388,30 @@ VALUES (1, 1),   -- React
 
 select *
 from question_skill;
+
+select * from category;
+
+insert into category (name)
+values ('JOB_REVIEW'),
+       ('QUESTION_REVIEW'),
+       ('INFO_SHARING'),
+       ('ETC');
+
+select * from article;
+
+INSERT INTO article (member_id, title, category_id, content, created_at, updated_at, view)
+VALUES (4, 'My first article', 1, 'This is my first article.', '2025-01-20', '2025-01-20', 0),
+       (3,  'Important article',1, 'This is an important article.', '2025-01-21', '2025-01-21', 0),
+       (2,  'Reference article', 1,'This is a reference article.', '2025-01-22', '2025-01-22', 0),
+       (1, 'To review later', 1,'This is an article to review later.', '2025-01-23', '2025-01-23', 0);
+
+select * from comment;
+
+insert into comment (member_id, article_id, content, created_at, updated_at)
+values (1, 5, 'Great article!', '2025-01-20', '2025-01-20'),
+       (2, 5, 'Needs more details.', '2025-01-21', '2025-01-21'),
+       (3, 6, 'This is very helpful!', '2025-01-22', '2025-01-22'),
+       (4, 7, 'Clear and concise.', '2025-01-23', '2025-01-23');
 
 INSERT INTO bookmark (bookmark_id, member_id, name, description, access_level)
 VALUES (1, 1, 'My first bookmark', '첫 북마크', 'PUBLIC'),
