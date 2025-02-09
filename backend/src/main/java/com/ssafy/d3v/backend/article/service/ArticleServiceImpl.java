@@ -73,4 +73,39 @@ public class ArticleServiceImpl implements ArticleService {
         return new PagedResponse<>(articleResponses, PaginationInfo.from(articles));
     }
 
+    @Override
+    @Transactional
+    public ArticleDetailResponse create(long categoryId, String title, String content, List<MultipartFile> images) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다." + memberId));
+
+        Article article = Article.builder()
+                .member(member)
+                .category(category)
+                .title(title)
+                .content(content)
+                .view(0)
+                .commentCount(0)
+                .build();
+
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                if (!image.isEmpty()) {
+                    String imageUrl = s3ImageUploader.upload(image);
+                    ArticleImage articleImage = ArticleImage.builder()
+                            .originImageName(image.getOriginalFilename())
+                            .imageUrl(imageUrl)
+                            .build();
+
+                    article.addImage(articleImage);
+                }
+            }
+        }
+
+        Article created = articleRepository.saveAndFlush(article);
+        return getArticleResponse(created);
+    }
 }

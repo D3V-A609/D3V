@@ -9,4 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ArticleService {
     PagedResponse<ArticleResponse> get(String category, String keyword, int page, int size, String sort);
 
+    ArticleDetailResponse create(long categoryId, String title, String content, List<MultipartFile> image);
 }

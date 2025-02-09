@@ -40,4 +40,13 @@ public class ArticleController {
         return ResponseEntity.ok().body(articleService.get(category, keyword, page, size, sort));
     }
 
+    @Operation(summary = "게시글 생성")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ArticleDetailResponse> create(@RequestParam("category_id") long categoryId,
+                                                        @RequestParam("title") String title,
+                                                        @RequestParam("content") String content,
+                                                        @Parameter(description = "업로드할 이미지 파일", content = @Content(mediaType = "multipart/form-data"))
+                                                        @RequestParam(value = "images", required = false) List<MultipartFile> image) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.create(categoryId, title, content, image));
+    }
 }
