@@ -55,4 +55,15 @@ public class ArticleController {
     public ResponseEntity<ArticleDetailResponse> getDetail(@PathVariable("article_id") long articleId) {
         return ResponseEntity.ok().body(articleService.getDetail(articleId));
     }
+
+    @Operation(summary = "게시글 수정")
+    @PatchMapping(value = "/{article_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ArticleDetailResponse> update(@PathVariable("article_id") long articleId,
+                                                        @RequestParam("category_id") long categoryId,
+                                                        @RequestParam("title") String title,
+                                                        @RequestParam("content") String content,
+                                                        @Parameter(description = "업로드할 이미지 파일", content = @Content(mediaType = "multipart/form-data"))
+                                                        @RequestParam(value = "images", required = false) List<MultipartFile> image) {
+        return ResponseEntity.ok().body(articleService.update(articleId, categoryId, title, content, image));
+    }
 }

@@ -119,4 +119,63 @@ public class ArticleServiceImpl implements ArticleService {
 
         return getArticleResponse(updated);
     }
+
+    @Override
+    @Transactional
+    public ArticleDetailResponse update(long articleId, long categoryId, String title, String content,
+                                        List<MultipartFile> images) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+
+        Article article = getArticle(articleId);
+
+        article.getImageUrls().forEach(image -> s3ImageUploader.deleteImageFromS3(image.getImageUrl()));
+        article.getImageUrls().clear();
+
+        List<ArticleImage> newImageEntities = new ArrayList<>();
+
+        if (images != null && !images.isEmpty()) {
+            images.stream()
+                    .filter(image -> !image.isEmpty())
+                    .forEach(image -> {
+                        String originImageName = image.getOriginalFilename();
+                        String imageUrl = s3ImageUploader.upload(image);
+
+                        ArticleImage newImage = ArticleImage.builder()
+                                .originImageName(originImageName)
+                                .imageUrl(imageUrl)
+                                .article(article)
+                                .build();
+
+                        newImageEntities.add(newImage);
+                    });
+        }
+
+        article.getImageUrls().addAll(newImageEntities);
+
+        article.toBuilder()
+                .category(category)
+                .title(title)
+                .content(content)
+                .build();
+
+        Article updated = articleRepository.saveAndFlush(article);
+
+        return getArticleResponse(updated);
+    }
+
+    private static ArticleDetailResponse getArticleResponse(Article article) {
+        return ArticleDetailResponse.builder()
+                .id(article.getId())
+                .categoryId(article.getCategory().getId())
+                .name(article.getCategory().getName())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .images(article.getImageUrls())
+                .createdAt(article.getCreatedAt())
+                .updatedAt(article.getUpdatedAt())
+                .view(article.getView())
+                .commentCount(article.getCommentCount())
+                .build();
+    }
 }

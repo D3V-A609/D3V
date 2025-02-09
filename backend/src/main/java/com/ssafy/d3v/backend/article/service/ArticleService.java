@@ -12,4 +12,7 @@ public interface ArticleService {
     ArticleDetailResponse create(long categoryId, String title, String content, List<MultipartFile> image);
 
     ArticleDetailResponse getDetail(long articleId);
+
+    ArticleDetailResponse update(long articleId, long categoryId, String title, String content,
+                                 List<MultipartFile> image);
 }
