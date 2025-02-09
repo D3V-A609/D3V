@@ -28,6 +28,7 @@ import lombok.ToString;
 @Table(name = "article_image")
 public class ArticleImage {
     @Id
+    @Column(name = "article_image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
