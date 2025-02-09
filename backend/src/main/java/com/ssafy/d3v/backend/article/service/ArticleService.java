@@ -15,4 +15,6 @@ public interface ArticleService {
 
     ArticleDetailResponse update(long articleId, long categoryId, String title, String content,
                                  List<MultipartFile> image);
+
+    void delete(long articleId);
 }

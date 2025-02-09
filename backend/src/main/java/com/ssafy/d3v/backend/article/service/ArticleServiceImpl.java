@@ -178,4 +178,18 @@ public class ArticleServiceImpl implements ArticleService {
                 .commentCount(article.getCommentCount())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public void delete(long articleId) {
+        Article article = getArticle(articleId);
+
+        article.delete(); //s3 이미지는 삭제하지 않음
+        articleRepository.saveAndFlush(article);
+    }
+
+    private Article getArticle(long articleId) {
+        return articleRepository.findByIdAndDeletedAtIsNull(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. " + articleId));
+    }
 }

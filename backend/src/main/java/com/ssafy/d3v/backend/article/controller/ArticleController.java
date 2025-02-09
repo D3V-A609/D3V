@@ -66,4 +66,11 @@ public class ArticleController {
                                                         @RequestParam(value = "images", required = false) List<MultipartFile> image) {
         return ResponseEntity.ok().body(articleService.update(articleId, categoryId, title, content, image));
     }
+
+    @Operation(summary = "게시글 삭제")
+    @DeleteMapping("/{article_id}")
+    public ResponseEntity delete(@PathVariable("article_id") long articleId) {
+        articleService.delete(articleId);
+        return ResponseEntity.ok().build();
+    }
 }
