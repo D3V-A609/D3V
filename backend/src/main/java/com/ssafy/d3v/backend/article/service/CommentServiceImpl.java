@@ -63,6 +63,10 @@ public class CommentServiceImpl implements CommentService {
 
         Comment saved = commentRepository.saveAndFlush(comment);
 
+        articleRepository.save(article.toBuilder()
+                .commentCount(article.getCommentCount() + 1)
+                .build());
+
         return CommentResponse.builder()
                 .id(saved.getId())
                 .articleId(saved.getArticle().getId())
