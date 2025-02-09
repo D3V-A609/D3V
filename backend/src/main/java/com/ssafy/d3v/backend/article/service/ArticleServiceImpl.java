@@ -108,4 +108,15 @@ public class ArticleServiceImpl implements ArticleService {
         Article created = articleRepository.saveAndFlush(article);
         return getArticleResponse(created);
     }
+
+    @Override
+    public ArticleDetailResponse getDetail(long articleId) {
+        Article article = getArticle(articleId);
+        Article updated = articleRepository.save(
+                article.toBuilder()
+                        .view(article.getView() + 1)
+                        .build());
+
+        return getArticleResponse(updated);
+    }
 }

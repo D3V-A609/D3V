@@ -49,4 +49,10 @@ public class ArticleController {
                                                         @RequestParam(value = "images", required = false) List<MultipartFile> image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(articleService.create(categoryId, title, content, image));
     }
+
+    @Operation(summary = "게시글 상세 조회")
+    @GetMapping("/{article_id}")
+    public ResponseEntity<ArticleDetailResponse> getDetail(@PathVariable("article_id") long articleId) {
+        return ResponseEntity.ok().body(articleService.getDetail(articleId));
+    }
 }
