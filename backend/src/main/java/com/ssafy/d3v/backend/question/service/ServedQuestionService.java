@@ -3,12 +3,12 @@ package com.ssafy.d3v.backend.question.service;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
-import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ServedQuestionService{
+public class ServedQuestionService {
 
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
