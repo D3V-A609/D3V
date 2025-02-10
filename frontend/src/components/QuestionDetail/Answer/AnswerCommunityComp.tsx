@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks/useRedux";
-import { fetchMyAnswer, fetchOtherAnswers } from "../../../store/slices/answerSlice";
 import MyAnswer from "./MyAnswer";
 import OtherAnswers from "./OtherAnswers";
 import "./AnswerCommunityComp.css";
+import { AnswerState } from "../../../store/slices/answerSlice";
+import { fetchMyAnswer, fetchOtherAnswers } from "../../../store/actions/answerActions";
 
 type AnswerCommunityCompProps = {
   questionId: number;
@@ -40,7 +41,7 @@ type AnswerCommunityCompProps = {
 
 const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
   const dispatch = useAppDispatch();
-  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers);
+  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers as AnswerState);
 
   useEffect(() => {
     dispatch(fetchMyAnswer(questionId));
@@ -52,7 +53,7 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
 
   return (
     <div className="answer-community-container">
-      {myAnswer && <MyAnswer answer={myAnswer} />}
+      {myAnswer && <MyAnswer />  } 
       {otherAnswers.length > 0 ? (
         <OtherAnswers answers={otherAnswers} />
       ) : (

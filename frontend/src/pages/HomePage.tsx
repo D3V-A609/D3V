@@ -1,8 +1,9 @@
 // Pages/HomePage.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
-import { fetchDailyQuestions, fetchTop10Questions, setSelectedQuestionId } from '../store/slices/questionSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux'
+import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
+import { fetchDailyQuestions, fetchTop10Questions  } from '../store/actions/questionActions';
 import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard';
 import Top10QuestionCard from '../components/Top10/Top10QuestionCard';
 import Top10Filter from '../components/Top10/Top10Filter';
@@ -13,18 +14,17 @@ import './HomePage.css';
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [selectedJob, setSelectedJob] = useState<string[]>(['Front-end']); // 기본값 설정
-  // Redux store에서 일일 질문 관련 상태를 가져옴
+  const [selectedJob, setSelectedJob] = useState<string[]>(['Front-end']);
+  
   const { 
     dailyQuestions, 
     top10Questions,
     loading, 
     error 
-  } = useAppSelector((state) => state.questions);
-  // 로그인 상태 (추후 실제 인증 상태로 대체 예정)
+  } = useAppSelector((state) => state.questions as QuestionState);
+  
   const isLoggedIn = true;
 
-  // 컴포넌트 마운트 시 일일 질문 데이터 fetch
   useEffect(() => {
     dispatch(fetchDailyQuestions());
   }, [dispatch]);
@@ -38,15 +38,12 @@ const HomePage: React.FC = () => {
     }
   }, [dispatch, selectedJob]);
 
-  // 질문 카드 클릭 시 선택된 질문 ID를 저장하는 핸들러
-  const QuestionCardClick = (questionId: number) => {
-    dispatch(setSelectedQuestionId(questionId));
-    navigate('/question');
+  const QuestionCardClick = (id: number) => {
+    dispatch(setSelectedQuestionId(id));
+    navigate(`/question`);
   };
 
-  // 로딩 상태 처리
   if (loading) return <div>Loading...</div>;
-  // 에러 상태 처리
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -61,11 +58,11 @@ const HomePage: React.FC = () => {
         <div className="question-cards">
           {dailyQuestions.map((question) => (
             <TodayQuestionCard
-              key={question.questionId}
+              key={question.id}
               title={question.content}
-              category={question.skillList[0]}
+              category={question.skillList?.[0] || 'General'}
               isLoggedIn={isLoggedIn}
-              onClick={() => QuestionCardClick(question.questionId)}
+              onClick={() => QuestionCardClick(question.id)}
             />
           ))}
         </div>
@@ -86,7 +83,7 @@ const HomePage: React.FC = () => {
         <div className="question-cards">
           {top10Questions.map((question) => (
             <Top10QuestionCard
-              key={question.questionId}
+              key={question.id}
               title={question.content}
               category={question.skillList[0]}
               onClick={() => QuestionCardClick(question.questionId)}

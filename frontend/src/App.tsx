@@ -29,7 +29,7 @@ function App() {
       ),
       children: [
         { path: '/', element: <HomePage /> },
-        { path: '/AllQuestionPage', element: <AllQuestionPage /> },
+        { path: '/all-questions', element: <AllQuestionPage /> },
         { path: '/ai', element: <AIPage /> },
         { path: '/my', element: <MyPage /> },
         { path: '/board', element: <BoardPage /> },

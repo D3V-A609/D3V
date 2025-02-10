@@ -1,10 +1,36 @@
-// store/services/dailyQuestionApi.ts
+// store/services/questionApi.ts
 import api from './api';
 
 export const questionApi = {
-  getQuestions: (page = 0, size = 15) => 
-    api.get<QuestionResponse>(`/question?page=${page}&size=${size}`), // 모든 질문 조회
-  getQuestionById: (questionId: number) => api.get<Question>(`/question/${questionId}`), // 질문 상세 조회
+  // 전체 질문 조회 API
+  getQuestions: async ({
+    jobs,
+    skills,
+    solved,
+    order = 'desc',
+    sort = 'acnt',
+    page = 0,
+    size = 15,
+    keyword,
+  }: QuestionParams = {}) => {
+    const queryParams = new URLSearchParams();
+
+    // 선택적 파라미터들을 쿼리스트링에 추가
+    if (jobs?.length) jobs.forEach(job => queryParams.append('jobs', job));
+    if (skills?.length) skills.forEach(skill => queryParams.append('skills', skill));
+    if (solved) queryParams.append('solved', solved);
+    if (order) queryParams.append('order', order);
+    if (sort) queryParams.append('sort', sort);
+    if (page !== undefined) queryParams.append('page', page.toString());
+    if (size !== undefined) queryParams.append('size', size.toString());
+    if (keyword) queryParams.append('keyword', keyword);
+
+    const queryString = queryParams.toString();
+    return await api.get<QuestionResponse>(`/question${queryString ? `?${queryString}` : ''}`);
+  },
+
+  // 개별 질문 조회 API
+  getQuestionById: (id: number) => api.get<Question>(`/question/${id}`),
 
   // Top10 API
   getTop10Questions: ({ month, job }: { month?: string; job: string }) => {
@@ -14,8 +40,6 @@ export const questionApi = {
     
     return api.get<Question[]>(`/question/top10?${queryParams.toString()}`);
   }
-  
 };
-
 
 export default questionApi;

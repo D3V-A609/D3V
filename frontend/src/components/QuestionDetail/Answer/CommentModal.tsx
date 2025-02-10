@@ -5,7 +5,7 @@ import dummyUsers from '../../../constants/dummyUsers';
 import dummyComments from '../../../constants/dummyComments';
 import './CommentModal.css';
 import { useAppDispatch } from '../../../store/hooks/useRedux';
-import { toggleLike } from '../../../store/slices/answerSlice';
+import { toggleLike } from '../../../store/actions/answerActions';
 
 interface CommentModalProps {
   answer: Answer;
