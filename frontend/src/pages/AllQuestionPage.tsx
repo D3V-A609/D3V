@@ -4,7 +4,10 @@ import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { fetchQuestions } from '../store/actions/questionActions';
 import { QuestionState } from '../store/slices/questionSlice';
 import PageHeader from "../components/PageHeader/PageHeader"
+import StatusFilter from '../components/QuestionFilter/StatusFilter';
 import QuestionList from '../features/QuestionList/QuestionList';
+import Pagination from '../components/Pagination/Pagination';
+
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
@@ -13,7 +16,7 @@ const AllQuestionPage = () => {
   const dispatch = useAppDispatch();
   
   // Redux store에서 필요한 상태들을 가져옴
-  const { questions, loading, error, pagination } = useAppSelector(
+  const { questions, error, pagination } = useAppSelector(
     (state) => state.questions as QuestionState
   );
 
@@ -28,24 +31,44 @@ const AllQuestionPage = () => {
     order: 'desc'   // 초기값: 내림차순
   });
   
+  // 필터 상태
+  const [statusFilter, setStatusFilter] = useState<QuestionStatus | 'all'>('all');
+
   // 컴포넌트 마운트 시 또는 정렬 상태 변경 시 질문 목록 조회
   useEffect(() => {
     dispatch(fetchQuestions({
       page: 0,
       size: 15,
       order: currentSort.order,
-      sort: currentSort.field
+      sort: currentSort.field,
+      solved: statusFilter === 'all' ? undefined : statusFilter
     }));
-  }, [dispatch, currentSort]);
+  }, [dispatch, currentSort, statusFilter]);
 
-  // 정렬 변경 핸들러
+  
+  console.log(pagination)
+
+  // 필터 변경 시 페이지를 0으로 리셋
+  const handleStatusFilterChange = (status: QuestionStatus | 'all') => {
+    setStatusFilter(status);
+    dispatch(fetchQuestions({
+      page: 0,
+      size: pagination.size,
+      sort: currentSort.field,
+      order: currentSort.order,
+      solved: status === 'all' ? undefined : status
+    }));
+  };
+
+  // 정렬 변경 시에도 현재 필터 상태를 유지
   const handleSort = (sort: SortField, order: SortOrder) => {
-    setCurrentSort({ field: sort, order });  // 정렬 상태 업데이트
+    setCurrentSort({ field: sort, order });
     dispatch(fetchQuestions({
       page: pagination.currentPage,
       size: pagination.size,
       sort,
-      order
+      order,
+      solved: statusFilter === 'all' ? undefined : statusFilter
     }));
   };
 
@@ -55,7 +78,8 @@ const AllQuestionPage = () => {
       page,
       size: pagination.size,
       sort: currentSort.field,
-      order: currentSort.order
+      order: currentSort.order,
+      solved: statusFilter === 'all' ? undefined : statusFilter
     }));
   };
 
@@ -73,14 +97,21 @@ const AllQuestionPage = () => {
         iconStyle="search-icon"
       />
 
-      {/* QuestionList 컴포넌트에 필요한 props 전달 */}
+      <StatusFilter 
+        statusFilter={statusFilter}
+        onStatusFilterChange={handleStatusFilterChange}
+      />
+
       <QuestionList 
-        questions={questions}                    // 질문 목록
-        currentPage={pagination.currentPage}     // 현재 페이지
-        totalPages={pagination.totalPages}       // 전체 페이지 수
-        onPageChange={handlePageChange}          // 페이지 변경 핸들러
-        onSort={handleSort}                      // 정렬 변경 핸들러
-        currentSort={currentSort}                // 현재 정렬 상태
+        questions={questions}
+        onSort={handleSort}
+        currentSort={currentSort}
+      />
+
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );
