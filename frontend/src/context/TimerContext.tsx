@@ -21,16 +21,21 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // ✅ 타이머 시간 선택 핸들러
   const handleTimeSelect = (time: number | null) => {
+    resetTimer();
     setSelectedTime(time);
     setRemainingTime(time);
   };
 
   // ✅ 타이머 시작 함수
-  const startTimer = (time: number | null) => {
+  const startTimer = (time: number | null = remainingTime) => {
     if (time === null) return;
     if (isRunning || remainingTime === null) return;
-    setSelectedTime(time);
-    setRemainingTime(time);
+
+    // 남은 시간이 없다면 새로 설정된 시간으로 시작
+    if(remainingTime == null && time !== null){
+      setRemainingTime(time);
+    }
+
     setIsRunning(true);
     startTimeRef.current = Date.now();
   };
@@ -39,9 +44,6 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const pauseTimer = () => {
     if (!isRunning || startTimeRef.current === null) return;
     setIsRunning(false);
-    const currentTime = Date.now();
-    const elapsedTime = Math.floor((currentTime - startTimeRef.current) / 1000);
-    setRemainingTime((prev) => Math.max((prev ?? 0) - elapsedTime, 0));
   };
 
   // ✅ 타이머 초기화 함수

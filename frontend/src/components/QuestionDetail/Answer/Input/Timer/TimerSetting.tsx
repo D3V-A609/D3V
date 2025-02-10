@@ -19,20 +19,27 @@ const TimerSetting: React.FC<TimerSettingProps> = ({
 }) => {
   const {selectedTime, remainingTime, isRunning, handleTimeSelect, startTimer, pauseTimer } = useTimer();
 
+  const btnSelecteTime = (time: number | null) => {
+    handleTimeSelect(time);
+    handleDropdownToggle();
+  }
+
 
   return(
     <div className="timer-setting-container">
       {!showTimerDropdown? (
-        <div className="timer-initial" onClick={handleDropdownToggle}>
+        <div className="timer-initial" key={remainingTime} onClick={handleDropdownToggle}>
           <span>{remainingTime !== null ? `${remainingTime}초` : "타이머 설정"}</span>
           <MdOutlineTimer className="timer-icon" />
         </div>
       ) : (
         <div className="timer-dropdown">
+            <span>{remainingTime !== null ? `${remainingTime}초` : "타이머 설정"}</span>
+            <MdOutlineTimer className="timer-icon" />
           <div className="dropdown-menu">
             <div
               className={`dropdown-item ${selectedTime === null ? 'selected' : ''}`}
-              onClick={() => handleTimeSelect(null)}  // ✅ null 선택
+              onClick={() => btnSelecteTime(null)}  // ✅ null 선택
             >
               선택 안 함
             </div>
@@ -40,7 +47,7 @@ const TimerSetting: React.FC<TimerSettingProps> = ({
               <div
                 key={time}
                 className={`dropdown-item ${selectedTime === time ? 'selected' : ''}`}  // ✅ 선택된 값 표시
-                onClick={() => handleTimeSelect(time)}
+                onClick={() => btnSelecteTime(time)}
               >
                 {time === 30 ? "30초" : time === 60 ? "1분" : "3분"}
               </div>
