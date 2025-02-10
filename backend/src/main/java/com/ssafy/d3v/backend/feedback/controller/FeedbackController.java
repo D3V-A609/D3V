@@ -31,4 +31,10 @@ public class FeedbackController {
         return ResponseEntity.ok().body(feedbackService.get(answerId));
     }
 
+    @Operation(summary = "피드백 생성")
+    @PostMapping("/{answer_id}/feedback")
+    public ResponseEntity<FeedbackResponse> create(@PathVariable("answer_id") long answerId,
+                                                   @RequestBody FeedbackRequest feedbackRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(feedbackService.create(answerId, feedbackRequest));
+    }
 }

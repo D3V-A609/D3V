@@ -31,8 +31,44 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public FeedbackResponse create(long answerId, FeedbackRequest feedbackRequest) {
+        Answer answer = getAnswer(answerId);
+        Member member = getMember(memberId);
+
+        Feedback feedback = Feedback.builder()
+                .answer(answer)
+                .member(member)
+                .content(feedbackRequest.content())
+                .build();
+
+        Feedback saved = feedbackRepository.saveAndFlush(feedback);
+        return getFeedbackResponse(saved);
+    }
     private Member getMember(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
+
+    private Answer getAnswer(long answerId) {
+        return answerRepository.findById(answerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다."));
+    }
+
+    private Feedback getFeedback(long feedbackId, Member member) {
+        return feedbackRepository.findByIdAndMember(feedbackId, member)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 피드백입니다."));
+    }
+
+    private static FeedbackResponse getFeedbackResponse(Feedback feedback) {
+        return FeedbackResponse.builder()
+                .feedbackId(feedback.getId())
+                .answerId(feedback.getAnswer().getAnswerId())
+                .memberId(feedback.getMember().getId())
+                .content(feedback.getContent())
+                .createdAt(feedback.getCreatedAt())
+                .updatedAt(feedback.getUpdatedAt())
+                .build();
     }
 }

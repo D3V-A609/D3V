@@ -7,4 +7,5 @@ import java.util.List;
 public interface FeedbackService {
     List<FeedbackResponse> get(long answerId);
 
+    FeedbackResponse create(long answerId, FeedbackRequest feedbackRequest);
 }
