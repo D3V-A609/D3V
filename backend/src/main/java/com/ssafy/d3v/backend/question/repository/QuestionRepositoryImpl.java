@@ -186,7 +186,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
                 // solved 필터링 적용 (필터링 값이 null이면 모든 결과 포함)
                 .filter(response -> solvedFilter == null || response.status().equals(solvedFilter))
                 .toList();
-
+        long filteredTotal = responseList.size();
         return new PageImpl<>(responseList, pageable, total);
     }
 

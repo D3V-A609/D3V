@@ -3,14 +3,19 @@ package com.ssafy.d3v.backend.question.entity;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import java.io.Serializable;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("TopQuestionCache")
+@RedisHash(value = "TopQuestionCache", timeToLive = 3600 * 24 * 30)
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TopQuestionCache implements Serializable {
 
     @Id

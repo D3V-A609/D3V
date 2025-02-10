@@ -184,7 +184,7 @@ public class QuestionService {
 
         // Redis에서 데이터 조회
         return topQuestionCacheRepository.findById(cacheKey)
-                .map(TopQuestionCache::getQuestions) // 캐시에 데이터가 있으면 반환
+                .map(TopQuestionCache::getQuestions)
                 .orElseGet(() -> {
                     System.out.println("Cache miss for " + cacheKey + ". Generating data...");
 
@@ -226,6 +226,7 @@ public class QuestionService {
             }
 
             // Top 10 질문 조회 (DB)
+            System.out.println("Generating top 10 questions for " + job + " in " + month + " ...");
             List<QuestionDto> topQuestions = questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate,
                             job).stream()
                     .map(QuestionDto::from)
