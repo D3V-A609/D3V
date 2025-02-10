@@ -21,7 +21,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
-@Builder(toBuilder = true)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Feedback extends BaseEntity {
