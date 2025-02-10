@@ -49,7 +49,7 @@ public class AnswerServiceImpl implements AnswerService {
             throw new IllegalStateException("작성한 답변이 없습니다. 질문 ID: " + questionId);
         }
 
-        boolean isSolved = servedQuestionRepository.findByMemberAndQuestion(member, question)
+        boolean isSolved = servedQuestionRepository.findByMemberAndQuestion_Id(member, questionId)
                 .map(ServedQuestion::getIsSolved)
                 .orElse(false);
 

@@ -96,11 +96,11 @@ public class ServedQuestionService {
                 .collect(Collectors.toList());
     }
 
-    public String getIsSolvedStatus(Question question) {
+    public String getIsSolvedStatus(Long questionId) {
         Member member = memberRepository.findById(tempMemeberId)
                 .orElseThrow(() -> new EntityNotFoundException("Member not found"));
         Optional<ServedQuestion> servedQuestionOptional =
-                servedQuestionRepository.findByMemberAndQuestion(member, question);
+                servedQuestionRepository.findByMemberAndQuestion_Id(member, questionId);
 
         if (servedQuestionOptional.isPresent()) {
             Boolean isSolved = servedQuestionOptional.get().getIsSolved();

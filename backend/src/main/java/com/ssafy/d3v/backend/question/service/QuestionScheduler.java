@@ -15,23 +15,12 @@ public class QuestionScheduler {
     private final QuestionService questionService;
 
     /**
-     * 한 달에 한 번 실행: 매월 1일 2AM 실행
+     * 매월 1일 오전 2시에 실행하여 모든 직무의 Top 10 질문 생성 및 저장.
      */
     @Scheduled(cron = "0 0 2 1 * ?") // 매월 1일 오전 2시 실행
     public void scheduleMonthlyTop10Questions() {
-        // 현재 날짜를 기준으로 이전 달의 데이터를 가져옴
-        LocalDate now = LocalDate.now();
-        String Month = now.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-        // 예시 직무 (필요 시 수정 가능)
-        String jobRoleString = "DEVELOPER";
-
-        // getTop10Questions 호출
-        List<Question> top10Questions = questionService.getTop10Questions(Month, jobRoleString);
-
-        // 로그 출력 (필요 시 추가 로직 작성 가능)
-        System.out.println("Monthly Top 10 Questions executed for month: " + Month);
-        top10Questions.forEach(question -> System.out.println(question.getContent()));
+        String currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        questionService.generateAndSaveTop10QuestionsForAllJobs(currentMonth);
     }
 
     /**

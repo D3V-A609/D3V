@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.question.controller;
 
+import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -58,25 +59,28 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
-        return ResponseEntity.ok(createQuestionResponse(question));
+        return ResponseEntity.ok(createQuestionResponse(QuestionDto.from(question)));
     }
 
-    @GetMapping("/all")
-    @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이징 조회합니다")
-    public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size) {
-        Page<Question> questionsPage = questionService.getAllQuestions(page, size);
-
-        Page<QuestionResponse> questionResponsesPage = questionsPage.map(this::createQuestionResponse);
-
-        return ResponseEntity.ok(questionResponsesPage);
-    }
+//    @GetMapping("/all")
+//    @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이징 조회합니다")
+//    public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "15") int size) {
+//        Page<Question> questionsPage = questionService.getAllQuestions(page, size);
+//
+//        Page<QuestionResponse> questionResponsesPage = questionsPage.map(this::createQuestionResponse);
+//
+//        return ResponseEntity.ok(questionResponsesPage);
+//    }
 
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        return getListResponseEntity(questionService.getDailyQuestions());
+        return getListResponseEntity(questionService.getDailyQuestions()
+                .stream()
+                .map(QuestionDto::from)
+                .toList());
     }
 
     // /api/question/top10?month={month}&job={job}
@@ -87,17 +91,17 @@ public class QuestionController {
         return getListResponseEntity(questionService.getTop10Questions(month, job));
     }
 
-    private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<Question> questions) {
+    private ResponseEntity<List<QuestionResponse>> getListResponseEntity(List<QuestionDto> questions) {
         List<QuestionResponse> questionResponseList = questions.stream()
                 .map(this::createQuestionResponse)
                 .toList();
         return ResponseEntity.ok(questionResponseList);
     }
 
-    private QuestionResponse createQuestionResponse(Question question) {
-        String solved = servedQuestionService.getIsSolvedStatus(question);
-        List<Skill> skills = questionService.getSkillsByQuestionId(question.getId());
-        List<Job> jobs = questionService.getJobsByQuestionId(question.getId());
+    private QuestionResponse createQuestionResponse(QuestionDto question) {
+        String solved = servedQuestionService.getIsSolvedStatus(question.id());
+        List<Skill> skills = questionService.getSkillsByQuestionId(question.id());
+        List<Job> jobs = questionService.getJobsByQuestionId(question.id());
         return QuestionResponse.from(question, solved, skills, jobs);
     }
 }

@@ -1,11 +1,16 @@
 package com.ssafy.d3v.backend.question.repository;
 
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.d3v.backend.answer.entity.QAnswer;
 import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
@@ -111,13 +116,20 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
         Map<String, Function<Boolean, OrderSpecifier<?>>> sortMapping = Map.of(
                 "acnt", asc -> asc ? question.answerCount.asc() : question.answerCount.desc(),
                 "ccnt", asc -> asc ? question.challengeCount.asc() : question.challengeCount.desc(),
-                "avg", asc -> asc ?
-                        (question.answerCount.castToNum(Double.class)
-                                .divide(question.challengeCount.castToNum(Double.class))).asc() :
-                        (question.answerCount.castToNum(Double.class)
-                                .divide(question.challengeCount.castToNum(Double.class))).desc()
-        );
+                "avg", asc -> {
+                    // CaseBuilder를 사용하여 조건부 표현식 생성
+                    Expression<Double> avgExpression = new CaseBuilder()
+                            .when(question.challengeCount.eq(0L))
+                            .then(Expressions.constant(0.0)) // challengeCount가 0이면 0.0 반환
+                            .otherwise(
+                                    question.answerCount.castToNum(Double.class)
+                                            .divide(question.challengeCount.castToNum(Double.class))
+                            );
 
+                    // OrderSpecifier 생성
+                    return new OrderSpecifier<>(asc ? Order.ASC : Order.DESC, avgExpression);
+                }
+        );
         // 정렬 기준 선택
         OrderSpecifier<?> orderSpecifier = Optional.ofNullable(sort)
                 .map(sortMapping::get)
@@ -161,7 +173,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
         // 추가 데이터 처리 및 매핑: solved 값과 관련 데이터를 포함한 QuestionResponse 생성
         List<QuestionResponse> responseList = results.stream()
                 .map(q -> {
-                    String solved = servedQuestionRepository.findByMemberAndQuestion(member, q)
+                    String solved = servedQuestionRepository.findByMemberAndQuestion_Id(member, q.getId())
                             .map(ServedQuestion::getIsSolved)
                             .map(isSolved -> isSolved ? "solved" : "unSolved")
                             .orElse("notSolved");
@@ -169,7 +181,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
                     List<Job> jobs = jobMap.getOrDefault(q.getId(), List.of());
                     List<Skill> skills = skillMap.getOrDefault(q.getId(), List.of());
 
-                    return QuestionResponse.from(q, solved, skills, jobs);
+                    return QuestionResponse.from(QuestionDto.from(q), solved, skills, jobs);
                 })
                 // solved 필터링 적용 (필터링 값이 null이면 모든 결과 포함)
                 .filter(response -> solvedFilter == null || response.status().equals(solvedFilter))
