@@ -81,4 +81,13 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .updatedAt(feedback.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public void delete(long answerId, long feedbackId) {
+        Feedback feedback = getFeedback(feedbackId, getMember(memberId));
+
+        feedback.delete();
+        feedbackRepository.saveAndFlush(feedback);
+    }
 }

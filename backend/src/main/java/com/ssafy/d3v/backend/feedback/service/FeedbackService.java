@@ -10,4 +10,6 @@ public interface FeedbackService {
     FeedbackResponse create(long answerId, FeedbackRequest feedbackRequest);
 
     FeedbackResponse update(long answerId, long feedbackId, FeedbackRequest feedbackRequest);
+
+    void delete(long answerId, long feedbackId);
 }

@@ -45,4 +45,12 @@ public class FeedbackController {
                                                    @RequestBody FeedbackRequest feedbackRequest) {
         return ResponseEntity.ok().body(feedbackService.update(answerId, feedbackId, feedbackRequest));
     }
+
+    @Operation(summary = "피드백 삭제")
+    @DeleteMapping("/{answer_id}/feedback/{feedback_id}")
+    public ResponseEntity delete(@PathVariable("answer_id") long answerId,
+                                 @PathVariable("feedback_id") long feedbackId) {
+        feedbackService.delete(answerId, feedbackId);
+        return ResponseEntity.ok().build();
+    }
 }
