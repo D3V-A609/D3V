@@ -5,7 +5,7 @@ import { fetchQuestions, fetchDailyQuestions, fetchQuestionById } from '../actio
 // 질문 상태에 대한 타입 정의
 export interface QuestionState {
   question: Question | null;
-  questions: DailyQuestions;          // 전체 질문 목록
+  questions: Question[];          // 전체 질문 목록
   dailyQuestions: Question[];         // 일일 질문 목록
   selectedQuestionId: number | null;  // 현재 선택된 질문의 ID
   loading: boolean;                   // 로딩 상태

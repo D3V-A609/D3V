@@ -1,61 +1,94 @@
 // pages/AllQuestionPage.tsx
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { fetchQuestions } from '../store/actions/questionActions';
+import { QuestionState } from '../store/slices/questionSlice';
+import PageHeader from "../components/PageHeader/PageHeader"
+import QuestionList from '../features/QuestionList/QuestionList';
+import { BiSearch } from "react-icons/bi";
+import "./AllQuestionPage.css";
 
 const AllQuestionPage = () => {
-  const dispatch = useDispatch();
+  // Redux dispatch 함수 가져오기
+  const dispatch = useAppDispatch();
   
-  // Redux store에서 필요한 상태 가져오기
-  const { 
-    questions, 
-    loading, 
-    error,
-    pagination 
-  } = useSelector((state: { questions: QuestionState }) => state.questions);
+  // Redux store에서 필요한 상태들을 가져옴
+  const { questions, loading, error, pagination } = useAppSelector(
+    (state) => state.questions as QuestionState
+  );
 
-  // 컴포넌트 마운트 시 질문 목록 조회
+  // 정렬 상태를 관리하는 state
+  // field: 정렬 기준 필드 (acnt: 답변수, ccnt: 도전수)
+  // order: 정렬 방향 (desc: 내림차순, asc: 오름차순)
+  const [currentSort, setCurrentSort] = useState<{
+    field: SortField;
+    order: SortOrder;
+  }>({
+    field: 'acnt',  // 초기값: 답변수 기준
+    order: 'desc'   // 초기값: 내림차순
+  });
+  
+  // 컴포넌트 마운트 시 또는 정렬 상태 변경 시 질문 목록 조회
   useEffect(() => {
     dispatch(fetchQuestions({
       page: 0,
       size: 15,
-      order: 'desc',
-      sort: 'acnt'
+      order: currentSort.order,
+      sort: currentSort.field
     }));
-  }, [dispatch]);
-  console.log(questions)
+  }, [dispatch, currentSort]);
 
-  if (loading) return <div>Loading...</div>;
+  // 정렬 변경 핸들러
+  const handleSort = (sort: SortField, order: SortOrder) => {
+    setCurrentSort({ field: sort, order });  // 정렬 상태 업데이트
+    dispatch(fetchQuestions({
+      page: pagination.currentPage,
+      size: pagination.size,
+      sort,
+      order
+    }));
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (page: number) => {
+    dispatch(fetchQuestions({
+      page,
+      size: pagination.size,
+      sort: currentSort.field,
+      order: currentSort.order
+    }));
+  };
+
+  // 로딩 중이면 로딩 표시
+  // if (loading) return <div>Loading...</div>;
+  // 에러가 있으면 에러 메시지 표시
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
-      <h1>All Questions</h1>
-      <div className="question-list">
-        {questions.map((question) => (
-          <div key={question.id} className="question-item">
-            <h3>{question.content}</h3>
-            <div>
-              <span>Answers: {question.answerCount}</span>
-              <span>Status: {question.status}</span>
-            </div>
-            <div>
-              <span>Skills: {question.skillList.join(', ')}</span>
-              <span>Jobs: {question.jobList.join(', ')}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="pagination">
-        <span>Total: {pagination.totalElements}</span>
-        <span>Page: {pagination.currentPage + 1} of {pagination.totalPages}</span>
-      </div>
+    <div className="question-page">
+      <PageHeader 
+        title="면접 질문 모음"
+        description="원하는 직무와 기술별로 모든 면접 질문을 검색해보세요!"
+        icon={<BiSearch />}
+        iconStyle="search-icon"
+      />
+
+      {/* QuestionList 컴포넌트에 필요한 props 전달 */}
+      <QuestionList 
+        questions={questions}                    // 질문 목록
+        currentPage={pagination.currentPage}     // 현재 페이지
+        totalPages={pagination.totalPages}       // 전체 페이지 수
+        onPageChange={handlePageChange}          // 페이지 변경 핸들러
+        onSort={handleSort}                      // 정렬 변경 핸들러
+        currentSort={currentSort}                // 현재 정렬 상태
+      />
     </div>
   );
 };
 
 export default AllQuestionPage;
+
+
 
 
 
