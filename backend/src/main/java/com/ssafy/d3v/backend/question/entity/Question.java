@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.question.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,9 +46,11 @@ public class Question {
     private Long challengeCount;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<QuestionJob> questionJobs;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<QuestionSkill> questionSkills;
 
     @Builder

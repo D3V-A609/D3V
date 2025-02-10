@@ -67,3 +67,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    redis:
+      host: 52.78.105.9
+      port: 6379

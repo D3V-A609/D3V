@@ -1,7 +1,6 @@
 package com.ssafy.d3v.backend.question.repository;
 
 import com.ssafy.d3v.backend.member.entity.Member;
-import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +17,7 @@ public interface ServedQuestionRepository extends JpaRepository<ServedQuestion, 
 
     List<ServedQuestion> findByMemberAndIsDailyAndServedAt(Member member, Boolean isDaily, LocalDate servedAt);
 
-    Optional<ServedQuestion> findByMemberAndQuestion(Member member, Question question);
+    Optional<ServedQuestion> findByMemberAndQuestion_Id(Member member, Long questionId);
 
 }
 

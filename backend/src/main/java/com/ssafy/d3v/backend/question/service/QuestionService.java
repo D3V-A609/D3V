@@ -2,6 +2,7 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
@@ -11,9 +12,12 @@ import com.ssafy.d3v.backend.question.entity.QuestionSkill;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.entity.SkillType;
+import com.ssafy.d3v.backend.question.entity.TopQuestionCache;
 import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
+import com.ssafy.d3v.backend.question.repository.JobRepository;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
+import com.ssafy.d3v.backend.question.repository.TopQuestionCacheRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -41,6 +45,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
+    private final JobRepository jobRepository;
+    private final TopQuestionCacheRepository topQuestionCacheRepository; // Redis 캐시 저장소
     private final Long TempMemeberId = 1L; // 임시 아이디
 
     public Question getById(Long questionId) {
@@ -53,7 +59,6 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    @Transactional
     public List<Question> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
         Member member = memberRepository.findById(memberId)
@@ -78,7 +83,8 @@ public class QuestionService {
         return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
     }
 
-    private List<Question> CreateRandomQuestions(Member member) {
+    @Transactional
+    public List<Question> CreateRandomQuestions(Member member) {
 
         // 데일리 생성 로직이 현재는 로그인 시 생성하는 방식인데 스케줄러 써서 개선할 수 있을 것 같다.
         // 추가로 개인별 맞춤으로 다른 가중치도 추가할 예정
@@ -149,7 +155,7 @@ public class QuestionService {
         for (Question question : selectedQuestions) {
             // 이미 존재하는 ServedQuestion 조회
             Optional<ServedQuestion> existingServedQuestion = servedQuestionRepository
-                    .findByMemberAndQuestion(member, question);
+                    .findByMemberAndQuestion_Id(member, question.getId());
 
             if (existingServedQuestion.isPresent()) {
                 // 1. 기존 레코드가 존재하면 isDaily=true, servedAt=오늘 날짜로 업데이트
@@ -170,17 +176,72 @@ public class QuestionService {
         return selectedQuestions;
     }
 
-    public List<Question> getTop10Questions(String month, String jobRoleString) {
+    /**
+     * 특정 직무와 월에 대한 Top 10 질문 조회 (캐시 우선).
+     */
+    public List<QuestionDto> getTop10Questions(String month, String jobRoleString) {
+        String cacheKey = jobRoleString.toUpperCase() + "-" + month;
+
+        // Redis에서 데이터 조회
+        return topQuestionCacheRepository.findById(cacheKey)
+                .map(TopQuestionCache::getQuestions) // 캐시에 데이터가 있으면 반환
+                .orElseGet(() -> {
+                    System.out.println("Cache miss for " + cacheKey + ". Generating data...");
+
+                    // 캐시에 없으면 데이터를 생성
+                    generateAndSaveTop10QuestionsForAllJobs(month);
+
+                    // 다시 캐시에서 조회
+                    return topQuestionCacheRepository.findById(cacheKey)
+                            .map(TopQuestionCache::getQuestions)
+                            .orElseThrow(() -> new IllegalStateException(
+                                    "Failed to generate and cache Top 10 questions for: " + cacheKey));
+                });
+    }
+
+    /**
+     * 모든 직무에 대해 Top 10 질문을 생성하고 저장 (Redis 사용).
+     */
+    @Transactional
+    public void generateAndSaveTop10QuestionsForAllJobs(String month) {
+        // 모든 직무 가져오기
+        List<JobRole> allJobs = jobRepository.findAll().stream().map(Job::getJobRole).toList();
+
         // "yyyy-MM" 형식의 문자열을 YearMonth로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        YearMonth yearMonth = YearMonth.parse(month, formatter)
-                .minusMonths(1); // 이전 달 계산
+        YearMonth yearMonth = YearMonth.parse(month, formatter).minusMonths(1); // 이전 달 계산
 
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay(); // 월의 첫 번째 날 00:00:00
         LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 월의 마지막 날 23:59:59
 
-        return questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate,
-                JobRole.valueOf(jobRoleString.toUpperCase()));
+        // 각 직무에 대해 Top 10 질문 처리
+        for (JobRole job : allJobs) {
+            String cacheKey = job.name() + "-" + month; // e.g., "DEVELOPER-2025-01"
+
+            // Redis에서 데이터 조회
+            if (topQuestionCacheRepository.existsById(cacheKey)) {
+                System.out.println(
+                        "Top 10 questions for " + job + " in " + month + " already exist in cache. Skipping...");
+                continue;
+            }
+
+            // Top 10 질문 조회 (DB)
+            List<QuestionDto> topQuestions = questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate,
+                            job).stream()
+                    .map(QuestionDto::from)
+                    .toList();
+
+            // Redis에 데이터 저장
+            TopQuestionCache topQuestionCache = TopQuestionCache.builder()
+                    .id(cacheKey)
+                    .jobRole(job.name())
+                    .month(month)
+                    .questions(topQuestions)
+                    .build();
+            topQuestionCacheRepository.save(topQuestionCache);
+
+            System.out.println("Top 10 questions for " + job + " in " + month + " saved to cache.");
+        }
     }
 
     public List<Job> getJobsByQuestionId(Long questionId) {
