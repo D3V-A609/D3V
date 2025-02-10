@@ -1,54 +1,137 @@
-/* Pages/BoardPage.css */
-/* 페이지 전체 레이아웃 */
+/* 전체 페이지 레이아웃 */
 .board-page {
-  padding: 40px 40px;
-  width: 1200px; 
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
   margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* 섹션 간 간격 */
-.today-question-section,
-.board-section {
-  margin-bottom: 60px;
+/* 헤더 */
+.page-header {
+  margin-bottom: 20px;
 }
 
-/* 질문 카드 컨테이너 레이아웃 */
-.question-cards {
+/* 카테고리 필터 */
+.category-filter {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.category-buttons button {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  color: #535353;
+  cursor: pointer;
+}
+
+.category-buttons button.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.category-buttons button:hover {
+  text-decoration: underline;
+}
+
+/* 글쓰기 버튼 */
+.write-button {
+  background-color: #00518d;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+}
+
+.write-button:hover {
+  background-color: #003b6f;
+}
+
+/* 정렬 버튼 */
+.sort-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.sort-buttons button {
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  color: #535353;
+}
+
+.sort-buttons button:hover {
+  text-decoration: underline;
+}
+
+/* 게시글 목록 */
+.article-list {
+  width: 100%;
+}
+
+.article-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.article-list th,
+.article-list td {
+  padding: 12px;
+}
+
+.article-list th {
+  font-size: 14px;
+}
+
+.article-list td {
+  font-size: 14px;
+}
+
+.article-list tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.article-list tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
   justify-content: center;
-  gap: 2em; 
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 1280px) {
-  .question-cards {
-    gap: 1.5em;
-  }
+/* 검색창 위치 조정 */
+.search-bar-container {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 250px;
+  margin-left: auto;
+  width: fit-content;
+  flex-shrink: 0; /* 크기 축소 방지 */
 }
 
-@media (max-width: 1024px) {
+@media screen and (max-width: 1280px) {
   .board-page {
-    padding: 40px 20px;
-  }
-  
-  .question-cards {
-    gap: 1em;
+    padding: 20px;
   }
 
-  .today-question-section,
-  .board-section {
-    margin-bottom: 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .board-page {
-    padding: 20px 16px;
-  }
-  
-  .question-cards {
-    gap: 1.5em;
+  .search-bar-container {
+    position: static;
+    margin-top: 20px;
+    width: 100%;
   }
 }
