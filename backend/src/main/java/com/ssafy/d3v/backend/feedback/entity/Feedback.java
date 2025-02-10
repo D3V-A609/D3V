@@ -40,4 +40,8 @@ public class Feedback extends BaseEntity {
 
     @NotBlank
     private String content;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
