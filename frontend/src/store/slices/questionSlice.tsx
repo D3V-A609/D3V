@@ -4,6 +4,7 @@ import { fetchQuestions, fetchDailyQuestions, fetchQuestionById } from '../actio
 
 // 질문 상태에 대한 타입 정의
 export interface QuestionState {
+  question: Question | null;
   questions: DailyQuestions;          // 전체 질문 목록
   dailyQuestions: Question[];         // 일일 질문 목록
   selectedQuestionId: number | null;  // 현재 선택된 질문의 ID
@@ -19,6 +20,7 @@ export interface QuestionState {
 
 // 초기 상태 값 설정
 export const initialState: QuestionState = {
+  question: null,
   questions: [],                      // 빈 질문 목록으로 초기화
   dailyQuestions: [],                // 빈 일일 질문 목록으로 초기화
   selectedQuestionId: null,          // 선택된 질문 없음
@@ -31,6 +33,8 @@ export const initialState: QuestionState = {
     size: 15,                        // 기본 페이지 크기 15
   },
 };
+
+
 
 // Redux Slice 정의
 const questionSlice = createSlice({
