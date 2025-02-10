@@ -8,4 +8,6 @@ public interface FeedbackService {
     List<FeedbackResponse> get(long answerId);
 
     FeedbackResponse create(long answerId, FeedbackRequest feedbackRequest);
+
+    FeedbackResponse update(long answerId, long feedbackId, FeedbackRequest feedbackRequest);
 }

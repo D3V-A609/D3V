@@ -46,6 +46,16 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback saved = feedbackRepository.saveAndFlush(feedback);
         return getFeedbackResponse(saved);
     }
+
+    @Override
+    @Transactional
+    public FeedbackResponse update(long answerId, long feedbackId, FeedbackRequest feedbackRequest) {
+        Feedback feedback = getFeedback(feedbackId, getMember(memberId));
+        feedback.updateContent(feedbackRequest.content());
+
+        return getFeedbackResponse(feedback);
+    }
+
     private Member getMember(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));

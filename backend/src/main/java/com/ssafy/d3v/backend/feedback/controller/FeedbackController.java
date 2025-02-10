@@ -37,4 +37,12 @@ public class FeedbackController {
                                                    @RequestBody FeedbackRequest feedbackRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(feedbackService.create(answerId, feedbackRequest));
     }
+
+    @Operation(summary = "피드백 수정")
+    @PatchMapping("/{answer_id}/feedback/{feedback_id}")
+    public ResponseEntity<FeedbackResponse> update(@PathVariable("answer_id") long answerId,
+                                                   @PathVariable("feedback_id") long feedbackId,
+                                                   @RequestBody FeedbackRequest feedbackRequest) {
+        return ResponseEntity.ok().body(feedbackService.update(answerId, feedbackId, feedbackRequest));
+    }
 }
