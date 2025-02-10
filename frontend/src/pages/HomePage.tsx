@@ -13,19 +13,20 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   
+  // Redux Store 데이터에 접근
   const { dailyQuestions, error } = useAppSelector(
     (state) => state.questions as QuestionState
   );
 
-  console.log(dailyQuestions)
   // 로그인 상태 (추후 실제 인증 상태로 대체 예정)
   const isLoggedIn = true;
   // const { isLoggedIn } = useAppSelector((state) => state.auth);
-
+  
+  // 디스패치치
   useEffect(() => {
     dispatch(fetchDailyQuestions());
   }, [dispatch]);
-
+  
   const QuestionCardClick = (id: number) => {
     dispatch(setSelectedQuestionId(id));
     navigate(`/question`);
@@ -46,11 +47,11 @@ const HomePage: React.FC = () => {
         <div className="question-cards">
           {dailyQuestions.map((question) => (
             <TodayQuestionCard
-              key={question.question.id}
-              title={question.question.content}
-              category={question.skillList[0]}
+              key={question.id}
+              title={question.content}
+              category={question.skillList?.[0] || 'General'}
               isLoggedIn={isLoggedIn}
-              onClick={() => QuestionCardClick(question.question.id)}
+              onClick={() => QuestionCardClick(question.id)}
             />
           ))}
         </div>
