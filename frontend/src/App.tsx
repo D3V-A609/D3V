@@ -3,7 +3,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Header from './components/header/Header';
 
 import HomePage from './pages/HomePage.tsx';
-// import AllQuestionPage from './pages/AllQuestionPage.tsx';
+import AllQuestionPage from './pages/AllQuestionPage.tsx';
 import BoardPage from './pages/BoardPage.tsx';
 import AIPage from './pages/AIPage.tsx';
 import MyPage from './pages/MyPage.tsx';
@@ -29,7 +29,7 @@ function App() {
       ),
       children: [
         { path: '/', element: <HomePage /> },
-        // { path: '/AllQuestionPage', element: <AllQuestionPage /> },
+        { path: '/all-questions', element: <AllQuestionPage /> },
         { path: '/ai', element: <AIPage /> },
         { path: '/my', element: <MyPage /> },
         { path: '/board', element: <BoardPage /> },

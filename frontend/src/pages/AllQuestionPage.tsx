@@ -1,3 +1,65 @@
+// pages/AllQuestionPage.tsx
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchQuestions } from '../store/actions/questionActions';
+
+const AllQuestionPage = () => {
+  const dispatch = useDispatch();
+  
+  // Redux store에서 필요한 상태 가져오기
+  const { 
+    questions, 
+    loading, 
+    error,
+    pagination 
+  } = useSelector((state: { questions: QuestionState }) => state.questions);
+
+  // 컴포넌트 마운트 시 질문 목록 조회
+  useEffect(() => {
+    dispatch(fetchQuestions({
+      page: 0,
+      size: 15,
+      order: 'desc',
+      sort: 'acnt'
+    }));
+  }, [dispatch]);
+  console.log(questions)
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div>
+      <h1>All Questions</h1>
+      <div className="question-list">
+        {questions.map((question) => (
+          <div key={question.id} className="question-item">
+            <h3>{question.content}</h3>
+            <div>
+              <span>Answers: {question.answerCount}</span>
+              <span>Status: {question.status}</span>
+            </div>
+            <div>
+              <span>Skills: {question.skillList.join(', ')}</span>
+              <span>Jobs: {question.jobList.join(', ')}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="pagination">
+        <span>Total: {pagination.totalElements}</span>
+        <span>Page: {pagination.currentPage + 1} of {pagination.totalPages}</span>
+      </div>
+    </div>
+  );
+};
+
+export default AllQuestionPage;
+
+
+
+
 // import React, { useEffect, useState } from "react";
 // import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
 // import PageHeader from "../components/PageHeader/PageHeader"
