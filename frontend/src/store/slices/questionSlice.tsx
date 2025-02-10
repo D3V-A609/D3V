@@ -18,6 +18,14 @@ export const initialState: QuestionState = {
   selectedQuestionId: null  // 선택된 질문 ID
 };
 
+// Helper function to ensure arrays are never null/undefined
+const ensureArrays = (question: QuestionDetail): QuestionDetail => {
+  return {
+    ...question,
+    skillList: question.skillList?.length ? question.skillList : ['default'],
+    jobList: question.jobList?.length ? question.jobList : ['default']
+  };
+};
 
 // 질문 관련 리듀서 정의
 const questionSlice = createSlice({
@@ -42,7 +50,8 @@ const questionSlice = createSlice({
       })
       .addCase(fetchDailyQuestions.fulfilled, (state, action) => {
         state.loading = false;
-        state.dailyQuestions = action.payload;
+        // state.dailyQuestions = action.payload;
+        state.dailyQuestions = action.payload.map(ensureArrays);
       })
       .addCase(fetchDailyQuestions.rejected, (state, action) => {
         state.loading = false;
@@ -56,7 +65,8 @@ const questionSlice = createSlice({
       })
       .addCase(fetchQuestionById.fulfilled, (state, action) => {
         state.loading = false;
-        state.question = action.payload;
+        // state.question = action.payload;
+        state.question = action.payload ? ensureArrays(action.payload) : null;
       })
       .addCase(fetchQuestionById.rejected, (state, action) => {
         state.loading = false;
