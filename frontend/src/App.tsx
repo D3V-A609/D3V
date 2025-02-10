@@ -12,6 +12,8 @@ import QuestionDetailPage from './pages/QuestionDetailPage.tsx';
 
 import './App.css';
 import './styles/TestStyle.css'
+import { RecordingProvider } from './context/RecordingContext.tsx';
+import { TimerProvider } from './context/TimerContext.tsx';
 
 function App() {
 
@@ -34,7 +36,13 @@ function App() {
         { path: '/my', element: <MyPage /> },
         { path: '/board', element: <BoardPage /> },
         { path: '/video', element: <VideoPage /> },
-        { path: '/question', element: <QuestionDetailPage />}
+        { path: '/question', element: 
+          <RecordingProvider>
+            <TimerProvider>
+            <QuestionDetailPage />
+            </TimerProvider>
+          </RecordingProvider>
+        }
       ],
     },
   ]);
