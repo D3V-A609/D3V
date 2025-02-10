@@ -6,75 +6,71 @@ import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
 
+// QuestionList 컴포넌트의 props 타입 정의
 interface QuestionListProps {
-  questions: Question[];
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  totalPages: number;
+  questions: Question[];                    // 질문 목록
+  currentPage: number;                      // 현재 페이지 번호
+  totalPages: number;                       // 전체 페이지 수
+  onPageChange: (page: number) => void;     // 페이지 변경 핸들러
+  onSort: (sort: SortField, order: SortOrder) => void;  // 정렬 변경 핸들러
+  currentSort: {                            // 현재 정렬 상태
+    field: SortField;                       // 정렬 기준 필드
+    order: SortOrder;                       // 정렬 방향
+  };
 }
 
 const QuestionList: React.FC<QuestionListProps> = ({ 
   questions, 
   currentPage, 
-  onPageChange, 
-  totalPages 
+  totalPages,
+  onPageChange,
+  onSort,
+  currentSort  
 }) => {
+  // 페이지 이동을 위한 navigate 훅
   const navigate = useNavigate();
+  // Redux dispatch 함수
   const dispatch = useAppDispatch();
 
-  const [sortKey, setSortKey] = useState<"challengeCount" | "answerCount" | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  // 선택된 질문들의 ID를 관리하는 state
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
-
-  // 정렬된 질문 목록 생성
-  const sortedQuestions = [...questions].sort((a, b) => {
-    if (!sortKey) return 0;
-    if (sortDirection === "desc") {
-      return b[sortKey] - a[sortKey];
-    }
-    return a[sortKey] - b[sortKey];
-  });
-
-  const handleSort = (key: "challengeCount" | "answerCount") => {
-    if (sortKey === key) {
-      setSortDirection((prev) => (prev === "desc" ? "asc" : "desc"));
-    } else {
-      setSortKey(key);
-      setSortDirection("desc");
-    }
-    onPageChange(0); // API는 0부터 시작하므로 0으로 변경
+  
+  // 정렬 핸들러: 같은 필드를 다시 클릭하면 정렬 방향을 토글
+  const handleSort = (field: SortField) => {
+    const newOrder = currentSort.field === field && currentSort.order === 'desc' ? 'asc' : 'desc';
+    onSort(field, newOrder);
   };
 
-  const getSortIcon = (key: "challengeCount" | "answerCount") => {
-    if (sortKey !== key) return "▽";
-    return sortDirection === "desc" ? "▼" : "▲";
-  };
-
+  // 전체 선택 체크박스 핸들러
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedQuestions(questions.map((q) => q.questionId));
+      setSelectedQuestions(questions.map((q) => q.id));
     } else {
       setSelectedQuestions([]);
     }
   };
 
-  const handleCheckbox = (questionId: number) => {
+  // 개별 체크박스 핸들러
+  const handleCheckbox = (id: number) => {
     setSelectedQuestions((prev) =>
-      prev.includes(questionId)
-        ? prev.filter((id) => id !== questionId)
-        : [...prev, questionId]
+      prev.includes(id)
+        ? prev.filter((id) => id !== id)
+        : [...prev, id]
     );
   };
 
+  // 북마크 추가 핸들러
   const handleAddToBookmarks = () => {
     console.log("Selected questions to bookmark:", selectedQuestions);
   };
 
-  const handleQuestionClick = (questionId: number) => {
-    dispatch(setSelectedQuestionId(questionId));
+  // 질문 클릭 핸들러: 상세 페이지로 이동
+  const handleQuestionClick = (id: number) => {
+    dispatch(setSelectedQuestionId(id));
     navigate(`/question`);
   };
 
+  // 페이지네이션 번호 생성 로직
   const getPageNumbers = () => {
     const pageNumbers = [];
     const currentGroup = Math.ceil((currentPage + 1) / 5);
@@ -82,6 +78,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
     const start = (currentGroup - 1) * 5;
     const end = Math.min(currentGroup * 5 - 1, totalPages - 1);
 
+    // 첫 번째 그룹인 경우
     if (currentGroup === 1) {
       for (let i = start; i <= end; i++) {
         pageNumbers.push(i);
@@ -90,13 +87,17 @@ const QuestionList: React.FC<QuestionListProps> = ({
         pageNumbers.push('...');
         pageNumbers.push(totalPages - 1);
       }
-    } else if (currentGroup === lastGroup) {
+    } 
+    // 마지막 그룹인 경우
+    else if (currentGroup === lastGroup) {
       pageNumbers.push(0);
       pageNumbers.push('...');
       for (let i = start; i <= end; i++) {
         pageNumbers.push(i);
       }
-    } else {
+    } 
+    // 중간 그룹인 경우
+    else {
       pageNumbers.push(0);
       pageNumbers.push('...');
       for (let i = start; i <= end; i++) {
@@ -114,6 +115,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
       <table>
         <thead>
           <tr>
+            {/* 전체 선택 체크박스 */}
             <th className="center">
               <input
                 type="checkbox"
@@ -125,37 +127,41 @@ const QuestionList: React.FC<QuestionListProps> = ({
               />
             </th>
             <th>질문</th>
+            {/* 도전 수 정렬 헤더 */}
             <th
               className="center"
-              onClick={() => handleSort("challengeCount")}
+              onClick={() => handleSort('ccnt')}
               style={{ cursor: "pointer" }}
             >
-              도전 수 {getSortIcon("challengeCount")}
+              도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
             </th>
+            {/* 답변 수 정렬 헤더 */}
             <th
               className="center"
-              onClick={() => handleSort("answerCount")}
+              onClick={() => handleSort('acnt')}
               style={{ cursor: "pointer" }}
             >
-              답변 수 {getSortIcon("answerCount")}
+              답변 수 {currentSort.field === 'acnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedQuestions.map((question) => (
-            <tr key={question.questionId}>
+          {/* 질문 목록 렌더링 */}
+          {questions.map((question) => (
+            <tr key={question.id}>
               <td className="center">
                 <input
                   type="checkbox"
-                  checked={selectedQuestions.includes(question.questionId)}
-                  onChange={() => handleCheckbox(question.questionId)}
+                  checked={selectedQuestions.includes(question.id)}
+                  onChange={() => handleCheckbox(question.id)}
                 />
               </td>
               <td 
                 className="question-content"
-                onClick={() => handleQuestionClick(question.questionId)}
+                onClick={() => handleQuestionClick(question.id)}
                 style={{ cursor: 'pointer' }}
               >
+                {/* 기술 스택 아이콘 */}
                 <div className="tech-icons">
                   {question.skillList.map((tech) => (
                     <TechIcon key={tech} tech={tech} />
@@ -170,6 +176,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
         </tbody>
       </table>
 
+      {/* 북마크 추가 버튼 (질문이 선택된 경우에만 표시) */}
       {selectedQuestions.length > 0 && (
         <div className="selected-actions">
           <button onClick={handleAddToBookmarks} className="bookmark-button">
@@ -179,7 +186,9 @@ const QuestionList: React.FC<QuestionListProps> = ({
         </div>
       )}
 
+      {/* 페이지네이션 */}
       <div className="pagination">
+        {/* 이전 페이지 버튼 */}
         <button
           onClick={() => onPageChange(Math.max(currentPage - 1, 0))}
           disabled={currentPage === 0}
@@ -187,6 +196,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
         >
           &lt;
         </button>
+        {/* 페이지 번호 버튼들 */}
         {getPageNumbers().map((page, index) => (
           page === '...' ? (
             <span key={`ellipsis-${index}`} className="ellipsis">...</span>
@@ -200,6 +210,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
             </button>
           )
         ))}
+        {/* 다음 페이지 버튼 */}
         <button
           onClick={() => onPageChange(Math.min(currentPage + 1, totalPages - 1))}
           disabled={currentPage === totalPages - 1}

@@ -4,6 +4,7 @@
   width: 100%;
   margin: 24px auto;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* === 테이블 기본 스타일 === */
