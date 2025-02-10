@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
-import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -317,9 +316,9 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
-    public Page<QuestionResponse> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
-                                               String order,
-                                               String sort, int page, int size, String keyword) {
+    public Page<Question> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
+                                       String order,
+                                       String sort, int page, int size, String keyword) {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
         Member member = memberRepository.findById(memberId).orElseThrow();
 

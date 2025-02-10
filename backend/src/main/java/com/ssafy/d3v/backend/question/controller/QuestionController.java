@@ -50,7 +50,7 @@ public class QuestionController {
                 page,
                 size,
                 keyword
-        );
+        ).map(QuestionDto::from).map(this::createQuestionResponse);
         return ResponseEntity.ok(questions);
     }
 
