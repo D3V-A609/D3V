@@ -11,8 +11,7 @@ interface Question {
 }
 
 // 개별 질문
-interface QuestionDetail {
-  question: Question;
+interface QuestionDetail extends Question {
   status: "solved" | "unSolved" | "notSolved";
   skillList: string[]; // 기술 스택 (예: "REACT", "DOCKER" 등)
   jobList: string[]; // 직무 (예: "FRONTEND", "DEVOPS" 등)

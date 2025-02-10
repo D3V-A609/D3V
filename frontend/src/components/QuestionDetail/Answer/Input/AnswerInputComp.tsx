@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CiMicrophoneOn } from "react-icons/ci";
 import TimerSetting from "../Input/Timer/TimerSetting";
 import SelectPublicBtn from "../../../../features/Answer/SelectPublicBtn";
-import { useAppDispatch } from "../../../../store/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux";
 import { registServedAnswer, registAnswer } from "../../../../store/actions/answerActions";
-import { useRecordingContext } from "../../../../context/RecordingContext";
+import { useRecordingContext } from "../../../../context/RecordingContext"
+import { VoiceState } from "../../../../store/slices/voiceSlice";
 
 interface AnswerInputCompProps {
   questionId: number;  // 질문 ID
@@ -28,6 +29,15 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
   // 녹음 모드 관리
   const { enterRecordingMode } = useRecordingContext();
 
+  // 녹음 후 변환된 텍스트 데이터
+  const { speechToText } = useAppSelector((state) => state.voice as VoiceState);
+
+  useEffect(() => {
+    if (speechToText) {
+      setAnswerText(speechToText);  // 서버 응답이 들어오면 answerContent에 반영
+    }
+  }, [speechToText]);
+
   // Redux의 dispatch 사용 설정
   const dispatch = useAppDispatch();
 
@@ -48,13 +58,8 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
   // 답변 등록 버튼 클릭 시 실행되는 함수
   const handleRegistAnswer = async () => {
-    // 답변 내용이 비어있는 경우 사용자에게 경고
-    if (!answerContent.trim()) {
-      alert("답변을 입력해주세요.");
-      return;
-    }
-
     const content = answerContent.trim();  // 공백 제거한 답변 내용
+    if(answerContent === null || answerContent === '' || setIsIDK(true) ) setAnswerText('모르겠어요'); // 모르겠어요 체크 & 공백일 경우 "모르겠어요"
 
     // 서버에 전송할 답변 데이터 생성
     const answerPayload = {

@@ -9,6 +9,7 @@ interface TimerContextProps {
   startTimer: (initialTime: number | null) => void;
   pauseTimer: () => void;
   resetTimer: () => void;
+  formatTime: (time: number) => string;
 }
 
 const TimerContext = createContext<TimerContextProps | undefined>(undefined);
@@ -54,6 +55,13 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     startTimeRef.current = null;
   };
 
+  // 타이머 형식 변환 (분:초)
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60).toString().padStart(2, "0");
+    const seconds = (time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  };
+
   useEffect(() => {
     if (!isRunning || remainingTime === null || startTimeRef.current === null) return;
 
@@ -85,6 +93,7 @@ export const TimerProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         startTimer,
         pauseTimer,
         resetTimer,
+        formatTime,
       }}
     >
       {children}

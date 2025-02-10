@@ -6,7 +6,7 @@ import { RiBookmarkLine } from "react-icons/ri";
 import QuestionSkillTag from './QuestionSkillTag';
 
 interface QuestionContentCardProps {
-  question: Question;
+  question: QuestionDetail;
   isToday: boolean;
 }
 const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isToday}) => {

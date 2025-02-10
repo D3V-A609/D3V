@@ -207,6 +207,7 @@
   align-items: center;
   font-size: 14px;
   gap: 0.2em;
+  cursor: pointer;
 }
 
 .anwer-input-container__input .answer-submit .btn-answer-submit-group {
