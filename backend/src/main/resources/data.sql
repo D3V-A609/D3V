@@ -399,11 +399,11 @@ values ('JOB_REVIEW'),
 
 select * from article;
 
-INSERT INTO article (member_id, title, category_id, content, created_at, updated_at, view)
-VALUES (4, 'My first article', 1, 'This is my first article.', '2025-01-20', '2025-01-20', 0),
-       (3,  'Important article',1, 'This is an important article.', '2025-01-21', '2025-01-21', 0),
-       (2,  'Reference article', 1,'This is a reference article.', '2025-01-22', '2025-01-22', 0),
-       (1, 'To review later', 1,'This is an article to review later.', '2025-01-23', '2025-01-23', 0);
+INSERT INTO article (member_id, title, category_id, content, created_at, updated_at, view, comment_count)
+VALUES (4, 'My first article', 1, 'This is my first article.', '2025-01-20', '2025-01-20', 0, 0),
+       (3, 'Important article', 1, 'This is an important article.', '2025-01-21', '2025-01-21', 0, 0),
+       (2, 'Reference article', 1, 'This is a reference article.', '2025-01-22', '2025-01-22', 0, 0),
+       (1, 'To review later', 1, 'This is an article to review later.', '2025-01-23', '2025-01-23', 0, 0);
 
 select * from comment;
 
