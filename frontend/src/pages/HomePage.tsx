@@ -31,12 +31,17 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     if (selectedJob.length > 0) {
+      // Front-end -> FRONTEND로 변환
+      const formattedJob = selectedJob[0].toUpperCase().replace('-', '');
+      
       dispatch(fetchTop10Questions({
-        month: new Date().toISOString().slice(0, 7),
-        job: selectedJob[0]
+        month: '2025-01', // 현재가 2025-02이므로 지난달인 2025-01로 설정
+        job: formattedJob
       }));
     }
   }, [dispatch, selectedJob]);
+  
+  
 
   const QuestionCardClick = (id: number) => {
     dispatch(setSelectedQuestionId(id));
@@ -86,7 +91,7 @@ const HomePage: React.FC = () => {
               key={question.id}
               title={question.content}
               category={question.skillList[0]}
-              onClick={() => QuestionCardClick(question.questionId)}
+              onClick={() => QuestionCardClick(question.id)}
             />
           ))}
         </div>

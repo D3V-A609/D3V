@@ -35,11 +35,14 @@ export const questionApi = {
   // Top10 API
   getTop10Questions: ({ month, job }: { month?: string; job: string }) => {
     const queryParams = new URLSearchParams();
-    if (month) queryParams.append('month', month);
+    if (month) {
+      queryParams.append('month', month);
+    }
     queryParams.append('job', job);
     
     return api.get<Question[]>(`/question/top10?${queryParams.toString()}`);
   }
+  
 };
 
 export default questionApi;

@@ -31,6 +31,7 @@ export const fetchQuestionById = createAsyncThunk(
   }
 )
 
+// Top10 질문 조회 비동기 액션
 export const fetchTop10Questions = createAsyncThunk(
   'questions/fetchTop10',
   async (params: { month?: string; job: string }) => {

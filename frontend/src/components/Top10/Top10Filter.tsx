@@ -30,10 +30,6 @@ const Top10Filter: React.FC<Top10FilterProps> = ({
     onJobFilterChange(newJobFilter);
   };
 
-  const handleReset = () => {
-    onJobFilterChange([]);
-  };
-
   return (
     <div className="filter-container">
       <div className="filter-section">
@@ -49,14 +45,6 @@ const Top10Filter: React.FC<Top10FilterProps> = ({
           ))}
         </div>
       </div>
-      
-      {jobFilter.length > 0 && (
-        <div className="filter-footer">
-          <button className="reset-button" onClick={handleReset}>
-            필터 초기화
-          </button>
-        </div>
-      )}
     </div>
   );
 };
