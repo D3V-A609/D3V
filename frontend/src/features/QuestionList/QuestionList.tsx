@@ -112,80 +112,90 @@ const QuestionList: React.FC<QuestionListProps> = ({
 
   return (
     <div className="question-list">
-      <table>
-        <thead>
-          <tr>
-            {/* 전체 선택 체크박스 */}
-            <th className="center">
-              <input
-                type="checkbox"
-                onChange={handleSelectAll}
-                checked={
-                  questions.length > 0 &&
-                  selectedQuestions.length === questions.length
-                }
-              />
-            </th>
-            <th>질문</th>
-            {/* 도전 수 정렬 헤더 */}
-            <th
-              className="center"
-              onClick={() => handleSort('ccnt')}
-              style={{ cursor: "pointer" }}
-            >
-              도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
-            </th>
-            {/* 답변 수 정렬 헤더 */}
-            <th
-              className="center"
-              onClick={() => handleSort('acnt')}
-              style={{ cursor: "pointer" }}
-            >
-              답변 수 {currentSort.field === 'acnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* 질문 목록 렌더링 */}
-          {questions.map((question) => (
-            <tr key={question.id}>
-              <td className="center">
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              {/* 전체 선택 체크박스 */}
+              <th className="center">
                 <input
                   type="checkbox"
-                  checked={selectedQuestions.includes(question.id)}
-                  onChange={() => handleCheckbox(question.id)}
+                  onChange={handleSelectAll}
+                  checked={
+                    questions.length > 0 &&
+                    selectedQuestions.length === questions.length
+                  }
                 />
-              </td>
-              <td 
-                className="question-content"
-                onClick={() => handleQuestionClick(question.id)}
-                style={{ cursor: 'pointer' }}
+              </th>
+              <th>질문</th>
+              {/* 도전 수 정렬 헤더 */}
+              <th
+                className="center"
+                onClick={() => handleSort('ccnt')}
+                style={{ cursor: "pointer" }}
               >
-                {/* 기술 스택 아이콘 */}
-                <div className="tech-icons">
-                  {question.skillList.map((tech) => (
-                    <TechIcon key={tech} tech={tech} />
-                  ))}
-                </div>
-                <span>{question.content}</span>
-              </td>
-              <td className="center">{question.challengeCount}</td>
-              <td className="center">{question.answerCount}</td>
+                도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+              </th>
+              {/* 답변 수 정렬 헤더 */}
+              <th
+                className="center"
+                onClick={() => handleSort('acnt')}
+                style={{ cursor: "pointer" }}
+              >
+                답변 수 {currentSort.field === 'acnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+              </th>
+              {/* 평균 제출 수 정렬 헤더 */}
+              <th
+                className="center"
+                onClick={() => handleSort('avg')}
+                style={{ cursor: "pointer" }}
+              >
+                평균 제출 수 {currentSort.field === 'avg' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {/* 질문 목록 렌더링 */}
+            {questions.map((question) => (
+              <tr key={question.id}>
+                <td className="center">
+                  <input
+                    type="checkbox"
+                    checked={selectedQuestions.includes(question.id)}
+                    onChange={() => handleCheckbox(question.id)}
+                  />
+                </td>
+                <td 
+                  className="question-content"
+                  onClick={() => handleQuestionClick(question.id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {/* 기술 스택 아이콘 */}
+                  <div className="tech-icons">
+                    {question.skillList.map((tech) => (
+                      <TechIcon key={tech} tech={tech} />
+                    ))}
+                  </div>
+                  <span>{question.content}</span>
+                </td>
+                <td className="center">{question.challengeCount}</td>
+                <td className="center">{question.answerCount}</td>
+                <td className="center">{question.answerAverage}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      {/* 북마크 추가 버튼 (질문이 선택된 경우에만 표시) */}
-      {selectedQuestions.length > 0 && (
-        <div className="selected-actions">
-          <button onClick={handleAddToBookmarks} className="bookmark-button">
-            <PiBookmarkSimpleFill size={20} />
-            북마크에 추가하기 ({selectedQuestions.length})
-          </button>
-        </div>
-      )}
-
+        {/* 북마크 추가 버튼 (질문이 선택된 경우에만 표시) */}
+        {selectedQuestions.length > 0 && (
+          <div className="selected-actions">
+            <button onClick={handleAddToBookmarks} className="bookmark-button">
+              <PiBookmarkSimpleFill size={20} />
+              북마크에 추가하기 ({selectedQuestions.length})
+            </button>
+          </div>
+        )}
+    </div>
       {/* 페이지네이션 */}
       <div className="pagination">
         {/* 이전 페이지 버튼 */}
