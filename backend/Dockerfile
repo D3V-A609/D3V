@@ -2,7 +2,7 @@
 FROM openjdk:17-jdk AS build
 WORKDIR /app
 COPY . .
-RUN ./gradlew build --no-daemon
+RUN chmod +x gradlew && ./gradlew build --no-daemon
 
 # 2️⃣ 실행 단계 (더 가벼운 JRE 사용)
 FROM openjdk:17-jdk-slim
