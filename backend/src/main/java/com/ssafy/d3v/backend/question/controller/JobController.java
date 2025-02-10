@@ -2,7 +2,6 @@ package com.ssafy.d3v.backend.question.controller;
 
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
-import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import com.ssafy.d3v.backend.question.service.JobService;
@@ -12,7 +11,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,9 +35,9 @@ public class JobController {
         return jobService.getSkillsByJobs(jobs).stream().map(Skill::getName).toList();
     }
 
-    @GetMapping("/{jobRole}/questions")
-    @Operation(summary = "한 직무에 대한 질문들 조회", description = "하나의 직무에 대한 질문을 전부 조회합니다.")
-    public List<Question> getQuestionsByJob(@PathVariable String jobRole) {
-        return jobService.getQuestionsByJob(jobRole);
-    }
+//    @GetMapping("/{jobRole}/questions")
+//    @Operation(summary = "한 직무에 대한 질문들 조회", description = "하나의 직무에 대한 질문을 전부 조회합니다.")
+//    public List<Question> getQuestionsByJob(@PathVariable String jobRole) {
+//        return jobService.getQuestionsByJob(jobRole);
+//    }
 }

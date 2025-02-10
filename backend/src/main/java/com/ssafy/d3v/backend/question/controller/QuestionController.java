@@ -8,10 +8,6 @@ import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +28,32 @@ public class QuestionController {
     private final QuestionService questionService;
     private final ServedQuestionService servedQuestionService;
 
+    @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<Page<QuestionResponse>> getQuestions(
+            @RequestParam(required = false) List<String> jobs, // job 필터
+            @RequestParam(required = false) List<String> skills, // skill 필터
+            @RequestParam(required = false) String solved, // solved 필터
+            @RequestParam(defaultValue = "desc") String order, // 정렬 순서 (기본값: desc)
+            @RequestParam(defaultValue = "acnt") String sort, // 정렬 기준 (기본값: acnt)
+            @RequestParam(defaultValue = "0") int page, // 페이지 번호 (기본값: 0)
+            @RequestParam(defaultValue = "15") int size, // 페이지 크기 (기본값: 15)
+            @RequestParam(required = false) String keyword // 키워드 검색
+    ) {
+        Page<QuestionResponse> questions = questionService.getQuestions(
+                jobs,
+                skills,
+                solved,
+                order,
+                sort,
+                page,
+                size,
+                keyword
+        );
+        return ResponseEntity.ok(questions);
+    }
+
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 질문을 조회함",
-                    content = @Content(schema = @Schema(implementation = Question.class))),
-            @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-    })
     @GetMapping("/{question_id}")
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
@@ -45,8 +61,8 @@ public class QuestionController {
         return ResponseEntity.ok(createQuestionResponse(question));
     }
 
-    @GetMapping
-    @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이지네이션과 정렬로 조회합니다")
+    @GetMapping("/all")
+    @Operation(summary = "질문 전체 조회", description = "전체 질문을 페이징 조회합니다")
     public ResponseEntity<Page<QuestionResponse>> getAllQuestions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size) {
@@ -79,10 +95,10 @@ public class QuestionController {
     }
 
     private QuestionResponse createQuestionResponse(Question question) {
-        String status = servedQuestionService.getIsSolvedStatus(question);
+        String solved = servedQuestionService.getIsSolvedStatus(question);
         List<Skill> skills = questionService.getSkillsByQuestionId(question.getId());
         List<Job> jobs = questionService.getJobsByQuestionId(question.getId());
-        return QuestionResponse.from(question, status, skills, jobs);
+        return QuestionResponse.from(question, solved, skills, jobs);
     }
 }
 

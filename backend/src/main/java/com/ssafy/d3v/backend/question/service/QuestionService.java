@@ -2,6 +2,7 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -9,6 +10,7 @@ import com.ssafy.d3v.backend.question.entity.QuestionJob;
 import com.ssafy.d3v.backend.question.entity.QuestionSkill;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.entity.Skill;
+import com.ssafy.d3v.backend.question.entity.SkillType;
 import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
@@ -197,5 +199,48 @@ public class QuestionService {
         return question.getQuestionSkills().stream()
                 .map(QuestionSkill::getSkill)
                 .collect(Collectors.toList());
+    }
+
+    public Page<QuestionResponse> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
+                                               String order,
+                                               String sort, int page, int size, String keyword) {
+        Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        List<JobRole> jobs = convertToEnum(jobStrings, JobRole.class);
+        List<SkillType> skills = convertToEnum(skillStrings, SkillType.class);
+        return questionRepository.searchQuestions(
+                jobs,
+                skills,
+                member,
+                solvedFilter,
+                order,
+                sort,
+                page,
+                size,
+                keyword
+        );
+    }
+
+    /**
+     * 문자열 리스트를 Enum 리스트로 변환하는 유틸리티 메서드.
+     *
+     * @param <E>       Enum 타입
+     * @param values    문자열 리스트
+     * @param enumClass Enum 클래스 타입
+     * @return 변환된 Enum 리스트
+     */
+    private <E extends Enum<E>> List<E> convertToEnum(List<String> values, Class<E> enumClass) {
+        if (values == null || values.isEmpty()) {
+            return List.of(); // 빈 리스트 반환
+        }
+
+        try {
+            return values.stream()
+                    .map(value -> Enum.valueOf(enumClass, value.toUpperCase())) // 대소문자 무시하고 매핑
+                    .toList();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid value for enum " + enumClass.getSimpleName() + ": " + values);
+        }
     }
 }
