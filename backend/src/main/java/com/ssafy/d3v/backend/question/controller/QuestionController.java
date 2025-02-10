@@ -77,10 +77,7 @@ public class QuestionController {
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        return getListResponseEntity(questionService.getDailyQuestions()
-                .stream()
-                .map(QuestionDto::from)
-                .toList());
+        return getListResponseEntity(questionService.getDailyQuestions());
     }
 
     // /api/question/top10?month={month}&job={job}

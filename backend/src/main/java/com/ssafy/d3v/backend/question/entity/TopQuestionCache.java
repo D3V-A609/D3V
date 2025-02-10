@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash(value = "TopQuestionCache", timeToLive = 3600 * 24 * 30)
+@RedisHash(value = "TopQuestionCache", timeToLive = 60 * 60 * 24 * 30)
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
