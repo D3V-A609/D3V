@@ -75,25 +75,33 @@ const HomePage: React.FC = () => {
 
       {/* Top 10 섹션 */}
       <section className="top10-section">
-        <PageHeader 
-          title={`${selectedJob[0]} 주간 TOP 10`}
-          description="이번 주 가장 많이 도전한 질문"
-          icon={<BsTrophy />}
-          iconStyle="gold-trophy-icon"
-        />
-        <Top10Filter
-          jobFilter={selectedJob}
-          onJobFilterChange={setSelectedJob}
-        />
-        <div className="question-cards">
-          {top10Questions.map((question) => (
-            <Top10QuestionCard
-              key={question.id}
-              title={question.content}
-              category={question.skillList[0]}
-              onClick={() => QuestionCardClick(question.id)}
-            />
-          ))}
+        <div className="section-header">
+          <div className="title-wrapper">
+            <BsTrophy className="gold-trophy-icon" />
+            <div className="job-badge">{selectedJob[0]}</div>
+            <h2>주간 TOP 10</h2>
+          </div>
+        </div>
+        <Top10Filter jobFilter={selectedJob} onJobFilterChange={setSelectedJob} />
+        <button
+          className="more-button"
+          onClick={() =>
+            navigate('/all-questions', { state: { selectedJob: selectedJob[0] } })
+          }
+        >
+          더보기
+        </button>
+        <div className="cards-container">
+          <div className="cards-wrapper">
+            {top10Questions.map((question) => (
+              <Top10QuestionCard
+                key={question.id}
+                title={question.content}
+                category={question.skillList[0]}
+                onClick={() => QuestionCardClick(question.id)}
+              />
+            ))}
+          </div>
         </div>
       </section>
     </div>

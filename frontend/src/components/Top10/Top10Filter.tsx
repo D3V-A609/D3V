@@ -11,16 +11,19 @@ const Top10Filter: React.FC<Top10FilterProps> = ({
   onJobFilterChange,
 }) => {
     const JOB_CATEGORIES = [
-        "Front-end",
-        "Back-end",
-        "Full-stack",
-        "DevOps",
-        "Data Engineer",
-        "Data Scientist",
-        "Machine Learning Engineer",
-        "Android",
-        "iOS",
-        "Game Developer",
+      "Front-end",
+      "Back-end",
+      "Full-stack",
+      "Mobile",
+      "Block Chain",
+      "Embedded",
+      "DevOps",
+      "Database",
+      "Testing",
+      "Data Science",
+      "Machine Learning",
+      "Game Development",
+      "Cyber Security",
     ];
   const handleJobClick = (jobName: string) => {
     const newJobFilter = jobFilter.includes(jobName)

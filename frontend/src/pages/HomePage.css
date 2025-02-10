@@ -14,16 +14,74 @@
 .today-section,
 .top10-section {
   margin-bottom: 60px;
+  width: 100%;
+}
+
+.top10-section {
+  margin-top: 60px;
 }
 
 .gold-trophy-icon {
   color: #FFD700;
 }
 
-/* Top10 섹션 스타일 */
-.top10-section .question-cards {
+.question-cards {
   margin-top: 24px;
 }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.job-badge {
+  padding: 6px 12px;
+  border: 1px solid #000;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.filter-container {
+  margin-bottom: 24px;
+}
+
+.filter-buttons {
+  display: flex;
+}
+
+.more-button {
+  color: #666;
+  font-size: 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: right; /* 오른쪽 정렬 */
+  margin-left: auto; /* 왼쪽 여백 자동 설정 */
+  margin-bottom: 8px; /* 아래로 추가 간격 */
+  margin-top: -20px;
+  display: block; /* 블록 요소로 변경 */
+}
+
+
+.cards-container {
+  width: 100%; /* 좌우 패딩을 제외한 너비 설정 */
+  margin: auto; /* 가운데 정렬 */
+}
+
+.cards-wrapper {
+  display: grid; /* 그리드 레이아웃 사용 */
+  grid-template-columns: repeat(5, minmax(194px, auto)); /* 카드가 한 줄에 최대 5개 배치되도록 설정 */
+  gap: 20px 10px; /* 카드 간격 (가로 및 세로) */
+}
+
 
 /* 반응형 디자인 개선 */
 @media (max-width: 1280px) {
