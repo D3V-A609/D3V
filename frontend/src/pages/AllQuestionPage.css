@@ -7,6 +7,7 @@
   padding: 40px;
   margin: 0 auto;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* 필터 컨테이너 스타일 */
@@ -26,8 +27,8 @@
   align-items: center;
   margin-top: 16px;
   gap: 16px;
-  min-width: fit-content; 
-  flex-wrap: nowrap; 
+  width: 100%; /* min-width 제거 */
+  flex-wrap: wrap; /* nowrap에서 wrap으로 변경 */
 }
 
 /* 검색바 래퍼 스타일 */
@@ -41,4 +42,12 @@
 /* 스크롤바 공간 확보 */
 html {
   scrollbar-gutter: stable;
+  overflow-x: hidden
+}
+
+/* 반응형 처리 */
+@media screen and (max-width: 1280px) {
+  .question-page {
+    padding: 20px;
+  }
 }
