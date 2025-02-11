@@ -29,6 +29,7 @@ interface ArticleListProps {
   pagination?: Pagination; // Pagination 정보 (선택 사항)
   onPageChange(pageNumber: number): void; // 페이지 변경 핸들러
   onSort(field: string): void; // 정렬 변경 핸들러
+  onArticleClick(articleId: number): void; // 게시글 클릭 핸들러
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({
@@ -36,6 +37,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
   pagination,
   onPageChange,
   onSort,
+  onArticleClick,
 }) => {
   /**
    * 페이지네이션 번호 생성 로직
@@ -134,7 +136,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
             </thead>
             <tbody>
               {articles.map((article) => (
-                <tr key={article.id}>
+                <tr key={article.id} onClick={() => onArticleClick(article.id)}>
                   {/* 카테고리 영어 -> 한글 변환 */}
                   <td>{categoryNameMap[article.name] || article.name}</td>
                   <td>{article.title}</td>

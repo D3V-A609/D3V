@@ -16,8 +16,8 @@
   font-size: 16px; /* 글씨 크기 */
   font-weight: bold; /* 기본 글씨 굵기 */
   color: #000000; /* 글씨 색상 */
-  border-top: 2.5px solid #d9e9ff; /* 상단 선 */
-  border-bottom: 2.5px solid #d9e9ff; /* 하단 선 */
+  border-top: 2px solid #d9e9ff; /* 상단 선 */
+  border-bottom: 2px solid #d9e9ff; /* 하단 선 */
 }
 
 /* 상단 탭 호버 및 클릭 효과 제거 */

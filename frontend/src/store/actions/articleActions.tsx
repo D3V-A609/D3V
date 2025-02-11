@@ -10,3 +10,12 @@ export const fetchArticles = createAsyncThunk(
     return response.data; // API 응답 데이터 반환
   }
 );
+
+// 게시글 상세 조회 액션
+export const fetchArticle = createAsyncThunk(
+  "articles/fetchArticle",
+  async (articleId: number) => {
+    const response = await articleApi.getArticleById(articleId);
+    return response.data; // API 응답 데이터 반환
+  }
+);
