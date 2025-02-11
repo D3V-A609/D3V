@@ -32,11 +32,12 @@ public class ArticleController {
 
     @Operation(summary = "카테고리별 게시글 조회")
     @GetMapping
-    public ResponseEntity<PagedResponse<ArticleResponse>> get(@RequestParam(value = "category") String category,
-                                                              @RequestParam(value = "keyword", required = false) String keyword,
-                                                              @RequestParam(value = "page", defaultValue = "1") int page,
-                                                              @RequestParam(value = "size", defaultValue = "15") int size,
-                                                              @RequestParam(value = "sort", defaultValue = "LATEST") String sort) {
+    public ResponseEntity<PagedResponse<ArticleResponse>> get(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "15") int size,
+            @RequestParam(value = "sort", defaultValue = "LATEST") String sort) {
         return ResponseEntity.ok().body(articleService.get(category, keyword, page, size, sort));
     }
 
