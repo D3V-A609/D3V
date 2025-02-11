@@ -14,10 +14,10 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ message }) => {
     }
 
     // console.log('error 발생: ', message);
-    const timer = setTimeout(() => {
-      window.location.reload();
-    }, 1000); // 1초 후 새로고침
-    return () => clearTimeout(timer);
+    // const timer = setTimeout(() => {
+    //   window.location.reload();
+    // }, 1000); // 1초 후 새로고침
+    // return () => clearTimeout(timer);
   }, [message]);
 
   return (
