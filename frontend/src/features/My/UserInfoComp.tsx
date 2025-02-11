@@ -1,6 +1,6 @@
 import React from 'react';
 import './UserInfoComp.css'
-import SimpleUserInfo from '../../components/header/SimpleUserInfo';
+import UserProfileImg from '../../components/header/UserProfileImg';
 
 interface UserInfoProps {
   user: {
@@ -19,7 +19,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
       {/* 왼쪽 프로필 이미지 */}
       <div className="profile-image-container">
         {/* <img src={user.profileImage} alt="프로필" className="profile-image" /> */}
-        <SimpleUserInfo className="profile-image" />
+        <UserProfileImg className="profile-image" />
       </div>
 
       {/* 오른쪽 유저 정보 */}

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
+import { useAppDispatch } from '../../../../store/hooks/useRedux';
 import CommentModal from './CommentModal';
-import dummyUsers from '../../../constants/dummyUsers';
+import dummyUsers from '../../../../constants/dummyUsers';
 import "./AnswerItem.css";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoChatboxOutline } from "react-icons/io5";
-import { toggleLike } from '../../../store/actions/answerActions';
+import { toggleLike } from '../../../../store/actions/answerActions';
 
 interface AnswerItemProps {
   answer: Answer;

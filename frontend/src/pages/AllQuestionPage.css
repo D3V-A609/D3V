@@ -1,5 +1,5 @@
 /* pages/AllQuestionPage.css */
-/* 페이지 전체 컨테이너 스타일 */
+/* pages/AllQuestionPage.css */
 .question-page {
   position: relative;
   width: 100%;
@@ -10,7 +10,6 @@
   overflow-x: hidden;
 }
 
-/* 필터 컨테이너 스타일 */
 .filter-container {
   width: 100%;
   box-sizing: border-box;
@@ -18,36 +17,46 @@
   display: flex;
   position: relative;
   gap: 16px;
+  margin-bottom: 16px;
 }
 
-/* 검색바와 상태 필터 섹션 스타일 */
+/* 검색바와 상태 필터 섹션 스타일 수정 */
 .search-status-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
+  margin: 16px 0;
+  width: 100%;
   gap: 16px;
-  width: 100%; /* min-width 제거 */
-  flex-wrap: wrap; /* nowrap에서 wrap으로 변경 */
 }
 
-/* 검색바 래퍼 스타일 */
+/* 검색바 래퍼 스타일 수정 */
 .search-wrapper {
-  margin-left: auto;
-  width: fit-content;
-  flex-shrink: 0; /* 크기 축소 방지 */
+  flex: 0 0 auto;
+  min-width: 280px;
 }
 
-
-/* 스크롤바 공간 확보 */
+/* 스크롤바 스타일 */
 html {
   scrollbar-gutter: stable;
-  overflow-x: hidden
+  overflow-x: hidden;
 }
 
-/* 반응형 처리 */
+/* 반응형 스타일 */
 @media screen and (max-width: 1280px) {
   .question-page {
     padding: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .search-status-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrapper {
+    width: 100%;
+    min-width: unset;
   }
 }

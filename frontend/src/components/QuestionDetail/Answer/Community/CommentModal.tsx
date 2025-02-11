@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import dummyUsers from '../../../constants/dummyUsers';
-import dummyComments from '../../../constants/dummyComments';
+import dummyUsers from '../../../../constants/dummyUsers';
+import dummyComments from '../../../../constants/dummyComments';
 import './CommentModal.css';
-import { useAppDispatch } from '../../../store/hooks/useRedux';
-import { toggleLike } from '../../../store/actions/answerActions';
+import { useAppDispatch } from '../../../../store/hooks/useRedux';
+import { toggleLike } from '../../../../store/actions/answerActions';
 
 interface CommentModalProps {
   answer: Answer;
