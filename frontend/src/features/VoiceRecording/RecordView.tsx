@@ -27,7 +27,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
     isPaused,
     isRecordingStopped,
     isStartRecordFirst,
-    mediaBlobUrl,
+    mediaBlob,
     audioLevel,
     startRecording,
     stopRecording,
@@ -112,18 +112,24 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   }
 
   // 서버로 녹음 파일 데이터 전송 버튼
-  const uploadRecording = (mediaBlobUrl: string) => {
-    if (mediaBlobUrl) {
-      fetch(mediaBlobUrl)
-        .then((response) => response.blob())
-        .then((blob) => {
-          dispatch(sendVoiceRecording(blob));  // 녹음 데이터 서버로 전송
-        });
+  const uploadRecording = (mediaBlob: Blob) => {
+    if(mediaBlob){
+      // const formData = new FormData();
+      // formData.append('audio', mediaBlob);
+      dispatch(sendVoiceRecording(mediaBlob));
     }
+      // fetch(mediaBlob)
+      //   .then((response) => response.blob())
+      //   .then((blob) => {
+      //     dispatch(sendVoiceRecording(blob));  // 녹음 데이터 서버로 전송
+      //   });
+    // }
   }
 
-  const handleSubmitRecording = (mediaBlobUrl: string) => {
-    uploadRecording(mediaBlobUrl);
+  const handleSubmitRecording = (mediaBlob: Blob | undefined) => {
+    if(!mediaBlob) return;
+    // const blobUrl = URL.createObjectURL(mediaBlob);
+    uploadRecording(mediaBlob);
     exitRecordingMode();
   }
 
@@ -143,7 +149,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
       </h3>
 
       {/* 녹음 시작 버튼 */}
-      {mediaBlobUrl === undefined ?
+      {mediaBlob === undefined ?
       <div className="record-start-div record-div">
         <div className="record-start-btn"
         style={{
@@ -160,8 +166,8 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
         </div>
         <div className="record-start-text">녹음 시작</div>
       </div> : (
-      mediaBlobUrl !== undefined && (<div className="record-div audio-bar" >
-        <audio controls src={mediaBlobUrl} />
+      mediaBlob !== undefined && (<div className="record-div audio-bar" >
+        <audio controls src={URL.createObjectURL(mediaBlob)} />
       </div>)
     )}
 
@@ -198,9 +204,9 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
       )}
 
       {/* 녹음 종료 후 오디오 재생 */}
-      {mediaBlobUrl!==undefined && (
+      {mediaBlob!==undefined && (
         <div className="after-recording-div">
-          <div className="recorded-audio-section" onClick={() => handleSubmitRecording(mediaBlobUrl)}>
+          <div className="recorded-audio-section" onClick={() => handleSubmitRecording(mediaBlob)}>
             제출하기
           </div>
         </div>

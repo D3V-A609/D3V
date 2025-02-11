@@ -2,10 +2,10 @@ import api from './api';
 
 export const voiceApi = {
 
-  sendVoiceRecording: async (formData: FormData) => {
-    const response = await api.post('/speech/text', formData, {
+  sendVoiceRecording: async (mediaBlob: Blob) => {
+    const response = await api.post('/speech/text', mediaBlob, {
       headers: {
-        'Content-Type' : 'multipart/form-data',
+        'Content-Type' : 'application/octet-stream',
       },
     });
     return response.data;
