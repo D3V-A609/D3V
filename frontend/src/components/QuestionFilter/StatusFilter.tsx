@@ -25,14 +25,14 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
         className={statusFilter === "solved" ? "active" : ""}
         onClick={() => onStatusFilterChange("solved")}
       >
-        푼 문제
+        풀었음
       </span>
       <span className="separator">•</span>
       <span
         className={statusFilter === "notSolved" ? "active" : ""}
         onClick={() => onStatusFilterChange("notSolved")}
       >
-        안 푼 문제
+        안 풀었음
       </span>
       <span className="separator">•</span>
       <span

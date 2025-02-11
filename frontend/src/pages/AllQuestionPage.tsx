@@ -4,11 +4,11 @@ import { fetchQuestions } from '../store/actions/questionActions';
 import { fetchJobs, fetchSkillsByJobs } from '../store/actions/jobActions';
 import { QuestionState } from '../store/slices/questionSlice';
 import PageHeader from "../components/PageHeader/PageHeader"
+import StatusFilter from '../components/QuestionFilter/StatusFilter';
 import QuestionList from '../features/QuestionList/QuestionList';
 import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import Pagination from '../components/Pagination/Pagination';
-import StatusFilter from '../components/QuestionFilter/StatusFilter';
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
