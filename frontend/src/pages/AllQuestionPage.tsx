@@ -9,6 +9,7 @@ import QuestionList from '../features/QuestionList/QuestionList';
 import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import Pagination from '../components/Pagination/Pagination';
+import SearchBar from '../components/SearchBar/SearchBar';
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
@@ -39,7 +40,8 @@ const AllQuestionPage = () => {
     order: 'desc',
     jobs: [],
     skills: [],
-    solved: undefined
+    solved: undefined,
+    keyword: undefined
   });
 
   // 컴포넌트 마운트 시 직무 목록 조회
@@ -64,7 +66,8 @@ const AllQuestionPage = () => {
       page: 0,
       jobs: selectedJobs,
       skills: [],
-      solved: undefined
+      solved: undefined,
+      keyword: undefined  
     }));
   };
 
@@ -73,7 +76,8 @@ const AllQuestionPage = () => {
       ...prev,
       page: 0,
       skills: selectedSkills,
-      solved: undefined
+      solved: undefined,
+      keyword: undefined
     }));
   };
 
@@ -96,6 +100,18 @@ const AllQuestionPage = () => {
     setParams(prev => ({ ...prev, page }));
   };
 
+   /**
+   * 검색어 변경 핸들러
+   * @param query - 새로운 검색어
+   */
+  const handleSearch = (query: string) => {
+    setParams(prev => ({
+      ...prev,
+      page: 0,  // 검색 시 첫 페이지로 이동
+      keyword: query || undefined  // 빈 문자열인 경우 undefined로 설정
+    }));
+  };
+  
   /**
    * 모든 필터 초기화
    */
@@ -107,7 +123,8 @@ const AllQuestionPage = () => {
       order: 'desc',
       jobs: [],
       skills: [],
-      solved: undefined
+      solved: undefined,
+      keyword: undefined
     };
     
     Promise.all([
@@ -143,13 +160,23 @@ const AllQuestionPage = () => {
         onReset={handleReset}
       />
       
-      {/* 문제 상태 필터링 영역
+      {/* 검색바와 상태 필터 */}
+      <div className="search-status-section">
+        {/* 문제 상태 필터링 영역
           - 전체/푼 문제/진행 중/안 푼 문제 필터링
           - 상태별 질문 목록 조회 */}
-      <StatusFilter 
-        statusFilter={params.solved || "all"}
-        onStatusFilterChange={handleStatusFilterChange}
-      />
+        <StatusFilter 
+          statusFilter={params.solved || "all"}
+          onStatusFilterChange={handleStatusFilterChange}
+        />
+        <div className="search-wrapper">
+          {/* 검색바 */}
+          <SearchBar 
+            onSearch={handleSearch}
+            searchQuery={params.keyword || ""}
+          />
+        </div>
+      </div>
       
       {/* 질문 목록 표시 영역
           - 답변 수/도전 수/평균 점수 기준 정렬 기능
@@ -166,6 +193,7 @@ const AllQuestionPage = () => {
       {/* 페이지네이션 영역
           - 페이지 이동 기능
           - 첫 페이지/마지막 페이지 표시 */}
+
       <Pagination 
         currentPage={pagination.number}
         totalPages={pagination.totalPages}
