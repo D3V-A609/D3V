@@ -1,9 +1,10 @@
 package com.ssafy.d3v.backend.question.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
-import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -18,6 +19,8 @@ import com.ssafy.d3v.backend.question.repository.JobRepository;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import com.ssafy.d3v.backend.question.repository.TopQuestionCacheRepository;
+import jakarta.annotation.Resource;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -34,6 +37,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,12 +47,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class QuestionService {
 
+    private final Long TempMemeberId = 1L; // 임시 아이디
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
     private final JobRepository jobRepository;
     private final TopQuestionCacheRepository topQuestionCacheRepository; // Redis 캐시 저장소
-    private final Long TempMemeberId = 1L; // 임시 아이디
+    private final ObjectMapper objectMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, Object> listValueOperations;
+    private static final String DAILY_QUESTIONS_CACHE_PREFIX = "dailyQuestions:";
 
     public Question getById(Long questionId) {
         return questionRepository.findById(questionId)
@@ -59,28 +69,71 @@ public class QuestionService {
         return questionRepository.findAll(pageable);
     }
 
-    public List<Question> getDailyQuestions() {
-        Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
+    //    public List<Question> getDailyQuestions() {
+//        Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
+//        Member member = memberRepository.findById(memberId)
+//                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+//        // 현재 날짜
+//        LocalDate today = LocalDate.now();
+//
+//        // question: 매번 데일리 질문이 존재하는지 확인하는 로직을 Redis에 데일리 질문을 저장해서 확인하는 방법으로 개선할 수 있을 것 같다.
+//        // 1. 오늘 제공된 데일리 질문 조회
+//        List<ServedQuestion> dailyQuestions = servedQuestionRepository.findByMemberAndIsDailyAndServedAt(
+//                member, true, today
+//        );
+//
+//        // 2. 데일리 질문이 3개라면 그대로 반환
+//        if (dailyQuestions.size() == 3) {
+//            return dailyQuestions.stream()
+//                    .map(ServedQuestion::getQuestion) // ServedQuestion에서 Question 추출
+//                    .collect(Collectors.toList());
+//        } else if (dailyQuestions.size() > 0) {
+//            throw new IllegalStateException("오늘의 질문이 3개가 아닌 오류 발생");
+//        }
+//        return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
+//    }
+    public List<QuestionDto> getDailyQuestions() {
+        Long memberId = TempMemeberId; // 임시 코드, 실제로는 토큰에서 가져오도록 수정 필요
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+
         // 현재 날짜
         LocalDate today = LocalDate.now();
+        String cacheKey = DAILY_QUESTIONS_CACHE_PREFIX + memberId + ":" + today;
 
-        // question: 매번 데일리 질문이 존재하는지 확인하는 로직을 Redis에 데일리 질문을 저장해서 확인하는 방법으로 개선할 수 있을 것 같다.
-        // 1. 오늘 제공된 데일리 질문 조회
+        // 1. Redis에서 캐시된 데일리 질문 조회
+        listValueOperations = redisTemplate.opsForValue();
+        List<QuestionDto> cachedQuestions =
+                objectMapper.convertValue(
+                        listValueOperations.get(cacheKey),
+                        new TypeReference<>() {
+                        }
+                );
+        if (cachedQuestions != null) {
+            return cachedQuestions; // 캐시된 질문 반환
+        }
+
+        // 2. 데이터베이스에서 오늘의 질문 조회
         List<ServedQuestion> dailyQuestions = servedQuestionRepository.findByMemberAndIsDailyAndServedAt(
-                member, true, today
-        );
+                member, true, today);
 
-        // 2. 데일리 질문이 3개라면 그대로 반환
+        // 3. 데일리 질문이 3개라면 캐시에 저장 후 반환
         if (dailyQuestions.size() == 3) {
-            return dailyQuestions.stream()
-                    .map(ServedQuestion::getQuestion) // ServedQuestion에서 Question 추출
+            List<QuestionDto> questions = dailyQuestions.stream()
+                    .map(ServedQuestion::getQuestion)
+                    .map(QuestionDto::from)
                     .collect(Collectors.toList());
+
+            listValueOperations.set(cacheKey, questions, Duration.ofDays(1)); // TTL 설정 (1일)
+            return questions;
         } else if (dailyQuestions.size() > 0) {
             throw new IllegalStateException("오늘의 질문이 3개가 아닌 오류 발생");
         }
-        return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
+
+        // 4. 데일리 질문이 없는 경우 새로 생성하고 캐시에 저장
+        List<QuestionDto> newQuestions = CreateRandomQuestions(member).stream().map(QuestionDto::from).toList();
+        listValueOperations.set(cacheKey, newQuestions, Duration.ofDays(1)); // TTL 설정 (1일)
+        return newQuestions;
     }
 
     @Transactional
@@ -184,7 +237,7 @@ public class QuestionService {
 
         // Redis에서 데이터 조회
         return topQuestionCacheRepository.findById(cacheKey)
-                .map(TopQuestionCache::getQuestions) // 캐시에 데이터가 있으면 반환
+                .map(TopQuestionCache::getQuestions)
                 .orElseGet(() -> {
                     System.out.println("Cache miss for " + cacheKey + ". Generating data...");
 
@@ -226,6 +279,7 @@ public class QuestionService {
             }
 
             // Top 10 질문 조회 (DB)
+            System.out.println("Generating top 10 questions for " + job + " in " + month + " ...");
             List<QuestionDto> topQuestions = questionRepository.findTop10QuestionsByAnswerCount(startDate, endDate,
                             job).stream()
                     .map(QuestionDto::from)
@@ -262,9 +316,9 @@ public class QuestionService {
                 .collect(Collectors.toList());
     }
 
-    public Page<QuestionResponse> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
-                                               String order,
-                                               String sort, int page, int size, String keyword) {
+    public Page<Question> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
+                                       String order,
+                                       String sort, int page, int size, String keyword) {
         Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
         Member member = memberRepository.findById(memberId).orElseThrow();
 

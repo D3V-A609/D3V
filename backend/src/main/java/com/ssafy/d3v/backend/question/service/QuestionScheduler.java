@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.question.service;
 
-import com.ssafy.d3v.backend.question.entity.Question;
+import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,10 +29,10 @@ public class QuestionScheduler {
     @Scheduled(cron = "0 0 2 * * ?") // 매일 오전 2시 실행
     public void scheduleDailyQuestions() {
         // getDailyQuestions 호출
-        List<Question> dailyQuestions = questionService.getDailyQuestions();
+        List<QuestionDto> dailyQuestions = questionService.getDailyQuestions();
 
         // 로그 출력 (필요 시 추가 로직 작성 가능)
         System.out.println("Daily Questions executed for date: " + LocalDate.now());
-        dailyQuestions.forEach(question -> System.out.println(question.getContent()));
+        dailyQuestions.forEach(question -> System.out.println(question.content()));
     }
 }
