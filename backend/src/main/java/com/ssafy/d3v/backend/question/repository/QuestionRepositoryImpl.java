@@ -1,11 +1,7 @@
 package com.ssafy.d3v.backend.question.repository;
 
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.d3v.backend.answer.entity.QAnswer;
@@ -122,16 +118,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
         Map<String, Function<Boolean, OrderSpecifier<?>>> sortMapping = Map.of(
                 "acnt", asc -> asc ? question.answerCount.asc() : question.answerCount.desc(),
                 "ccnt", asc -> asc ? question.challengeCount.asc() : question.challengeCount.desc(),
-                "avg", asc -> {
-                    Expression<Double> avgExpression = new CaseBuilder()
-                            .when(question.challengeCount.eq(0L))
-                            .then(Expressions.constant(0.0))
-                            .otherwise(
-                                    question.answerCount.castToNum(Double.class)
-                                            .divide(question.challengeCount.castToNum(Double.class))
-                            );
-                    return new OrderSpecifier<>(asc ? Order.ASC : Order.DESC, avgExpression);
-                }
+                "avg", asc -> asc ? question.answerAverage.asc() : question.answerAverage.desc()
         );
 
         OrderSpecifier<?> orderSpecifier = Optional.ofNullable(sort)

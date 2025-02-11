@@ -26,9 +26,7 @@ public record QuestionResponse(
                 .standardAnswer(q.standardAnswer())
                 .answerCount(q.answerCount())
                 .challengeCount(q.challengeCount())
-                .answerAverage(q.challengeCount() == 0
-                        ? 0.0
-                        : Math.round((q.answerCount() / (double) q.challengeCount()) * 100) / 100.0)
+                .answerAverage(q.answerAverage())
                 .status(solved)
                 .skillList(skills.stream().map(Skill::getName).toList())
                 .jobList(jobs.stream().map(Job::getJobRole).toList())

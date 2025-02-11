@@ -9,7 +9,8 @@ public record QuestionDto(
         String content,
         String standardAnswer,
         Long answerCount,
-        Long challengeCount
+        Long challengeCount,
+        Double answerAverage
 ) {
     public static QuestionDto from(Question question) {
         return QuestionDto.builder()
@@ -17,6 +18,7 @@ public record QuestionDto(
                 .content(question.getContent())
                 .standardAnswer(question.getStandardAnswer())
                 .answerCount(question.getAnswerCount())
+                .answerAverage(question.getAnswerAverage())
                 .challengeCount(question.getChallengeCount())
                 .build();
     }

@@ -15,12 +15,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
-@ToString
 @Getter
 @Builder
 @AllArgsConstructor
@@ -45,6 +43,9 @@ public class Question {
     @ColumnDefault("0")// 기본값 = 0
     private Long challengeCount;
 
+    @ColumnDefault("0.0")
+    private Double answerAverage;
+
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<QuestionJob> questionJobs;
@@ -66,5 +67,15 @@ public class Question {
         this.standardAnswer = standardAnswer;
         this.answerCount = answerCount;
         this.challengeCount = challengeCount;
+    }
+
+    public void updateQuestion(Long answerCount, Long challengeCount) {
+        this.answerCount = answerCount;
+        this.challengeCount = challengeCount;
+        if (challengeCount != null && challengeCount != 0) {
+            this.answerAverage = (double) answerCount / challengeCount;
+        } else {
+            this.answerAverage = 0.0; // challengeCount가 0이거나 null인 경우 0.0으로 설정
+        }
     }
 }
