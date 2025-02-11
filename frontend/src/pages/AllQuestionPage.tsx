@@ -2,9 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { fetchQuestions } from '../store/actions/questionActions';
+import { fetchJobs, fetchSkillsByJobs } from '../store/actions/jobActions';
 import { QuestionState } from '../store/slices/questionSlice';
 import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from '../features/QuestionList/QuestionList';
+import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
+// import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
@@ -13,40 +16,69 @@ const AllQuestionPage = () => {
   const dispatch = useAppDispatch();
   
   // Redux store에서 필요한 상태들을 가져옴
-  const { questions, loading, error, pagination } = useAppSelector(
+  const { questions, pagination } = useAppSelector(
     (state) => state.questions as QuestionState
   );
+  const { jobs = [], skills = [] } = useAppSelector(
+    (state) => state.jobs as JobState
+  );
 
-  // 정렬 상태를 관리하는 state
+
+  // 필터 상태 관리
+  const [jobFilter, setJobFilter] = useState<JobType[]>([]);
+  const [skillFilter, setSkillFilter] = useState<SkillType[]>([]);
+  
+  // 정렬 상태 관리
   // field: 정렬 기준 필드 (acnt: 답변수, ccnt: 도전수)
   // order: 정렬 방향 (desc: 내림차순, asc: 오름차순)
   const [currentSort, setCurrentSort] = useState<{
     field: SortField;
     order: SortOrder;
   }>({
-    field: 'acnt',  // 초기값: 답변수 기준
-    order: 'desc'   // 초기값: 내림차순
+    field: 'acnt', // 초기값: 답변수 기준
+    order: 'desc' // 초기값: 내림차순
   });
   
-  // 컴포넌트 마운트 시 또는 정렬 상태 변경 시 질문 목록 조회
+ // 초기 데이터 로드
   useEffect(() => {
+    dispatch(fetchJobs());
     dispatch(fetchQuestions({
       page: 0,
       size: 15,
       order: currentSort.order,
       sort: currentSort.field
     }));
-  }, [dispatch, currentSort]);
+  }, [dispatch, currentSort.order, currentSort.field]);
+
+
+    // job 필터 변경 시 skill 데이터 로드 및 질문 필터링
+    useEffect(() => {
+      if (jobFilter.length > 0) {
+        dispatch(fetchSkillsByJobs(jobFilter));
+        dispatch(fetchQuestions({
+          page: pagination.currentPage,
+          size: pagination.size,
+          sort: currentSort.field,
+          order: currentSort.order,
+          jobs: jobFilter,
+          skills: skillFilter
+        }));
+      }
+    }, [
+      dispatch, 
+      jobFilter, 
+      skillFilter, 
+      pagination.currentPage, 
+      pagination.size, 
+      currentSort.field, 
+      currentSort.order
+    ]);
+
+
 
   // 정렬 변경 핸들러
   const handleSort = (sort: SortField, order: SortOrder) => {
-    setCurrentSort({ field: sort, order });  // 정렬 상태 업데이트
-    dispatch(fetchQuestions({
-      page: pagination.currentPage,
-      size: pagination.size,
-      sort,
-      order
-    }));
+    setCurrentSort({ field: sort, order });
   };
 
   // 페이지 변경 핸들러
@@ -55,14 +87,14 @@ const AllQuestionPage = () => {
       page,
       size: pagination.size,
       sort: currentSort.field,
-      order: currentSort.order
+      order: currentSort.order,
+      jobs: jobFilter,
+      skills: skillFilter
     }));
   };
 
-  // 로딩 중이면 로딩 표시
-  // if (loading) return <div>Loading...</div>;
   // 에러가 있으면 에러 메시지 표시
-  if (error) return <div>Error: {error}</div>;
+  // if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
 
   return (
     <div className="question-page">
@@ -73,6 +105,15 @@ const AllQuestionPage = () => {
         iconStyle="search-icon"
       />
 
+      <JobSkillFilter 
+        jobFilter={jobFilter}
+        skillFilter={skillFilter}
+        jobs={jobs}
+        skills={skills}
+        onJobFilterChange={setJobFilter}
+        onSkillFilterChange={setSkillFilter}
+      />
+      
       {/* QuestionList 컴포넌트에 필요한 props 전달 */}
       <QuestionList 
         questions={questions}                    // 질문 목록
