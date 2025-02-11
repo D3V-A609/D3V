@@ -17,7 +17,7 @@ import "./AllQuestionPage.css";
  * 전체 질문 목록을 표시하는 페이지 컴포넌트
  * 직무/기술/상태 필터링, 정렬, 페이지네이션 기능 포함
  */
-const AllQuestionPage = () => {
+const AllQuestionPage:React.FC = () => {
   // Redux 상태 관리
   const dispatch = useAppDispatch();
   const { questions, error, pagination } = useAppSelector((state) => state.questions as QuestionState);

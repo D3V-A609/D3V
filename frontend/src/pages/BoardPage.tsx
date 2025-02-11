@@ -18,7 +18,7 @@ const categoryMap: Record<string, string> = {
   기타: "ETC",
 };
 
-const BoardPage = () => {
+const BoardPage:React.FC = () => {
   const dispatch = useAppDispatch();
    // Redux 상태 가져오기
    const { articles, loading, error, pagination } = useAppSelector(
