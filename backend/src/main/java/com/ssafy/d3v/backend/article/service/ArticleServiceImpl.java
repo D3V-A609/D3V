@@ -172,6 +172,7 @@ public class ArticleServiceImpl implements ArticleService {
         return ArticleDetailResponse.builder()
                 .id(article.getId())
                 .categoryId(article.getCategory().getId())
+                .memberId(article.getMember().getId())
                 .name(article.getCategory().getName())
                 .title(article.getTitle())
                 .content(article.getContent())
