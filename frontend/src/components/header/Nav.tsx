@@ -1,7 +1,10 @@
 import React from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
-const Nav: React.FC = () => {
+interface NavProps {
+    toggleClose: () => void;
+}
+const Nav: React.FC<NavProps> = ({toggleClose}) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -20,6 +23,7 @@ const Nav: React.FC = () => {
             navigate(to, { replace: true });
             window.location.reload();
         }
+        toggleClose();
     };
 
     return (
