@@ -65,6 +65,13 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
+    @Override
+    public void delete() {
+        Member member = getMember();
+        member.delete();
+        memberRepository.saveAndFlush(member);
+    }
+
     private Member getMember() {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalStateException("해당 회원이 존재하지 않습니다. 회원 ID: " + memberId));

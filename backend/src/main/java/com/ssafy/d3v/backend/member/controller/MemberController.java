@@ -37,4 +37,10 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.update(memberRequest, profileImage));
     }
 
+    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping
+    public ResponseEntity delete() {
+        memberService.delete();
+        return ResponseEntity.ok().build();
+    }
 }

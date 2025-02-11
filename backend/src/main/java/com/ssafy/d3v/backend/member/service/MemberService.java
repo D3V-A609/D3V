@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface MemberService {
     MemberResponse get();
 
-    
     MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage);
+
+    void delete();
+
 }
