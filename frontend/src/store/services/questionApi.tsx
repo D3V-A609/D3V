@@ -31,6 +31,18 @@ export const questionApi = {
 
   // 개별 질문 조회 API
   getQuestionById: (id: number) => api.get<Question>(`/question/${id}`),
+
+  // Top10 API
+  getTop10Questions: ({ month, job }: { month?: string; job: string }) => {
+    const queryParams = new URLSearchParams();
+    if (month) {
+      queryParams.append('month', month);
+    }
+    queryParams.append('job', job);
+    
+    return api.get<Question[]>(`/question/top10?${queryParams.toString()}`);
+  }
+  
 };
 
 export default questionApi;

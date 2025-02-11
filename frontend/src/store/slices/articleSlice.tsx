@@ -1,5 +1,5 @@
 // src/store/slices/articleSlice.tsx
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { fetchArticles } from "../actions/articleActions";
 
 export interface Article {
@@ -23,7 +23,7 @@ export interface ArticleState {
   articles: Article[];
   loading: boolean;
   error: string | null;
-  pagination?: Pagination;
+  pagination: Pagination; // Pagination 타입 명시
 }
 
 const initialState: ArticleState = {
@@ -50,11 +50,7 @@ const articleSlice = createSlice({
       .addCase(fetchArticles.fulfilled, (state, action) => {
         state.loading = false;
         state.articles = action.payload.data || [];
-        state.pagination = {
-          totalRecords: action.payload.pagable?.totalRecords || 0,
-          currentPage: action.payload.pagable?.currentPage || 1,
-          totalPages: action.payload.pagable?.totalPages || 1,
-        };
+        state.pagination = action.payload.pagable || initialState.pagination; // 기본값 제공
       })
       .addCase(fetchArticles.rejected, (state, action) => {
         state.loading = false;

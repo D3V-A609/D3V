@@ -19,29 +19,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
+  position: relative; /* 선 추가를 위한 부모 요소 설정 */
+  padding-left: 5px;
 }
 
 .category-buttons {
   display: flex;
-  gap: 16px;
+  gap: 24px; /* 버튼 간격 */
 }
 
 .category-buttons button {
   background-color: transparent;
   border: none;
-  font-size: 16px;
-  color: #535353;
+  font-size: 18px;
+  color: #535353; /* 기본 텍스트 색상 */
   cursor: pointer;
-}
-
-.category-buttons button.active {
-  font-weight: bold;
-  color: #007bff;
+  position: relative; /* 파란색 선 위치를 위해 설정 */
 }
 
 .category-buttons button:hover {
-  text-decoration: underline;
+  text-decoration: underline; /* 호버 시 밑줄 표시 */
+}
+
+.category-buttons button.active {
+  font-weight: bold; /* 선택된 버튼은 굵게 표시 */
+}
+
+/* 카테고리 필터 하단 기본 얇은 선 */
+.category-filter::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; /* 선의 위치 조정 */
+  left: 0;
+  right: 0;
+  height: 1px; /* 기본 선 두께 */
+  background-color: #d9e9ff; /* 기본 선 색상 */
+}
+
+/* 선택된 카테고리 밑의 파란색 굵은 선 */
+.category-buttons button.active::after {
+  content: "";
+  position: absolute; /* 버튼 아래에 배치 */
+  bottom: -7px; /* 긴 얇은 선 위에 겹치도록 위치 조정 */
+  left: -10%; /* 버튼 시작점에 맞춤 */
+  width: calc(120%); /* 버튼 너비에 맞게 설정 */
+  height: 3px; /* 굵은 선 두께 */
+  background-color: #003b6f; /* 파란색 */
 }
 
 /* 글쓰기 버튼 */
@@ -51,28 +75,56 @@
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
+  margin-bottom: 3px;
+  font-size: 14px;
 }
 
 .write-button:hover {
   background-color: #003b6f;
 }
 
+/* 정렬 버튼 및 검색창 */
+.filter-and-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
 /* 정렬 버튼 */
 .sort-buttons {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px; /* 버튼 간격 */
 }
 
-.sort-buttons button {
+.sort-button {
   background-color: transparent;
   border: none;
-  font-size: 14px;
-  color: #535353;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px; /* 글씨 크기 */
+  font-weight: 300; /* 기본 텍스트 굵기 */
+  color: #7D7D7E; /* 기본 텍스트 색상 */
 }
 
-.sort-buttons button:hover {
-  text-decoration: underline;
+.sort-button.active {
+  font-weight: bold; /* 활성화된 버튼은 굵게 표시 */
+}
+
+.sort-button:hover {
+  text-decoration: underline; /* 호버 시 밑줄 표시 */
+}
+
+/* 검색창 스타일 */
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #D9E9FF;
+  border-radius: 5px;
+  width: fit-content; /* 고정된 가로 길이 */
+}
+
+.search-bar-input {
+  flex-grow: 1; /* 입력 필드가 남은 공간을 채움 */
 }
 
 /* 게시글 목록 */
@@ -106,23 +158,6 @@
   background-color: #f1f1f1;
 }
 
-/* 페이지네이션 */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-/* 검색창 위치 조정 */
-.search-bar-container {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 250px;
-  margin-left: auto;
-  width: fit-content;
-  flex-shrink: 0; /* 크기 축소 방지 */
-}
 
 @media screen and (max-width: 1280px) {
   .board-page {

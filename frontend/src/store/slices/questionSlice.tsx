@@ -1,12 +1,13 @@
 // store/slices/questionSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchQuestions, fetchDailyQuestions, fetchQuestionById } from '../actions/questionActions';
+import { fetchQuestions, fetchDailyQuestions, fetchQuestionById, fetchTop10Questions } from '../actions/questionActions';
 
 // 질문 상태에 대한 타입 정의
 export interface QuestionState {
   question: Question | null;
   questions: Question[];          // 전체 질문 목록
   dailyQuestions: Question[];         // 일일 질문 목록
+  top10Questions: Question[];         // Top 10 질문 목록
   selectedQuestionId: number | null;  // 현재 선택된 질문의 ID
   loading: boolean;                   // 로딩 상태
   error: string | null;               // 에러 메시지
@@ -23,6 +24,7 @@ export const initialState: QuestionState = {
   question: null,
   questions: [],                      // 빈 질문 목록으로 초기화
   dailyQuestions: [],                // 빈 일일 질문 목록으로 초기화
+  top10Questions: [],                // 빈 Top 10 질문 목록으로 초기화
   selectedQuestionId: null,          // 선택된 질문 없음
   loading: false,                    // 초기 로딩 상태 false
   error: null,                       // 초기 에러 없음
@@ -36,7 +38,8 @@ export const initialState: QuestionState = {
 
 
 
-// Redux Slice 정의
+
+// 질문 관련 리듀서 정의
 const questionSlice = createSlice({
   name: 'questions',                  // slice 이름
   initialState,
@@ -102,6 +105,22 @@ const questionSlice = createSlice({
       .addCase(fetchQuestionById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || '질문을 불러오는데 실패했습니다.';
+      })
+
+      // Top10 질문 조회 처리
+      .addCase(fetchTop10Questions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTop10Questions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.top10Questions = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchTop10Questions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'TOP 10 질문을 불러오는데 실패했습니다.';
+        state.top10Questions = [];
       })
   },
 });

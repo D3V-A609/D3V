@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks/useRedux";
-import MyAnswer from "./MyAnswer";
-import OtherAnswers from "./OtherAnswers";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux";
+import MyAnswer from "../Community/MyAnswer";
+import OtherAnswers from "../Community/OtherAnswers";
 import "./AnswerCommunityComp.css";
-import { AnswerState } from "../../../store/slices/answerSlice";
-import { fetchMyAnswer, fetchOtherAnswers } from "../../../store/actions/answerActions";
+import { AnswerState } from "../../../../store/slices/answerSlice";
+import { fetchMyAnswer, fetchOtherAnswers } from "../../../../store/actions/answerActions";
 
 type AnswerCommunityCompProps = {
   questionId: number;
