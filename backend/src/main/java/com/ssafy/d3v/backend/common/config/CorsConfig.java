@@ -14,7 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://d3hwfuup6sixfz.cloudfront.net")
+                        .allowedOrigins("https://d3hwfuup6sixfz.cloudfront.net", "http://localhost:5173",
+                                "https://d3hwfuup6sixfz.cloudfront.net:5173")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
