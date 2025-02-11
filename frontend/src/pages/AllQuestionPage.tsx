@@ -8,7 +8,7 @@ import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from '../features/QuestionList/QuestionList';
 import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
-import Pagination from '../components/Pagination/pagination';
+import Pagination from '../components/Pagination/Pagination';
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
