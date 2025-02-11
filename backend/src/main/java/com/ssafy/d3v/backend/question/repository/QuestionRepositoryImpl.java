@@ -16,7 +16,6 @@ import com.ssafy.d3v.backend.question.entity.QQuestion;
 import com.ssafy.d3v.backend.question.entity.QQuestionJob;
 import com.ssafy.d3v.backend.question.entity.QQuestionSkill;
 import com.ssafy.d3v.backend.question.entity.QServedQuestion;
-import com.ssafy.d3v.backend.question.entity.QSkill;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import java.time.LocalDateTime;
@@ -79,9 +78,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
 
         QQuestion question = QQuestion.question;
         QQuestionJob questionJob = QQuestionJob.questionJob;
-        QJob job = QJob.job;
         QQuestionSkill questionSkill = QQuestionSkill.questionSkill;
-        QSkill skill = QSkill.skill;
         QServedQuestion servedQuestion = QServedQuestion.servedQuestion;
 
         // 동적 조건 생성
