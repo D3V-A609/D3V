@@ -146,15 +146,18 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
 
         // 쿼리 생성
         JPAQuery<Question> query = queryFactory.selectFrom(question)
+                .distinct()
                 .leftJoin(servedQuestion).on(servedQuestion.question.eq(question)) // ServedQuestion과 left join
-                .leftJoin(question.questionJobs, questionJob)      // QuestionJob과 조인
-                .leftJoin(question.questionSkills, questionSkill)    // QuestionSkill과 조인
+                .leftJoin(question.questionJobs, questionJob)      // QuestionJob과 left join
+                .leftJoin(question.questionSkills, questionSkill)    // QuestionSkill과 left join
                 .where(predicates.toArray(new BooleanExpression[0]))
                 .orderBy(orderSpecifier);
 
-        // 페이징 및 데이터 조회
         long total = query.fetch().size();
-        List<Question> results = query.offset(pageable.getOffset())
+        // 페이징
+        System.out.println("메인 쿼리=========================");
+        List<Question> results = query
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
