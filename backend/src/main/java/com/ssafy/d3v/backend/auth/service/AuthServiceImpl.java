@@ -55,6 +55,22 @@ public class AuthServiceImpl implements AuthService {
                 .createdAt(LocalDateTime.now())
                 .build());
     }
+
+    @Override
+    @Transactional
+    public void verifyEmailCode(EmailVerificationRequest emailVerificationRequest) {
+        VerificationCodeCache verificationCodeCache = verificationCodeCacheRepository.findValidCode(
+                        emailVerificationRequest.email())
+                .orElseThrow(() -> new IllegalArgumentException("인증 코드가 만료되었습니다."));
+
+        if (!verificationCodeCache.getCode().equals(emailVerificationRequest.code())) {
+            throw new IllegalArgumentException("인증 코드가 일치하지 않습니다.");
+        } else {
+            verificationCodeCache.verify();
+            verificationCodeCacheRepository.save(verificationCodeCache);
+        }
+    }
+
     @Override
     @Transactional
     public void sendEmailPassword(EmailRequest emailRequest) {

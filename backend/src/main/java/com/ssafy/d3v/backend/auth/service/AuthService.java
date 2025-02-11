@@ -9,5 +9,8 @@ public interface AuthService {
     void checkEmailDuplication(String email);
 
     void sendEmailCode(EmailRequest emailRequest);
+
+    void verifyEmailCode(EmailVerificationRequest emailVerificationRequest);
+
     void sendEmailPassword(EmailRequest emailRequest);
 }

@@ -41,6 +41,14 @@ public class AuthController {
         authService.sendEmailCode(emailRequest);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "이메일 인증 코드 확인")
+    @PostMapping("/email/authentication")
+    public ResponseEntity<String> verifyEmailCode(@RequestBody EmailVerificationRequest emailVerificationRequest) {
+        authService.verifyEmailCode(emailVerificationRequest);
+        return ResponseEntity.ok().body("이메일 인증에 성공하였습니다.");
+    }
+
     @Operation(summary = "임시 비밀번호 전송")
     @PostMapping("/email/password")
     public ResponseEntity sendEmailPassword(@RequestBody EmailRequest emailRequest) {
