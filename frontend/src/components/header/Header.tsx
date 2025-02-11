@@ -1,29 +1,94 @@
-import React from "react";
-
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa"; // 햄버거 메뉴 아이콘
 
 import "./Header.css";
 
-import Logo from "../../assets/images/logo.svg";
-
+import Logo from "../../assets/images/logo.gif";
 import Nav from "./Nav.tsx";
-import SimpleUserInfo from "./SimpleUserInfo.tsx";
+import UserProfileImg from "./UserProfileImg.tsx";
 
 const Header: React.FC = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
+  const [isLogined, setIsLogined] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleLogoClick = () => { // 로고 클릭 시 home으로 이동
+  const handleLogoClick = () => {
     navigate("/");
-  }
+  };
+
+  const toggleUserInfo = () => {
+    setIsUserInfoOpen(!isUserInfoOpen);
+  };
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  const navToggleClose = () => {
+    if (isNavOpen) {
+      setIsNavOpen(!isNavOpen);
+    }
+  };
+
+  const logout = () => {
+    setIsLogined(false);
+    setIsUserInfoOpen(false);
+    navigate("/");
+  };
+
+  const login = () => {
+    setIsLogined(true);
+    setIsUserInfoOpen(false); // 로그인 시 드롭다운 닫기
+  };
+
   return (
     <header className="header-container">
       <div className="header-container_logo-div">
-        <img src={Logo} className="header-container_logo-svg" onClick={() => { handleLogoClick() }} />
+        {/* 햄버거 메뉴 버튼 */}
+        <div className="hamburger-menu" onClick={toggleNav}>
+          {isNavOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </div>
+
+        <img
+          src={Logo}
+          className="header-container_logo-svg"
+          onClick={handleLogoClick}
+        />
       </div>
-      <div className="header-container_right">
-        <SimpleUserInfo />
-        <Nav />
+
+      <nav
+        className={`header-container_nav-section ${
+          isNavOpen ? "active" : ""
+        }`}
+      >
+        <Nav toggleClose={navToggleClose} />
+      </nav>
+
+      {/* 유저 프로필 및 로그인 상태 */}
+      <div className="header-user-profile">
+        {isLogined ? (
+          <>
+            {/* SimpleUserInfo 클릭 시 유저 드롭다운 토글 */}
+            <div onClick={toggleUserInfo}>
+              <UserProfileImg />
+            </div>
+            {isUserInfoOpen && (
+              <div className="user-info-dropdown">
+                <ul>
+                  <li onClick={() => navigate("/my")}>마이 페이지</li>
+                  <li onClick={logout}>로그아웃</li>
+                </ul>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="login-btn" onClick={login}>
+            로그인
+          </div>
+        )}
       </div>
     </header>
   );

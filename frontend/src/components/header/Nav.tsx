@@ -1,7 +1,10 @@
 import React from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 
-const Nav: React.FC = () => {
+interface NavProps {
+    toggleClose: () => void;
+}
+const Nav: React.FC<NavProps> = ({toggleClose}) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -11,7 +14,6 @@ const Nav: React.FC = () => {
         { to: '/ai', label: 'AI 면접 연습' },
         { to: '/board', label: '자유게시판' },
         { to: '/video', label: '면접 영상 추천' },
-        { to: '/my', label: '마이 페이지' },
     ];
 
     const handleClick = (to: string) => {
@@ -20,6 +22,7 @@ const Nav: React.FC = () => {
             navigate(to, { replace: true });
             window.location.reload();
         }
+        toggleClose();
     };
 
     return (

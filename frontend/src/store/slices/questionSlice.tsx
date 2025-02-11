@@ -11,11 +11,17 @@ export interface QuestionState {
   selectedQuestionId: number | null;  // 현재 선택된 질문의 ID
   loading: boolean;                   // 로딩 상태
   error: string | null;               // 에러 메시지
-  pagination: {                       // 페이지네이션 정보
-    totalElements: number;            // 전체 질문 수
-    totalPages: number;              // 전체 페이지 수
-    currentPage: number;             // 현재 페이지 번호
-    size: number;                    // 페이지당 질문 수
+  pagination: {
+    pageable: Pageable;
+    last: boolean;
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+    sort: PageInfo;
+    first: boolean;
+    numberOfElements: number;
+    empty: boolean;
   };
 }
 
@@ -29,15 +35,33 @@ export const initialState: QuestionState = {
   loading: false,                    // 초기 로딩 상태 false
   error: null,                       // 초기 에러 없음
   pagination: {
+    pageable: {
+      pageNumber: 0,
+      pageSize: 15,
+      sort: {
+        empty: true,
+        sorted: false,
+        unsorted: true
+      },
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    last: false,
     totalElements: 0,
     totalPages: 0,
-    currentPage: 0,
-    size: 15,                        // 기본 페이지 크기 15
-  },
+    size: 15,
+    number: 0,
+    sort: {
+      empty: true,
+      sorted: false,
+      unsorted: true
+    },
+    first: true,
+    numberOfElements: 0,
+    empty: true
+  }
 };
-
-
-
 
 // 질문 관련 리듀서 정의
 const questionSlice = createSlice({
@@ -70,10 +94,16 @@ const questionSlice = createSlice({
         state.questions = action.payload.content;  // 질문 목록 업데이트
         // 페이지네이션 정보 업데이트
         state.pagination = {
+          pageable: action.payload.pageable,
+          last: action.payload.last,
           totalElements: action.payload.totalElements,
           totalPages: action.payload.totalPages,
-          currentPage: action.payload.number,
           size: action.payload.size,
+          number: action.payload.number,
+          sort: action.payload.sort,
+          first: action.payload.first,
+          numberOfElements: action.payload.numberOfElements,
+          empty: action.payload.empty
         };
       })
       .addCase(fetchQuestions.rejected, (state, action) => {

@@ -9,9 +9,6 @@ import "./QuestionList.css";
 // QuestionList 컴포넌트의 props 타입 정의
 interface QuestionListProps {
   questions: Question[];                    // 질문 목록
-  currentPage: number;                      // 현재 페이지 번호
-  totalPages: number;                       // 전체 페이지 수
-  onPageChange: (page: number) => void;     // 페이지 변경 핸들러
   onSort: (sort: SortField, order: SortOrder) => void;  // 정렬 변경 핸들러
   currentSort: {                            // 현재 정렬 상태
     field: SortField;                       // 정렬 기준 필드
@@ -20,10 +17,7 @@ interface QuestionListProps {
 }
 
 const QuestionList: React.FC<QuestionListProps> = ({ 
-  questions, 
-  currentPage, 
-  totalPages,
-  onPageChange,
+  questions,
   onSort,
   currentSort  
 }) => {
@@ -70,46 +64,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
     navigate(`/question`);
   };
 
-  // 페이지네이션 번호 생성 로직
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    const currentGroup = Math.ceil((currentPage + 1) / 5);
-    const lastGroup = Math.ceil(totalPages / 5);
-    const start = (currentGroup - 1) * 5;
-    const end = Math.min(currentGroup * 5 - 1, totalPages - 1);
-
-    // 첫 번째 그룹인 경우
-    if (currentGroup === 1) {
-      for (let i = start; i <= end; i++) {
-        pageNumbers.push(i);
-      }
-      if (totalPages > 5) {
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages - 1);
-      }
-    } 
-    // 마지막 그룹인 경우
-    else if (currentGroup === lastGroup) {
-      pageNumbers.push(0);
-      pageNumbers.push('...');
-      for (let i = start; i <= end; i++) {
-        pageNumbers.push(i);
-      }
-    } 
-    // 중간 그룹인 경우
-    else {
-      pageNumbers.push(0);
-      pageNumbers.push('...');
-      for (let i = start; i <= end; i++) {
-        pageNumbers.push(i);
-      }
-      pageNumbers.push('...');
-      pageNumbers.push(totalPages - 1);
-    }
-
-    return pageNumbers;
-  };
-
   return (
     <div className="question-list">
       <div className="table-container">
@@ -128,14 +82,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
                 />
               </th>
               <th>질문</th>
-              {/* 도전 수 정렬 헤더 */}
-              <th
-                className="center"
-                onClick={() => handleSort('ccnt')}
-                style={{ cursor: "pointer" }}
-              >
-                도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
-              </th>
               {/* 답변 수 정렬 헤더 */}
               <th
                 className="center"
@@ -144,13 +90,21 @@ const QuestionList: React.FC<QuestionListProps> = ({
               >
                 답변 수 {currentSort.field === 'acnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
               </th>
+              {/* 도전 수 정렬 헤더 */}
+              <th
+                className="center"
+                onClick={() => handleSort('ccnt')}
+                style={{ cursor: "pointer" }}
+              >
+                도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+              </th>
               {/* 평균 제출 수 정렬 헤더 */}
               <th
                 className="center"
                 onClick={() => handleSort('avg')}
                 style={{ cursor: "pointer" }}
               >
-                평균 제출 수 {currentSort.field === 'avg' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+                제출 수 평균 {currentSort.field === 'avg' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
               </th>
             </tr>
           </thead>
@@ -178,8 +132,8 @@ const QuestionList: React.FC<QuestionListProps> = ({
                   </div>
                   <span>{question.content}</span>
                 </td>
-                <td className="center">{question.challengeCount}</td>
                 <td className="center">{question.answerCount}</td>
+                <td className="center">{question.challengeCount}</td>
                 <td className="center">{question.answerAverage}</td>
               </tr>
             ))}
@@ -195,40 +149,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
             </button>
           </div>
         )}
-    </div>
-      {/* 페이지네이션 */}
-      <div className="pagination">
-        {/* 이전 페이지 버튼 */}
-        <button
-          onClick={() => onPageChange(Math.max(currentPage - 1, 0))}
-          disabled={currentPage === 0}
-          className="arrow-button"
-        >
-          &lt;
-        </button>
-        {/* 페이지 번호 버튼들 */}
-        {getPageNumbers().map((page, index) => (
-          page === '...' ? (
-            <span key={`ellipsis-${index}`} className="ellipsis">...</span>
-          ) : (
-            <button
-              key={page}
-              onClick={() => onPageChange(Number(page))}
-              className={currentPage === page ? "active" : ""}
-            >
-              {Number(page) + 1}
-            </button>
-          )
-        ))}
-        {/* 다음 페이지 버튼 */}
-        <button
-          onClick={() => onPageChange(Math.min(currentPage + 1, totalPages - 1))}
-          disabled={currentPage === totalPages - 1}
-          className="arrow-button"
-        >
-          &gt;
-        </button>
-      </div>
+      </div>  
     </div>
   );
 };
