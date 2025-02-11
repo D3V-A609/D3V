@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AnswerItem from './AnswerItem';
 import "./OtherAnswers.css";
-import PageHeader from '../../PageHeader/PageHeader';
+import PageHeader from '../../../PageHeader/PageHeader';
 import { FcBinoculars } from "react-icons/fc";
 
 interface OtherAnswersProps {

@@ -1,54 +1,172 @@
-/* Pages/BoardPage.css */
-/* 페이지 전체 레이아웃 */
+/* 전체 페이지 레이아웃 */
 .board-page {
-  padding: 40px 40px;
-  width: 1200px; 
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
   margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-/* 섹션 간 간격 */
-.today-question-section,
-.board-section {
-  margin-bottom: 60px;
+/* 헤더 */
+.page-header {
+  margin-bottom: 20px;
 }
 
-/* 질문 카드 컨테이너 레이아웃 */
-.question-cards {
+/* 카테고리 필터 */
+.category-filter {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2em; 
-  margin-top: 24px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative; /* 선 추가를 위한 부모 요소 설정 */
+  padding-left: 5px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 1280px) {
-  .question-cards {
-    gap: 1.5em;
-  }
+.category-buttons {
+  display: flex;
+  gap: 24px; /* 버튼 간격 */
 }
 
-@media (max-width: 1024px) {
+.category-buttons button {
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  color: #535353; /* 기본 텍스트 색상 */
+  cursor: pointer;
+  position: relative; /* 파란색 선 위치를 위해 설정 */
+}
+
+.category-buttons button:hover {
+  text-decoration: underline; /* 호버 시 밑줄 표시 */
+}
+
+.category-buttons button.active {
+  font-weight: bold; /* 선택된 버튼은 굵게 표시 */
+}
+
+/* 카테고리 필터 하단 기본 얇은 선 */
+.category-filter::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; /* 선의 위치 조정 */
+  left: 0;
+  right: 0;
+  height: 1px; /* 기본 선 두께 */
+  background-color: #d9e9ff; /* 기본 선 색상 */
+}
+
+/* 선택된 카테고리 밑의 파란색 굵은 선 */
+.category-buttons button.active::after {
+  content: "";
+  position: absolute; /* 버튼 아래에 배치 */
+  bottom: -7px; /* 긴 얇은 선 위에 겹치도록 위치 조정 */
+  left: -10%; /* 버튼 시작점에 맞춤 */
+  width: calc(120%); /* 버튼 너비에 맞게 설정 */
+  height: 3px; /* 굵은 선 두께 */
+  background-color: #003b6f; /* 파란색 */
+}
+
+/* 글쓰기 버튼 */
+.write-button {
+  background-color: #00518d;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 3px;
+  font-size: 14px;
+}
+
+.write-button:hover {
+  background-color: #003b6f;
+}
+
+/* 정렬 버튼 및 검색창 */
+.filter-and-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* 정렬 버튼 */
+.sort-buttons {
+  display: flex;
+  gap: 12px; /* 버튼 간격 */
+}
+
+.sort-button {
+  background-color: transparent;
+  border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px; /* 글씨 크기 */
+  font-weight: 300; /* 기본 텍스트 굵기 */
+  color: #7D7D7E; /* 기본 텍스트 색상 */
+}
+
+.sort-button.active {
+  font-weight: bold; /* 활성화된 버튼은 굵게 표시 */
+}
+
+.sort-button:hover {
+  text-decoration: underline; /* 호버 시 밑줄 표시 */
+}
+
+/* 검색창 스타일 */
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #D9E9FF;
+  border-radius: 5px;
+  width: fit-content; /* 고정된 가로 길이 */
+}
+
+.search-bar-input {
+  flex-grow: 1; /* 입력 필드가 남은 공간을 채움 */
+}
+
+/* 게시글 목록 */
+.article-list {
+  width: 100%;
+}
+
+.article-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.article-list th,
+.article-list td {
+  padding: 12px;
+}
+
+.article-list th {
+  font-size: 14px;
+}
+
+.article-list td {
+  font-size: 14px;
+}
+
+.article-list tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.article-list tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+@media screen and (max-width: 1280px) {
   .board-page {
-    padding: 40px 20px;
-  }
-  
-  .question-cards {
-    gap: 1em;
+    padding: 20px;
   }
 
-  .today-question-section,
-  .board-section {
-    margin-bottom: 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .board-page {
-    padding: 20px 16px;
-  }
-  
-  .question-cards {
-    gap: 1.5em;
+  .search-bar-container {
+    position: static;
+    margin-top: 20px;
+    width: 100%;
   }
 }
