@@ -8,4 +8,6 @@ public interface AuthService {
 
     void checkEmailDuplication(String email);
 
+    void sendEmailCode(EmailRequest emailRequest);
+    void sendEmailPassword(EmailRequest emailRequest);
 }

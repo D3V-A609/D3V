@@ -39,4 +39,35 @@ public class AuthServiceImpl implements AuthService {
         });
     }
 
+    @Override
+    @Transactional
+    public void sendEmailCode(EmailRequest emailRequest) {
+        checkEmailDuplication(emailRequest.email());
+
+        String code = codeGenerator.generateCode();
+        String text = emailSender.buildTextForVerificationCode(EmailTemplate.EMAIL_VERIFICATION_CONTENT, code);
+
+        emailSender.sendVerificationCode(emailRequest.email(), EmailTemplate.EMAIL_VERIFICATION_SUBJECT, text);
+        verificationCodeCacheRepository.save(VerificationCodeCache.builder()
+                .email(emailRequest.email())
+                .code(code)
+                .verified(false)
+                .createdAt(LocalDateTime.now())
+                .build());
+    }
+    @Override
+    @Transactional
+    public void sendEmailPassword(EmailRequest emailRequest) {
+        Member member = memberRepository.findByEmail(emailRequest.email())
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자가 존재하지 않습니다."));
+
+        String password = codeGenerator.generateCode();
+        String text = emailSender.buildTextForVerificationCode(EmailTemplate.EMAIL_PASSWORD_CONTENT, password);
+
+        emailSender.sendVerificationCode(emailRequest.email(), EmailTemplate.EMAIL_PASSWORD_SUBJECT, text);
+
+        //member.updatePassword(passwordEncoder.encode(password));
+
+        memberRepository.save(member);
+    }
 }

@@ -34,4 +34,17 @@ public class AuthController {
         authService.checkEmailDuplication(email);
         return ResponseEntity.ok().body("사용 가능한 이메일 입니다.");
     }
+
+    @Operation(summary = "이메일 인증 코드 전송")
+    @PostMapping("/email/code")
+    public ResponseEntity sendEmailCode(@RequestBody EmailRequest emailRequest) {
+        authService.sendEmailCode(emailRequest);
+        return ResponseEntity.ok().build();
+    }
+    @Operation(summary = "임시 비밀번호 전송")
+    @PostMapping("/email/password")
+    public ResponseEntity sendEmailPassword(@RequestBody EmailRequest emailRequest) {
+        authService.sendEmailPassword(emailRequest);
+        return ResponseEntity.ok().build();
+    }
 }
