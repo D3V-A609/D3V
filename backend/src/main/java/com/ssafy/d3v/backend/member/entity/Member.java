@@ -1,10 +1,9 @@
 package com.ssafy.d3v.backend.member.entity;
 
 import com.ssafy.d3v.backend.common.BaseEntity;
+import com.ssafy.d3v.backend.question.entity.JobRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +17,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -36,11 +35,6 @@ public class Member extends BaseEntity {
     @NotBlank
     private String password;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    @NotBlank
-    private MemberStatus status;
-
     @Column(name = "profile_img")
     private String profileImg;
 
@@ -56,6 +50,9 @@ public class Member extends BaseEntity {
     @Column(name = "provider_type")
     private String providerType;
 
+    @Column(name = "favorite_job")
+    private JobRole favoriteJob;
+
     @Builder
     public Member(String nickname, String email, String password) {
         this.nickname = nickname;
@@ -65,5 +62,9 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
 }
