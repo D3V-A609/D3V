@@ -31,9 +31,6 @@
   border-bottom: 0.5px solid #d9e9ff; /* 게시글 아래 얇은 선 추가 */
 }
 
-.article-list tbody tr:nth-child(odd) {
-  background-color: #f8f9fa; /* 홀수 행 배경색 */
-}
 
 .article-list tbody tr:hover {
   background-color: #e9ecef; /* 행 호버 효과 */

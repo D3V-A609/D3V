@@ -4,6 +4,7 @@ import { fetchArticle } from "../../store/actions/articleActions";
 import CommentInput from "../../components/CommentInput/CommentInput"; // 재사용 가능한 댓글 입력 컴포넌트
 import Profile from "../../components/Profile/Profile";
 import dummyUsers from "../../constants/dummyUsers";
+import CommentList from "../Comment/CommentList";
 import { FaAngleUp, FaAngleDown, FaEye, FaComment } from "react-icons/fa6";
 
 import "./ArticleDetail.css";
@@ -99,6 +100,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
             ) : null}
             <p>{currentArticle.content}</p>
           </div>
+          <p>총 {currentArticle.commentCount}개의 댓글이 있습니다.</p>
+          
+          {/* 댓글 목록 */}
+          <CommentList articleId={articleId} />
 
           {/* 댓글 작성란 */}
           <CommentInput articleId={articleId} />

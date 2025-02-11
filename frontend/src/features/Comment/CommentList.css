@@ -1,0 +1,31 @@
+.comment-list {
+    margin-top: 20px;
+  }
+  
+  .comment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #d9e9ff;
+  }
+  
+  .comment-item .profile-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .comment-item .profile-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  
+  .comment-item .nickname {
+    margin-left: 10px;
+  }
+  
+  .comment-item .date {
+    font-size: 12px;
+  }
+  
