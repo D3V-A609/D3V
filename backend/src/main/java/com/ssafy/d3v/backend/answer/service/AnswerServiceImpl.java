@@ -19,6 +19,7 @@ import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionCustomRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
+import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerCustomRepository answerCustomRepository;
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
+    private final ServedQuestionService servedQuestionService;
     private final ServedQuestionCustomRepository servedQuestionCustomRepository;
     private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
@@ -69,6 +71,13 @@ public class AnswerServiceImpl implements AnswerService {
                 .createdAt(LocalDateTime.now())
                 .accessLevel(answerRequest.accessLevel())
                 .build();
+
+        String isSolvedStatus = servedQuestionService.getIsSolvedStatus(questionId);
+        if (isSolvedStatus.equals("notSolved")) {
+            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
+        } else {
+            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
+        }
 
         servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
