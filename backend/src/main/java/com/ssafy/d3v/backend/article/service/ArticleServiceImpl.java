@@ -45,8 +45,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public PagedResponse<ArticleResponse> get(String categoryName, String keyword, int page, int size,
                                               String sort) {
-        Category category = categoryRepository.findByName(CategoryName.valueOf(categoryName))
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다." + categoryName));
+        Category category = null;
+        if (categoryName != null) {
+            category = categoryRepository.findByName(CategoryName.valueOf(categoryName))
+                    .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다. " + categoryName));
+        }
 
         Sort sortBy = switch (sort.toUpperCase()) {
             case LATEST_SORT -> Sort.by(Sort.Direction.DESC, "createdAt");
