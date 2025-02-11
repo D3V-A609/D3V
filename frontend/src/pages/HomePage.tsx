@@ -10,6 +10,8 @@ import Top10Filter from '../components/Top10/Top10Filter';
 import PageHeader from '../components/PageHeader/PageHeader';
 import { BsCheckLg, BsTrophy} from 'react-icons/bs';
 import './HomePage.css';
+import LoadingPage from '../components/ErrorHandling/LoadingPage';
+import ErrorPage from '../components/ErrorHandling/ErrorPage';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -48,8 +50,8 @@ const HomePage: React.FC = () => {
     navigate(`/question`);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <LoadingPage />;
+  if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
 
   return (
     <div className="home-page">
