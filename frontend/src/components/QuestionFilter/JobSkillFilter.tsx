@@ -9,6 +9,7 @@ interface JobSkillFilterProps {
   skills: SkillType[];
   onJobFilterChange: (jobs: JobType[]) => void;
   onSkillFilterChange: (skills: SkillType[]) => void;
+  onReset: () => void;
 }
 
 const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
@@ -18,6 +19,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
   skills,
   onJobFilterChange,
   onSkillFilterChange,
+  onReset,
 }) => {
   const handleJobClick = (jobName: JobType) => {
     const newJobFilter = jobFilter.includes(jobName)
@@ -46,6 +48,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
   const handleReset = () => {
     onJobFilterChange([]);
     onSkillFilterChange([]);
+    onReset(); // 상위 컴포넌트의 리셋 핸들러 호출
   };
 
   return (

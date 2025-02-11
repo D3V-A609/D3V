@@ -7,7 +7,7 @@ import { QuestionState } from '../store/slices/questionSlice';
 import PageHeader from "../components/PageHeader/PageHeader"
 import QuestionList from '../features/QuestionList/QuestionList';
 import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
-// import ErrorPage from '../components/ErrorHandling/ErrorPage';
+import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
 
@@ -16,7 +16,7 @@ const AllQuestionPage = () => {
   const dispatch = useAppDispatch();
   
   // Redux store에서 필요한 상태들을 가져옴
-  const { questions, pagination } = useAppSelector(
+  const { questions, error, pagination } = useAppSelector(
     (state) => state.questions as QuestionState
   );
   const { jobs = [], skills = [] } = useAppSelector(
@@ -93,8 +93,18 @@ const AllQuestionPage = () => {
     }));
   };
 
+  // 필터 초기화 핸들러
+  const handleReset = () => {
+    dispatch(fetchQuestions({
+      page: 0,
+      size: 15,
+      order: currentSort.order,
+      sort: currentSort.field
+    }));
+  };
+
   // 에러가 있으면 에러 메시지 표시
-  // if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
+  if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
 
   return (
     <div className="question-page">
@@ -112,6 +122,7 @@ const AllQuestionPage = () => {
         skills={skills}
         onJobFilterChange={setJobFilter}
         onSkillFilterChange={setSkillFilter}
+        onReset={handleReset}
       />
       
       {/* QuestionList 컴포넌트에 필요한 props 전달 */}
