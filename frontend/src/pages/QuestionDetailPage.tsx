@@ -14,8 +14,12 @@ import AnswerCommunityComp from '../components/QuestionDetail/Answer/AnswerCommu
 import { AnswerState } from '../store/slices/answerSlice';
 import { fetchAllMyAnswersByQID } from '../store/actions/answerActions';
 import { fetchQuestionById } from '../store/actions/questionActions';
+import { useRecordingContext } from '../context/RecordingContext';
+import RecordView from '../features/VoiceRecording/RecordView';
 
 const QuestionDetailPage: React.FC = () => {
+  const { isRecordingMode } = useRecordingContext();
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [currentQuestionDetailView, setQuestionDetailView] = useState<
@@ -23,7 +27,6 @@ const QuestionDetailPage: React.FC = () => {
   >("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
-  // const { selectedQuestionId, questions, dailyQuestions, loading, error } = useAppSelector(
   const { selectedQuestionId, question, dailyQuestions, loading, error } = useAppSelector(
     state => state.questions as QuestionState // 타입 단언문 사용
   );
@@ -66,6 +69,10 @@ const QuestionDetailPage: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
   
   return (
+    <>
+    {isRecordingMode ? <RecordView content={question? question.content : 'Q'}  /> :  
+ 
+  
     <div className="question-detail-container">
       <div className="question-detail_info-text text-gray2">
         <div className="question-detail_info-text text-gray2">
@@ -89,12 +96,10 @@ const QuestionDetailPage: React.FC = () => {
       {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
         <AnswerCommunityComp questionId={selectedQuestionId} />
       )}
-      {/* {currentQuestionDetailView === "community" && (
-        <AnswerCommunityComp questionId={1} />
-      )} */}
       </>}
       
     </div>
+    }</>
   );
 }
 

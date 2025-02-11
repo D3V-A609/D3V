@@ -1,199 +1,145 @@
-import React, { useRef } from "react";
-
-import { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
 import { CiMicrophoneOn } from "react-icons/ci";
 import TimerSetting from "../Input/Timer/TimerSetting";
 import SelectPublicBtn from "../../../../features/Answer/SelectPublicBtn";
-// import { useAppDispatch } from "react-redux";
-import { useAppDispatch } from "../../../../store/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux";
 import { registServedAnswer, registAnswer } from "../../../../store/actions/answerActions";
-// import { setSelectedQuestionId } from "../../../store/slices/questionSlice";
+import { useRecordingContext } from "../../../../context/RecordingContext"
+import { VoiceState } from "../../../../store/slices/voiceSlice";
 
 interface AnswerInputCompProps {
-  questionId: number; 
-  hasMyAnswers: boolean | undefined;
-  handleRegistAnswerSuccess: () => void;
+  questionId: number;  // 질문 ID
+  hasMyAnswers: boolean | undefined;  // 사용자가 이미 답변했는지 여부
+  handleRegistAnswerSuccess: () => void;  // 답변 등록 성공 시 호출되는 콜백
 }
 
-const AnswerInputComp: React.FC<AnswerInputCompProps> = ({questionId, hasMyAnswers, handleRegistAnswerSuccess}) => {
+const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
+  questionId,
+  hasMyAnswers,
+  handleRegistAnswerSuccess,
+}) => {
+  // 타이머 관련 상태 및 변수 관리
+  const [showTimerDropdown, setShowTimerDropdown] = useState(false);  // 타이머 드롭다운 표시 여부
 
-  const [showTimerDropdown, setShowTimerDropdown] = useState(false); // 타이머 선택 드롭다운 상태
-  const [selectedTime, setSelectedTime] = useState<number| null>(null); // 선택된 시간(default: null(타이머를 선택하지 않음))
-  const [isRunning, setIsRunning] = useState(false); // 타이머 실행 여부
+  // 답변 공개 범위 및 입력값 상태 관리
+  const [selectedPublicOption, setPublicOption] = useState("PUBLIC");  // 답변 공개 범위
+  const [isIDK, setIsIDK] = useState(false);  // '모르겠어요' 체크박스 상태
+  const [answerContent, setAnswerText] = useState<string>("");  // 사용자가 입력한 답변 내용
 
-  const remainingTimeRef = useRef<number | null>(null); // 실제 남은 시간 저장장 
-  //useRef로 타이머 시간 상태 관리 (useEffect로 관리 시 클로서 문제 발생 -> 값이 변경되더라도 클로저에 저장된 이전 값이 사용되어 타이머 종료 알림이 중복 발생)
-  const [displayTime, setDisplayTime] = useState<number | null>(null); // 화면 출력용 변수(default: 30초)
-  const startTimeRef = useRef<number | null>(null); // 타이머의 시작 시간
+  // 녹음 모드 관리
+  const { enterRecordingMode } = useRecordingContext();
 
-  const [selectedPublicOption, setPublicOption] = useState("PUBLIC"); // 답변 공개 범위 설정 상태(default: "PUBLIC(전체공개)" => "PUBLIC", "PRIVATE", "PROTECTED")
-  const [isIDK, setIsIDK] = useState(false); // 모르겠어요 체크박스 버튼 상태(default: 알고 있어요(모르겠어요X))
+  // 녹음 후 변환된 텍스트 데이터
+  const { speechToText } = useAppSelector((state) => state.voice as VoiceState);
 
-  const answerContent = useRef<HTMLTextAreaElement | null>(null); // 입력값이 변경해도 UI는 달라지지 않으므로 useState 대시 useRef 사용용
+  useEffect(() => {
+    if (speechToText) {
+      setAnswerText(speechToText);  // 서버 응답이 들어오면 answerContent에 반영
+    }
+  }, [speechToText]);
 
+  // Redux의 dispatch 사용 설정
   const dispatch = useAppDispatch();
 
-  // 모르겠어요 버튼 변경 핸들러
-  const handleIDKBtnChange = () =>{
+  // '모르겠어요' 체크박스 변경 핸들러
+  const handleIDKBtnChange = () => {
     setIsIDK(!isIDK);
-  }
+  };
 
-  // 공개 범위 옵션 변경 핸들러
+  // 답변 공개 범위 옵션 변경 핸들러
   const handlePublicOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPublicOption(e.target.value);
   };
 
-  // 답변 등록 함수
+  // 답변 입력 값 변경 핸들러
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setAnswerText(e.target.value);
+  };
+
+  // 답변 등록 버튼 클릭 시 실행되는 함수
   const handleRegistAnswer = async () => {
-    const content = answerContent.current?.value.trim() || '';
-    // POST할 데이터 생성
+    const content = answerContent.trim();  // 공백 제거한 답변 내용
+    if(answerContent === null || answerContent === '' || setIsIDK(true) ) setAnswerText('모르겠어요'); // 모르겠어요 체크 & 공백일 경우 "모르겠어요"
+
+    // 서버에 전송할 답변 데이터 생성
     const answerPayload = {
-      memberId: 3,  // 예시 멤버 ID
+      memberId: 3,  // 예제 멤버 ID (실제 코드에서는 동적 설정 필요)
       content: content,
-      accessLevel: selectedPublicOption,  // 공개 설정
-      // isSolved: !isIDK,
+      accessLevel: selectedPublicOption,
       questionId: questionId,
     };
 
+    // 풀었는지 여부를 서버에 전송하기 위한 데이터
     const solvedAnswerPayload = {
-      memberId: 3, 
+      memberId: 3,
       questionId: questionId,
-      isSolved: !isIDK, // 풀었는지 여부이므로 반대로 주어야 함
-    }
+      isSolved: !isIDK,
+    };
 
-    try{
-
-      if(hasMyAnswers!=undefined && !hasMyAnswers){
+    try {
+      // 사용자가 첫 답변을 등록하는 경우, 추가 정보 전송
+      if (hasMyAnswers !== undefined && !hasMyAnswers) {
         await dispatch(registServedAnswer(solvedAnswerPayload)).unwrap();
       }
-      await dispatch(registAnswer(answerPayload)).unwrap() // unwrap으로 감싸서 성공 실패를 쉽게 확인
 
-      // 성공적으로 등록되었을 경우, 입력 필드를 초기화
-      if (answerContent.current) {
-        answerContent.current.value = '';  // 입력 필드 비우기
-        handleRegistAnswerSuccess();
-      }
-    } catch(error){
-      alert("죄송합니다. 잠시 후 다시 시도해주세요.")
-      console.log("답변 등록 시 에러 : ", error); // 지워야 함
-    }
-    
-
-  }
-
-  // timer 드롭다운 열기/닫기
-  const handleDropdownToggle = () => setShowTimerDropdown(!showTimerDropdown); 
-
-  // timer 시간 선택
-  const handleTimeSelect = (time: number | null) => {
-    setSelectedTime(time);
-    setShowTimerDropdown(false);
-    remainingTimeRef.current = time;
-    setDisplayTime(time); // 화면에 표시될 남은 타이머 시간 설정정
-  };
-  
-  // 타이머 시작
-  // const startTimer = () => {
-  //   if (isRunning || remainingTimeRef.current === null) return; // 이미 실행 중이면 무시
-  //   setIsRunning(true);
-  //   remainingTimeRef.current = selectedTime;
-  //   setDisplayTime(selectedTime);  // 타이머 초기화
-  // };
-
-  // 타이머 시작 / 재개
-  const startTimer = () => {
-    if(isRunning || remainingTimeRef.current === null) return; // 타이머를 이미 실행중이거나 설정하지 않은 경우 무시
-    setIsRunning(true);
-    startTimeRef.current = Date.now(); // timer의 시작 시점의 시간을 기록록
-  }
-
-  // 타이머 일시 정지
-  const pauseTimer = () => {
-    if(!isRunning || remainingTimeRef.current === null) return; // 실행 중이지 않으면 무시
-    setIsRunning(false);
-
-    // 남은 시간을 현재 시점 기준으로 업데이트
-    if(startTimeRef.current !== null){
-      const currentTime = Date.now();
-      const elapsedTime = Math.floor((currentTime-startTimeRef.current) / 1000); // 경과 시간 계산
-      remainingTimeRef.current = Math.max(remainingTimeRef.current - elapsedTime, 0); // 남은 시간 업데이트
+      // 답변 데이터 서버에 전송
+      await dispatch(registAnswer(answerPayload)).unwrap();
+      
+      // 성공적으로 답변이 등록된 경우 입력 필드를 초기화
+      setAnswerText("");
+      handleRegistAnswerSuccess();  // 성공 콜백 호출
+    } catch (error) {
+      alert("죄송합니다. 잠시 후 다시 시도해주세요.");
+      console.error("답변 등록 시 에러:", error);
     }
   };
 
-  // 타이머 동작 관리
-  useEffect(() => {
-    if (!isRunning || remainingTimeRef.current === null || startTimeRef.current === null) return;
-
-      const timer = setInterval(() => {
-      const currentTime = Date.now();
-
-      // startTimeRef와 remainingTimeRef가 null이 아닌지 안전하게 접근
-      if (startTimeRef.current !== null && remainingTimeRef.current !== null) {
-        const elapsedTime = Math.floor((currentTime - startTimeRef.current) / 1000);
-        const newRemainingTime = Math.max(remainingTimeRef.current - elapsedTime, 0);
-
-        setDisplayTime(newRemainingTime);
-
-        // 남은 시간이 0일 경우 타이머 종료
-        if (newRemainingTime <= 0) {
-          clearInterval(timer);
-          setIsRunning(false);
-          remainingTimeRef.current = null;
-          alert("타이머 종료!");
-        }
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);  // 컴포넌트 언마운트 시 타이머 정리
-  }, [isRunning]);
+  // 타이머 드롭다운 표시/숨김 토글 함수
+  const handleDropdownToggle = () => setShowTimerDropdown(!showTimerDropdown);
 
   return (
     <div className="answer-input-container">
       <div className="answer-title">
-        <span className="text-brackets">{"{"}</span>  답변하기  <span className="text-brackets">{"}"}</span>
+        <span className="text-brackets">{"{"}</span> 답변하기 <span className="text-brackets">{"}"}</span>
       </div>
       <div className="answer-subtitle text-gray2">
-        면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼
-        준비해보세요!
+        면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!
       </div>
       <div className="anwer-input-container__input">
         <div className="answer-setting">
+          {/* 공개 범위 선택 컴포넌트 */}
           <SelectPublicBtn selectedOption={selectedPublicOption} onChange={handlePublicOptionChange} />
+          {/* 타이머 설정 컴포넌트 */}
           <TimerSetting
             showTimerDropdown={showTimerDropdown}
-            selectedTime={selectedTime}
-            remainingTime={displayTime} // 렌더링용
-            isRunning={isRunning}
             handleDropdownToggle={handleDropdownToggle}
-            handleTimeSelect={handleTimeSelect}
-            startTimer={startTimer}
-            pauseTimer={pauseTimer}
           />
-
         </div>
         <div className="answer-input">
-          <textarea className="answer-input-area"
-          ref={answerContent}
-          placeholder="답변을 입력해주세요." />
+          {/* 답변 입력 영역 */}
+          <textarea
+            className="answer-input-area"
+            value={answerContent}
+            onChange={handleInputChange}
+            placeholder="답변을 입력해주세요."
+          />
         </div>
         <div className="answer-submit">
-          <div className="answer-voice">
+          {/* 음성 입력 버튼 */}
+          <div className="answer-voice" onClick={enterRecordingMode}>
             <CiMicrophoneOn className="voice-icon" />
             <div>음성으로 입력하기</div>
           </div>
           <div className="btn-answer-submit-group">
-             {/* <div className="checkbox-IDK">모르겠어요</div> */}
-             <div className="checkbox-IDK">
-              <input
-                type="checkbox"
-                id="idk"
-                checked={isIDK}
-                onChange={handleIDKBtnChange}
-              />
+            {/* '모르겠어요' 체크박스 */}
+            <div className="checkbox-IDK">
+              <input type="checkbox" id="idk" checked={isIDK} onChange={handleIDKBtnChange} />
               <label htmlFor="idk">모르겠어요</label>
             </div>
-             <div className="btn-submit" onClick={handleRegistAnswer}>저장하기</div>
+            {/* 답변 저장 버튼 */}
+            <div className="btn-submit" onClick={handleRegistAnswer}>
+              저장하기
+            </div>
           </div>
         </div>
       </div>
