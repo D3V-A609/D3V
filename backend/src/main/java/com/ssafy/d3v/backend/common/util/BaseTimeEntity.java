@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.common;
+package com.ssafy.d3v.backend.common.util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @MappedSuperclass // 공통 매핑 정보 제공
 @EntityListeners(AuditingEntityListener.class) // Auditing 기능 활성화
-public abstract class BaseEntity {
+public abstract class BaseTimeEntity {
 
     @CreatedDate // 엔티티 생성 시 자동으로 값 설정
     @Column(updatable = false, nullable = false) // 수정 불가, null 허용 안 함

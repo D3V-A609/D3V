@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.article.entity;
 
-import com.ssafy.d3v.backend.common.BaseEntity;
+import com.ssafy.d3v.backend.common.util.BaseTimeEntity;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ import lombok.ToString;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Article extends BaseEntity {
+public class Article extends BaseTimeEntity {
     @Id
     @Column(name = "article_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

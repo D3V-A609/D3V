@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.like.dto.LikesRequest;
 import com.ssafy.d3v.backend.like.entity.Likes;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;

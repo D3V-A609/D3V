@@ -8,7 +8,7 @@ import com.ssafy.d3v.backend.bookmark.entity.Bookmark;
 import com.ssafy.d3v.backend.bookmark.entity.BookmarkQuestion;
 import com.ssafy.d3v.backend.bookmark.repository.BookmarkQuestionRepository;
 import com.ssafy.d3v.backend.bookmark.repository.BookmarkRepository;
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.entity.Question;

@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.common.config;
+package com.ssafy.d3v.backend.common.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
