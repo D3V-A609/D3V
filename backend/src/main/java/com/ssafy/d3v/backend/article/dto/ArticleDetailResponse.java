@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record ArticleDetailResponse(long id, long categoryId, CategoryName name,
+public record ArticleDetailResponse(long id, long categoryId, long memberId, CategoryName name,
                                     String title, String content, List<ArticleImage> images,
                                     LocalDateTime createdAt, LocalDateTime updatedAt,
                                     int view, int commentCount) {
