@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
 
-import Logo from "../../assets/images/logo.svg";
+import Logo from "../../assets/images/logo.gif";
 
 import Nav from "./Nav.tsx";
 import SimpleUserInfo from "./SimpleUserInfo.tsx";
@@ -21,9 +21,11 @@ const Header: React.FC = () => {
       <div className="header-container_logo-div">
         <img src={Logo} className="header-container_logo-svg" onClick={() => { handleLogoClick() }} />
       </div>
-      <div className="header-container_right">
-        <SimpleUserInfo />
+      <div className="header-nav-bar">
         <Nav />
+      </div>
+      <div className="header-user-profile">
+        <SimpleUserInfo />  
       </div>
     </header>
   );
