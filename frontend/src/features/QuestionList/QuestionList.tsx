@@ -128,14 +128,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
                 />
               </th>
               <th>질문</th>
-              {/* 도전 수 정렬 헤더 */}
-              <th
-                className="center"
-                onClick={() => handleSort('ccnt')}
-                style={{ cursor: "pointer" }}
-              >
-                도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
-              </th>
               {/* 답변 수 정렬 헤더 */}
               <th
                 className="center"
@@ -144,13 +136,21 @@ const QuestionList: React.FC<QuestionListProps> = ({
               >
                 답변 수 {currentSort.field === 'acnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
               </th>
+              {/* 도전 수 정렬 헤더 */}
+              <th
+                className="center"
+                onClick={() => handleSort('ccnt')}
+                style={{ cursor: "pointer" }}
+              >
+                도전 수 {currentSort.field === 'ccnt' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+              </th>
               {/* 평균 제출 수 정렬 헤더 */}
               <th
                 className="center"
                 onClick={() => handleSort('avg')}
                 style={{ cursor: "pointer" }}
               >
-                평균 제출 수 {currentSort.field === 'avg' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
+                제출 수 평균 {currentSort.field === 'avg' ? (currentSort.order === 'desc' ? '▼' : '▲') : '▽'}
               </th>
             </tr>
           </thead>
@@ -178,8 +178,8 @@ const QuestionList: React.FC<QuestionListProps> = ({
                   </div>
                   <span>{question.content}</span>
                 </td>
-                <td className="center">{question.challengeCount}</td>
                 <td className="center">{question.answerCount}</td>
+                <td className="center">{question.challengeCount}</td>
                 <td className="center">{question.answerAverage}</td>
               </tr>
             ))}
