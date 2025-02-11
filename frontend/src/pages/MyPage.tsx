@@ -12,8 +12,18 @@ const MyPage:React.FC = () => {
         following: 50,
         follower: 97
       }
-    return (<div className='my-page-container'>
-        <UserInfoComp user={user} />
+    return (
+    <div className='my-page-container'>
+        <div className='my-detail-info-container'>
+            <UserInfoComp user={user} />
+        </div>
+        <div className='my-bookmark-info-container'></div>
+        <div className='my-answer-info-container'></div>
+        <div className='my-learning-info-container'>
+            <div className="my-streak"></div>
+            <div className='my-answer-commu-activity'></div>
+        </div>
+        <div className='my-commu-info-container'></div>
     </div>)
 }
 

@@ -1,6 +1,7 @@
 .my-page-container{
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   padding: 3em;
 }

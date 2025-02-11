@@ -1,0 +1,103 @@
+.content-section-container {
+  max-width: 700px;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 10px;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.content-title-icon {
+  width: 24px;
+  height: 24px;
+  align-self: baseline;
+}
+
+.content-title-text{
+  padding-left: 0.8em;
+}
+
+.more-button {
+  border: none;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  margin: 0 ;
+  padding-right: 5px;
+  font-weight: medium;
+}
+
+.more-button:hover {
+  text-decoration: underline;
+}
+
+.content-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-item {
+  padding: 10px;
+  background-color: white;
+  border: 2px solid #D9E9FF;
+  font-size: 16px;
+  color: black;
+  text-align: start;
+
+  display: -webkit-box; /* 플렉스 기반의 줄 제한 설정 */
+  -webkit-line-clamp: 2; /* 최대 2줄로 제한 */
+  -webkit-box-orient: vertical; /* 세로 방향 박스 설정 */
+  text-overflow: ellipsis; /* 잘린 부분에 ... 표시 */
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+  max-height: 5rem;
+  line-height: 1.8rem; /* 줄 간격 설정 */
+
+  align-items: center;
+}
+
+.content-item.middle-item{
+  border-top: none;
+}
+
+.content-item.first-item {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.content-item.last-item {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .content-section-container {
+    padding: 15px;
+  }
+
+  .content-item {
+    font-size: 14px;
+  }
+
+  .more-button {
+    font-size: 12px;
+  }
+}
