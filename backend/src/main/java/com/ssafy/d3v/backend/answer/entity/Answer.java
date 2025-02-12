@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.answer.entity;
 
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
