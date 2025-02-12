@@ -1,5 +1,5 @@
 import React from "react";
-import "./ContentPreviewList.css";
+import styles from "./ContentPreviewList.module.css";
 
 // const contents = [
 //   "선언적 UI 부분이 좀 더 자세히 설명되었으면 좋겠어요. 이 부분이 실제로 어떤 장점이 있는지 궁금합니다.",
@@ -15,23 +15,23 @@ interface ContentPreviewProps {
   contents: string[] | Question[] | Answer[];
   handleMoreBtn: () => void;
   handleDetailContent: (id: number) => void
-  className: string;
+  className?: string;
 }
 
 // const ContentPreviewList: React.FC = () => {
   const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, handleMoreBtn, handleDetailContent, className}) => {
   return (
     // <div className="content-section-container">
-      <div className={`content-section-container ${className}`}>
-      <div className="content-header">
-        <div className="content-title">
+      <div className={`${styles["content-section-container"]} ${className}`}>
+      <div className={styles["content-header"]}>
+        <div className={styles["content-title"]}>
           {/* <span className="content-title-icon">💬</span>  */}
-          <span className="content-title-icon">{titleIcon}</span> 
+          <span className={styles["content-title-icon"]}>{titleIcon}</span> 
           {/* <span className="content-title-text">댓글</span> */}
-          <span className="content-title-text">{title}</span>
+          <span className={styles["content-title-text"]}>{title}</span>
         </div>
         {/* <div className="more-button">더보기</div> */}
-        <div className="more-button" onClick={handleMoreBtn}>더보기</div>
+        <div className={styles["more-button"]} onClick={handleMoreBtn}>더보기</div>
       </div>
 
       <div className="content-list">
