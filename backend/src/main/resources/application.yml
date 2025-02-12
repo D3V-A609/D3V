@@ -7,10 +7,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   mail:
-    host: smtp.gmail.com # ${MAIL_HOST}
-    port: 587 # ${MAIL_PORT}
-    username: by28287@gmail.com # ${MAIL_USERNAME}
-    password: jtreizizqqjpurwu # ${MAIL_PASSWORD}
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -34,35 +34,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web.cors: DEBUG
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
-    url: jdbc:h2:mem:dv3-local-db
-    driver-class-name: org.h2.Driver
-    username: user
-    password:
-  jpa:
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        format_sql: true # SQL 로그 출력
-    hibernate:
-      ddl-auto: create-drop
-  sql:
-    init:
-      mode: always
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-logging:
-  level:
-    org.hibernate.SQL: debug # SQL 로그 출력을 위한 로그 레벨 조정
-
-
 
 ---
 
@@ -86,5 +57,5 @@ spring:
     show-sql: true
   data:
     redis:
-      host: 52.78.105.9
-      port: 6379
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
