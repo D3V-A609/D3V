@@ -1,4 +1,4 @@
-const dummyOtherAnswers: Answer[] = [
+const dummyOtherAnswers = [
   {
     questionId: 1,
     memberId: 2,

@@ -19,7 +19,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ answer, isOpen, onClose }) 
   const [currentPage, setCurrentPage] = useState(1);
   const [newComment, setNewComment] = useState('');
   const answerAuthor = dummyUsers.find(user => user.memberId === answer.memberId);
-  const comments = dummyComments.filter(comment => comment.answerId === answer.answerId);
+  const comments = dummyComments.filter(comment => comment.commentId === answer.answerId);
 
   const commentsPerPage = 10;
   const indexOfLastComment = currentPage * commentsPerPage;

@@ -1,4 +1,4 @@
-const dummyComments: Comment[] = [
+const dummyComments = [
   {
     commentId: 1,
     answerId: 2,

@@ -32,7 +32,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
     try {
       const resultAction = await dispatch(toggleLike(answer.answerId));
       if (toggleLike.fulfilled.match(resultAction)) {
-        const { like } = resultAction.payload;
+        // const { like } = resultAction.payload;
         setIsLiked(!isLiked);
       }
     } catch (error) {
@@ -48,11 +48,11 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
       <div className="answer-item">
         <div className="profile">
           <div className="profile-avatar">
-            {member.profileImg ? (
+            {/* {member.profileImg ? (
               <img src={member.profileImg} alt="profile" />
             ) : (
               <div className="avatar-fallback">{member.nickname[0].toUpperCase()}</div>
-            )}
+            )} */}
           </div>
           <div className="profile-info">
             <div className="profile-role">

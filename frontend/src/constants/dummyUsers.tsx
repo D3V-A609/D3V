@@ -1,4 +1,4 @@
-const dummyUsers: User[] = [
+const dummyUsers = [
   {
     memberId: 1,
     nickname: "박경완",
