@@ -9,7 +9,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com/")  // 허용할 출처 명시
+                .allowedOrigins("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com/",
+                        "http://localhost:5173")  // 허용할 출처 명시
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowCredentials(true);
     }
