@@ -1,37 +1,33 @@
+/* CommentList.css */
 .comment-list {
-    margin-top: 20px;
-  }
+  margin: 20px 30px;
+}
 
-  .comment-list ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-left: 0;
-  }
-  
-  .comment-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #d9e9ff;
-  }
-  
-  .comment-item .profile-section {
-    display: flex;
-    align-items: center;
-  }
-  
-  .comment-item .profile-avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-  }
-  
-  .comment-item .nickname {
-    margin-left: 10px;
-  }
-  
-  .comment-item .date {
-    font-size: 12px;
-  }
-  
+.comment-count {
+  text-align: left;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.count-number {
+  font-size: 1.2em;
+  color: #00518D;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+
+/* 댓글 없을 때 메시지 스타일 */
+.no-comments {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* 로딩 및 에러 메시지 스타일 */
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}

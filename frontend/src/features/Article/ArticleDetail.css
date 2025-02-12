@@ -10,7 +10,7 @@
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #d9e9ff; /* 하단 선 */
+  border-bottom: 3px solid #d9e9ff; /* 하단 선 */
 }
 
 .nav-buttons {
@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   padding: 8px 8px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   border-radius: 3px;
   height: 35px;
@@ -33,7 +33,7 @@
 .nav-button {
   border: 1px solid #00518d;
   background-color: white;
-  width: 90px;
+  width: 70px;
 }
 
 .back-button {
@@ -48,7 +48,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0px 30px 10px;
+  padding: 0px 30px 5px;
   background-color: #ffffff;
   width: 100%;
   border-bottom: 1px solid #d9e9ff; /* 하단 선 */
@@ -64,14 +64,14 @@
 
 .detail-info .category {
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   color: #00518d;
 }
 
 .detail-info .title {
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -89,33 +89,16 @@
   gap: 10px; /* 프로필과 작성일 간격 */
 }
 
-.profile-avatar {
-  width: 20px; /* 프로필 크기 조정 */
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #0072ef; /* 파란색 테두리 */
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.profile-name {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 12px; /* 글씨 크기 조정 */
-  font-weight: bold;
-}
-
-.profile-role {
-  font-family: 'Mingzat', sans-serif;
-  font-size: 6px; /* 글씨 크기 조정 */
+.profile-container {
+  transform: scale(0.8); /* 프로필 이미지 크기 조절 */
+  transform-origin: center; /* 중앙 기준으로 크기 조절 */
+  justify-self: start; /* 왼쪽 정렬 */
 }
 
 .date {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .right-section {
@@ -139,11 +122,11 @@
   flex-direction: column; /* 세로 정렬 */
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 40px 30px; /* 상하좌우 여백 */
+  padding: 30px 30px; /* 상하좌우 여백 */
   gap: 10px; /* 요소 간 간격 */
   width: 100%; /* 전체 너비 */
   background-color: #ffffff; /* 배경색 */
-  border-bottom: 2px solid #d9e9ff; /* 하단 테두리 */
+  border-bottom: 3px solid #d9e9ff; /* 하단 테두리 */
 }
 
 .detail-content img {
@@ -157,5 +140,6 @@
   font-weight: 300; /* 얇은 글씨체 */
   line-height: 20px; /* 줄 간격 */
   color: #000000; /* 글씨 색상 */
+  font-size: 16px;
 }
 

@@ -3,6 +3,8 @@ import { useAppDispatch } from "../../store/hooks/useRedux";
 import { updateComment, deleteComment } from "../../store/actions/commentActions";
 import dummyUsers from "../../constants/dummyUsers";
 import { Comment } from "../../store/slices/commentSlice";
+import Profile from "../../components/Profile/Profile";
+import "./CommentItem.css";
 
 interface CommentItemProps {
   comment: Comment;
@@ -47,41 +49,58 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isAuthor, articleId 
 
   return (
     <li className="comment-item">
-      <div className="profile-section">
-        {member ? (
-          <>
-            <img src={member.profileImg} alt="프로필" className="profile-avatar" />
-            <span className="nickname">{member.nickname}</span>
-          </>
-        ) : (
-          <span>사용자 정보 없음</span>
-        )}
-      </div>
-      {isEditing ? (
-        <textarea
-          value={editedContent}
-          onChange={(e) => setEditedContent(e.target.value)}
+    <div className="comment-profile">
+      {member ? (
+        <Profile
+          profileImg={member.profileImg}
+          jobField={member.jobField}
+          nickname={member.nickname}
         />
       ) : (
-        <p>{comment.content}</p>
+        <span>사용자 정보 없음</span>
       )}
-      <span className="date">{new Date(comment.createdAt).toLocaleDateString()}</span>
-      {isAuthor && (
-        <div className="comment-actions">
-          {isEditing ? (
-            <>
-              <button onClick={handleUpdate}>등록</button>
-              <button onClick={handleCancel}>취소</button>
-            </>
-          ) : (
-            <>
-              <button onClick={handleEdit}>수정</button>
-              <button onClick={handleDelete}>삭제</button>
-            </>
-          )}
-        </div>
-      )}
-    </li>
+    </div>
+    <div className="comment-main">
+      <div className="comment-content">
+        {isEditing ? (
+          <textarea
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+          />
+        ) : (
+          <p>{comment.content}</p>
+        )}
+      </div>
+      <div className="comment-info">
+        {isAuthor && (
+          <div className="comment-actions">
+            {isEditing ? (
+              <>
+                <button onClick={handleUpdate}>등록</button>
+                <button onClick={handleCancel}>취소</button>
+              </>
+            ) : (
+              <>
+                <button onClick={handleEdit}>수정</button>
+                <button onClick={handleDelete}>삭제</button>
+              </>
+            )}
+          </div>
+        )}
+        <span className="date">
+          {new Date(comment.createdAt).toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          })}
+        </span>
+      </div>
+    </div>
+  </li>
   );
 };
 
