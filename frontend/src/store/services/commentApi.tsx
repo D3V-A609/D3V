@@ -13,13 +13,13 @@ export const commentApi = {
   },
 
   // 댓글 수정 API
-  updateComment: async (commentId: number, content: string) => {
-    return await api.put(`/comment/${commentId}`, { content });
+  updateComment: async (articleId: number, commentId: number, content: string) => {
+    return await api.patch(`/article/${articleId}/comment/${commentId}`, { content });
   },
 
   // 댓글 삭제 API
-  deleteComment: async (commentId: number) => {
-    return await api.delete(`/comment/${commentId}`);
+  deleteComment: async (articleId: number, commentId: number) => {
+    return await api.delete(`/article/${articleId}/comment/${commentId}`);
   },
 };
 

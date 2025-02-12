@@ -22,16 +22,16 @@ export const createComment = createAsyncThunk(
 
 export const updateComment = createAsyncThunk(
   "comments/updateComment",
-  async ({ commentId, content }: { commentId: number; content: string }) => {
-    const response = await commentApi.updateComment(commentId, content);
+  async ({ articleId, commentId, content }: { articleId: number; commentId: number; content: string }) => {
+    const response = await commentApi.updateComment(articleId, commentId, content);
     return response.data;
   }
 );
 
 export const deleteComment = createAsyncThunk(
   "comments/deleteComment",
-  async (commentId: number) => {
-    await commentApi.deleteComment(commentId);
+  async ({ articleId, commentId }: { articleId: number; commentId: number }) => {
+    await commentApi.deleteComment(articleId, commentId);
     return commentId;
   }
 );
