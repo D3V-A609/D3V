@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.answer.service;
 
+import com.ssafy.d3v.backend.answer.dto.AnswerQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
@@ -12,5 +13,10 @@ public interface AnswerService {
     List<AnswerResponse> create(long questionId, AnswerRequest answerRequest);
 
     List<AnswerResponse> getMyAnswers(long questionId);
+
     PagedResponse<AnswerResponse> getTotalAnswers(long questionId, int size, int page);
+
+    void updateAccessLevel(long answerId, String accessLevel);
+
+    PagedResponse<AnswerQuestionResponse> getLastestQuestion(int size, int page, boolean isSolved);
 }
