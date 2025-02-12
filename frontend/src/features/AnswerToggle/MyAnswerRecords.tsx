@@ -3,7 +3,7 @@ import { Chrono } from 'react-chrono';
 // import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 import PageHeader from '../../components/PageHeader/PageHeader';
 
-import { FcCommandLine } from "react-icons/fc";
+import { GrHistory } from "react-icons/gr";
 
 interface MyAnswerRecordsProps{
   myAnswers: Answer[];
@@ -61,9 +61,10 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
           과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.
         </div> */}
         <PageHeader
-        title='내 답변 로그'
-        description='과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.' 
-        icon={<FcCommandLine />}
+          title='내 답변 로그'
+          description='과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.' 
+          icon={<GrHistory />}
+          iconStyle="answer-log"
         />
         <div className="records-timeline">
           <Chrono

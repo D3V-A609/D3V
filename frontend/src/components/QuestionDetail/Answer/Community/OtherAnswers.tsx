@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AnswerItem from './AnswerItem';
 import "./OtherAnswers.css";
 import PageHeader from '../../../PageHeader/PageHeader';
-import { FcBinoculars } from "react-icons/fc";
+import { PiEyesFill } from "react-icons/pi";
 
 interface OtherAnswersProps {
   answers: Answer[];
@@ -43,8 +43,11 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
     <div className="other-answers-container">
       <div className="other-answers-header">
         <PageHeader
-        title='다른 사람들의 답변 보기' description='다양한 면접 답변과 의견을 한 눈에 보며 인사이트를 얻어보세요.' 
-        icon={ <FcBinoculars /> }/>
+          title='다른 사람들의 답변 보기' 
+          description='다양한 면접 답변과 의견을 한 눈에 보며 인사이트를 얻어보세요.' 
+          icon={<PiEyesFill />}
+          iconStyle="other-answer"
+        />
         <select 
           className="sort-select"
           value={sortType}

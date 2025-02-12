@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux
 import { registServedAnswer, registAnswer } from "../../../../store/actions/answerActions";
 import { useRecordingContext } from "../../../../context/RecordingContext"
 import { VoiceState } from "../../../../store/slices/voiceSlice";
+import PageHeader from "../../../PageHeader/PageHeader";
+import { BsChatSquareQuote } from "react-icons/bs";
 
 interface AnswerInputCompProps {
   questionId: number;  // 질문 ID
@@ -99,12 +101,21 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
   return (
     <div className="answer-input-container">
-      <div className="answer-title">
+      {/* <div className="answer-title">
         <span className="text-brackets">{"{"}</span> 답변하기 <span className="text-brackets">{"}"}</span>
       </div>
       <div className="answer-subtitle text-gray2">
         면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!
-      </div>
+      </div> */}
+
+      <PageHeader 
+        title="답변하기"
+        description="면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!"
+        icon={<BsChatSquareQuote />}
+        iconStyle="chat-quote"
+      />
+
+
       <div className="anwer-input-container__input">
         <div className="answer-setting">
           {/* 공개 범위 선택 컴포넌트 */}
