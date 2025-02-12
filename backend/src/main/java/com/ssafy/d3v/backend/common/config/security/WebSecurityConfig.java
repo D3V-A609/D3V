@@ -6,12 +6,16 @@ import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.d3v.backend.oauth.service.CustomOAuth2UserService;
+import java.util.ArrayList;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,18 +35,29 @@ public class WebSecurityConfig {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() { // security를 적용하지 않을 리소스
+        return web -> web.ignoring()
+                // error endpoint를 열어줘야 함, favicon.ico 추가!
+                .requestMatchers("/error", "/favicon.ico");
+    }
+    
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .httpBasic(httpBasic -> httpBasic.disable())
-                .formLogin(formLogin -> formLogin.disable())
+                .csrf(AbstractHttpConfigurer::disable) // http only 쿠키 사용할거라 켜야됨. 설정법 알아보고 킬 예정
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/member/**",
+                                "/api/**",//원할한 테스트를 위해서 다 풀어둠
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**")
+                                "/api/member/**",
+                                "/api/question/daily",
+                                "/api/question/top10",
+                                "/api/job/**"
+                        )
                         .permitAll()
                         .requestMatchers("/**").hasAnyRole("USER", "ADMIN"))
                 .oauth2Login(oauth2 -> oauth2
@@ -103,13 +118,29 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
+        //리소스를 허용할 URL 지정
+        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
+        allowedOriginPatterns.add("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com/");
+        allowedOriginPatterns.add("http://localhost:5173");
+        configuration.setAllowedOrigins(allowedOriginPatterns);
+
+        //허용하는 HTTP METHOD 지정
+        ArrayList<String> allowedHttpMethods = new ArrayList<>();
+        allowedHttpMethods.add("GET");
+        allowedHttpMethods.add("POST");
+        allowedHttpMethods.add("PUT");
+        allowedHttpMethods.add("DELETE");
+        configuration.setAllowedMethods(allowedHttpMethods);
+
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//        configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+
+        //인증, 인가를 위한 credentials 를 TRUE로 설정
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }
