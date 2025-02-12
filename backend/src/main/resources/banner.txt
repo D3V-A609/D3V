@@ -4,5 +4,6 @@
   |___/   |___/   _\_/_
 _|"""""|_|"""""|_| """"|
 "`-0-0-'"`-0-0-'"`-0-0-'
+미친 cors... 복수한다...
 ${application.title} ${application.version}
 Powered by Spring Boot ${spring-boot.version}
