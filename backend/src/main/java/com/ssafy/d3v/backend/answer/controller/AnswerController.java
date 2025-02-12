@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.answer.controller;
 
+import com.ssafy.d3v.backend.answer.dto.AnswerQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +51,16 @@ public class AnswerController {
     @GetMapping("/question/{question_id}/answer")
     public ResponseEntity<PagedResponse<AnswerResponse>> getTotalAnswers(@PathVariable("question_id") long questionId,
                                                                          @RequestParam(value = "size", defaultValue = "15") int size,
-                                                                         @RequestParam(value = "page", defaultValue = "1") int page){
+                                                                         @RequestParam(value = "page", defaultValue = "1") int page) {
         return ResponseEntity.ok().body(answerService.getTotalAnswers(questionId, size, page));
     }
+
+    @Operation(summary = "답변 공개 범위 변경")
+    @PatchMapping("/answer/{answer_id}")
+    public ResponseEntity updateAccessLevel(@PathVariable("answer_id") long answerId,
+                                            @RequestParam(value = "access_level") String accessLevel) {
+        answerService.updateAccessLevel(answerId, accessLevel);
+        return ResponseEntity.ok().build();
+    }
+
 }
