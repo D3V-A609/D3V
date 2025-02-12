@@ -11,7 +11,7 @@
 
 /* 헤더 */
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 /* 카테고리 필터 */
@@ -94,7 +94,7 @@
 /* 정렬 버튼 */
 .sort-buttons {
   display: flex;
-  gap: 12px; /* 버튼 간격 */
+  gap: 5px; /* 버튼 간격 */
 }
 
 .sort-button {

@@ -6,7 +6,7 @@ export const articleApi = {
   getArticles: async ({
     category,
     page = 1,
-    size = 2,
+    size = 15,
     sort = 'LATEST',
     keyword,
   }: {

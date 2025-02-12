@@ -1,4 +1,4 @@
-.modal-overlay {
+/* .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -216,7 +216,7 @@
   border-radius: 4.76px;
   padding: 16px;
   margin-bottom: 40px;  /* 버튼과의 간격 확보 */
-  resize: none;
+  /* resize: none;
   font-family: 'Noto Sans KR';
 }
 
@@ -247,7 +247,7 @@
   position: absolute;
   right: 41px;
   bottom: 0;  /* 입력창 아래에 위치 */
-  width: 103.7px;
+  /* width: 103.7px;
   height: 29.49px;
   border: 0.95px solid #000000;
   border-radius: 4.76px;
@@ -261,4 +261,4 @@
 .submit-button:hover {
   background-color: #004a7c;
   color: #FFFFFF;
-}
+} */

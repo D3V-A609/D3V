@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
 import { fetchArticles } from "../store/actions/articleActions";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
-// import ArticleDetail from "../features/Article/ArticleDetail";
+import ArticleDetail from "../features/Article/ArticleDetail";
 // import ArticleForm from "../features/Article/ArticleForm";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
@@ -29,7 +29,7 @@ const BoardPage:React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortField, setSortField] = useState<string>("LATEST");
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
-  // const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
 
   useEffect(() => {
     if (currentView === "list") {
@@ -43,12 +43,12 @@ const BoardPage:React.FC = () => {
   const handleSort = (field: string) => setSortField(field);
 
   const handleWriteClick = () => setCurrentView("create");
-  // const handleArticleClick = (articleId: number) => {
-  //   setSelectedArticleId(articleId);
-  //   setCurrentView("detail");
-  // };
+  const handleArticleClick = (articleId: number) => {
+    setSelectedArticleId(articleId);
+    setCurrentView("detail");
+  };
   // const handleEditClick = () => setCurrentView("edit");
-  // const handleBackToList = () => setCurrentView("list");
+  const handleBackToList = () => setCurrentView("list");
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error occurred: {error}</div>;
@@ -104,16 +104,16 @@ const BoardPage:React.FC = () => {
               dispatch(fetchArticles({ category: categoryMap[category], keyword: searchQuery, page: pageNumber }))
             }
             onSort={handleSort}
-            // onArticleClick={handleArticleClick}
+            onArticleClick={handleArticleClick}
           />
         </>
       )}
 
-      {/* 상세 조회
+      {/* 상세 조회 */}
       {currentView === "detail" && selectedArticleId && (
         <ArticleDetail
           articleId={selectedArticleId}
-          onEditClick={handleEditClick}
+          // onEditClick={handleEditClick}
           onBackClick={handleBackToList}
         />
       )}

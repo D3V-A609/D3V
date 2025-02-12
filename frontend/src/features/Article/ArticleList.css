@@ -16,8 +16,8 @@
   font-size: 16px; /* 글씨 크기 */
   font-weight: bold; /* 기본 글씨 굵기 */
   color: #000000; /* 글씨 색상 */
-  border-top: 2.5px solid #d9e9ff; /* 상단 선 */
-  border-bottom: 2.5px solid #d9e9ff; /* 하단 선 */
+  border-top: 2px solid #d9e9ff; /* 상단 선 */
+  border-bottom: 2px solid #d9e9ff; /* 하단 선 */
 }
 
 /* 상단 탭 호버 및 클릭 효과 제거 */
@@ -31,9 +31,6 @@
   border-bottom: 0.5px solid #d9e9ff; /* 게시글 아래 얇은 선 추가 */
 }
 
-.article-list tbody tr:nth-child(odd) {
-  background-color: #f8f9fa; /* 홀수 행 배경색 */
-}
 
 .article-list tbody tr:hover {
   background-color: #e9ecef; /* 행 호버 효과 */
