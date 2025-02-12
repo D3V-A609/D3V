@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
       />
       <section className="today-questions">
         <div className="question-cards">
-          {dailyQuestions.map((question) => (
+          {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
             <TodayQuestionCard
               key={question.id}
               title={question.content}
