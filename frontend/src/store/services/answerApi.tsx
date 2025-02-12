@@ -43,7 +43,7 @@ export const answerApi = {
     }
   },
 
-  // 추가한 부분분
+  // 추가한 부분
   // 한 질문에 대한 모든 내 답변 조회
   getMyAllAnswerByQId : (questionId: number) => {
     try{
@@ -55,8 +55,7 @@ export const answerApi = {
   },
 
   // 답변 등록 
-  registAnswer: (payload:{ questionId:number; memberId: number; content: string; accessLevel: string; 
-    // isSolved: boolean 
+  registAnswer: (payload:{ questionId:number; memberId: number; content: string; accessLevel: string; isSolved: boolean 
   }) => {
     try{
       const {questionId, ...bodyPayload} = payload;
