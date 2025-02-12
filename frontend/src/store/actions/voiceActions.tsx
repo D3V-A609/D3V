@@ -9,7 +9,8 @@ export const sendVoiceRecording = createAsyncThunk(
       formData.append('file', blob, 'recording.webm');  // 파일 확장자는 필요에 맞게 변경 가능
       const response = await voiceApi.sendVoiceRecording(formData);
       return response;
-    } catch (_) {
+    } catch (error) {
+      console.log('in voice action: ', error);
       return rejectWithValue('Failed to transform the voice to Text.');
     }
   }
