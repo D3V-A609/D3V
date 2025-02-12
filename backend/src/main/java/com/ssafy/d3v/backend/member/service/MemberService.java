@@ -5,7 +5,7 @@ import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberService {
-    MemberResponse get();
+    MemberResponse get(long memberId);
 
     MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage);
 

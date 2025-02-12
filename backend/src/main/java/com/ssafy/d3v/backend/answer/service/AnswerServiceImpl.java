@@ -2,12 +2,14 @@ package com.ssafy.d3v.backend.answer.service;
 
 import static java.util.stream.Collectors.toList;
 
+import com.ssafy.d3v.backend.answer.dto.AnswerQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.answer.repository.AnswerCustomRepository;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
+import com.ssafy.d3v.backend.common.AccessLevel;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
 import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
@@ -19,10 +21,15 @@ import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionCustomRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
+import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +46,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final FeedbackCustomRepository feedbackCustomRepository;
+    private final QuestionService questionService;
     private final Long memberId = 1L;
 
     @Override
@@ -152,5 +160,34 @@ public class AnswerServiceImpl implements AnswerService {
                 prevPage
         );
         return new PagedResponse<>(answerResponses, paginationInfo);
+    }
+
+    @Override
+    @Transactional
+    public void updateAccessLevel(long answerId, String accessLevel) {
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다. ID: " + answerId));
+
+        answer.updateAccessLevel(AccessLevel.valueOf(accessLevel));
+        answerRepository.saveAndFlush(answer);
+    }
+
+    @Override
+    public PagedResponse<AnswerQuestionResponse> getLastestQuestion(int size, int page, boolean isSolved) {
+        Member member = getMemberById();
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "servedAt"));
+        Page<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
+                isSolved, pageable);
+
+        List<AnswerQuestionResponse> answerQuestionResponses = servedQuestions.stream()
+                .map(ele -> AnswerQuestionResponse.from(
+                        ele.getId(),
+                        ele.getQuestion().getContent(),
+                        ele.getIsSolved(),
+                        questionService.getSkillsByQuestionId(ele.getId())))
+                .collect(toList());
+
+        return new PagedResponse<>(answerQuestionResponses, PaginationInfo.from(servedQuestions));
     }
 }

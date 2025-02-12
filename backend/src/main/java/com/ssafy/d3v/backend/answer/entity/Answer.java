@@ -62,4 +62,8 @@ public class Answer {
         this.createdAt = createdAt;
         this.accessLevel = accessLevel;
     }
+
+    public void updateAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
+    }
 }
