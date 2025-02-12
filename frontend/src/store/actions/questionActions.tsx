@@ -59,3 +59,17 @@ export const fetchTop10Questions = createAsyncThunk(
     }
   }
 )
+
+// 답변한 최신 질문 
+export const fetchMyLastedQuestions = createAsyncThunk(
+  'questioins/latest',
+  async (isSolved: boolean, {rejectWithValue}) => {
+    try{
+      const response = await questionApi.getLatestQuestions(isSolved);
+      return response;
+    }catch(error){
+      console.log('in question action -5: ', error);
+      return rejectWithValue('내 최신 기록을 불러오는데 문제가 발생했습니다.')
+    }
+  }
+)

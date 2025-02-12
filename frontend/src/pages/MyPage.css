@@ -10,3 +10,9 @@
 .my-detail-info-container{
   justify-items: anchor-center;
 }
+
+.my-answer-info-container{
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}

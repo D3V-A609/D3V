@@ -6,9 +6,10 @@ import TechIcon from "../../TechIcon/TechIcon";
 
 interface QuestionSkillProps {
   skill: string;
+  className?: string;
 }
 
-const QuestionSkillTag: React.FC<QuestionSkillProps> = ({ skill }) => {
+const QuestionSkillTag: React.FC<QuestionSkillProps> = ({ skill, className }) => {
   const skillStyle = getSkillStyle(skill.toLowerCase());
 
   // Hex 코드를 rgba로 변환하는 함수
@@ -22,7 +23,7 @@ const QuestionSkillTag: React.FC<QuestionSkillProps> = ({ skill }) => {
 
   return (
     <div
-      className="skill-tag-container"
+      className={`skill-tag-container ${className}`}
       style={{ backgroundColor: hexToRgba(skillStyle.backgroundColor, 0.1) }} // 투명도 10%
     >
       <TechIcon tech={skill.toLowerCase()} className="skill-tag-icon" />

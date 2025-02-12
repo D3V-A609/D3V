@@ -67,3 +67,11 @@ interface QuestionResponse {
   numberOfElements: number;  // 현재 페이지의 요소 수
   empty: boolean;            // 결과가 비어있는지 여부
 }
+
+// my-page 내의 답변 응답용
+interface myQuestion{
+  questionId: number; // 질문 ID
+  content: string;    // 질문 내용
+  isSolved: boolean;  // 풀었는지 여부
+  skillList: string[];// 스킬 리스트트
+}

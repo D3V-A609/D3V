@@ -1,6 +1,6 @@
 // store/slices/questionSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchQuestions, fetchDailyQuestions, fetchQuestionById, fetchTop10Questions } from '../actions/questionActions';
+import { fetchQuestions, fetchDailyQuestions, fetchQuestionById, fetchTop10Questions, fetchMyLastedQuestions } from '../actions/questionActions';
 
 // 질문 상태에 대한 타입 정의
 export interface QuestionState {
@@ -8,6 +8,8 @@ export interface QuestionState {
   questions: Question[];          // 전체 질문 목록
   dailyQuestions: Question[];         // 일일 질문 목록
   top10Questions: Question[];         // Top 10 질문 목록
+  MySolvedQuestions: myQuestion[]; // 내 최신 푼 질문(for my page)
+  MyUnsolvedQuestions: myQuestion[]; // 내 최신 못푼 질문(for my page)
   selectedQuestionId: number | null;  // 현재 선택된 질문의 ID
   loading: boolean;                   // 로딩 상태
   error: string | null;               // 에러 메시지
@@ -31,6 +33,8 @@ export const initialState: QuestionState = {
   questions: [],                      // 빈 질문 목록으로 초기화
   dailyQuestions: [],                // 빈 일일 질문 목록으로 초기화
   top10Questions: [],                // 빈 Top 10 질문 목록으로 초기화
+  MySolvedQuestions: [],          // 내 최신 푼 질문(for my page)
+  MyUnsolvedQuestions: [],       // 내 최신 못푼 질문(for my page)
   selectedQuestionId: null,          // 선택된 질문 없음
   loading: false,                    // 초기 로딩 상태 false
   error: null,                       // 초기 에러 없음
@@ -151,6 +155,24 @@ const questionSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'TOP 10 질문을 불러오는데 실패했습니다.';
         state.top10Questions = [];
+      })
+
+      // 최신 답변에 대한 질문 조회 처리(for my Page)
+      .addCase(fetchMyLastedQuestions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMyLastedQuestions.fulfilled, (state, action) => {
+        state.loading = false;
+        const key = action.meta.arg ? "MySolvedQuestions" : "MyUnsolvedQuestions";
+        state[key] = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchMyLastedQuestions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '내 최신 기록록을 불러오는데 실패했습니다.';
+        const key = action.meta.arg ? "MySolvedQuestions" : "MyUnsolvedQuestions";
+        state[key] = [];
       })
   },
 });
