@@ -105,8 +105,12 @@ public class CommentServiceImpl implements CommentService {
     public void delete(Long articleId, Long commentId) {
         Member member = getMemberById(memberId);
         Comment comment = getComment(commentId, member);
+        Article article = getArticleById(articleId);
 
         commentRepository.delete(comment);
+        articleRepository.save(article.toBuilder()
+                .commentCount(article.getCommentCount() - 1)
+                .build());
     }
 
     private Comment getComment(Long commentId, Member member) {
