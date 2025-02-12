@@ -6,6 +6,8 @@ import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -53,9 +55,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private Long ongoingStreak;
 
     @Column(name = "provider_type")
+    @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private RoleType role;
 
     @Column(name = "favorite_job")

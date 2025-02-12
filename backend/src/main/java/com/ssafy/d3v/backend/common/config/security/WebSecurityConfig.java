@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,18 +40,10 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/ws/**",
-                                "/api/v1/user/password-find/**",
-                                "/api/v1/user/email-check/**",
-                                "/api/v1/user/email-valid/**",
-                                "/api/v1/user",
-                                "/api/v1/user/login",
-                                "/api/v1/user/logout",
-                                "/api/v1/user/token",
+                                "/api/member/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/alarm").permitAll()
                         .requestMatchers("/**").hasAnyRole("USER", "ADMIN"))
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authEndpoint -> authEndpoint
