@@ -29,25 +29,27 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
         </div>
 
         <div className="user-sub-info">
-          <span className="nickname">[<span className='text-blue'>{user.job}</span>] developer</span>
-          <span className="followers">
-            <span className="label">팔로워</span>
-            <span className="value text-blue">{user.follower}</span>
-            <span className="separator">|</span>
-            <span className="label">팔로잉</span>
-            <span className="value text-blue">{user.following}</span>
-          </span>
-        </div>
+          <div className="user-sub-info-left">
+            <span className="nickname">[<span className='text-blue'>{user.job}</span>] developer</span>
+            <p className='text-blue'>
+              <span>📧 </span> {user.email}
+            </p>
+          </div>
+          <div className='user-sub-info-right'>
+            <span className="followers">
+              <span className="label">팔로워</span>
+              <span className="value text-blue">{user.follower}</span>
+              <span className="separator">|</span>
+              <span className="label">팔로잉</span>
+              <span className="value text-blue">{user.following}</span>
+            </span>
 
-        <div className="user-contact-info">
-          <p className='text-blue'>
-            <span>📧 </span> {user.email}
-          </p>
-          <p className='text-blue text-github'>
-            <a href={`https://${user.githubUri}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0072EF' }}>
-              <span>🐙 </span> {user.githubUri}
-            </a>
-          </p>
+            <p className='text-blue text-github'>
+              <a href={`https://${user.githubUri}`} target="_blank" rel="noopener noreferrer" style={{ color: '#0072EF' }}>
+                <span>🐙 </span> {user.githubUri}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
       <div className='update-user-info-btn'>
