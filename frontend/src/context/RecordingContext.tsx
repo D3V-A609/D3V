@@ -8,7 +8,7 @@ interface RecordingContextProps {
   isPaused: boolean; // 일시정지 상태인지를 저장
   isRecordingStopped: boolean; // 녹음이 끝난 것인지를 저장
   audioLevel: number; // audio 비주얼라이저를 위한 변수수
-  mediaBlobUrl: string | undefined;  // 녹음된 오디오 URL
+  mediaBlob: Blob | undefined;  // 녹음된 오디오 Blob 데이터터
   enterRecordingMode: () => void;  // 녹음 모드 시작 함수
   exitRecordingMode: () => void;  // 녹음 모드 종료 함수
   startRecording: () => void;  // 녹음 시작 함수
@@ -26,10 +26,11 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [isRecording, setIsRecording] = useState(false); // 녹음이 진행중인지 여부를 관리
   const [isPaused, setIsPaused] = useState(false);
   const [isRecordingStopped, setIsRecordingStopped] = useState(false);
-  const [mediaBlobUrl, setMediaBlobUrl] = useState<string | undefined>(undefined);  // 녹음된 오디오 URL 저장
+  const [mediaBlob, setMediaBlob] = useState<Blob | undefined>(undefined);  // 녹음된 오디오 URL 저장
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recorderChunksRef = useRef<Blob[]>([]);
 
+  // audio visualizer을 위한 설정
   const [audioLevel, setAudioLevel] = useState(0);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserNodeRef = useRef<AnalyserNode | null>(null);
@@ -60,9 +61,13 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(recorderChunksRef.current, { type: 'audio/webm'});
-        const url = URL.createObjectURL(blob);
-        setMediaBlobUrl(url);
+        if(recorderChunksRef.current.length > 0){
+          const blob = new Blob(recorderChunksRef.current, { type: 'audio/webm'});
+          setMediaBlob(blob);
+        }
+        // const url = URL.createObjectURL(blob);
+        // setMediaBlobUrl(url);
+        
       };
 
       mediaRecorder.start();
@@ -76,16 +81,13 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // 녹음 중지
   const stopRecording = () => {
-    // if(mediaRecorderRef.current){
-      setIsRecording(false);
-      setIsPaused(false);
-      setAudioLevel(0);
-      setIsRecordingStopped(true);
-      // setStartRecordFirst(false);
-      stopAudioAnalysis();
+    setIsRecording(false);
+    setIsPaused(false);
+    setAudioLevel(0);
+    setIsRecordingStopped(true);
+    stopAudioAnalysis();
 
-      mediaRecorderRef.current?.stop();
-    // }
+    mediaRecorderRef.current?.stop();
   }
 
   // 녹음 일시정지/재개 핸들러
@@ -106,9 +108,8 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setIsRecording(false);
       setIsPaused(false);
       setIsRecordingStopped(false);
-      setMediaBlobUrl(undefined);  // 오디오 URL 초기화
+      setMediaBlob(undefined);  // 오디오 URL 초기화
       setStartRecordFirst(false);
-      // setShowButtons(false);  // 버튼 숨기기
       recorderChunksRef.current = [];  // 녹음 데이터 초기화
     }, 10);  // 상태 업데이트를 비동기적으로 반영
   };
@@ -167,7 +168,7 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         isStartRecordFirst,
         isPaused,
         isRecordingStopped,
-        mediaBlobUrl,
+        mediaBlob,
         audioLevel,
         enterRecordingMode,
         exitRecordingMode,
