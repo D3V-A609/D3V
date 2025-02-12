@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.bookmark.entity;
 
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

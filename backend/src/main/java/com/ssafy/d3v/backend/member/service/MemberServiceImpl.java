@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
                 .githubUrl(member.getGithubUrl())
                 .maxStreak(member.getMaxStreak())
                 .ongoingStreak(member.getOngoingStreak())
-                .providerType(member.getProviderType())
+                .providerType(member.getProviderType().name())
                 .createdAt(member.getCreatedAt())
                 .favoriteJob(member.getFavoriteJob())
                 .build();
@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
         if (!profileImage.isEmpty()) {
             s3ImageUploader.deleteImageFromS3(member.getProfileImg());
             String profileImg = s3ImageUploader.upload(profileImage);
-            member.updateProfileImg(profileImg);
+            member.setProfileImg(profileImg);
         }
 
         Member updated = memberRepository.saveAndFlush(member.toBuilder()
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
                 .githubUrl(updated.getGithubUrl())
                 .maxStreak(updated.getMaxStreak())
                 .ongoingStreak(updated.getOngoingStreak())
-                .providerType(updated.getProviderType())
+                .providerType(updated.getProviderType().name())
                 .createdAt(updated.getCreatedAt())
                 .favoriteJob(updated.getFavoriteJob())
                 .build();

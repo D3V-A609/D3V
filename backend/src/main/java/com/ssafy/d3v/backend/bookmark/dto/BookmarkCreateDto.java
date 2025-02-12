@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.bookmark.dto;
 
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.common.validation.annotation.AccessLevelValid;
 import lombok.Getter;
 

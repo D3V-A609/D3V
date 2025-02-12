@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.article.entity;
 
-import com.ssafy.d3v.backend.common.BaseEntity;
+import com.ssafy.d3v.backend.common.util.BaseTimeEntity;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +22,7 @@ import lombok.ToString;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Comment extends BaseEntity {
+public class Comment extends BaseTimeEntity {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
