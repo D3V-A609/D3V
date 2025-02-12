@@ -1,7 +1,6 @@
 // src/store/slices/articleSlice.tsx
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchArticles } from "../actions/articleActions";
-import { fetchArticle } from "../actions/articleActions";
+import { fetchArticles, fetchArticle } from "../actions/articleActions";
 
 export interface Article {
   id: number;

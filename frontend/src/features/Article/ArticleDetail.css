@@ -6,19 +6,13 @@
 /* 상단 네비게이션 버튼 */
 .detail-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* 오른쪽 정렬 */
   align-items: center;
   margin-bottom: 10px;
-  padding-bottom: 20px;
-  border-bottom: 3px solid #d9e9ff; /* 하단 선 */
+  padding-bottom: 5px;
+  border-bottom: 3px solid #d9e9ff;
 }
 
-.nav-buttons {
-  display: flex;
-  gap: 10px; /* 윗글과 아랫글 버튼 간격 */
-}
-
-.nav-button,
 .back-button {
   display: flex;
   align-items: center;
@@ -28,6 +22,9 @@
   font-weight: bold;
   border-radius: 3px;
   height: 35px;
+  width: 70px;
+  background-color: #00518d;
+  color: #ffffff;
 }
 
 .nav-button {
