@@ -16,7 +16,8 @@
   color: #2d3748;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;  
+  gap: 6px;
 }
 
 /* === 헤더 설명 텍스트 === */
@@ -38,47 +39,46 @@
 }
 
 /* === 아이콘 변형 === */
-.search-icon {
-  background-color: var(--color-dark-blue);
-  padding: 5px;
+.search-icon svg{
+  color: var(--color-dark-blue);
+  padding: 3px 0 0 0;
 }
 
-.check-icon {
-  background-color: var(--color-blue);
-  padding: 4px;
+.check-icon svg{
+  color: var(--color-blue);
+  padding: 3px 0 0 0;
 }
 
-.pink-chat-icon {
-  background-color: var(--color-pink);
-  padding: 4px;
+.pink-chat-icon svg{
+  color: var(--color-pink);
+  padding: 3px 0 0 0;
 }
 
-.chat-quote {
-  background-color: var(--color-blue);
-  /* background-color: #008965; */
-  padding: 6px;
+.chat-quote svg{
+  color: var(--color-blue);
+  /* color: #008965; */
+  padding: 3px 0 0 0;
 }
 
-.answer-log {
-  background-color: var(--color-dark-blue);
-  /* background-color: #008965; */
-  padding: 6px;
+.answer-log svg{
+  color: var(--color-dark-blue);
+  /* color: #008965; */
+  padding: 3px 0 0 0;
 }
 
-.other-answer {
-  background-color: var(--color-dark-blue);
-  padding: 4px;
+.other-answer svg{
+  color: var(--color-dark-blue);
+  padding: 3px 0 0 0;
   transform: scaleX(-1);
 }
 
-.youtube-icon {
-  background-color: var(--color-fire);
-  padding: 5px;
+.youtube-icon svg{
+  color: var(--color-fire);
+  padding: 3px 0 0 0;
 }
 
 /* 아이콘 내부 SVG 스타일 */
 .header-icon svg {
   width: 100%;
   height: 100%;
-  color: white;
 }
