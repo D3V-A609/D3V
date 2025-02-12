@@ -26,10 +26,6 @@ import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -173,21 +169,17 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public PagedResponse<AnswerQuestionResponse> getLastestQuestion(int size, int page, boolean isSolved) {
+    public List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved) {
         Member member = getMemberById();
+        List<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
+                isSolved);
 
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "servedAt"));
-        Page<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
-                isSolved, pageable);
-
-        List<AnswerQuestionResponse> answerQuestionResponses = servedQuestions.stream()
+        return servedQuestions.stream()
                 .map(ele -> AnswerQuestionResponse.from(
                         ele.getId(),
                         ele.getQuestion().getContent(),
                         ele.getIsSolved(),
                         questionService.getSkillsByQuestionId(ele.getId())))
                 .collect(toList());
-
-        return new PagedResponse<>(answerQuestionResponses, PaginationInfo.from(servedQuestions));
     }
 }

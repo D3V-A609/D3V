@@ -9,9 +9,6 @@ import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,7 +26,7 @@ public class ServedQuestionCustomRepository {
         return (int) affectedRows;
     }
 
-    public Page<ServedQuestion> findServedQuestions(Long memberId, Boolean isSolved, Pageable pageable) {
+    public List<ServedQuestion> findServedQuestions(Long memberId, Boolean isSolved) {
         BooleanBuilder whereClause = new BooleanBuilder();
 
         whereClause.and(servedQuestion.member.id.eq(memberId));
@@ -38,21 +35,10 @@ public class ServedQuestionCustomRepository {
             whereClause.and(servedQuestion.isSolved.eq(isSolved));
         }
 
-        List<ServedQuestion> servedQuestionList = queryFactory
+        return queryFactory
                 .selectFrom(servedQuestion)
                 .where(whereClause)
                 .orderBy(servedQuestion.servedAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
-
-        long totalRecords = queryFactory
-                .select(servedQuestion.count())
-                .from(servedQuestion)
-                .where(whereClause)
-                .fetchOne();
-
-        return new PageImpl<>(servedQuestionList, pageable, totalRecords);
     }
-
 }
