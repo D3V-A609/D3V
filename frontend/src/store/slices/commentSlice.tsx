@@ -1,6 +1,6 @@
 // src/store/slices/commentSlice.tsx
-import { createSlice } from "@reduxjs/toolkit";
-import { fetchComments } from "../actions/commentActions";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchComments, createComment } from "../actions/commentActions";
 
 export interface Comment {
   id: number;
@@ -53,6 +53,19 @@ const commentSlice = createSlice({
       .addCase(fetchComments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch comments.";
+      })
+      .addCase(createComment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createComment.fulfilled, (state, action: PayloadAction<Comment>) => {
+        state.loading = false;
+        state.comments.unshift(action.payload);
+        state.pagination.totalRecords += 1;
+      })
+      .addCase(createComment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to create comment.";
       });
   },
 });

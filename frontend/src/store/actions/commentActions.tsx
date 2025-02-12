@@ -10,3 +10,12 @@ export const fetchComments = createAsyncThunk(
     return response.data; // API 응답 데이터 반환
   }
 );
+
+// 댓글 작성 액션
+export const createComment = createAsyncThunk(
+  "comments/createComment",
+  async ({ articleId, content }: { articleId: number; content: string }) => {
+    const response = await commentApi.createComment(articleId, content);
+    return response.data;
+  }
+);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "../../store/hooks/useRedux";
-import axios from "axios";
+import { createComment } from "../../store/actions/commentActions";
 import "./CommentInput.css";
 
 interface CommentInputProps {
@@ -20,11 +20,8 @@ const CommentInput: React.FC<CommentInputProps> = ({ articleId }) => {
     }
 
     try {
-      const response = await axios.post(`/article/${articleId}/comment`, { content });
-      console.log("댓글 작성 성공:", response.data);
-
-      // 댓글 목록 갱신을 위해 필요한 액션을 디스패치하거나 상태를 갱신합니다.
-      dispatch({ type: "comments/fetchComments", payload: { articleId } });
+      await dispatch(createComment({ articleId, content })).unwrap();
+      console.log("댓글 작성 성공");
 
       // 입력 필드 초기화
       setContent("");
