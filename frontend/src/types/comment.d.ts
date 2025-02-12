@@ -1,4 +1,4 @@
-declare type Comment = {
+type Comment = {
   commentId: number;
   answerId: number;
   memberId: number;

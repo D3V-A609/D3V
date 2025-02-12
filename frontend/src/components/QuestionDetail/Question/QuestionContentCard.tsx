@@ -6,7 +6,7 @@ import { RiBookmarkLine } from "react-icons/ri";
 import QuestionSkillTag from './QuestionSkillTag';
 
 interface QuestionContentCardProps {
-  question: QuestionDetail;
+  question: Question;
   isToday: boolean;
 }
 const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isToday}) => {
@@ -35,7 +35,7 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
         {question.content}
       </div>
       <div className="skill-tags-group">
-        {question.skillList?.map(skill => (
+        {question.skillList?.map((skill: string) => (
           <QuestionSkillTag skill={skill} key={skill} />
         ))}
       </div>

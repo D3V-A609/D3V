@@ -9,7 +9,8 @@ export const sendVoiceRecording = createAsyncThunk(
       // formData.append('speech', mediaBlob);
       const response = await voiceApi.sendVoiceRecording(mediaBlob);
       return response;
-    } catch (_) {
+    } catch (error) {
+      console.log('in voice action: ', error);
       return rejectWithValue('Failed to transform the voice to Text.');
     }
   }

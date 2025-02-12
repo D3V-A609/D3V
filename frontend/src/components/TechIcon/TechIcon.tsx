@@ -1,7 +1,7 @@
 // components/TechIcon/TechIcon.tsx
 import {
   FaReact, FaHtml5, FaJsSquare, FaJava, FaPython, FaDocker, FaNode,
-  FaVuejs, FaAngular, FaAws, FaCloud, FaChartBar, FaUnity,
+  FaVuejs, FaAngular, FaAws, FaCloud, FaUnity,
   FaLock, FaEthereum, FaCode, FaCss3Alt, FaSass, FaRProject, FaRobot,
   FaGitAlt
 } from "react-icons/fa";
