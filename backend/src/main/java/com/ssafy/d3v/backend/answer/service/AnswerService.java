@@ -18,4 +18,5 @@ public interface AnswerService {
 
     void updateAccessLevel(long answerId, String accessLevel);
 
+    PagedResponse<AnswerQuestionResponse> getLastestQuestion(int size, int page, boolean isSolved);
 }

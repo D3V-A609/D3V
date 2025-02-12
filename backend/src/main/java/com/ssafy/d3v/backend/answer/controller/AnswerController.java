@@ -63,4 +63,12 @@ public class AnswerController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "최신 답변에 대한 질문 조회")
+    @GetMapping("/lastest_question")
+    public ResponseEntity<PagedResponse<AnswerQuestionResponse>> getLastestQuestion(
+            @RequestParam(value = "size", defaultValue = "15") int size,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "is_solved", defaultValue = "true") boolean isSolved) {
+        return ResponseEntity.ok().body(answerService.getLastestQuestion(size, page, isSolved));
+    }
 }

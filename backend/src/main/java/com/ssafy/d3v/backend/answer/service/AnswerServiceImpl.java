@@ -172,4 +172,22 @@ public class AnswerServiceImpl implements AnswerService {
         answerRepository.saveAndFlush(answer);
     }
 
+    @Override
+    public PagedResponse<AnswerQuestionResponse> getLastestQuestion(int size, int page, boolean isSolved) {
+        Member member = getMemberById();
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "servedAt"));
+        Page<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
+                isSolved, pageable);
+
+        List<AnswerQuestionResponse> answerQuestionResponses = servedQuestions.stream()
+                .map(ele -> AnswerQuestionResponse.from(
+                        ele.getId(),
+                        ele.getQuestion().getContent(),
+                        ele.getIsSolved(),
+                        questionService.getSkillsByQuestionId(ele.getId())))
+                .collect(toList());
+
+        return new PagedResponse<>(answerQuestionResponses, PaginationInfo.from(servedQuestions));
+    }
 }
