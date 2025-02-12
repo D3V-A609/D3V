@@ -7,7 +7,8 @@ const dummyUsers = [
     ongoingStreak: 3,
     provider_type: "LOCAL",
     status: "ACTIVE",
-    jobField: "Back-end"
+    jobField: "Back-end",
+    profileImg: ""
   },
   {
     memberId: 2,
@@ -17,7 +18,8 @@ const dummyUsers = [
     ongoingStreak: 4,
     provider_type: "LOCAL",
     status: "ACTIVE",
-    jobField: "Front-end"
+    jobField: "Front-end",
+    profileImg: ""
   },
   {
     memberId: 3,
@@ -27,7 +29,8 @@ const dummyUsers = [
     ongoingStreak: 3,
     provider_type: "LOCAL",
     status: "ACTIVE",
-    jobField: "Back-end"
+    jobField: "Back-end",
+    profileImg: ""
   },
   {
     memberId: 4,
@@ -37,7 +40,8 @@ const dummyUsers = [
     ongoingStreak: 5,
     provider_type: "LOCAL",
     status: "ACTIVE",
-    jobField: "Front-end"
+    jobField: "Front-end",
+    profileImg: ""
   },
   {
     memberId: 5,
@@ -47,7 +51,8 @@ const dummyUsers = [
     ongoingStreak: 5,
     provider_type: "LOCAL",
     status: "ACTIVE",
-    jobField: "Back-end"
+    jobField: "Back-end",
+    profileImg: ""
   },
 ];
 export default dummyUsers;

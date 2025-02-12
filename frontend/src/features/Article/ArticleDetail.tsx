@@ -64,7 +64,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
               <div className="left-section">
                 {member ? (
                   <Profile 
-                    profileImg={member.profileImg} 
+                    profileImg={member?.profileImg} 
                     jobField={member.jobField} 
                     nickname={member.nickname} 
                   />
