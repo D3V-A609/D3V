@@ -61,7 +61,7 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
   // 답변 등록 버튼 클릭 시 실행되는 함수
   const handleRegistAnswer = async () => {
     const content = answerContent.trim();  // 공백 제거한 답변 내용
-    if(answerContent === null || answerContent === '' || setIsIDK(true) ) setAnswerText('모르겠어요'); // 모르겠어요 체크 & 공백일 경우 "모르겠어요"
+    if(answerContent === null || answerContent === '' || isIDK === true ) setAnswerText('모르겠어요'); // 모르겠어요 체크 & 공백일 경우 "모르겠어요"
 
     // 서버에 전송할 답변 데이터 생성
     const answerPayload = {
@@ -69,6 +69,7 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
       content: content,
       accessLevel: selectedPublicOption,
       questionId: questionId,
+      isSolved: !isIDK,
     };
 
     // 풀었는지 여부를 서버에 전송하기 위한 데이터
