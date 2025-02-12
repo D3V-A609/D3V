@@ -13,9 +13,8 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com", "http://localhost:5173",
-                                "http://d3vtest.s3-website.ap-northeast-2.amazonaws.com:5173")
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowCredentials(true);
             }
