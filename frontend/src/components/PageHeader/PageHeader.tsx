@@ -32,15 +32,15 @@ const PageHeader: React.FC<PageHeaderProps> = ({
 }) => {
   return (
     <div className="page-header">
-      {/* 설명이 있는 경우에만 description 섹션 렌더링 */}
       {description && (
-        <p className="header-description">
-          {/* 아이콘이 있는 경우에만 아이콘 렌더링 */}
-          {icon && <span className={`header-icon ${iconStyle || ''}`}>{icon}</span>}
-          {description}
-        </p>
+        <p className="header-description">{description}</p>
       )}
-      <h1 className="header-title">{title}</h1>
+      <h1 className="header-title">
+        {icon && (
+          <span className={`header-icon ${iconStyle || ''}`}>{icon}</span>
+        )}
+        <span className="title-text">{title}</span>
+      </h1>
     </div>
   );
 };

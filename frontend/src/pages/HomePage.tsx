@@ -59,7 +59,7 @@ const HomePage: React.FC = () => {
         title="오늘의 면접 질문"
         description="D3V's pick"
         icon={<BsCheckLg />}
-        iconStyle="yellow-check-icon"
+        iconStyle="check-icon"
       />
       <section className="today-questions">
         <div className="question-cards">

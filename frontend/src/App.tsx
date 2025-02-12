@@ -11,7 +11,8 @@ import VideoPage from './pages/VideoPage.tsx';
 import QuestionDetailPage from './pages/QuestionDetailPage.tsx';
 
 import './App.css';
-import './styles/TestStyle.css'
+import './styles/TextStyle.css';
+
 import { RecordingProvider } from './context/RecordingContext.tsx';
 import { TimerProvider } from './context/TimerContext.tsx';
 
