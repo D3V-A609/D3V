@@ -11,6 +11,16 @@ export const commentApi = {
   createComment: async (articleId: number, content: string) => {
     return await api.post(`/article/${articleId}/comment`, { content });
   },
+
+  // 댓글 수정 API
+  updateComment: async (commentId: number, content: string) => {
+    return await api.put(`/comment/${commentId}`, { content });
+  },
+
+  // 댓글 삭제 API
+  deleteComment: async (commentId: number) => {
+    return await api.delete(`/comment/${commentId}`);
+  },
 };
 
 export default commentApi;

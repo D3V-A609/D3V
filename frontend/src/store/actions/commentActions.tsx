@@ -19,3 +19,19 @@ export const createComment = createAsyncThunk(
     return response.data;
   }
 );
+
+export const updateComment = createAsyncThunk(
+  "comments/updateComment",
+  async ({ commentId, content }: { commentId: number; content: string }) => {
+    const response = await commentApi.updateComment(commentId, content);
+    return response.data;
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "comments/deleteComment",
+  async (commentId: number) => {
+    await commentApi.deleteComment(commentId);
+    return commentId;
+  }
+);
