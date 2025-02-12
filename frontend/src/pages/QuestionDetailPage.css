@@ -134,23 +134,23 @@
 
 /* 답변 입력 부분 => AnswerInputComp style 정의 */
 .answer-input-container {
-  padding: 1rem 1em;
+  padding: 2rem 0;
 }
 
-.answer-input-container .answer-title {
+/* .answer-input-container .answer-title {
   justify-self: start;
   font-weight: bolder;
   font-size: 24px;
   align-self: center;
-}
+} */
 
-.answer-input-container .answer-subtitle {
+/* .answer-input-container .answer-subtitle {
   padding-top: 0.8rem;
   justify-self: start;
   text-align: left;
   font-weight: light;
   font-size: 12px;
-}
+} */
 
 .anwer-input-container__input {
   padding-top: 1rem;

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FcViewDetails } from "react-icons/fc";
+import { BsChatSquareQuote } from "react-icons/bs";
 import "./MyAnswer.css";
 import { useAppSelector } from '../../../../store/hooks/useRedux';
 import { AnswerState } from '../../../../store/slices/answerSlice';
+import PageHeader from '../../../PageHeader/PageHeader';
 
 const MyAnswer: React.FC = () => {
   const { myAnswerArr } = useAppSelector(state => state.answers as AnswerState);
@@ -14,10 +15,16 @@ const MyAnswer: React.FC = () => {
 
   return (
     <div className="my-answer-container">
-      <div className="answer-title">
+      <PageHeader 
+        title="내 답변"
+        // description="D3V's pick"
+        icon={<BsChatSquareQuote />}
+        iconStyle="chat-quote"
+      />
+      {/* <div className="answer-title">
         <FcViewDetails className="study-icon" size={24} />
           내 답변
-      </div>
+      </div> */}
       <div className="my-answer-content">
         <div className="answer-label">A.</div>
         <div className="answer-text">{recentAnswer.content}</div>

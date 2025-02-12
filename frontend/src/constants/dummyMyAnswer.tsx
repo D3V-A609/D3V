@@ -1,4 +1,4 @@
-const dummyMyAnswer: Answer = {
+const dummyMyAnswer = {
   questionId: 1,
   memberId: 1,
   answerId: 1,

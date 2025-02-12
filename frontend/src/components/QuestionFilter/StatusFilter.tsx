@@ -2,20 +2,11 @@
 import React from "react";
 import "./StatusFilter.css";
 
-/**
- * StatusFilter 컴포넌트의 props 인터페이스
- * @param statusFilter 현재 선택된 필터 상태
- * @param onStatusFilterChange 필터 변경 시 호출될 콜백 함수
- */
 interface StatusFilterProps {
-  statusFilter: "all" | "solved" | "unsolved";
-  onStatusFilterChange: (status: "all" | "solved" | "unsolved") => void;
+  statusFilter: QuestionStatus | "all";
+  onStatusFilterChange: (status: QuestionStatus | "all") => void;
 }
 
-/**
- * 문제 상태 필터 컴포넌트
- * 전체/푼 문제/안 푼 문제를 필터링하는 기능 제공
- */
 const StatusFilter: React.FC<StatusFilterProps> = ({
   statusFilter,
   onStatusFilterChange,
@@ -34,14 +25,21 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
         className={statusFilter === "solved" ? "active" : ""}
         onClick={() => onStatusFilterChange("solved")}
       >
-        푼 문제
+        풀었음
       </span>
       <span className="separator">•</span>
       <span
-        className={statusFilter === "unsolved" ? "active" : ""}
-        onClick={() => onStatusFilterChange("unsolved")}
+        className={statusFilter === "notSolved" ? "active" : ""}
+        onClick={() => onStatusFilterChange("notSolved")}
       >
-        안 푼 문제
+        안 풀었음
+      </span>
+      <span className="separator">•</span>
+      <span
+        className={statusFilter === "unSolved" ? "active" : ""}
+        onClick={() => onStatusFilterChange("unSolved")}
+      >
+        모르겠어요 문제
       </span>
     </div>
   );

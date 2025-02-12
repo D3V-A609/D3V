@@ -8,10 +8,11 @@ import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard
 import Top10QuestionCard from '../components/Top10/Top10QuestionCard';
 import Top10Filter from '../components/Top10/Top10Filter';
 import PageHeader from '../components/PageHeader/PageHeader';
-import { BsCheckLg, BsTrophy} from 'react-icons/bs';
+import { BsFillTrophyFill } from "react-icons/bs";
 import './HomePage.css';
 import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
+import { BsFillCalendarCheckFill } from "react-icons/bs";
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -58,8 +59,8 @@ const HomePage: React.FC = () => {
       <PageHeader 
         title="오늘의 면접 질문"
         description="D3V's pick"
-        icon={<BsCheckLg />}
-        iconStyle="yellow-check-icon"
+        icon={<BsFillCalendarCheckFill />}
+        iconStyle="check-icon"
       />
       <section className="today-questions">
         <div className="question-cards">
@@ -78,11 +79,11 @@ const HomePage: React.FC = () => {
       {/* Top 10 섹션 */}
       <section className="top10-section">
         <div className="section-header">
-          <div className="title-wrapper">
-            <BsTrophy className="gold-trophy-icon" />
-            <div className="job-badge">{selectedJob[0]}</div>
-            <h2>주간 TOP 10</h2>
-          </div>
+          <PageHeader           
+            title={`${selectedJob[0]} 주간 TOP 10`}
+            icon={<BsFillTrophyFill />}
+            iconStyle="trophy-icon"
+          />
         </div>
         <Top10Filter jobFilter={selectedJob} onJobFilterChange={setSelectedJob} />
         <button
