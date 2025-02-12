@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { fetchArticle } from "../../store/actions/articleActions";
-import CommentInput from "../../components/CommentInput/CommentInput"; // 재사용 가능한 댓글 입력 컴포넌트
+import CommentInput from "../Comment/CommentInput"; // 재사용 가능한 댓글 입력 컴포넌트
 import Profile from "../../components/Profile/Profile";
 import dummyUsers from "../../constants/dummyUsers";
 import CommentList from "../Comment/CommentList";

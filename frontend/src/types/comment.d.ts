@@ -4,4 +4,5 @@ declare type Comment = {
   memberId: number;
   content: string;
   createdAt: string;
+  updatedAt: string;
 };

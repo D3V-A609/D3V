@@ -7,8 +7,8 @@ import rootReducer from './reducers';
 import persistConfig from './persistConfig';
 
 // persistReducer로 rootReducer를 감싸기
-// persistReducer로 감쌀 때 Partial 타입 허용 => 타입을 허용하지 않게 되면 persistConfig와 rootReducer의 타입이 같지 않아 에러 (rootReducer가 undefined를 포함하게 되면..)
-const persistedReducer = persistReducer<Partial<ReturnType<typeof rootReducer>>>(persistConfig, rootReducer) ;
+// persistReducer로 감쌀 때 rootReducer로 return type 지정해서 typescript가 reducer의 전체 상태 구조를 정확히 추론할 수 있도록 설정
+const persistedReducer = persistReducer<ReturnType<typeof rootReducer>>(persistConfig, rootReducer) ;
 
 
 export const store = configureStore({
