@@ -34,4 +34,23 @@ public class HistoryServiceImpl implements HistoryService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void createDailyHistory() {
+        LocalDate today = LocalDate.now();
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            History history = History.builder()
+                    .member(member)
+                    .date(today)
+                    .count(0)
+                    .build();
+
+            log.info("history: {}", history.toString());
+            historyRepository.save(history);
+        }
+    }
 }

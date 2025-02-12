@@ -6,4 +6,5 @@ import java.util.List;
 public interface HistoryService {
     List<HistoryResponse> getHistory(Long memberId, int year);
 
+    void createDailyHistory();
 }
