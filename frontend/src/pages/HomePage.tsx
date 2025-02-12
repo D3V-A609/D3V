@@ -8,10 +8,11 @@ import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard
 import Top10QuestionCard from '../components/Top10/Top10QuestionCard';
 import Top10Filter from '../components/Top10/Top10Filter';
 import PageHeader from '../components/PageHeader/PageHeader';
-import { BsCheckLg, BsTrophy} from 'react-icons/bs';
+import { BsTrophy} from 'react-icons/bs';
 import './HomePage.css';
 import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
+import { BsFillCalendarCheckFill } from "react-icons/bs";
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -58,7 +59,7 @@ const HomePage: React.FC = () => {
       <PageHeader 
         title="오늘의 면접 질문"
         description="D3V's pick"
-        icon={<BsCheckLg />}
+        icon={<BsFillCalendarCheckFill />}
         iconStyle="check-icon"
       />
       <section className="today-questions">

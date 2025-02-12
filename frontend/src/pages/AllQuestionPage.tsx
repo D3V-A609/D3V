@@ -10,8 +10,8 @@ import JobSkillFilter from '../components/QuestionFilter/JobSkillFilter';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import Pagination from '../components/Pagination/Pagination';
 import SearchBar from '../components/SearchBar/SearchBar';
-import { BiSearch } from "react-icons/bi";
 import "./AllQuestionPage.css";
+import { ImFolderOpen } from 'react-icons/im';
 
 /**
  * 전체 질문 목록을 표시하는 페이지 컴포넌트
@@ -143,7 +143,7 @@ const AllQuestionPage:React.FC = () => {
       <PageHeader 
         title="면접 질문 모음"
         description="원하는 직무와 기술별로 모든 면접 질문을 검색해보세요!"
-        icon={<BiSearch />}
+        icon={<ImFolderOpen />}
         iconStyle="search-icon"
       />
 
