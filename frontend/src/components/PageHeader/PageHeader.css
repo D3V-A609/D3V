@@ -49,6 +49,11 @@
   padding: 1px 0 0 0;
 }
 
+.trophy-icon svg{
+  color: var(--color-yellow);
+  padding: 1px 0 0 0;
+}
+
 .pink-chat-icon svg{
   color: var(--color-pink);
   padding: 3px 0 0 0;
