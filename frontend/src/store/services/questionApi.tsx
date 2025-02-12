@@ -35,7 +35,7 @@ export const questionApi = {
     }
   },
 
-  // 개별 질문 조회 API
+  /** 개별 질문 조회 API */
   getQuestionById: (id: number) => {
     try{
       return api.get<Question>(`/question/${id}`)
@@ -57,7 +57,18 @@ export const questionApi = {
       return api.get<Question[]>(`/question/top10?${queryParams.toString()}`);
     }catch(error){
       console.log('in question api error-3: ', error);
-      throw new Error('top 10 질문을 불러오는데 에러가 발생했습니다.')
+      throw new Error('top 10 질문을 불러오는데 문재재가 발생했습니다.')
+    }
+  },
+
+  /** 답변한 최신 질문 불러오기 */
+  getLatestQuestions: async(isSolved:  boolean) => {
+    try{
+      const response = await api.get<myQuestion[]>(`/lastest_question?is_solved=${isSolved}`);
+      return response.data;
+    }catch(error){
+      console.log('in question api error-4: ', error);
+      throw new Error('내 최신 기록을 불러오는데 문제가 발생했습니다.')
     }
   }
   
