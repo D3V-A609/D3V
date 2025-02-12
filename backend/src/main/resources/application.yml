@@ -30,6 +30,10 @@ cloud:
       static: ${REGION}
     stack:
       auto: false
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web.cors: DEBUG
 ---
 spring:
   config:
