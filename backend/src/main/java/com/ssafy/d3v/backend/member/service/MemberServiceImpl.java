@@ -20,8 +20,8 @@ public class MemberServiceImpl implements MemberService {
     private final Long memberId = 1L;
 
     @Override
-    public MemberResponse get() {
-        Member member = getMember();
+    public MemberResponse get(long memberId) {
+        Member member = getMember(memberId);
         return MemberResponse.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage) {
-        Member member = getMember();
+        Member member = getMember(memberId);
 
         if (!profileImage.isEmpty()) {
             s3ImageUploader.deleteImageFromS3(member.getProfileImg());
@@ -71,12 +71,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void delete() {
-        Member member = getMember();
+        Member member = getMember(memberId);
         member.delete();
         memberRepository.saveAndFlush(member);
     }
 
-    private Member getMember() {
+    private Member getMember(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalStateException("해당 회원이 존재하지 않습니다. 회원 ID: " + memberId));
     }
