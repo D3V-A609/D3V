@@ -4,6 +4,6 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record CommentResponse(long id, long articleId, String content,
+public record CommentResponse(long id, long articleId, long memberId, String content,
                               LocalDateTime createdAt, LocalDateTime updatedAt) {
 }

@@ -92,6 +92,7 @@ public class QuestionService {
 //        }
 //        return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
 //    }
+    @Transactional
     public List<QuestionDto> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시 코드, 실제로는 토큰에서 가져오도록 수정 필요
         Member member = memberRepository.findById(memberId)
