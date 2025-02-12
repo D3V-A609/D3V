@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +75,7 @@ public class QuestionController {
 //        return ResponseEntity.ok(questionResponsesPage);
 //    }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
@@ -84,6 +86,7 @@ public class QuestionController {
     }
 
     // /api/question/top10?month={month}&job={job}
+    @CrossOrigin(origins = "http://d3vtest.s3-website.ap-northeast-2.amazonaws.com")
     @GetMapping("/top10")
     @Operation(summary = "월간 TOP10 질문을 조회합니다", description = "선택한 직무에 대한 저번 달의 답변수 TOP10 질문을 조회합니다.")
     public ResponseEntity<List<QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
