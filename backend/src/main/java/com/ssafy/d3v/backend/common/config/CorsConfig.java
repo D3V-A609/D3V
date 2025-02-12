@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.common.config;
 
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,17 +14,13 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 프론트엔드 도메인
-        configuration.setAllowedOrigins(List.of("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com"));
-        // 허용할 HTTP 메서드
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "PUT", "DELETE"));
-        // 허용할 요청 헤더
-        configuration.setAllowedHeaders(List.of("Content-Type", "Authorization"));
-        // 인증 정보를 포함한 요청 허용
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:5173", "http://d3vtest.s3-website.ap-northeast-2.amazonaws.com/"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // 모든 경로에 대해 설정 적용
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
