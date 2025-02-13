@@ -4,6 +4,7 @@ import com.ssafy.d3v.backend.answer.dto.AnswerQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
+import com.ssafy.d3v.backend.answer.dto.TextAnswerResponse;
 import com.ssafy.d3v.backend.answer.service.AnswerService;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -68,5 +70,11 @@ public class AnswerController {
     public ResponseEntity<List<AnswerQuestionResponse>> getLastestQuestion(
             @RequestParam(value = "is_solved", defaultValue = "true") boolean isSolved) {
         return ResponseEntity.ok().body(answerService.getLastestQuestion(isSolved));
+    }
+
+    @Operation(summary = "음성 답변 텍스트로 변환")
+    @PostMapping(value = "/speech/text", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<TextAnswerResponse> convertSpeechToText(@RequestBody byte[] speech) {
+        return ResponseEntity.ok().body(answerService.convertSpeechToText(speech));
     }
 }

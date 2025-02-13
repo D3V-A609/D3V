@@ -44,7 +44,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public PagedResponse<ArticleResponse> get(String categoryName, String keyword, int page, int size,
-                                              String sort) {
+                                              String sort, String order) {
         Category category = null;
         if (categoryName != null) {
             category = categoryRepository.findByName(CategoryName.valueOf(categoryName))
@@ -52,10 +52,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         Sort sortBy = switch (sort.toUpperCase()) {
-            case LATEST_SORT -> Sort.by(Sort.Direction.DESC, "createdAt");
-            case VIEW_SORT -> Sort.by(Sort.Direction.DESC, "view");
-            case COMMENT_SORT -> Sort.by(Sort.Direction.DESC, "commentCount");
-            default -> Sort.by(Sort.Direction.DESC, "createdAt");
+            case LATEST_SORT -> Sort.by(Sort.Direction.valueOf(order), "createdAt");
+            case VIEW_SORT -> Sort.by(Sort.Direction.valueOf(order), "view");
+            case COMMENT_SORT -> Sort.by(Sort.Direction.valueOf(order), "commentCount");
+            default -> Sort.by(Sort.Direction.valueOf(order), "createdAt");
         };
 
         Pageable pageable = PageRequest.of(page - 1, size, sortBy);
@@ -114,9 +114,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleDetailResponse getDetail(long articleId) {
         Article article = getArticle(articleId);
-        Article updated = articleRepository.save(
+        Article updated = articleRepository.saveAndFlush(
                 article.toBuilder()
                         .view(article.getView() + 1)
                         .build());
