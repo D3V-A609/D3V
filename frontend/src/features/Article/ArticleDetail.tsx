@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { fetchArticle, deleteArticle } from "../../store/actions/articleActions";
 import CommentInput from "../Comment/CommentInput";
@@ -25,6 +25,7 @@ interface ArticleDetailProps {
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick }) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { currentArticle, loading, error } = useAppSelector(
     (state) => state.articles || { currentArticle: null, loading: false, error: null }
@@ -48,12 +49,22 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
     setIsEditing(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
+    if (isDeleting) return; // 이미 삭제 중이면 실행하지 않음
     if (currentArticle && window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
-      await dispatch(deleteArticle(currentArticle.id));
-      onBackClick();
+      try {
+        setIsDeleting(true); // 삭제 중 상태 설정
+        await dispatch(deleteArticle(currentArticle.id)).unwrap();
+        alert("게시글이 성공적으로 삭제되었습니다.");
+        onBackClick(); // 게시글 목록으로 이동
+      } catch (error) {
+        console.error("게시글 삭제 중 오류 발생:", error);
+        alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        setIsDeleting(false); // 삭제 완료 후 상태 초기화
+      }
     }
-  };
+  }, [currentArticle, isDeleting, dispatch, onBackClick]);
 
   return (
     <div className="article-detail">
@@ -62,7 +73,9 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
           {isAuthor && !isEditing && (
             <>
               <button className="edit-button" onClick={handleEdit}>수정</button>
-              <button className="delete-button" onClick={handleDelete}>삭제</button>
+              <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting ? "삭제 중..." : "삭제"}
+              </button>
             </>
           )}
         </div>
