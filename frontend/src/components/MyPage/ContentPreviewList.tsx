@@ -13,7 +13,7 @@ interface ContentPreviewProps {
 
 const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, className}) => {
 
-  const filledContents = contents.length < 5
+  const filledContents = (contents.length < 5 && contents.length > 0)
   ? contents.concat(Array(5 - contents.length).fill({ content: " " })) // ✅ 빈 값 추가
   : contents;
 
