@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Chrono } from 'react-chrono';
-// import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 import PageHeader from '../../components/PageHeader/PageHeader';
 
 import { GrHistory } from "react-icons/gr";
@@ -43,6 +42,16 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
           todayFlag = true; // 플래그를 설정하여 이후 오늘 날짜는 빈 문자열로 표시
         }
       }
+
+      // 마지막 5글자가 "모르겠어요" 인지 확인
+      const content = record.content.trim();
+      const hasUnknownText = content.endsWith('IDK');
+
+      // "IDK"가 포함된다면 subtitle에 추가
+      const subtitle = hasUnknownText ? "⍰ 모르겠어요" : "";
+
+      // "IDK" 문자열 제거
+      const cleanContent = hasUnknownText ? content.slice(0, -3).trim() : content;
 
       // Chrono에서 사용할 데이터 구조로 변환
       return {
