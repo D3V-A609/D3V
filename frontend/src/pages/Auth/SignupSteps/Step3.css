@@ -1,3 +1,5 @@
+/* step3.css */
+
 .form-group select {
   width: 100%;
   padding: 0.8rem;
@@ -6,6 +8,11 @@
   font-size: 1rem;
   background-color: white;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 1em;
 }
 
 .form-group select:focus {
@@ -15,7 +22,7 @@
 
 .submit-button {
   width: 100%;
-  padding: 1rem;
+  height: 56px;
   background-color: var(--color-blue);
   color: white;
   border: none;
@@ -23,7 +30,10 @@
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 1rem;
+  display: flex;          
+  justify-content: center; 
+  align-items: center;    
 }
 
 .submit-button:hover {

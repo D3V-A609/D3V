@@ -19,9 +19,14 @@ const AuthLayout: React.FC = () => {
     }
   };
 
-  return (
+  const getBackgroundClass = () => {
+    return location.pathname.includes('/auth/signup') ? 'auth-left signup-bg' : 'auth-left';
+  };
+  
+
+return (
     <div className="auth-page">
-      <div className="auth-left">
+      <div className={getBackgroundClass()}>
         <div className="logo">
           <img src={logoImg} alt="Logo" />
         </div>
