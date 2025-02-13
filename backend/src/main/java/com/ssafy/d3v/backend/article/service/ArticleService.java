@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ArticleService {
-    PagedResponse<ArticleResponse> get(String category, String keyword, int page, int size, String sort);
+    PagedResponse<ArticleResponse> get(String category, String keyword, int page, int size, String sort, String order);
 
     ArticleDetailResponse create(long categoryId, String title, String content, List<MultipartFile> image);
 
