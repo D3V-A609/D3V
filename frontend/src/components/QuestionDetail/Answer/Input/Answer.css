@@ -45,6 +45,11 @@ display: none;
   padding-left: 20px;
 }
 
+.TitleWrapper-sc-13izrht-0.hnoVec.timeline-item-title.active.rc-title{
+  background-color: white;;
+  color: #ff9374;
+}
+
 /* 베스트 답변 컨테이너 */
 .best-answer-container{
   padding: 1rem 0 3rem 0;

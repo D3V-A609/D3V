@@ -58,8 +58,8 @@ export const answerApi = {
   registAnswer: (payload:{ questionId:number; memberId: number; content: string; accessLevel: string; isSolved: boolean 
   }) => {
     try{
-      const {questionId, ...bodyPayload} = payload;
-      return api.post<Answer[]>(`/question/${questionId}/answer`, bodyPayload)
+      // const {questionId, ...bodyPayload} = payload;
+      return api.post<Answer[]>(`/question/${payload.questionId}/answer`, payload)
     }catch(error){
       console.log('in answer api error-6: ', error);
       throw new Error('답변을 등록하는데 문제가 발생했습니다.')

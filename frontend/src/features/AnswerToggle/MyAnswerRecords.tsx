@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Chrono } from 'react-chrono';
-// import dummyMyAnswerRecords from '../../constants/dummyMyAnswerRecords';
 import PageHeader from '../../components/PageHeader/PageHeader';
 
 import { GrHistory } from "react-icons/gr";
@@ -44,11 +43,22 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
         }
       }
 
+      // 마지막 5글자가 "모르겠어요" 인지 확인
+      const content = record.content.trim();
+      const hasUnknownText = content.endsWith('IDK');
+
+      // "IDK"가 포함된다면 subtitle에 추가
+      const subtitle = hasUnknownText ? "⍰ 모르겠어요" : "";
+
+      // "IDK" 문자열 제거
+      const cleanContent = hasUnknownText ? content.slice(0, -3).trim() : content;
+
       // Chrono에서 사용할 데이터 구조로 변환
       return {
         title: title, // "Today" 또는 빈 문자열
         cardTitle: formattedDate, // 포맷된 날짜
-        cardDetailedText: record.content, // 답변 내용을 카드의 상세 내용으로 설정
+        cardDetailedText: cleanContent, // 답변 내용을 카드의 상세 내용으로 설정
+        cardSubtitle: subtitle, // 모르겠어요 추가가
       };
     });
   }, [myAnswers]);
@@ -56,13 +66,9 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
   return (
     <div>
       <div className="my-answer-records-container">
-        {/* <div className="title">{"{"} 내 답변 로그 {"}"}</div>
-        <div className="sub-title">
-          과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.
-        </div> */}
         <PageHeader
           title='내 답변 로그'
-          description='과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요.' 
+          description='과거의 나와 현재의 나, 어떻게 달라졌는지 답변 Log를 통해 비교해보세요!' 
           icon={<GrHistory />}
           iconStyle="answer-log"
         />
@@ -73,6 +79,7 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
             mode="VERTICAL" // 세로 방향으로 타임라인 표시
             theme={{
               secondary: "#ff9374", // 주요 강조 색상 설정
+              cardSubtitleColor: "#CEC7C7", // 🔹 subtitle 색상을 회색으로 설정
             }}
           />
         </div>
