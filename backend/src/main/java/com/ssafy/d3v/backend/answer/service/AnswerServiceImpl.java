@@ -6,12 +6,15 @@ import com.ssafy.d3v.backend.answer.dto.AnswerQuestionResponse;
 import com.ssafy.d3v.backend.answer.dto.AnswerRequest;
 import com.ssafy.d3v.backend.answer.dto.AnswerResponse;
 import com.ssafy.d3v.backend.answer.dto.StandardAnswerResponse;
+import com.ssafy.d3v.backend.answer.dto.TextAnswerResponse;
 import com.ssafy.d3v.backend.answer.entity.Answer;
 import com.ssafy.d3v.backend.answer.repository.AnswerCustomRepository;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
+import com.ssafy.d3v.backend.common.exception.SpeechToTextException;
 import com.ssafy.d3v.backend.common.util.AccessLevel;
+import com.ssafy.d3v.backend.common.util.SpeechToTextConverter;
 import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
@@ -23,6 +26,7 @@ import com.ssafy.d3v.backend.question.repository.ServedQuestionCustomRepository;
 import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +47,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final MemberRepository memberRepository;
     private final FeedbackCustomRepository feedbackCustomRepository;
     private final QuestionService questionService;
+    private final SpeechToTextConverter textConverter;
     private final Long memberId = 1L;
 
     @Override
@@ -73,7 +78,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .question(question)
                 .content(answerRequest.content())
                 .createdAt(LocalDateTime.now())
-                .accessLevel(answerRequest.accessLevel())
+                .accessLevel(AccessLevel.valueOf(answerRequest.accessLevel()))
                 .build();
 
         String isSolvedStatus = servedQuestionService.getIsSolvedStatus(questionId);
@@ -181,5 +186,16 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getIsSolved(),
                         questionService.getSkillsByQuestionId(ele.getId())))
                 .collect(toList());
+    }
+
+    @Override
+    public TextAnswerResponse convertSpeechToText(byte[] speech) {
+        try {
+            return TextAnswerResponse.builder()
+                    .text(textConverter.convertSpeechToText(speech))
+                    .build();
+        } catch (IOException e) {
+            throw new SpeechToTextException("음성 파일을 변환하는 중 오류 발생");
+        }
     }
 }
