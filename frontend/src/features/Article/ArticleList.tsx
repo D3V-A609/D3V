@@ -1,9 +1,7 @@
-// src/features/ArticleList/ArticleList.tsx
-import React from "react";
+import React, { useMemo } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ArticleList.css";
 
-// 카테고리 영어 -> 한글 매핑
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
   QUESTION_REVIEW: "답변 첨삭",
@@ -17,6 +15,7 @@ interface Article {
   title: string;
   view: number;
   commentCount: number;
+  createdAt: string;
 }
 
 interface Pagination {
@@ -29,8 +28,12 @@ interface ArticleListProps {
   articles: Article[];
   pagination?: Pagination;
   onPageChange(pageNumber: number): void;
-  onSort(field: string): void;
+  onSort(field: string, order: 'asc' | 'desc'): void;
   onArticleClick(articleId: number): void;
+  currentSort: {
+    field: string;
+    order: 'asc' | 'desc';
+  };
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({
@@ -39,44 +42,71 @@ const ArticleList: React.FC<ArticleListProps> = ({
   onPageChange,
   onSort,
   onArticleClick,
+  currentSort,
 }) => {
+  const handleSort = (field: string) => {
+    const newOrder = currentSort.field === field && currentSort.order === 'desc' ? 'asc' : 'desc';
+    onSort(field, newOrder);
+  };
+
+  const renderSortIcon = (field: string) => {
+    if (currentSort.field !== field) return '▽';
+    return currentSort.order === 'asc' ? '▲' : '▼';
+  };
+
+  const sortedArticles = useMemo(() => {
+    return [...articles].sort((a, b) => {
+      const modifier = currentSort.order === 'asc' ? 1 : -1;
+      if (currentSort.field === 'LATEST') {
+        return modifier * (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      } else if (currentSort.field === 'COMMENT') {
+        return modifier * (b.commentCount - a.commentCount);
+      } else if (currentSort.field === 'VIEW') {
+        return modifier * (b.view - a.view);
+      }
+      return 0;
+    });
+  }, [articles, currentSort]);
+
   return (
     <div className="article-list">
-      {articles.length > 0 ? (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>카테고리</th>
-                <th>제목</th>
-                <th onClick={() => onSort("view")}>조회 수</th>
-                <th onClick={() => onSort("commentCount")}>댓글 수</th>
-              </tr>
-            </thead>
-            <tbody>
-              {articles.map((article) => (
-                <tr key={article.id} onClick={() => onArticleClick(article.id)}>
-                  <td>{categoryNameMap[article.name] || article.name}</td>
-                  <td>{article.title}</td>
-                  <td>{article.view}</td>
-                  <td>{article.commentCount}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <table>
+        <thead>
+          <tr>
+            <th>카테고리</th>
+            <th>제목</th>
+            <th onClick={() => handleSort('LATEST')} style={{ cursor: 'pointer' }}>
+              작성일 {renderSortIcon('LATEST')}
+            </th>
+            <th onClick={() => handleSort('COMMENT')} style={{ cursor: 'pointer' }}>
+              댓글 수 {renderSortIcon('COMMENT')}
+            </th>
+            <th onClick={() => handleSort('VIEW')} style={{ cursor: 'pointer' }}>
+              조회 수 {renderSortIcon('VIEW')}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedArticles.map((article) => (
+            <tr key={article.id} onClick={() => onArticleClick(article.id)}>
+              <td>{categoryNameMap[article.name] || article.name}</td>
+              <td>{article.title}</td>
+              <td>{new Date(article.createdAt).toLocaleDateString()}</td>
+              <td>{article.commentCount}</td>
+              <td>{article.view}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-          {pagination && (
-            <Pagination
-              currentPage={pagination.currentPage - 1}  // 0-based로 변환
-              totalPages={pagination.totalPages}
-              first={pagination.currentPage === 1}
-              last={pagination.currentPage === pagination.totalPages}
-              onPageChange={(page) => onPageChange(page + 1)}  // 1-based로 변환하여 호출
-            />
-          )}
-        </>
-      ) : (
-        <div className="no-articles-message">게시글이 없습니다.</div>
+      {pagination && (
+        <Pagination
+          currentPage={pagination.currentPage - 1}
+          totalPages={pagination.totalPages}
+          first={pagination.currentPage === 1}
+          last={pagination.currentPage === pagination.totalPages}
+          onPageChange={(page) => onPageChange(page + 1)}
+        />
       )}
     </div>
   );

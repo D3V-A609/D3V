@@ -96,8 +96,6 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
             ) : null}
             <p>{currentArticle.content}</p>
           </div>
-          <p>총 {currentArticle.commentCount}개의 댓글이 있습니다.</p>
-          
           {/* 댓글 목록 */}
           <CommentList articleId={articleId} />
 

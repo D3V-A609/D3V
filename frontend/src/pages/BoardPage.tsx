@@ -1,11 +1,10 @@
-// src/pages/BoardPage.tsx
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchArticles } from "../store/actions/articleActions";
+import { fetchArticles, fetchArticle } from "../store/actions/articleActions";
+import { updateArticleInList } from "../store/slices/articleSlice";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
-// import ArticleForm from "../features/Article/ArticleForm";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
@@ -18,36 +17,44 @@ const categoryMap: Record<string, string> = {
   기타: "ETC",
 };
 
-const BoardPage:React.FC = () => {
+const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
-   // Redux 상태 가져오기
-   const { articles, loading, error, pagination } = useAppSelector(
+  const { articles, loading, error, pagination } = useAppSelector(
     (state) => state.articles || { articles: [], loading: false, error: null, pagination: undefined }
-    // 기본값으로 undefined 설정
   );
   const [category, setCategory] = useState<string>("전체");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortField, setSortField] = useState<string>("LATEST");
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
 
   useEffect(() => {
     if (currentView === "list") {
       const apiCategory = categoryMap[category];
-      dispatch(fetchArticles({ category: apiCategory, keyword: searchQuery, sort: sortField }));
+      dispatch(fetchArticles({ category: apiCategory, keyword: searchQuery, sort: sortField, order: sortOrder }));
     }
-  }, [dispatch, category, searchQuery, sortField, currentView]);
+  }, [dispatch, category, searchQuery, sortField, sortOrder, currentView]);
 
   const handleCategoryChange = (newCategory: string) => setCategory(newCategory);
   const handleSearch = (query: string) => setSearchQuery(query);
-  const handleSort = (field: string) => setSortField(field);
+  const handleSort = (field: string, order: 'asc' | 'desc') => {
+    setSortField(field);
+    setSortOrder(order);
+  };
 
   const handleWriteClick = () => setCurrentView("create");
+  
   const handleArticleClick = (articleId: number) => {
     setSelectedArticleId(articleId);
     setCurrentView("detail");
+    dispatch(fetchArticle(articleId)).then((action) => {
+      if (fetchArticle.fulfilled.match(action)) {
+        dispatch(updateArticleInList(action.payload));
+      }
+    });
   };
-  // const handleEditClick = () => setCurrentView("edit");
+  
   const handleBackToList = () => setCurrentView("list");
 
   if (loading) return <div>Loading...</div>;
@@ -62,7 +69,6 @@ const BoardPage:React.FC = () => {
         iconStyle="pink-chat-icon"
       />
 
-      {/* 목록 조회 */}
       {currentView === "list" && (
         <>
           <div className="category-filter">
@@ -82,51 +88,27 @@ const BoardPage:React.FC = () => {
             </button>
           </div>
 
-          <div className="filter-and-search">
-            <div className="sort-buttons">
-              {["LATEST", "VIEW", "COMMENT"].map((sort) => (
-                <button
-                  key={sort}
-                  className={`sort-button ${sortField === sort ? "active" : ""}`}
-                  onClick={() => handleSort(sort)}
-                >
-                  {sort === "LATEST" ? "· 최신순" : sort === "VIEW" ? "· 조회순" : "· 댓글순"}
-                </button>
-              ))}
-            </div>
-            <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
-          </div>
+          <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
 
           <ArticleList
             articles={articles}
             pagination={pagination}
             onPageChange={(pageNumber) =>
-              dispatch(fetchArticles({ category: categoryMap[category], keyword: searchQuery, page: pageNumber }))
+              dispatch(fetchArticles({ category: categoryMap[category], keyword: searchQuery, sort: sortField, order: sortOrder, page: pageNumber }))
             }
             onSort={handleSort}
             onArticleClick={handleArticleClick}
+            currentSort={{ field: sortField, order: sortOrder }}
           />
         </>
       )}
 
-      {/* 상세 조회 */}
       {currentView === "detail" && selectedArticleId && (
         <ArticleDetail
           articleId={selectedArticleId}
-          // onEditClick={handleEditClick}
           onBackClick={handleBackToList}
         />
       )}
-
-      {/* 게시글 작성 및 수정 *
-      {(currentView === "create" || currentView === "edit") && (
-        <ArticleForm
-          mode={currentView}
-          articleId={currentView === "edit" ? selectedArticleId : undefined}
-          onSubmitSuccess={handleBackToList}
-          onCancelClick={handleBackToList}
-        />
-      )} */}
     </div>
   );
 };
