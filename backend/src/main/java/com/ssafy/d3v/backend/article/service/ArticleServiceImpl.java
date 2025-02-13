@@ -158,15 +158,13 @@ public class ArticleServiceImpl implements ArticleService {
 
         article.getImageUrls().addAll(newImageEntities);
 
-        article.toBuilder()
+        Article updated = article.toBuilder()
                 .category(category)
                 .title(title)
                 .content(content)
                 .build();
 
-        Article updated = articleRepository.saveAndFlush(article);
-
-        return getArticleResponse(updated);
+        return getArticleResponse(articleRepository.saveAndFlush(updated));
     }
 
     private static ArticleDetailResponse getArticleResponse(Article article) {
