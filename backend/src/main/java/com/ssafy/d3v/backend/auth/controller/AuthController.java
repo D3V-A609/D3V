@@ -4,10 +4,9 @@ import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
 import com.ssafy.d3v.backend.auth.service.AuthService;
 import com.ssafy.d3v.backend.common.util.Response;
+import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.NoSuchElementException;
@@ -33,8 +32,7 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(summary = "토큰 재발급 API", responses = {
-            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공", content = @Content(schema =
-            @Schema(implementation = UserTestResDto.TokenInfo.class))),
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
             @ApiResponse(responseCode = "400", description = "토큰 재발급 실패"),
     })
     @PostMapping("/token")
