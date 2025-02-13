@@ -114,9 +114,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleDetailResponse getDetail(long articleId) {
         Article article = getArticle(articleId);
-        Article updated = articleRepository.save(
+        Article updated = articleRepository.saveAndFlush(
                 article.toBuilder()
                         .view(article.getView() + 1)
                         .build());
