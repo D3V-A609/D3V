@@ -44,6 +44,7 @@ const BoardPage: React.FC = () => {
   };
 
   const handleWriteClick = () => setCurrentView("create");
+  
   const handleArticleClick = (articleId: number) => {
     setSelectedArticleId(articleId);
     setCurrentView("detail");
@@ -53,6 +54,7 @@ const BoardPage: React.FC = () => {
       }
     });
   };
+  
   const handleBackToList = () => setCurrentView("list");
 
   if (loading) return <div>Loading...</div>;
@@ -86,24 +88,7 @@ const BoardPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="filter-and-search">
-            <div className="sort-buttons">
-              {[
-                { field: "LATEST", label: "최신순" },
-                { field: "VIEW", label: "조회순" },
-                { field: "COMMENT", label: "댓글순" }
-              ].map(({ field, label }) => (
-                <button
-                  key={field}
-                  className={`sort-button ${sortField === field ? "active" : ""}`}
-                  onClick={() => handleSort(field, sortField === field && sortOrder === 'desc' ? 'asc' : 'desc')}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
-          </div>
+          <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
 
           <ArticleList
             articles={articles}

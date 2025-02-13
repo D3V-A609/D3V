@@ -51,7 +51,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
 
   const renderSortIcon = (field: string) => {
     if (currentSort.field !== field) return '▽';
-    return currentSort.order === 'asc' ? '△' : '▼';
+    return currentSort.order === 'asc' ? '▲' : '▼';
   };
 
   const sortedArticles = useMemo(() => {
