@@ -9,26 +9,30 @@
   color: #0072EF;
 }
 
-.text-github{
+.github-info{
   width: 160px;
   text-align: start;
 }
 
+.mail-info, .github-info{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
 .user-detail-info-container{
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
   background-color: #F4FAFF;
   width: 100%;
   border-radius: 8px;
   padding: 30px;
+  padding-left: 3em;
+  padding-right: 3em;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  min-width: 400px;
-  /* max-width: 900px; */
+  min-width: 580px;
 }
 
 .profile-image-container{
-  /* margin-right: 20px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,7 +52,7 @@
   justify-content: start;
   flex-direction: column;
   gap: 1rem;
-  padding: 0 6em 0 3em;
+  padding: 0 6em 0 5em;
   color: black;
 }
 
@@ -56,6 +60,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 .user-name {
@@ -87,11 +92,19 @@
 }
 
 .user-sub-info {
-  /* margin-bottom: 14px; */
   font-size: 16px;
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   color: black;
+  gap: 6em;
+}
+
+.user-sub-info-left, .user-sub-info-right{
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  justify-content: start;
+  text-align: start;
 }
 
 .user-sub-info .nickname {
@@ -119,8 +132,8 @@
   text-decoration: underline;
 }
 
-/* === 반응형: 900px 이하에서 수직 배치 === */
-@media (max-width: 900px) {
+/* === 반응형: 1100px 이하에서 수직 배치 === */
+@media (max-width: 1100px) {
   .user-detail-info-container {
     flex-direction: column;
     padding: 20px;
@@ -132,11 +145,11 @@
 
   .user-info-content {
     padding: 0;
+    justify-content: center;
   }
 
   .user-top-section {
     flex-direction: column;
-    align-items: flex-start;
   }
 
   .user-name {
@@ -151,8 +164,8 @@
   }
 
   .user-sub-info {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: center;
   }
 
   .followers {
@@ -167,5 +180,9 @@
   .edit-button {
     padding: 5px 8px;
     font-size: 14px;
+  }
+
+  .update-user-info-btn{
+    justify-content: end;
   }
 }
