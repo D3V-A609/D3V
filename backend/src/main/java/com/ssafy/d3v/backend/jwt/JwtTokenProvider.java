@@ -33,7 +33,8 @@ public class JwtTokenProvider {
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000L;          // 1일
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 90 * 24 * 60 * 60 * 1000L;    // 90일
-    private static final int REFRESH_TOKEN_EXPIRE_TIME_COOKIE = Integer.MAX_VALUE;
+    private static final int REFRESH_TOKEN_EXPIRE_TIME_COOKIE = 24 * 60 * 60; // 1일 (초 단위)
+    // 토큰 만료 시간은 임의로 설정해 둔 것이고 보안을 높이고자 하면 AccessToken은 1시간으로 줄여도 될듯함.
 
     private final Key key;
 
@@ -42,9 +43,11 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public TokenInfo generateToken(Authentication authentication) {
         // 권한 가져오기
+
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
