@@ -15,6 +15,7 @@ import { CgCloseR } from "react-icons/cg";
 import ContentPreviewList from '../components/MyPage/ContentPreviewList';
 import { fetchMyLastedQuestions } from '../store/actions/questionActions';
 import { QuestionState } from '../store/slices/questionSlice';
+import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
     const user = {
@@ -68,7 +69,9 @@ const MyPage:React.FC = () => {
         {/* <SectionContainerMemo className='my-ai-container' title='AI 면접 연습' icon={icons.AIIcon} /> */}
 
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
-            <div className="my-streak"></div>
+            <div className="my-streak">
+                <StreakHeatMap />
+            </div>
             <div className='my-answer-commu-activity'></div>
         </SectionContainerMemo>
 

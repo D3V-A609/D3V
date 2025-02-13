@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   voice: voiceReducer,
   jobs: jobReducer,
   comments: commentReducer,
-  history: historyReducer,
+  historys: historyReducer,
 }) as Reducer<{
   questions: ReturnType<typeof questionReducer>;
   answers: ReturnType<typeof answerReducer>;
@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
   voice: ReturnType<typeof voiceReducer>;
   jobs: ReturnType<typeof jobReducer>;
   comments: ReturnType<typeof commentReducer>;
-  history: ReturnType<typeof historyReducer>;
+  historys: ReturnType<typeof historyReducer>;
 }>;
 
 

@@ -1,4 +1,4 @@
-interface heatmap {
+interface AnswerHistory {
   date: string,
   count: number
 }

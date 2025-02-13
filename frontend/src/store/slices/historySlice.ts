@@ -5,7 +5,7 @@ export interface HistoryState {
   uploading: boolean;
   uploadSuccess: boolean;
   error: string | null;
-  history: heatmap[];
+  history: AnswerHistory[];
 }
 
 export const initialState: HistoryState = {
@@ -16,7 +16,7 @@ export const initialState: HistoryState = {
 };
 
 const historySlice = createSlice({
-  name: 'history',
+  name: 'historys',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
