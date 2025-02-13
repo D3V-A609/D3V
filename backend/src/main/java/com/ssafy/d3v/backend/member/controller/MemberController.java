@@ -4,11 +4,8 @@ import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
-import com.ssafy.d3v.backend.member.dto.UserTestResDto;
 import com.ssafy.d3v.backend.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +60,9 @@ public class MemberController {
     })
 
     @PostMapping("")
-    public ResponseEntity<?> signUp(@RequestBody @Validated UserTestReqDto.SignUp signUp, Errors errors) {
+    public ResponseEntity<?> signUp(@RequestBody @Validated UserTestReqDto.SignUp signUp
+            , @RequestParam(value = "profile_image", required = false) MultipartFile profileImage
+            , Errors errors) {
         // validation check
         log.info(signUp.toString());
         if (errors.hasErrors()) {
@@ -71,13 +70,12 @@ public class MemberController {
             return Response.badRequest("회원가입에 실패하였습니다.");
         }
 
-        return memberService.signUp(signUp);
+        return memberService.signUp(signUp, profileImage);
     }
 
 
     @Operation(summary = "로그인 API", responses = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema =
-            @Schema(implementation = UserTestResDto.UserInfo.class))),
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "400", description = "로그인 실패"),
     })
     @PostMapping("/login")
