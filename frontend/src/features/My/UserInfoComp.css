@@ -9,9 +9,15 @@
   color: #0072EF;
 }
 
-.text-github{
+.github-info{
   width: 160px;
   text-align: start;
+}
+
+.mail-info, .github-info{
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .user-detail-info-container{
@@ -139,11 +145,11 @@
 
   .user-info-content {
     padding: 0;
+    justify-content: center;
   }
 
   .user-top-section {
     flex-direction: column;
-    align-items: flex-start;
   }
 
   .user-name {
@@ -159,7 +165,7 @@
 
   .user-sub-info {
     flex-direction: row;
-    align-items: center;
+    justify-content: center;
   }
 
   .followers {
@@ -174,5 +180,9 @@
   .edit-button {
     padding: 5px 8px;
     font-size: 14px;
+  }
+
+  .update-user-info-btn{
+    justify-content: end;
   }
 }
