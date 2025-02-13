@@ -73,7 +73,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .question(question)
                 .content(answerRequest.content())
                 .createdAt(LocalDateTime.now())
-                .accessLevel(answerRequest.accessLevel())
+                .accessLevel(AccessLevel.valueOf(answerRequest.accessLevel()))
                 .build();
 
         String isSolvedStatus = servedQuestionService.getIsSolvedStatus(questionId);
