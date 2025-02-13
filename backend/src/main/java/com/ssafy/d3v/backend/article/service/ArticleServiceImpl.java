@@ -43,8 +43,8 @@ public class ArticleServiceImpl implements ArticleService {
     private final Long memberId = 1L;
 
     @Override
-    public PagedResponse<ArticleResponse> get(String categoryName, String keyword, int page, int size,
-                                              String sort, String order) {
+    public PagedResponse<ArticleResponse> get(String categoryName, String keyword,
+                                              int page, int size, String sort, String order) {
         Category category = null;
         if (categoryName != null) {
             category = categoryRepository.findByName(CategoryName.valueOf(categoryName))

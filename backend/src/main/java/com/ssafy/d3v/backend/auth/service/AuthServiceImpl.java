@@ -6,14 +6,24 @@ import com.ssafy.d3v.backend.auth.entity.VerificationCodeCache;
 import com.ssafy.d3v.backend.auth.exception.DuplicateResourceException;
 import com.ssafy.d3v.backend.auth.repository.VerificationCodeCacheRepository;
 import com.ssafy.d3v.backend.common.constant.EmailTemplate;
+import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
+import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.CodeGenerator;
 import com.ssafy.d3v.backend.common.util.EmailSender;
+import com.ssafy.d3v.backend.common.util.Response;
+import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationCodeCacheRepository verificationCodeCacheRepository;
     private final EmailSender emailSender;
     private final CodeGenerator codeGenerator;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
     //private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -85,5 +97,45 @@ public class AuthServiceImpl implements AuthService {
         //member.updatePassword(passwordEncoder.encode(password));
 
         memberRepository.save(member);
+    }
+
+    @Override
+    public ResponseEntity<?> getSocialType(String email) {
+        if (memberRepository.findByEmail(email).orElse(null) == null) {
+            return Response.badRequest("해당하는 유저가 존재하지 않습니다.");
+        }
+        Member member = memberRepository.findUserByEmail(email);
+
+        return Response.makeResponse(HttpStatus.OK, "소셜 가입 여부 확인 성공", 1, member.getProviderType());
+    }
+
+    @Override
+    public ResponseEntity<?> reissue(UserTestReqDto.Reissue reissue) {
+        // 1. Refresh Token 검증
+        if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
+            return Response.badRequest("Refresh Token 정보가 유효하지 않습니다.");
+        }
+
+        // 2. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
+
+        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
+        // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
+        if (ObjectUtils.isEmpty(refreshToken)) {
+            return Response.badRequest("잘못된 요청입니다.");
+        }
+        if (!refreshToken.equals(reissue.getRefreshToken())) {
+            return Response.badRequest("Refresh Token 정보가 일치하지 않습니다.");
+        }
+
+        // 4. 새로운 토큰 생성
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+        // 5. RefreshToken Redis 업데이트
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(),
+                tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        return Response.makeResponse(HttpStatus.OK, "토큰 재발급을 성공하였습니다.", 0, tokenInfo);
     }
 }

@@ -1,12 +1,12 @@
 package com.ssafy.d3v.backend.oauth.handler;
 
 
-import static com.ssafy.d3v.backend.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
+import static com.ssafy.d3v.backend.common.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
 import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
-import com.ssafy.d3v.backend.jwt.JwtTokenProvider;
-import com.ssafy.d3v.backend.jwt.TokenInfo;
+import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
+import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import com.ssafy.d3v.backend.oauth.info.OAuth2UserInfo;
@@ -71,9 +71,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new IllegalArgumentException(
                     "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
-
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
+        log.info("=============================redirectUri: " + redirectUri);
+        //String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        String targetUrl = "http://localhost:5173/oauth/redirect"; // @Value가 안먹어서 임시로 하드코딩해둠. 바꿔야 됨.
+        log.info("=============================targetUrl: " + targetUrl);
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 

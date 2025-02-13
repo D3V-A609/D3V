@@ -3,23 +3,63 @@ package com.ssafy.d3v.backend.auth.controller;
 import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
 import com.ssafy.d3v.backend.auth.service.AuthService;
+import com.ssafy.d3v.backend.common.util.Response;
+import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
 @Tag(name = "인증", description = "인증 API")
 public class AuthController {
     private final AuthService authService;
+
+    @Operation(summary = "토큰 재발급 API", responses = {
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @ApiResponse(responseCode = "400", description = "토큰 재발급 실패"),
+    })
+    @PostMapping("/token")
+    public ResponseEntity<?> reissue(@RequestBody @Validated UserTestReqDto.Reissue reissue, Errors errors) {
+        // validation check
+        if (errors.hasErrors()) {
+            return Response.badRequest("토큰 재발급을 실패하였습니다.");
+        }
+        return authService.reissue(reissue);
+    }
+
+    @Operation(summary = "소셜 가입 여부 확인 API")
+    @GetMapping(value = "/social/{email}")
+    public ResponseEntity<?> getSocialType(
+            @Parameter(description = "회원 이메일", required = true, example = "ssafy123@gmail.com")
+            @PathVariable String email) {
+        try {
+            log.info("소셜 여부 확인 API");
+            return authService.getSocialType(email);
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage());
+            return Response.notFound("잘못된 요청입니다.");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Response.serverError("서버 에러");
+        }
+    }
 
     @Operation(summary = "닉네임 중복 확인")
     @GetMapping("/nickname/duplication")
