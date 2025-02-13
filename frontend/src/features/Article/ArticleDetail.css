@@ -6,11 +6,31 @@
 /* 상단 네비게이션 버튼 */
 .detail-header {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
   padding-bottom: 5px;
   border-bottom: 3px solid #d9e9ff;
+}
+
+.left-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 3px;
+  height: 35px;
+  width: 70px;
+  background-color: #ffffff;
+  color: #00518d;
+  border: 1px solid #00518d;
 }
 
 .back-button {
@@ -25,6 +45,7 @@
   width: 70px;
   background-color: #00518d;
   color: #ffffff;
+  border: none;
 }
 
 .nav-button {
