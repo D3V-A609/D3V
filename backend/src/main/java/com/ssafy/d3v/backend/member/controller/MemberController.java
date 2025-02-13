@@ -1,13 +1,16 @@
 package com.ssafy.d3v.backend.member.controller;
 
 import com.ssafy.d3v.backend.common.util.Response;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
-import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import com.ssafy.d3v.backend.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -60,7 +63,7 @@ public class MemberController {
     })
 
     @PostMapping("")
-    public ResponseEntity<?> signUp(@RequestBody @Validated UserTestReqDto.SignUp signUp
+    public ResponseEntity<?> signUp(@RequestBody @Validated SignUp signUp
             , @RequestParam(value = "profile_image", required = false) MultipartFile profileImage
             , Errors errors) {
         // validation check
@@ -79,15 +82,18 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "로그인 실패"),
     })
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated UserTestReqDto.Login login, Errors errors) {
+    public ResponseEntity<?> login(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestBody @Validated Login login,
+            Errors errors) {
         // validation  check
         log.info(login.toString());
         if (errors.hasErrors()) {
             log.error("login 에러 : {}", errors.getAllErrors());
             return Response.badRequest("로그인에 실패하였습니다.");
         }
-
-        return memberService.login(login);
+        return memberService.login(request, response, login);
     }
 
 
@@ -95,11 +101,10 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "400", description = "로그아웃 실패"),
     })
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody @Validated UserTestReqDto.Logout logout, Errors errors) {
-        if (errors.hasErrors()) {
-            return Response.badRequest("로그아웃을 실패하였습니다.");
-        }
-        return memberService.logout(logout);
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        return memberService.logout(request, response);
     }
 }

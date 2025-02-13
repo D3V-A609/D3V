@@ -7,12 +7,12 @@ import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestB
 
 import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.common.jwt.TokenInfo;
+import com.ssafy.d3v.backend.common.util.CookieUtil;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import com.ssafy.d3v.backend.oauth.info.OAuth2UserInfo;
 import com.ssafy.d3v.backend.oauth.info.OAuth2UserInfoFactory;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.ssafy.d3v.backend.oauth.utils.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

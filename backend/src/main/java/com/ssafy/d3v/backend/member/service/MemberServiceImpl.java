@@ -5,13 +5,15 @@ import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
 import com.ssafy.d3v.backend.member.dto.MemberLoginResponse;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
-import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +108,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> signUp(UserTestReqDto.SignUp signUp, MultipartFile profileImage) {
+    public ResponseEntity<?> signUp(MemberReqDto.SignUp signUp, MultipartFile profileImage) {
         if (memberRepository.existsByEmail(signUp.getEmail())) {
             return Response.badRequest("이미 회원가입된 이메일입니다.");
         }
@@ -136,44 +138,37 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> login(UserTestReqDto.Login login) {
+    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, MemberReqDto.Login login) {
         try {
-            if (memberRepository.findByEmail(login.getEmail()).orElse(null) == null) {
-                return Response.badRequest("해당하는 유저가 존재하지 않습니다.");
-            }
-            Member member = memberRepository.findUserByEmail(login.getEmail());
+            Member member = validateUser(login.getEmail());
 
             if (member.getProviderType() != ProviderType.LOCAL) {
                 return Response.badRequest("소셜 로그인을 이용해주세요.");
             }
 
-            UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
-
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            Authentication authentication = authenticateUser(login);
 
             TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            storeRefreshTokenInRedis(authentication.getName(), tokenInfo);
 
-            redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(),
-                    tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-            log.info("redis 값 저장 후 확인 : {}", redisTemplate.keys("RT:*"));
-
-            MemberLoginResponse memberLoginResponse = MemberLoginResponse.from(member, tokenInfo.getRefreshToken());
+            MemberLoginResponse memberLoginResponse = MemberLoginResponse.from(member, tokenInfo.getAccessToken());
+            // ==============쿠키 Refresh Token 생성 로직 필요==================
 
             return Response.makeResponse(HttpStatus.OK, "로그인을 성공했습니다.", 0, memberLoginResponse);
         } catch (BadCredentialsException e) {
-            log.error("Login BadCredentialsException error : {}", e.getMessage());
+            log.error("Login failed: Invalid credentials - {}", e.getMessage());
             return Response.badRequest("비밀번호가 일치하지 않습니다.");
         } catch (RedisConnectionFailureException e) {
-            log.error("Login RedisConnectionFailureException error : {}", e.getMessage());
+            log.error("Login failed: Redis connection error - {}", e.getMessage());
             return Response.serverError("레디스 서버 연결에 실패하였습니다.");
         } catch (QueryTimeoutException e) {
-            log.error("Login QueryTimeoutException error : {}", e.getMessage());
+            log.error("Login failed: Redis timeout error - {}", e.getMessage());
             return Response.serverError("레디스 서버 연결에서 시간 초과가 발생하였습니다.");
         }
     }
 
     @Transactional
-    public ResponseEntity<?> logout(UserTestReqDto.Logout logout) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
             return Response.badRequest("잘못된 요청입니다.");
@@ -187,11 +182,32 @@ public class MemberServiceImpl implements MemberService {
             // Refresh Token 삭제
             redisTemplate.delete("RT:" + authentication.getName());
         }
+        // ==============쿠키 Refresh Token 삭제 로직 필요==================
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
         redisTemplate.opsForValue().set(logout.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         return Response.ok("로그아웃 되었습니다.");
+    }
+
+    private Member validateUser(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다."));
+    }
+
+    private Authentication authenticateUser(MemberReqDto.Login login) {
+        UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
+        return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+    }
+
+    private void storeRefreshTokenInRedis(String username, TokenInfo tokenInfo) {
+        redisTemplate.opsForValue().set(
+                "RT:" + username,
+                tokenInfo.getRefreshToken(),
+                tokenInfo.getRefreshTokenExpirationTime(),
+                TimeUnit.MILLISECONDS
+        );
+        log.info("Redis refresh token stored: {}", redisTemplate.keys("RT:*"));
     }
 }

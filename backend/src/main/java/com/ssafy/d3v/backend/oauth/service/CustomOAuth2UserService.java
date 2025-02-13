@@ -26,7 +26,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private static final String ALREADY_SIGNED_UP_SOCIAL = "already_signed_up_social";
     private static final String ALREADY_SIGNED_UP_LOCAL = "already_signed_up_local";
 
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member savedUser = userRepository.findMemberByEmail(userInfo.getEmail()).orElseThrow();
+        Member savedUser = memberRepository.findMemberByEmail(userInfo.getEmail()).orElseThrow();
 
         if (savedUser != null) {
             if (savedUser.getProviderType() == ProviderType.LOCAL) {
@@ -76,7 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .profileImg(userInfo.getImageUrl())
                 .build();
 
-        return userRepository.saveAndFlush(user);
+        return memberRepository.saveAndFlush(user);
     }
 
     private void updateUser(Member user, OAuth2UserInfo userInfo) {

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-public class UserTestReqDto {
+public class MemberReqDto {
 
     @Getter
     @Setter
@@ -53,29 +53,5 @@ public class UserTestReqDto {
         public UsernamePasswordAuthenticationToken toAuthentication() {
             return new UsernamePasswordAuthenticationToken(email, password);
         }
-    }
-
-    @Getter
-    @Setter
-    public static class Logout {
-        @NotEmpty(message = "잘못된 요청입니다.")
-        @Schema(description = "액세스 토큰", example = "token")
-        private String accessToken;
-
-        @NotEmpty(message = "잘못된 요청입니다.")
-        @Schema(description = "리프레쉬 토큰", example = "token")
-        private String refreshToken;
-    }
-
-    @Getter
-    @Setter
-    public static class Reissue {
-        @NotEmpty(message = "accessToken 을 입력해주세요.")
-        @Schema(description = "액세스 토큰", example = "access")
-        private String accessToken;
-
-        @NotEmpty(message = "refreshToken 을 입력해주세요.")
-        @Schema(description = "리프레쉬 토큰", example = "refresh")
-        private String refreshToken;
     }
 }

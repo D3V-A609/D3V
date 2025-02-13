@@ -4,17 +4,16 @@ import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
 import com.ssafy.d3v.backend.auth.service.AuthService;
 import com.ssafy.d3v.backend.common.util.Response;
-import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,12 +35,10 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "토큰 재발급 실패"),
     })
     @PostMapping("/token")
-    public ResponseEntity<?> reissue(@RequestBody @Validated UserTestReqDto.Reissue reissue, Errors errors) {
-        // validation check
-        if (errors.hasErrors()) {
-            return Response.badRequest("토큰 재발급을 실패하였습니다.");
-        }
-        return authService.reissue(reissue);
+    public ResponseEntity<?> reissue(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+        return authService.reissue(request, response);
     }
 
     @Operation(summary = "소셜 가입 여부 확인 API")

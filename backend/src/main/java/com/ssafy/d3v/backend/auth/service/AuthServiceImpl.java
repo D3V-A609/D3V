@@ -11,9 +11,10 @@ import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.CodeGenerator;
 import com.ssafy.d3v.backend.common.util.EmailSender;
 import com.ssafy.d3v.backend.common.util.Response;
-import com.ssafy.d3v.backend.member.dto.UserTestReqDto;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void sendEmailPassword(EmailRequest emailRequest) {
         Member member = memberRepository.findByEmail(emailRequest.email())
-                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 유저가 존재하지 않습니다."));
 
         String password = codeGenerator.generateCode();
         String text = emailSender.buildTextForVerificationCode(EmailTemplate.EMAIL_PASSWORD_CONTENT, password);
@@ -101,16 +102,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> getSocialType(String email) {
-        if (memberRepository.findByEmail(email).orElse(null) == null) {
-            return Response.badRequest("해당하는 유저가 존재하지 않습니다.");
-        }
-        Member member = memberRepository.findUserByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 이메일을 가진 유저가 존재하지 않습니다."));
 
         return Response.makeResponse(HttpStatus.OK, "소셜 가입 여부 확인 성공", 1, member.getProviderType());
     }
 
     @Override
-    public ResponseEntity<?> reissue(UserTestReqDto.Reissue reissue) {
+    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
             return Response.badRequest("Refresh Token 정보가 유효하지 않습니다.");
