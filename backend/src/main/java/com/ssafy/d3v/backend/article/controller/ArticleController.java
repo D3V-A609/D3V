@@ -37,8 +37,9 @@ public class ArticleController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "15") int size,
-            @RequestParam(value = "sort", defaultValue = "LATEST") String sort) {
-        return ResponseEntity.ok().body(articleService.get(category, keyword, page, size, sort));
+            @RequestParam(value = "sort", defaultValue = "LATEST") String sort,
+            @RequestParam(value = "order", defaultValue = "DESC") String order) {
+        return ResponseEntity.ok().body(articleService.get(category, keyword, page, size, sort, order));
     }
 
     @Operation(summary = "게시글 생성")
