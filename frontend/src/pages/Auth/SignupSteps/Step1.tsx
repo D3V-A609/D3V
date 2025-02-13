@@ -38,7 +38,7 @@ const Step1: React.FC = () => {
     }
 
     // 비밀번호 유효성 검사
-    const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+    const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/;
     if (!passwordRegex.test(formData.password)) {
       newErrors.password = '영문, 숫자, 특수문자만 입력 가능합니다';
       isValid = false;
@@ -66,14 +66,14 @@ const Step1: React.FC = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // 영문, 숫자, 특수문자만 허용하는 정규식
-    if (/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(value) || value === '') {
+    if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
       setFormData({...formData, password: value});
     }
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(value) || value === '') {
+    if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
       setFormData({...formData, confirmPassword: value});
     }
   };
@@ -91,7 +91,7 @@ const Step1: React.FC = () => {
       <p className="signup-description">
         이메일과 비밀번호를 입력해주세요.
       </p>
-      <form onSubmit={handleNext}>
+      <form className="from" onSubmit={handleNext}>
         <div className="form-group">
           <label>이메일</label>
           <input 

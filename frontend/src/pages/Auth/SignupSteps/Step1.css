@@ -1,3 +1,5 @@
+/* step1.css */
+
 .signup-step {
   width: 100%;
   max-width: 480px;
@@ -14,14 +16,25 @@ h2 {
   color: #333;
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
 .form-group {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  width: 100%;
 }
 
 .form-group input {
@@ -30,6 +43,7 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -41,15 +55,18 @@ h2 {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .password-input-wrapper input {
+  width: 100%;
   padding-right: 40px;
+  box-sizing: border-box;
 }
 
 .password-toggle {
   position: absolute;
-  right: 10px;
+  right: 15px;
   background: none;
   border: none;
   cursor: pointer;

@@ -1,12 +1,13 @@
 /* Container */
 .login-container {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
+  box-sizing: border-box;
   padding: 1rem 0;
 }
+
 
 /* Back Link */
 .back-link {
@@ -25,16 +26,16 @@
 
 /* Form Layout */
 .login-content {
-  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .login-form-wrapper {
   width: 100%;
   max-width: 480px;
+  margin: 0 auto;
 }
 
 /* Typography */
@@ -50,7 +51,7 @@ h1 {
 
 /* Form Elements */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
 .form-group label {
@@ -104,7 +105,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin: 1rem 0;
 }
 
 .remember-me {
@@ -132,13 +133,13 @@ h1 {
   border: none;
   border-radius: 4px;
   font-weight: 500;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
   cursor: pointer;
 }
 
 /* Sign Up Prompt */
 .signup-prompt {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   text-align: center;
   color: #666;
 }

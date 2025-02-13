@@ -6,11 +6,15 @@
 .auth-left {
   flex: 0.7;
   background-color: var(--color-light-blue);
-  padding: 3rem 2rem;
+  padding: 2rem 2rem;
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.signup-bg {
+  background-color: var(--color-pink); /* 또는 원하는 색상 */
 }
 
 .auth-illustration {
@@ -46,8 +50,15 @@
 
 .auth-right {
   flex: 1;
-  padding: 3.5rem 4rem;
+  padding: 2rem 4rem;
   background: white;
   display: flex;
   flex-direction: column;
+}
+
+
+/* 스크롤바 스타일 */
+html {
+  scrollbar-gutter: stable;
+  overflow-x: hidden;
 }
