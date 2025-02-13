@@ -1,4 +1,5 @@
 import api from './api';
+import { AnswerResponse } from "../slices/answerSlice";
 
 export const answerApi = {
   getMyAnswer: async (questionId: number) => {
@@ -12,16 +13,18 @@ export const answerApi = {
     }
   },
 
-  getOtherAnswers: async (questionId: number) => {
-    try{
-      const response = await api.get<Answer[]>(`/question/${questionId}/answer`);
-      // return response.data.filter(answer => answer.memberId !== 1);
+  getOtherAnswers: async (questionId: number, page: number, size: number) => {
+    try {
+      const response = await api.get<AnswerResponse>(`/question/${questionId}/answer`, {
+        params: { page, size }
+      });
       return response.data;
-    } catch(error){
+    } catch (error) {
       console.log('in answer api error-2: ', error)
       throw new Error('모든 답변을 불러오는데 문제가 발생했습니다.')
     }
   },
+  
 
   likeAnswer: async (answerId: number, memberId: number) => {
     try{

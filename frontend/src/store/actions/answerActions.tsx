@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { answerApi } from "../services/answerApi";
-import { AnswerState } from "../slices/answerSlice";
+import { AnswerState, AnswerResponse } from "../slices/answerSlice";
 
-export const fetchMyAnswer = createAsyncThunk(
+export const fetchMyAnswer = createAsyncThunk<Answer[], number, { rejectValue: string }>(
   'answers/fetchMyAnswer',
   async (questionId: number, { rejectWithValue }) => {
     try {
@@ -15,16 +15,53 @@ export const fetchMyAnswer = createAsyncThunk(
   }
 );
 
-export const fetchOtherAnswers = createAsyncThunk(
+export const fetchOtherAnswers = createAsyncThunk<
+  AnswerResponse,
+  { questionId: number; page: number; size: number },
+  { rejectValue: string }
+>(
   'answers/fetchOtherAnswers',
-  async (questionId: number, { rejectWithValue }) => {
+  async ({ questionId, page, size }, { rejectWithValue }) => {
     try {
-      const response = await answerApi.getOtherAnswers(questionId);
-      console.log("답변들: ", response);
-      return response;
+      const response = await answerApi.getOtherAnswers(questionId, page, size);
+      return response; // API 응답이 이미 AnswerResponse 형식과 일치하므로 그대로 반환
     } catch (error) {
       console.error('in answer action -2: ', error);
       return rejectWithValue('답변들을 불러오는데 문제가 발생했습니다.');
+    }
+  }
+);
+
+export const toggleLike = createAsyncThunk(
+  'answers/toggleLike',
+  async (answerId: number, { getState, dispatch }) => {
+    const state = getState() as { answers: AnswerState };
+    const otherAnswers = state.answers.otherAnswers;
+    if (!otherAnswers || !otherAnswers.data) {
+      throw new Error('답변을 찾을 수 없습니다.');
+    }
+    const answer = otherAnswers.data.find(a => a.answerId === answerId);
+    if (!answer) {
+      throw new Error('답변을 찾을 수 없습니다.');
+    }
+
+    const memberId = 1; // 실제 사용자 ID로 교체
+
+    try {
+      if (answer.isLiked) {
+        await answerApi.unlikeAnswer(answerId, memberId);
+      } else {
+        await answerApi.likeAnswer(answerId, memberId);
+      }
+      
+      return { 
+        answerId, 
+        isLiked: !answer.isLiked,
+        like: answer.isLiked ? answer.like - 1 : answer.like + 1
+      };
+    } catch (error) {
+      console.error('in answer action -6:', error);
+      throw error;
     }
   }
 );
@@ -73,29 +110,3 @@ export const registAnswer = createAsyncThunk(
     }
   }
 )
-
-export const toggleLike = createAsyncThunk(
-  'answers/toggleLike',
-  async (answerId: number, { getState, rejectWithValue }) => {
-    const state = getState() as { answers: AnswerState };
-    const answer = state.answers.otherAnswers.find(a => a.answerId === answerId);
-    if (!answer) throw new Error('Answer not found');
-
-    const memberId = 1; // 실제 사용자 ID로 교체
-
-    try {
-      await (answer.isLiked 
-        ? answerApi.unlikeAnswer(answerId, memberId) 
-        : answerApi.likeAnswer(answerId, memberId));      
-      
-      return { 
-        answerId, 
-        isLiked: !answer.isLiked,
-        like: answer.isLiked ? answer.like - 1 : answer.like + 1
-      };
-    } catch (error) {
-      console.error('in answer action -6:', error);
-      return rejectWithValue('추천 기능을 실행하는데 에러가 발생했습니다.')
-    }
-  }
-);

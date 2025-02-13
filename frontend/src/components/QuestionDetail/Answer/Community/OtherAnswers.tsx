@@ -9,6 +9,7 @@ interface OtherAnswersProps {
 }
 
 const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
+  console.log('OtherAnswers received answers:', answers);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortType, setSortType] = useState<'latest' | 'comments' | 'likes'>('latest');
   const answersPerPage = 10;
