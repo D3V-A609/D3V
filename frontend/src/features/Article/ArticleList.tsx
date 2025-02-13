@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ArticleList.css";
 
@@ -28,11 +28,11 @@ interface ArticleListProps {
   articles: Article[];
   pagination?: Pagination;
   onPageChange(pageNumber: number): void;
-  onSort(field: string, order: 'asc' | 'desc'): void;
+  onSort(field: string, order: 'ASC' | 'DESC'): void;
   onArticleClick(articleId: number): void;
   currentSort: {
     field: string;
-    order: 'asc' | 'desc';
+    order: 'ASC' | 'DESC';
   };
 }
 
@@ -45,28 +45,14 @@ const ArticleList: React.FC<ArticleListProps> = ({
   currentSort,
 }) => {
   const handleSort = (field: string) => {
-    const newOrder = currentSort.field === field && currentSort.order === 'desc' ? 'asc' : 'desc';
+    const newOrder = currentSort.field === field && currentSort.order === 'DESC' ? 'ASC' : 'DESC';
     onSort(field, newOrder);
   };
 
   const renderSortIcon = (field: string) => {
     if (currentSort.field !== field) return '▽';
-    return currentSort.order === 'asc' ? '▲' : '▼';
+    return currentSort.order === 'ASC' ? '▲' : '▼';
   };
-
-  const sortedArticles = useMemo(() => {
-    return [...articles].sort((a, b) => {
-      const modifier = currentSort.order === 'asc' ? 1 : -1;
-      if (currentSort.field === 'LATEST') {
-        return modifier * (new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      } else if (currentSort.field === 'COMMENT') {
-        return modifier * (b.commentCount - a.commentCount);
-      } else if (currentSort.field === 'VIEW') {
-        return modifier * (b.view - a.view);
-      }
-      return 0;
-    });
-  }, [articles, currentSort]);
 
   return (
     <div className="article-list">
@@ -87,7 +73,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {sortedArticles.map((article) => (
+          {articles.map((article) => (
             <tr key={article.id} onClick={() => onArticleClick(article.id)}>
               <td>{categoryNameMap[article.name] || article.name}</td>
               <td>{article.title}</td>

@@ -6,14 +6,14 @@ export const articleApi = {
     page = 1,
     size = 15,
     sort = 'LATEST',
-    order = 'desc',
+    order = 'DESC',
     keyword,
   }: {
     category?: string;
     page?: number;
     size?: number;
     sort?: string;
-    order?: 'asc' | 'desc';
+    order?: 'ASC' | 'DESC';
     keyword?: string;
   } = {}) => {
     try {
@@ -25,7 +25,7 @@ export const articleApi = {
       if (order) queryParams.append('order', order);
       if (keyword) queryParams.append('keyword', keyword);
 
-      const queryString = queryParams.toString();
+    const queryString = queryParams.toString();
       return await api.get(`/article${queryString ? `?${queryString}` : ''}`);
     } catch (error) {
       console.log('in article api error-1: ', error);
@@ -42,12 +42,17 @@ export const articleApi = {
     }
   },
   
-  createArticle: async (data: { category: string; title: string; content: string }) => {
+  // 게시글 생성 API
+  createArticle: async (formData: FormData) => {
     try {
-      return await api.post('/article', data);
+      return await api.post("/article", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     } catch (error) {
-      console.log('in article api error-3: ', error);
-      throw new Error('게시글을 등록하는데 문제가 발생했습니다.');
+      console.error("Error in createArticle API:", error);
+      throw error;
     }
   },
 

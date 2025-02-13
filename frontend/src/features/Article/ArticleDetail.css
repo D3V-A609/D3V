@@ -127,8 +127,10 @@
 }
 
 .detail-content img {
-  max-width: 100%; /* 이미지가 콘텐츠 영역을 넘지 않도록 제한 */
+  max-width: 70%; /* 이미지 너비를 컨테이너의 70%로 제한 */
   height: auto; /* 비율 유지 */
+  display: block; /* 적절한 정렬을 위해 블록 레벨 요소로 설정 */
+  margin: 0 auto; /* 이미지를 가로로 중앙 정렬 */
 }
 
 .detail-content p {
