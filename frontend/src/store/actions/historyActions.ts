@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { heatmapApi } from "../services/heatmapApi";
+import { historyApi } from "../services/historyApi";
 
 export const fetchHistory = createAsyncThunk(
   'history',
   async (payload: {memberId: number, year: number}, {rejectWithValue }) => {
     try{
-      const response = await heatmapApi.getHistory(payload);
+      const response = await historyApi.getHistory(payload);
       return response.data;
     }catch(error){
       console.log('in heatmap action: ', error);

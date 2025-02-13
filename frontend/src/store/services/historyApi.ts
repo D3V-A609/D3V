@@ -1,6 +1,6 @@
 import api from './api';
 
-export const heatmapApi = {
+export const historyApi = {
 
   getHistory: async (payload: {memberId: number, year: number}) => {
     try{

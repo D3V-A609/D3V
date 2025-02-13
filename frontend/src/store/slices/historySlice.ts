@@ -1,22 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchHistory } from '../actions/heatmapActions';
+import { fetchHistory } from '../actions/historyActions';
 
-export interface HeatMapState {
+export interface HistoryState {
   uploading: boolean;
   uploadSuccess: boolean;
   error: string | null;
   history: heatmap[];
 }
 
-export const initialState: HeatMapState = {
+export const initialState: HistoryState = {
   uploading: false,
   uploadSuccess: false,
   error: null,
   history: []
 };
 
-const heatmapSlice = createSlice({
-  name: 'heatmap',
+const historySlice = createSlice({
+  name: 'history',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -39,4 +39,4 @@ const heatmapSlice = createSlice({
   },
 });
 
-export default heatmapSlice.reducer;
+export default historySlice.reducer;
