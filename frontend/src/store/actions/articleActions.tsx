@@ -3,7 +3,7 @@ import { articleApi } from "../services/articleApi";
 
 export const fetchArticles = createAsyncThunk(
   "articles/fetchArticles",
-  async (params?: { category?: string; page?: number; size?: number; sort?: string; order?: 'asc' | 'desc'; keyword?: string }) => {
+  async (params?: { category?: string; page?: number; size?: number; sort?: string; order?: 'ASC' | 'DESC'; keyword?: string }) => {
     try {
       const response = await articleApi.getArticles(params);
       return response.data;
@@ -19,5 +19,19 @@ export const fetchArticle = createAsyncThunk(
   async (articleId: number) => {
     const response = await articleApi.getArticleById(articleId);
     return response.data;
+  }
+);
+
+// 게시글 생성 액션
+export const createArticle = createAsyncThunk(
+  "articles/createArticle",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const response = await articleApi.createArticle(formData);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating article:", error);
+      return rejectWithValue("게시글 생성에 실패했습니다.");
+    }
   }
 );

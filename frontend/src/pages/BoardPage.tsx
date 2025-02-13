@@ -5,6 +5,7 @@ import { updateArticleInList } from "../store/slices/articleSlice";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
+import WriteArticle from "../features/Article/WriteArticle"; // 글쓰기 컴포넌트 추가
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
@@ -25,7 +26,7 @@ const BoardPage: React.FC = () => {
   const [category, setCategory] = useState<string>("전체");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortField, setSortField] = useState<string>("LATEST");
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
 
@@ -38,13 +39,13 @@ const BoardPage: React.FC = () => {
 
   const handleCategoryChange = (newCategory: string) => setCategory(newCategory);
   const handleSearch = (query: string) => setSearchQuery(query);
-  const handleSort = (field: string, order: 'asc' | 'desc') => {
+  const handleSort = (field: string, order: 'ASC' | 'DESC') => {
     setSortField(field);
     setSortOrder(order);
   };
 
   const handleWriteClick = () => setCurrentView("create");
-  
+
   const handleArticleClick = (articleId: number) => {
     setSelectedArticleId(articleId);
     setCurrentView("detail");
@@ -54,7 +55,7 @@ const BoardPage: React.FC = () => {
       }
     });
   };
-  
+
   const handleBackToList = () => setCurrentView("list");
 
   if (loading) return <div>Loading...</div>;
@@ -108,6 +109,10 @@ const BoardPage: React.FC = () => {
           articleId={selectedArticleId}
           onBackClick={handleBackToList}
         />
+      )}
+
+      {currentView === "create" && (
+        <WriteArticle onCancel={() => setCurrentView("list")} />
       )}
     </div>
   );

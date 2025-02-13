@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { fetchArticle } from "../../store/actions/articleActions";
-import CommentInput from "../Comment/CommentInput"; // 재사용 가능한 댓글 입력 컴포넌트
+import CommentInput from "../Comment/CommentInput";
 import Profile from "../../components/Profile/Profile";
 import dummyUsers from "../../constants/dummyUsers";
 import CommentList from "../Comment/CommentList";
@@ -9,7 +9,6 @@ import { FaEye, FaComment } from "react-icons/fa6";
 
 import "./ArticleDetail.css";
 
-// 카테고리 영어 -> 한글 매핑
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
   QUESTION_REVIEW: "답변 첨삭",
@@ -19,18 +18,16 @@ const categoryNameMap: Record<string, string> = {
 
 interface ArticleDetailProps {
   articleId: number;
-  onBackClick: () => void; // 목록으로 돌아가기 핸들러
+  onBackClick: () => void;
 }
 
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick }) => {
   const dispatch = useAppDispatch();
-  
+
   const { currentArticle, loading, error } = useAppSelector(
-    (state) => state.articles || { currentArticle: null, loading: false, error: null}
-    // 기본값으로 undefined 설정
+    (state) => state.articles || { currentArticle: null, loading: false, error: null }
   );
 
-  // 게시글 상세 데이터 가져오기
   useEffect(() => {
     if (!currentArticle || currentArticle.id !== articleId) {
       dispatch(fetchArticle(articleId));
@@ -40,7 +37,6 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  // 작성자 정보 가져오기
   const member = dummyUsers.find(user => user.memberId === currentArticle?.memberId);
 
   return (
@@ -60,21 +56,29 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
               <h1 className="title">{currentArticle.title}</h1>
             </div>
             <div className="meta-row">
-              {/* 왼쪽 섹션: 프로필과 작성일 */}
               <div className="left-section">
                 {member ? (
-                  <Profile 
-                    profileImg={member?.profileImg} 
-                    jobField={member.jobField} 
-                    nickname={member.nickname} 
+                  <Profile
+                    profileImg={member?.profileImg}
+                    jobField={member.jobField}
+                    nickname={member.nickname}
                   />
                 ) : (
                   <span>작성자 정보를 불러올 수 없습니다.</span>
                 )}
-                <span className="date">{currentArticle.updatedAt || "작성일 없음"}</span>
+                <span className="date">
+                {new Date(currentArticle.createdAt).toLocaleString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: false
+                })}
+              </span>
               </div>
 
-              {/* 오른쪽 섹션: 조회수와 댓글 */}
               <div className="right-section">
                 <div className="stat-item">
                   <FaEye className="icon" />
@@ -88,14 +92,20 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
             </div>
           </div>
 
+          {/* 게시글 내용 */}
           <div className="detail-content">
             {currentArticle.images?.length ? (
               currentArticle.images.map((image) => (
                 <img key={image.id} src={image.imageUrl} alt={image.originImageName} />
               ))
             ) : null}
-            <p>{currentArticle.content}</p>
+            {/* HTML 태그를 렌더링 */}
+            <div
+              dangerouslySetInnerHTML={{ __html: currentArticle.content }}
+              className="article-content"
+            ></div>
           </div>
+
           {/* 댓글 목록 */}
           <CommentList articleId={articleId} />
 
