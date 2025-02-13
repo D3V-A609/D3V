@@ -7,6 +7,7 @@ import com.ssafy.d3v.backend.bookmark.service.BookmarkServiceImpl;
 import com.ssafy.d3v.backend.common.dto.BaseResponse;
 import com.ssafy.d3v.backend.common.message.SuccessMessages;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "북마크", description = "북마크 API")
 @RequestMapping("/api/bookmark")
 public class BookmarkController {
 
@@ -41,7 +43,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 수정", description = "북마크 이름, 설명, 접근권한 수정")
     @PatchMapping("/{bookmarkId}")
     public ResponseEntity<?> update(
-            @PathVariable("bookmarkId") long bookmarkId,
+            @PathVariable("bookmarkId") Long bookmarkId,
             @RequestBody BookmarkCreateDto request
     ) {
         bookmarkService.update(bookmarkId, request);
@@ -66,7 +68,7 @@ public class BookmarkController {
     // 북마크 단일 조회
     @Operation(summary = "단일 북마크 조회", description = "북마크 id로 조회, 해당 북마크에 있는 질문 리스트 재공")
     @GetMapping("/{bookmarkId}")
-    public ResponseEntity<?> get(@PathVariable("bookmarkId") Long bookmarkId) {
+    public ResponseEntity<?> getBookmark(@PathVariable("bookmarkId") Long bookmarkId) {
         BookmarkDetailResponse response = bookmarkService.get(bookmarkId);
         return ResponseEntity.ok(response);
     }
@@ -74,7 +76,7 @@ public class BookmarkController {
     // 북마크 전체 조회
     @Operation(summary = "전체 북마크 조회", description = "북마크 id로 조회, 해당 북마크에 있는 질문 리스트 재공")
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<?> getAll(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<?> getAllBookmarks(@PathVariable("memberId") Long memberId) {
         BookmarkResponse response = bookmarkService.getAll(memberId);
         return ResponseEntity.ok(response);
     }
@@ -82,8 +84,6 @@ public class BookmarkController {
     // 북마크에 질문 추가
 
     // 북마크에 질문 삭제
-
-    // 북마크 질문 순서 변경
 
 }
 
