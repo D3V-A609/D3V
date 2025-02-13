@@ -28,7 +28,7 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
         </div>
 
         <div className={styles["content-list"]}>
-          { Array.isArray(filledContents) ? (
+          { Array.isArray(filledContents) && filledContents.length>0 ? (
           filledContents.slice(0,5).map((content, index) => (
             <div key={index} 
             className={`${styles["content-item"]} ${
