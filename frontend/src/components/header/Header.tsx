@@ -44,6 +44,11 @@ const Header: React.FC = () => {
     setIsUserInfoOpen(false); // 로그인 시 드롭다운 닫기
   };
 
+  const goMyPage = () => {
+    navigate('/my');
+    setIsUserInfoOpen(false);
+  }
+
   return (
     <header className="header-container">
       <div className="header-container_logo-div">
@@ -78,7 +83,7 @@ const Header: React.FC = () => {
             {isUserInfoOpen && (
               <div className="user-info-dropdown">
                 <ul>
-                  <li onClick={() => navigate("/my")}>마이 페이지</li>
+                  <li onClick={goMyPage}>마이 페이지</li>
                   <li onClick={logout}>로그아웃</li>
                 </ul>
               </div>
