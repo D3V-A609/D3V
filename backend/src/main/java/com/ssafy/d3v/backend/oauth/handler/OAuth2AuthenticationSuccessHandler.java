@@ -1,12 +1,12 @@
 package com.ssafy.d3v.backend.oauth.handler;
 
 
-import static com.ssafy.d3v.backend.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
+import static com.ssafy.d3v.backend.common.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
 import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
-import com.ssafy.d3v.backend.jwt.JwtTokenProvider;
-import com.ssafy.d3v.backend.jwt.TokenInfo;
+import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
+import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import com.ssafy.d3v.backend.oauth.info.OAuth2UserInfo;

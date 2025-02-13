@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
                 .githubUrl(member.getGithubUrl())
                 .maxStreak(member.getMaxStreak())
                 .ongoingStreak(member.getOngoingStreak())
-                .providerType(member.getProviderType().name())
+                .providerType(member.getProviderType())
                 .createdAt(member.getCreatedAt())
                 .favoriteJob(member.getFavoriteJob())
                 .build();
@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
                 .githubUrl(updated.getGithubUrl())
                 .maxStreak(updated.getMaxStreak())
                 .ongoingStreak(updated.getOngoingStreak())
-                .providerType(updated.getProviderType().name())
+                .providerType(updated.getProviderType())
                 .createdAt(updated.getCreatedAt())
                 .favoriteJob(updated.getFavoriteJob())
                 .build();

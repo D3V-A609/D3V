@@ -1,7 +1,7 @@
 package com.ssafy.d3v.backend.common.config.security;
 
-import com.ssafy.d3v.backend.jwt.JwtAuthenticationFilter;
-import com.ssafy.d3v.backend.jwt.JwtTokenProvider;
+import com.ssafy.d3v.backend.common.jwt.JwtAuthenticationFilter;
+import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;

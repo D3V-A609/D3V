@@ -10,5 +10,4 @@ public interface MemberService {
     MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage);
 
     void delete();
-
 }
