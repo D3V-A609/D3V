@@ -40,12 +40,12 @@ public class WebSecurityConfig {
                 // error endpoint를 열어줘야 함, favicon.ico 추가!
                 .requestMatchers("/error", "/favicon.ico");
     }
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable) // http only 쿠키 사용할거라 켜야됨. 설정법 알아보고 킬 예정
+                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/api/**",//원할한 테스트를 위해서 다 풀어둠
                                 "/swagger-ui/**",
+                                "/v3/api-docs/**",
                                 "/api/member/**",
                                 "/api/question/daily",
                                 "/api/question/top10",
