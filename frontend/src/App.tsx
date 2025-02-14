@@ -6,15 +6,14 @@ import AllQuestionPage from './pages/AllQuestionPage.tsx';
 import BoardPage from './pages/BoardPage.tsx';
 import AIPage from './pages/AIPage.tsx';
 import MyPage from './pages/MyPage.tsx';
-import VideoPage from './pages/VideoPage.tsx';
 import QuestionDetailPage from './pages/QuestionDetailPage.tsx';
 import AuthLayout from './features/Auth/layouts/AuthLayout.tsx';
 import SignupLayout from './features/Auth/layouts/SignupLayout.tsx';
 import LoginPage from './pages/Auth/Login.tsx';
 import ForgotPasswordPage from './pages/Auth/ForgotPassword.tsx';
 import Step1 from './pages/Auth/SignupSteps/Step1.tsx';
-import Step2 from './pages/Auth/SignupSteps/step2.tsx';
-import Step3 from './pages/Auth/SignupSteps/step3.tsx';
+import Step2 from './pages/Auth/SignupSteps/Step2.tsx';
+import Step3 from './pages/Auth/SignupSteps/Step3.tsx';
 
 import './App.css';
 import './styles/TextStyle.css';
@@ -65,7 +64,6 @@ function App() {
         { path: '/ai', element: <AIPage /> },
         { path: '/my', element: <MyPage /> },
         { path: '/board', element: <BoardPage /> },
-        { path: '/video', element: <VideoPage /> },
         { path: '/question', element: 
           <RecordingProvider>
             <TimerProvider>
