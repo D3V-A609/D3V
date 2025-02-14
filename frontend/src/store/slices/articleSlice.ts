@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchArticles, fetchArticle, createArticle, fetchMyArticles, fetMyArticleComments } from "../actions/articleActions";
+import { fetchArticles, fetchArticle, createArticle, fetchMyArticles, fetMyArticleComments, updateArticle, deleteArticle } from "../actions/articleActions";
 
 export interface ArticleState {
   articles: Article[];
@@ -116,6 +116,39 @@ const articleSlice = createSlice({
       .addCase(fetMyArticleComments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+
+      // 게시글 수정
+      .addCase(updateArticle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateArticle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentArticle = action.payload;
+        const index = state.articles.findIndex(article => article.id === action.payload.id);
+        if (index !== -1) {
+          state.articles[index] = action.payload;
+        }
+      })
+      .addCase(updateArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to update the article.";
+      })
+
+      // 게시글 삭제
+      .addCase(deleteArticle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteArticle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.articles = state.articles.filter(article => article.id !== action.payload);
+        state.currentArticle = null;
+      })
+      .addCase(deleteArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to delete the article.";
       });
 
   },

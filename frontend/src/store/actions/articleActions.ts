@@ -67,4 +67,32 @@ export const fetMyArticleComments = createAsyncThunk(
       return rejectWithValue("내가 작성한 게시글 댓글을 불러오는데 문제가 발생했습니다.")
     }
   }
-)
+);
+
+// 게시글 수정 액션
+export const updateArticle = createAsyncThunk(
+  "articles/updateArticle",
+  async ({ id, data }: { id: number; data: FormData }, { rejectWithValue }) => {
+    try {
+      const response = await articleApi.updateArticle(id, data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("게시글 수정에 실패했습니다.");
+    }
+  }
+);
+
+// 게시글 삭제 액션
+export const deleteArticle = createAsyncThunk(
+  "articles/deleteArticle",
+  async (id: number, { rejectWithValue }) => {
+    try {
+      await articleApi.deleteArticle(id);
+      return id;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue("게시글 삭제에 실패했습니다.");
+    }
+  }
+);

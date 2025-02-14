@@ -26,9 +26,6 @@ const CommentList: React.FC<CommentListProps> = ({ articleId }) => {
 
   return (
     <div className="comment-list">
-      <p className="comment-count">
-        총 댓글 <span className="count-number">{pagination.totalRecords}</span>개가 있습니다.
-      </p>
       {comments.map((comment) => (
         <CommentItem
           key={comment.id}

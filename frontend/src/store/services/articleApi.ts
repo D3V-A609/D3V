@@ -56,9 +56,13 @@ export const articleApi = {
     }
   },
 
-  updateArticle: async (id: number, data: { title?: string; content?: string }) => {
+  updateArticle: async (id: number, data: FormData) => {
     try {
-      return await api.put(`/article/${id}`, data);
+      return await api.patch(`/article/${id}`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     } catch (error) {
       console.log('in article api error-4: ', error);
       throw new Error('게시글을 수정하는데 문제가 발생했습니다.');
