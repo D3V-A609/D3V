@@ -6,8 +6,7 @@ import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.ssafy.d3v.backend.oauth.service.CustomOAuth2UserService;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -121,25 +120,19 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        //리소스를 허용할 URL 지정
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://d3vtest.s3-website.ap-northeast-2.amazonaws.com/");
-        allowedOriginPatterns.add("http://localhost:5173");
-        configuration.setAllowedOrigins(allowedOriginPatterns);
+        // 허용할 Origin 설정 (와일드카드 제거, 정확한 도메인만 허용)
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://d3v.asia",
+                "http://localhost:5173"
+        ));
 
-        //허용하는 HTTP METHOD 지정
-        ArrayList<String> allowedHttpMethods = new ArrayList<>();
-        allowedHttpMethods.add("GET");
-        allowedHttpMethods.add("POST");
-        allowedHttpMethods.add("PUT");
-        allowedHttpMethods.add("DELETE");
-        allowedHttpMethods.add("PATCH");
-        configuration.setAllowedMethods(allowedHttpMethods);
+        // 허용할 HTTP Method 설정
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
-        configuration.setAllowedHeaders(Collections.singletonList("*"));
-//        configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
+        // 허용할 Header 설정
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        //인증, 인가를 위한 credentials 를 TRUE로 설정
+        // 인증 정보를 포함한 요청 허용
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -147,4 +140,5 @@ public class WebSecurityConfig {
 
         return source;
     }
+
 }
