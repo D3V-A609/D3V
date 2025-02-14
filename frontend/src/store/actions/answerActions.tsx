@@ -34,7 +34,7 @@ export const fetchOtherAnswers = createAsyncThunk<
 
 export const toggleLike = createAsyncThunk(
   'answers/toggleLike',
-  async (answerId: number, { getState, dispatch }) => {
+  async (answerId: number, { getState }) => {
     const state = getState() as { answers: AnswerState };
     const otherAnswers = state.answers.otherAnswers;
     if (!otherAnswers || !otherAnswers.data) {

@@ -20,7 +20,7 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
       if (sortType === 'comments') {
-        return b.commentCount - a.commentCount;
+        return b.count - a.count;
       }
       return b.like - a.like;
     });

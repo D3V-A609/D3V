@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IoClose } from "react-icons/io5";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import { fetchFeedbacks, createFeedback, updateFeedback, deleteFeedback } from '../../../../store/actions/feedbackActions';
+import { toggleLike } from '../../../../store/actions/answerActions';
 import Profile from '../../../Profile/Profile';
-import Pagination from '../../../Pagination/Pagination';
 import dummyUsers from '../../../../constants/dummyUsers';
 import './FeedbackModal.css';
 
@@ -11,37 +12,60 @@ interface FeedbackModalProps {
   answer: Answer;
   isOpen: boolean;
   onClose: () => void;
+  onLikeUpdate: (isLiked: boolean, likeCount: number) => void;
 }
 
-const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose }) => {
+const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate }) => {
   const dispatch = useAppDispatch();
-  const { feedbacks, loading, error } = useAppSelector(state => state.feedbacks);
+  const { feedbacks, error } = useAppSelector(state => state.feedbacks);
   const [newFeedback, setNewFeedback] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [editingFeedbackId, setEditingFeedbackId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const feedbacksPerPage = 10;
-  const indexOfLastFeedback = currentPage * feedbacksPerPage;
-  const indexOfFirstFeedback = indexOfLastFeedback - feedbacksPerPage;
-  const currentFeedbacks = feedbacks.slice(indexOfFirstFeedback, indexOfLastFeedback);
-  const totalPages = Math.ceil(feedbacks.length / feedbacksPerPage);
+  const lastFeedbackElementRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isOpen) {
-      dispatch(fetchFeedbacks(answer.answerId));
+      dispatch(fetchFeedbacks(answer.answerId))
+        .then((action) => {
+          if (fetchFeedbacks.fulfilled.match(action)) {
+            setHasMore(action.payload.length === 10);
+          }
+        });
     }
-  }, [dispatch, answer.answerId, isOpen]);
+  }, [dispatch, answer.answerId, isOpen, page]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (lastFeedbackElementRef.current) {
+      observer.current.observe(lastFeedbackElementRef.current);
+    }
+  }, [hasMore]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}. ${month}. ${day}. ${hours}:${minutes}:${seconds}`;
+    return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')}. ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+  };
+
+  const handleLikeClick = async () => {
+    try {
+      const resultAction = await dispatch(toggleLike(answer.answerId));
+      if (toggleLike.fulfilled.match(resultAction)) {
+        const { isLiked, like } = resultAction.payload;
+        onLikeUpdate(isLiked, like);
+      }
+    } catch (error) {
+      console.error('좋아요 실패:', error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,7 +90,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose }
 
   const handleDelete = async (feedbackId: number) => {
     if (window.confirm('정말로 이 피드백을 삭제하시겠습니까?')) {
-      await dispatch(deleteFeedback({ answerId: answer.answerId, feedbackId, memberId: 1}));
+      await dispatch(deleteFeedback({ answerId: answer.answerId, feedbackId }));
     }
   };
 
@@ -84,66 +108,89 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose }
 
         {/* 답변 섹션 */}
         <div className="answer-section">
-          <Profile
-            profileImg={dummyUsers.find(user => user.memberId === answer.memberId)?.profileImg || ''}
-            jobField={dummyUsers.find(user => user.memberId === answer.memberId)?.jobField || ''}
-            nickname={dummyUsers.find(user => user.memberId === answer.memberId)?.nickname || ''}
-          />
-          <div className="answer-text">{answer.content}</div>
-          <div className="answer-date">{formatDate(answer.createdAt)}</div>
-          <div className="answer-actions">
-            <button className="like-button">
+          <div className="answer-header">
+            <Profile
+              profileImg={dummyUsers.find(user => user.memberId === answer.memberId)?.profileImg || ''}
+              jobField={dummyUsers.find(user => user.memberId === answer.memberId)?.jobField || ''}
+              nickname={dummyUsers.find(user => user.memberId === answer.memberId)?.nickname || ''}
+            />
+          </div>
+          <div className="answer-body">
+            <p className="answer-text">{answer.content}</p>
+          </div>
+          <div className="answer-footer">
+            <span className="answer-date">{formatDate(answer.createdAt)}</span>
+            <button className={`like-button ${answer.isLiked ? 'liked' : ''}`} onClick={handleLikeClick}>
+              {answer.isLiked ? (
+                <AiFillLike className="button-icon liked-icon" />
+              ) : (
+                <AiOutlineLike className="button-icon" />
+              )}
               좋아요 ({answer.like})
             </button>
           </div>
         </div>
 
-        {/* 피드백 섹션 */}
-        <div className="feedbacks-section">
-          {loading && <p>피드백을 불러오는 중...</p>}
-          {error && <p>Error: {error}</p>}
-          {currentFeedbacks.map((feedback: Feedback) => {
-            const user = dummyUsers.find(user => user.memberId === feedback.memberId);
-            return (
-              <div key={feedback.feedbackId} className="feedback-item">
-                {user && (
-                  <Profile
-                    profileImg={user.profileImg}
-                    jobField={user.jobField}
-                    nickname={user.nickname}
-                  />
-                )}
-                <p className="feedback-content">{feedback.content}</p>
-                <p className="feedback-date">{formatDate(feedback.createdAt)}</p>
-                {feedback.memberId === currentUserId && (
-                  <div className="feedback-actions">
-                    <button onClick={() => handleEdit(feedback.feedbackId, feedback.content)}>수정</button>
-                    <button onClick={() => handleDelete(feedback.feedbackId)}>삭제</button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* 페이지네이션 */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          first={currentPage === 1}
-          last={currentPage === totalPages}
-        />
-
-        {/* 피드백 입력란 */}
         <form onSubmit={handleSubmit} className="feedback-form">
           <textarea
             value={newFeedback}
             onChange={(e) => setNewFeedback(e.target.value)}
             placeholder="피드백을 입력하세요"
           />
-          <button type="submit" className="submit-button">등록</button>
+          <button type="submit" className="feedback-submit-button">등록</button>
         </form>
+
+        <div className="feedbacks-section">
+          {error && <p>Error: {error}</p>}
+          {feedbacks.map((feedback: Feedback, index: number) => {
+            const user = dummyUsers.find(user => user.memberId === feedback.memberId);
+            return (
+              <div 
+                key={feedback.feedbackId} 
+                className="feedback-item"
+                ref={index === feedbacks.length - 1 ? lastFeedbackElementRef : null}
+              >
+                <div className="feedback-header">
+                  <div className="feedback-profile">
+                    {user && (
+                      <Profile
+                        profileImg={user.profileImg}
+                        jobField={user.jobField}
+                        nickname={user.nickname}
+                      />
+                    )}
+                  </div>
+                  {feedback.memberId === currentUserId && !editingFeedbackId && (
+                    <div className="feedback-actions">
+                      <button onClick={() => handleEdit(feedback.feedbackId, feedback.content)}>수정</button>
+                      <button onClick={() => handleDelete(feedback.feedbackId)}>삭제</button>
+                    </div>
+                  )}
+                </div>
+                <div className="feedback-body">
+                  {editingFeedbackId === feedback.feedbackId ? (
+                    <>
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                      />
+                      <div className="edit-actions">
+                        <button onClick={() => handleUpdate(feedback.feedbackId)}>수정 완료</button>
+                        <button onClick={() => setEditingFeedbackId(null)}>취소</button>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="feedback-content">{feedback.content}</p>
+                  )}
+                </div>
+                <div className="feedback-footer">
+                  <span className="feedback-date">{formatDate(feedback.createdAt)}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
       </div>
     </div>
   );

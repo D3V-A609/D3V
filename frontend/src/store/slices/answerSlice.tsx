@@ -67,7 +67,7 @@ const answerSlice = createSlice({
         state.otherAnswers = null;
       })
       .addCase(toggleLike.pending, (state) => {
-        // 로딩 상태를 변경하지 않습니다.
+        state.error = null;
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
         const { answerId, isLiked, like } = action.payload;

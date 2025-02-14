@@ -61,7 +61,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
           <div className="answer-buttons">
             <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
               <IoChatboxOutline className="button-icon" />
-              댓글 보기 ({answer.commentCount || 0})
+              댓글 보기 ({answer.count || 0})
             </button>
             <button 
               className="btn-like"
@@ -79,9 +79,13 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
       </div>
       {/* FeedbackModal에 answer 객체를 전달 */}
       <FeedbackModal
-        answer={answer}
+        answer={{...answer, isLiked: localIsLiked, like: localLikeCount}}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onLikeUpdate={(isLiked, likeCount) => {
+          setLocalIsLiked(isLiked);
+          setLocalLikeCount(likeCount);
+        }}
       />
     </>
   );

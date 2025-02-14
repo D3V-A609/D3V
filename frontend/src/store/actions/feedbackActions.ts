@@ -27,8 +27,8 @@ export const updateFeedback = createAsyncThunk(
 
 export const deleteFeedback = createAsyncThunk(
   "feedbacks/deleteFeedback",
-  async ({ answerId, feedbackId, memberId }: { answerId: number; feedbackId: number; memberId: number }) => {
-    await feedbackApi.deleteFeedback(answerId, feedbackId, memberId);
+  async ({ answerId, feedbackId }: { answerId: number; feedbackId: number }) => {
+    await feedbackApi.deleteFeedback(answerId, feedbackId);
     return feedbackId;
   }
 );

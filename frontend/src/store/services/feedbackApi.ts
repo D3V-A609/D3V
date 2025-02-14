@@ -31,9 +31,9 @@ export const feedbackApi = {
     }
   },
 
-  deleteFeedback: async (answerId: number, feedbackId: number, memberId: number) => {
+  deleteFeedback: async (answerId: number, feedbackId: number) => {
     try {
-      const response = await api.delete(`/answer/${answerId}/feedback/${feedbackId}`, { data: { member_id: memberId } });
+      const response = await api.delete(`/answer/${answerId}/feedback/${feedbackId}`, { data: { answerId, feedbackId } });
       return response.data;
     } catch (error) {
       console.error('Error deleting feedback:', error);
