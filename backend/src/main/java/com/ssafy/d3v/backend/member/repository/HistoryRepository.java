@@ -6,5 +6,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HistoryRepository extends JpaRepository<History, Long> {
-    List<History> findByDateBetween(LocalDate start, LocalDate end);
+    List<History> findByMemberIdAndDateBetween(long memberId, LocalDate start, LocalDate end);
 }
