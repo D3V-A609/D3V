@@ -16,6 +16,8 @@ public record MemberResponse(
         long ongoingStreak,
         ProviderType providerType,
         LocalDateTime createdAt,
-        JobRole favoriteJob
+        JobRole favoriteJob,
+        int followerCount,
+        int followingCount
 ) {
 }

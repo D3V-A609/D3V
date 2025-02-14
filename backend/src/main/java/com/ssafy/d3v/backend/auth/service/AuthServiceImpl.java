@@ -28,6 +28,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -42,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final CodeGenerator codeGenerator;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void checkNicknameDuplication(String nickname) {
@@ -101,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
         emailSender.sendVerificationCode(emailRequest.email(), EmailTemplate.EMAIL_PASSWORD_SUBJECT, text);
 
-        //member.updatePassword(passwordEncoder.encode(password));
+        member.setPassword(passwordEncoder.encode(password));
 
         memberRepository.save(member);
     }
