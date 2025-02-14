@@ -17,4 +17,6 @@ public interface ArticleService {
                                  List<MultipartFile> image);
 
     void delete(long articleId);
+
+    List<ArticleResponse> getMyArticles(long memberId);
 }

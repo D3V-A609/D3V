@@ -128,4 +128,21 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
         return member;
     }
+
+    @Override
+    public List<CommentResponse> getMyComments(Long memberId) {
+        Member member = getMemberById(memberId);
+        List<Comment> comments = commentRepository.findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(member);
+        System.out.println(comments);
+        return comments.stream()
+                .map(c -> CommentResponse.builder()
+                        .id(c.getId())
+                        .articleId(c.getArticle().getId())
+                        .memberId(c.getMember().getId())
+                        .content(c.getContent())
+                        .createdAt(c.getCreatedAt())
+                        .updatedAt(c.getUpdatedAt())
+                        .build())
+                .toList();
+    }
 }
