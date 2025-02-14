@@ -35,8 +35,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -64,34 +62,6 @@ public class QuestionService {
                 .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
 
-    public Page<Question> getAllQuestions(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return questionRepository.findAll(pageable);
-    }
-
-    //    public List<Question> getDailyQuestions() {
-//        Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
-//        Member member = memberRepository.findById(memberId)
-//                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
-//        // 현재 날짜
-//        LocalDate today = LocalDate.now();
-//
-//        // question: 매번 데일리 질문이 존재하는지 확인하는 로직을 Redis에 데일리 질문을 저장해서 확인하는 방법으로 개선할 수 있을 것 같다.
-//        // 1. 오늘 제공된 데일리 질문 조회
-//        List<ServedQuestion> dailyQuestions = servedQuestionRepository.findByMemberAndIsDailyAndServedAt(
-//                member, true, today
-//        );
-//
-//        // 2. 데일리 질문이 3개라면 그대로 반환
-//        if (dailyQuestions.size() == 3) {
-//            return dailyQuestions.stream()
-//                    .map(ServedQuestion::getQuestion) // ServedQuestion에서 Question 추출
-//                    .collect(Collectors.toList());
-//        } else if (dailyQuestions.size() > 0) {
-//            throw new IllegalStateException("오늘의 질문이 3개가 아닌 오류 발생");
-//        }
-//        return CreateRandomQuestions(member); // 데일리 질문이 없는 경우 생성
-//    }
     @Transactional
     public List<QuestionDto> getDailyQuestions() {
         Long memberId = TempMemeberId; // 임시 코드, 실제로는 토큰에서 가져오도록 수정 필요

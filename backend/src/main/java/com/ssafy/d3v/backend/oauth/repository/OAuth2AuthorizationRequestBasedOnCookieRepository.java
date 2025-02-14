@@ -1,7 +1,7 @@
 package com.ssafy.d3v.backend.oauth.repository;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
-import com.ssafy.d3v.backend.oauth.utils.CookieUtil;
+import com.ssafy.d3v.backend.common.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
