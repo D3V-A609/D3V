@@ -11,7 +11,8 @@ import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
 import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.member.dto.MemberLoginResponse;
-import com.ssafy.d3v.backend.member.dto.MemberReqDto;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import com.ssafy.d3v.backend.member.entity.Member;
@@ -30,8 +31,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,6 @@ public class MemberServiceImpl implements MemberService {
     private final S3ImageUploader s3ImageUploader;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
@@ -126,20 +124,20 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> signUp(MemberReqDto.SignUp signUp, MultipartFile profileImage) {
+    public ResponseEntity<?> signUp(SignUp signUp, MultipartFile profileImage) {
         if (memberRepository.existsByEmail(signUp.getEmail())) {
             return Response.badRequest("이미 회원가입된 이메일입니다.");
         }
-        String profileImg = "empty";
-        if (!profileImage.isEmpty()) {
-            profileImg = s3ImageUploader.upload(profileImage);
+        String ImgUrl = "";
+        if (profileImage != null && !profileImage.isEmpty()) {
+            ImgUrl = s3ImageUploader.upload(profileImage);
         }
         String nickname = signUp.getNickname();
         Member member = Member.builder()
                 .email(signUp.getEmail())
                 .nickname(nickname.substring(0, Math.min(15, nickname.length())))
                 .password(passwordEncoder.encode(signUp.getPassword()))
-                .profileImg(profileImg)
+                .profileImg(ImgUrl)
                 .githubUrl(signUp.getGithubUrl())
                 .maxStreak(0L)
                 .ongoingStreak(0L)
@@ -156,22 +154,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> login(HttpServletResponse response, MemberReqDto.Login login) {
+    public ResponseEntity<?> login(HttpServletResponse response, Login login) {
         try {
-            Member member = validateUser(login.getEmail());
+            Member member = validateUser(login.getEmail(), login.getPassword());
 
             if (member.getProviderType() != ProviderType.LOCAL) {
                 return Response.badRequest("소셜 로그인을 이용해주세요.");
             }
-            // username & password 검사 후 유저 정보 가져옴
-            UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
             // 토큰 생성
-            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(login.getEmail(), RoleType.ROLE_USER.name());
 
             // Redis에 RefreshToken 저장
-            storeRefreshTokenInRedis(authentication.getName(), tokenInfo);
+            storeRefreshTokenInRedis(login.getEmail(), tokenInfo);
 
             log.info("로그인 토큰 생성 Access Token: " + tokenInfo.getAccessToken());
             log.info("로그인 토큰 생성 Refresh Token: " + tokenInfo.getRefreshToken());
@@ -223,14 +218,18 @@ public class MemberServiceImpl implements MemberService {
         return Response.ok("로그아웃 되었습니다.");
     }
 
-    private Member validateUser(String email) {
-        return memberRepository.findByEmail(email)
+    private Member validateUser(String email, String password) {
+        // 1. 이메일로 사용자 조회
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다."));
-    }
 
-    private Authentication authenticateUser(MemberReqDto.Login login) {
-        UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
-        return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        // 2. 비밀번호 검증
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 3. 인증 성공 시 사용자 반환
+        return member;
     }
 
     private void storeRefreshTokenInRedis(String username, TokenInfo tokenInfo) {

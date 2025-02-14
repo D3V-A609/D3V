@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -50,7 +52,6 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/**",//원할한 테스트를 위해서 다 풀어둠
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api/member/login",
@@ -61,7 +62,7 @@ public class WebSecurityConfig {
                                 "/api/job/**"
                         )
                         .permitAll()
-                        .requestMatchers("/**").hasAnyRole("USER", "ADMIN"))
+                        .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN"))
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authEndpoint -> authEndpoint
                                 .baseUri("/oauth2/authorization")
@@ -77,6 +78,13 @@ public class WebSecurityConfig {
                 UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
+    }
+
+    // Spring Security 5.7 이상에서는 AuthenticationManager를 직접 Bean으로 등록해야 함
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
 
