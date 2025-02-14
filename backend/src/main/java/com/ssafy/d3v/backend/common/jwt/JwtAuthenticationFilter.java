@@ -1,5 +1,6 @@
-package com.ssafy.d3v.backend.jwt;
+package com.ssafy.d3v.backend.common.jwt;
 
+import com.ssafy.d3v.backend.common.util.HeaderUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -12,15 +13,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
-
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_TYPE = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
@@ -29,8 +26,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        // 1. Request Header 에서 JWT 토큰 추출
-        String token = resolveToken((HttpServletRequest) request);
+        // 1. Request Header 에서 Access Token 추출
+        String token = HeaderUtil.getAccessToken((HttpServletRequest) request);
 
         // 2. validateToken 으로 토큰 유효성 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
@@ -43,14 +40,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             }
         }
         chain.doFilter(request, response);
-    }
-
-    // Request Header 에서 토큰 정보 추출
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
-            return bearerToken.substring(BEARER_TYPE.length());
-        }
-        return null;
     }
 }

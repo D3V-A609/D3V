@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.oauth.utils;
+package com.ssafy.d3v.backend.common.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

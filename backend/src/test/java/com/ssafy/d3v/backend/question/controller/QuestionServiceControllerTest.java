@@ -1,5 +1,9 @@
 package com.ssafy.d3v.backend.question.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -11,16 +15,13 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @SqlGroup({
-        @Sql(value= "/sql/question-controller-test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+        @Sql(value = "/sql/question-controller-test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 })
-public class QuestionControllerTest {
+public class QuestionServiceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

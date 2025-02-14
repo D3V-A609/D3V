@@ -114,7 +114,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
-                        likesRepository.countByAnswer(ele)))
+                        likesRepository.countByAnswer(ele),
+                        likesRepository.existsByMemberAndAnswer(member, ele)))
                 .toList();
     }
 
@@ -149,7 +150,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
-                        likesRepository.countByAnswer(ele)))
+                        likesRepository.countByAnswer(ele),
+                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), ele)))
                 .collect(toList());
 
         int totalPages = (int) Math.ceil((double) totalRecords / size);
