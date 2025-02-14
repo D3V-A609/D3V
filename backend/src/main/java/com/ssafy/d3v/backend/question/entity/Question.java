@@ -1,6 +1,7 @@
 package com.ssafy.d3v.backend.question.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.d3v.backend.bookmark.entity.BookmarkQuestion;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,6 +54,10 @@ public class Question {
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<QuestionSkill> questionSkills;
+
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<BookmarkQuestion> bookmarkQuestions;
 
     @Builder
     public Question(String content, String standardAnswer) {

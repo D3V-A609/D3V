@@ -83,8 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다." + memberId));
+        Member member = getMember(memberId);
 
         Article article = Article.builder()
                 .member(member)
@@ -111,6 +110,11 @@ public class ArticleServiceImpl implements ArticleService {
 
         Article created = articleRepository.saveAndFlush(article);
         return getArticleResponse(created);
+    }
+
+    private Member getMember(long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다." + memberId));
     }
 
     @Override
@@ -158,15 +162,13 @@ public class ArticleServiceImpl implements ArticleService {
 
         article.getImageUrls().addAll(newImageEntities);
 
-        article.toBuilder()
+        Article updated = article.toBuilder()
                 .category(category)
                 .title(title)
                 .content(content)
                 .build();
 
-        Article updated = articleRepository.saveAndFlush(article);
-
-        return getArticleResponse(updated);
+        return getArticleResponse(articleRepository.saveAndFlush(updated));
     }
 
     private static ArticleDetailResponse getArticleResponse(Article article) {
@@ -197,5 +199,24 @@ public class ArticleServiceImpl implements ArticleService {
     private Article getArticle(long articleId) {
         return articleRepository.findByIdAndDeletedAtIsNull(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다. " + articleId));
+    }
+
+    @Override
+    public List<ArticleResponse> getMyArticles(long memberId) {
+        Member member = getMember(memberId);
+        List<Article> articles = articleRepository.findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(member);
+
+        return articles.stream()
+                .map(a -> ArticleResponse.builder()
+                        .id(a.getId())
+                        .categoryId(a.getCategory().getId())
+                        .name(a.getCategory().getName())
+                        .title(a.getTitle())
+                        .createdAt(a.getCreatedAt())
+                        .updatedAt(a.getUpdatedAt())
+                        .view(a.getView())
+                        .commentCount(a.getCommentCount())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

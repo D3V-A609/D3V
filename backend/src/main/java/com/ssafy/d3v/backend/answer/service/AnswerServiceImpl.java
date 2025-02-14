@@ -53,7 +53,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public StandardAnswerResponse getStandardAnswer(long questionId) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById();
+        Member member = getMemberById(memberId);
 
         boolean hasAnswer = answerRepository.existsByQuestionAndMember(question, member);
         if (!hasAnswer) {
@@ -71,7 +71,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Transactional
     public List<AnswerResponse> create(long questionId, AnswerRequest answerRequest) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById();
+        Member member = getMemberById(memberId);
 
         Answer answer = Answer.builder()
                 .member(member)
@@ -97,7 +97,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<AnswerResponse> getMyAnswers(long questionId) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById();
+        Member member = getMemberById(memberId);
 
         return getAnswerResponses(question, member);
     }
@@ -113,7 +113,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
-                        likesRepository.countByAnswer(ele)))
+                        likesRepository.countByAnswer(ele),
+                        likesRepository.existsByMemberAndAnswer(member, ele)))
                 .toList();
     }
 
@@ -123,7 +124,7 @@ public class AnswerServiceImpl implements AnswerService {
         return question;
     }
 
-    private Member getMemberById() {
+    private Member getMemberById(long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
         return member;
@@ -146,7 +147,8 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getCreatedAt(),
                         ele.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
-                        likesRepository.countByAnswer(ele)))
+                        likesRepository.countByAnswer(ele),
+                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), ele)))
                 .collect(toList());
 
         int totalPages = (int) Math.ceil((double) totalRecords / size);
@@ -175,7 +177,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved) {
-        Member member = getMemberById();
+        Member member = getMemberById(memberId);
         List<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
                 isSolved);
 
