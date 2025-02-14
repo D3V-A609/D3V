@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Member savedUser = memberRepository.findMemberByEmail(userInfo.getEmail()).orElseThrow();
+        Member savedUser = memberRepository.findMemberByEmail(userInfo.getEmail());
 
         if (savedUser != null) {
             if (savedUser.getProviderType() == ProviderType.LOCAL) {
