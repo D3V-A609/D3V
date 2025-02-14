@@ -31,9 +31,12 @@ const authSlice = createSlice({
     },
     loginSuccess: (state, action: PayloadAction<{ isAuthenticated: boolean }>) => {
       state.isAuthenticated = action.payload.isAuthenticated;
+    },
+    logout: (state) => {
+      state.isAuthenticated = false;
     }
   }
 });
 
-export const { setCurrentStep, updateFormData, loginSuccess } = authSlice.actions;
+export const { setCurrentStep, updateFormData, loginSuccess, logout } = authSlice.actions;
 export default authSlice.reducer;
