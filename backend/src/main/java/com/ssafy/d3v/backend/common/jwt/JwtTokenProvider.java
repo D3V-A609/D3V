@@ -29,12 +29,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
+    private final String serverUrl = "https://localhost:8080";
+    private final String clientUrl = "https://localhost:5173";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000L;          // 1일
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 90 * 24 * 60 * 60 * 1000L;    // 90일
     private static final int REFRESH_TOKEN_EXPIRE_TIME_COOKIE = 24 * 60 * 60; // 1일 (초 단위)
-    // 토큰 만료 시간은 임의로 설정해 둔 것이고 보안을 높이고자 하면 AccessToken은 1시간으로 줄여도 될듯함.
+    // 토큰 만료 시간은 개발의 편의성을 위헤 길게 설정해둠
 
     private final Key key;
 
@@ -43,6 +45,15 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String extractIdFromToken(String Token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(Token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
     public TokenInfo generateToken(Authentication authentication) {
@@ -54,16 +65,20 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(accessTokenExpiresIn)
+                .setIssuer(serverUrl)
+                .setAudience(clientUrl)
+                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .setIssuedAt(new Date())
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .setIssuer(serverUrl)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -82,12 +97,17 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(id)
                 .claim(AUTHORITIES_KEY, role)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setIssuer(serverUrl)
+                .setAudience(clientUrl)
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_TIME))
+                .setIssuedAt(new Date())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(id)
+                .setIssuer(serverUrl)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
