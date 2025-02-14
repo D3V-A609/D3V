@@ -6,6 +6,7 @@ import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final S3ImageUploader s3ImageUploader;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final Long memberId = 1L;
 
     @Override
@@ -49,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member updated = memberRepository.saveAndFlush(member.toBuilder()
                 .nickname(memberRequest.nickname())
-                //.password(passwordEncoder.encode(memberRequest.password()))
+                .password(passwordEncoder.encode(memberRequest.password()))
                 .githubUrl(memberRequest.githubUrl())
                 .favoriteJob(memberRequest.favoriteJob())
                 .build());

@@ -12,6 +12,7 @@ import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final VerificationCodeCacheRepository verificationCodeCacheRepository;
     private final EmailSender emailSender;
     private final CodeGenerator codeGenerator;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void checkNicknameDuplication(String nickname) {
@@ -82,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
 
         emailSender.sendVerificationCode(emailRequest.email(), EmailTemplate.EMAIL_PASSWORD_SUBJECT, text);
 
-        //member.updatePassword(passwordEncoder.encode(password));
+        member.setPassword(passwordEncoder.encode(password));
 
         memberRepository.save(member);
     }
