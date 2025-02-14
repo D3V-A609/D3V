@@ -23,9 +23,10 @@ public class HistoryServiceImpl implements HistoryService {
     private final MemberRepository memberRepository;
 
     @Override
-    public List<HistoryResponse> getHistory(Long memberId, int year) {
-        List<History> histories = historyRepository.findByDateBetween(
-                LocalDate.of(year, 1, 1), LocalDate.of(year, 12, 31));
+    public List<HistoryResponse> getHistory(Long memberId) {
+        LocalDate today = LocalDate.now();
+        List<History> histories = historyRepository
+                .findByMemberIdAndDateBetween(memberId, today.minusYears(1), today);
 
         return histories.stream()
                 .map(history -> HistoryResponse.builder()
