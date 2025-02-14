@@ -3,13 +3,19 @@ package com.ssafy.d3v.backend.bookmark.service;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkCreateDto;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkDetailResponse;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkResponse;
+import com.ssafy.d3v.backend.bookmark.dto.BookmarkSelectionResponse;
 import com.ssafy.d3v.backend.bookmark.dto.QuestionInfo;
 import com.ssafy.d3v.backend.bookmark.entity.Bookmark;
+import com.ssafy.d3v.backend.bookmark.entity.BookmarkQuestion;
+import com.ssafy.d3v.backend.bookmark.repository.BookmarkQuestionRepository;
 import com.ssafy.d3v.backend.bookmark.repository.BookmarkRepository;
 import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.FollowRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.entity.Question;
+import com.ssafy.d3v.backend.question.repository.QuestionRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookmarkServiceImpl implements BookmarkService {
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
-    //    private final QuestionRepository questionRepository;
+    private final QuestionRepository questionRepository;
+    private final BookmarkQuestionRepository bookmarkQuestionRepository;
     private final Long testId = 1L;
     private final FollowRepository followRepository;
 
@@ -112,16 +119,109 @@ public class BookmarkServiceImpl implements BookmarkService {
                 .filter(this::isAccessible)
                 .toList();
 
-        List<BookmarkResponse.BookmarkDto> bookmarkDtos = bookmarks.stream()
-                .map(bookmark -> BookmarkResponse.BookmarkDto.from(
-                        bookmark,
-                        bookmark.getBookmarkQuestions().size()
-                ))
+        return BookmarkResponse.from(bookmarks);
+    }
+
+    // 질문의 북마크들 조회
+    @Override
+    public BookmarkSelectionResponse getQuestionBookmarks(Long questionId) {
+//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        Member member = memberRepository.findById(testId).orElseThrow();
+        List<Bookmark> bookmarks = bookmarkRepository.findByMember(member);
+        List<Long> bookmarkIds = bookmarkQuestionRepository.findBookmarkIdsByQuestionIdAndMemberId(questionId,
+                member.getId());
+        return BookmarkSelectionResponse.from(bookmarks, bookmarkIds);
+    }
+
+    // 질문의 북마크들 수정
+    @Override
+    @Transactional
+    public BookmarkSelectionResponse updateQuestionBookmarks(Long questionId, List<Long> newBookmarkIds) {
+        Member member = memberRepository.findById(testId)
+                .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+
+        List<Bookmark> userBookmarks = bookmarkRepository.findByMember(member);
+        List<Long> userBookmarkIds = userBookmarks.stream()
+                .map(Bookmark::getId)
                 .toList();
 
-        return BookmarkResponse.builder()
-                .bookmarks(bookmarkDtos)
-                .build();
+        List<Long> currentBookmarkIds = bookmarkQuestionRepository.findBookmarkIdsByQuestionId(questionId);
+        List<Long> currentBookmarkList = new ArrayList<>(currentBookmarkIds);
+
+        List<Long> validNewBookmarkIds = newBookmarkIds.stream()
+                .filter(userBookmarkIds::contains)
+                .toList();
+
+        List<Long> toAdd = validNewBookmarkIds.stream()
+                .filter(id -> !currentBookmarkList.contains(id))
+                .toList();
+
+        List<Long> toRemove = currentBookmarkIds.stream()
+                .filter(id -> !validNewBookmarkIds.contains(id))
+                .toList();
+
+        if (!toRemove.isEmpty()) {
+            bookmarkQuestionRepository.deleteByQuestionIdAndBookmarkIds(questionId, toRemove);
+        }
+
+        for (Long bookmarkId : toAdd) {
+            Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                    .orElseThrow(() -> new RuntimeException("추가하려는 북마크가 존재하지 않습니다."));
+            Question question = questionRepository.findById(questionId)
+                    .orElseThrow(() -> new RuntimeException("해당 질문이 존재하지 않습니다."));
+
+            bookmarkQuestionRepository.save(BookmarkQuestion.builder()
+                    .bookmark(bookmark)
+                    .question(question)
+                    .build());
+        }
+
+        List<Long> updatedBookmarkIds = bookmarkQuestionRepository.findBookmarkIdsByQuestionId(questionId);
+        return BookmarkSelectionResponse.from(userBookmarks, new ArrayList<>(updatedBookmarkIds));
+    }
+
+    // 북마크에 질문들 추가
+    @Override
+    @Transactional
+    public void addQuestions(Long bookmarkId, List<Long> questionIds) {
+//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        Member member = memberRepository.findById(testId).orElseThrow();
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new RuntimeException("해당 북마크가 존재하지 않습니다."));
+        if (!bookmark.getMember().getId().equals(testId)) {
+            throw new RuntimeException("본인의 북마크에만 질문을 추가할 수 있습니다.");
+        }
+        List<Long> existingQuestionIds = bookmarkQuestionRepository.findQuestionIdsByBookmarkIdAndMemberId(bookmarkId,
+                member.getId());
+
+        List<Question> questionsToAdd = questionRepository.findAllById(
+                questionIds.stream().filter(id -> !existingQuestionIds.contains(id)).toList()
+        );
+
+        List<BookmarkQuestion> newEntries = new ArrayList<>();
+        for (Question question : questionsToAdd) {
+            newEntries.add(BookmarkQuestion.builder()
+                    .bookmark(bookmark)
+                    .question(question)
+                    .build());
+        }
+
+        if (!newEntries.isEmpty()) {
+            bookmarkQuestionRepository.saveAll(newEntries);
+        }
+    }
+
+    // 북마크에 있는 질문 삭제
+    @Override
+    @Transactional
+    public void deleteQuestion(Long bookmarkId, Long questionId) {
+//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        Member member = memberRepository.findById(testId).orElseThrow();
+        bookmarkQuestionRepository.deleteByBookmarkIdAndQuestionId(bookmarkId, questionId);
+
     }
 
 
@@ -137,37 +237,18 @@ public class BookmarkServiceImpl implements BookmarkService {
             return true;
         }
         if (bookmark.getAccessLevel() == AccessLevel.PROTECTED) {
-            return followRepository.existsByFollowerAndFollowing(owner, member);
+            return followRepository.existsByFollowerAndFollowing(owner, member)
+                    && followRepository.existsByFollowerAndFollowing(member, owner);
         }
 
         return false;
 
     }
 
-    // TODO: 2차 MVP 때 개발 시작 (북마크에 질문 추가, 수정, 삭제)
-
-//    // 북마크에 질문 추가
-//    @Override
-//    @Transactional
-//    public BookmarkDetailResponse addQuestion(Long bookmarkId, Long questionId) {
-//        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
-//                .orElseThrow();
-//
-//        Question question = questionRepository.
-//    }
-//
-//    // 북마크에서 질문 삭제
-//    @Override
-//    @Transactional
-//    public BookmarkDetailResponse deleteQuestion(Long bookmarkId, Long questionId) {
-//
-//    }
-//
-//    // 북마크 질문 순서 수정
-//    @Override
-//    @Transactional
-//    public BookmarkDetailResponse updateQuestionOrder(Long bookmarkId, Long questionId, int order) {
-//
+//    private boolean isValid(Long bookmarkId, Member member) {
+//        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new RuntimeException("북마크가 없습니다."));
+//        Member owner = bookmark.getMember();
+//        return owner.equals(member);
 //    }
 
 }
