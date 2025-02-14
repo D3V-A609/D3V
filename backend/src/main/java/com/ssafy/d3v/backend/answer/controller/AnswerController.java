@@ -77,4 +77,10 @@ public class AnswerController {
     public ResponseEntity<TextAnswerResponse> convertSpeechToText(@RequestBody byte[] speech) {
         return ResponseEntity.ok().body(answerService.convertSpeechToText(speech));
     }
+
+    @Operation(summary = "내가 추천을 누른 다른 사람의 답변")
+    @GetMapping("/member/liked_answer")
+    public ResponseEntity<List<AnswerResponse>> getAnswerByLike() {
+        return ResponseEntity.ok().body(answerService.getAnswerByLike());
+    }
 }

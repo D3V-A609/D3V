@@ -29,6 +29,7 @@ import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -135,8 +136,10 @@ public class AnswerServiceImpl implements AnswerService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다. ID: " + questionId));
 
-        List<Answer> answerList = answerCustomRepository.findPublicAnswersByQuestion(question, size, page);
-        long totalRecords = answerCustomRepository.countPublicAnswersByQuestion(question);
+        Member viewer = getMemberById(memberId);
+
+        List<Answer> answerList = answerCustomRepository.findAnswersByAccessLevel(question, viewer, size, page);
+        long totalRecords = answerCustomRepository.countAnswersByAccessLevel(question, viewer);
 
         List<AnswerResponse> answerResponses = answerList.stream()
                 .map(ele -> new AnswerResponse(
@@ -199,5 +202,25 @@ public class AnswerServiceImpl implements AnswerService {
         } catch (IOException e) {
             throw new SpeechToTextException("음성 파일을 변환하는 중 오류 발생");
         }
+    }
+
+    @Override
+    public List<AnswerResponse> getAnswerByLike() {
+        Member member = getMemberById(memberId);
+        List<Answer> answers = answerCustomRepository.getAnswerByLike(member);
+
+        return answers.stream()
+                .map(answer -> new AnswerResponse(
+                        answer.getQuestion().getId(),
+                        answer.getMember().getId(),
+                        answer.getAnswerId(),
+                        answer.getContent(),
+                        answer.getCreatedAt(),
+                        answer.getAccessLevel(),
+                        (int) feedbackCustomRepository.countFeedbackByAnswer(answer),
+                        likesRepository.countByAnswer(answer),
+                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), answer)
+                ))
+                .collect(Collectors.toList());
     }
 }

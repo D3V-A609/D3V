@@ -20,26 +20,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/answer")
+@RequestMapping("/api")
 @Tag(name = "피드백", description = "피드백 API")
 public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @Operation(summary = "피드백 조회")
-    @GetMapping("/{answer_id}/feedback")
+    @GetMapping("/answer/{answer_id}/feedback")
     public ResponseEntity<List<FeedbackResponse>> get(@PathVariable("answer_id") long answerId) {
         return ResponseEntity.ok().body(feedbackService.get(answerId));
     }
 
     @Operation(summary = "피드백 생성")
-    @PostMapping("/{answer_id}/feedback")
+    @PostMapping("/answer/{answer_id}/feedback")
     public ResponseEntity<FeedbackResponse> create(@PathVariable("answer_id") long answerId,
                                                    @RequestBody FeedbackRequest feedbackRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(feedbackService.create(answerId, feedbackRequest));
     }
 
     @Operation(summary = "피드백 수정")
-    @PatchMapping("/{answer_id}/feedback/{feedback_id}")
+    @PatchMapping("/answer/{answer_id}/feedback/{feedback_id}")
     public ResponseEntity<FeedbackResponse> update(@PathVariable("answer_id") long answerId,
                                                    @PathVariable("feedback_id") long feedbackId,
                                                    @RequestBody FeedbackRequest feedbackRequest) {
@@ -47,10 +47,16 @@ public class FeedbackController {
     }
 
     @Operation(summary = "피드백 삭제")
-    @DeleteMapping("/{answer_id}/feedback/{feedback_id}")
+    @DeleteMapping("/answer/{answer_id}/feedback/{feedback_id}")
     public ResponseEntity delete(@PathVariable("answer_id") long answerId,
                                  @PathVariable("feedback_id") long feedbackId) {
         feedbackService.delete(answerId, feedbackId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "내가 작성한 피드백")
+    @GetMapping("/my_feedback")
+    public ResponseEntity<List<FeedbackResponse>> getMyFeedbacks() {
+        return ResponseEntity.ok().body(feedbackService.getMyFeedbacks());
     }
 }

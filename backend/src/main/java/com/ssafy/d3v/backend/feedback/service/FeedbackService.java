@@ -12,4 +12,6 @@ public interface FeedbackService {
     FeedbackResponse update(long answerId, long feedbackId, FeedbackRequest feedbackRequest);
 
     void delete(long answerId, long feedbackId);
+
+    List<FeedbackResponse> getMyFeedbacks();
 }
