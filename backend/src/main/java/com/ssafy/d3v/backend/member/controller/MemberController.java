@@ -83,7 +83,6 @@ public class MemberController {
     })
     @PostMapping("/login")
     public ResponseEntity<?> login(
-            HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody @Validated Login login,
             Errors errors) {
@@ -93,7 +92,7 @@ public class MemberController {
             log.error("login 에러 : {}", errors.getAllErrors());
             return Response.badRequest("로그인에 실패하였습니다.");
         }
-        return memberService.login(request, response, login);
+        return memberService.login(response, login);
     }
 
 

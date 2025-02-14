@@ -17,7 +17,7 @@ public interface MemberService {
 
     ResponseEntity<?> signUp(MemberReqDto.SignUp signUp, MultipartFile profileImage);
 
-    ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, MemberReqDto.Login login);
+    ResponseEntity<?> login(HttpServletResponse response, MemberReqDto.Login login);
 
     ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response);
 }

@@ -1,7 +1,12 @@
 package com.ssafy.d3v.backend.member.service;
 
+import static com.ssafy.d3v.backend.common.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
+import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
+
 import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.common.jwt.TokenInfo;
+import com.ssafy.d3v.backend.common.util.CookieUtil;
+import com.ssafy.d3v.backend.common.util.HeaderUtil;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
 import com.ssafy.d3v.backend.member.dto.MemberLoginResponse;
@@ -138,7 +143,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> login(HttpServletRequest request, HttpServletResponse response, MemberReqDto.Login login) {
+    public ResponseEntity<?> login(HttpServletResponse response, MemberReqDto.Login login) {
         try {
             Member member = validateUser(login.getEmail());
 
@@ -148,11 +153,15 @@ public class MemberServiceImpl implements MemberService {
 
             Authentication authentication = authenticateUser(login);
 
+            // Redis에 RefreshToken 저장
             TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
             storeRefreshTokenInRedis(authentication.getName(), tokenInfo);
 
+            // 쿠키에 Refresh Token 저장
+            CookieUtil.addCookie(response, REFRESH_TOKEN, tokenInfo.getRefreshToken(),
+                    getRefreshTokenExpireTimeCookie());
+
             MemberLoginResponse memberLoginResponse = MemberLoginResponse.from(member, tokenInfo.getAccessToken());
-            // ==============쿠키 Refresh Token 생성 로직 필요==================
 
             return Response.makeResponse(HttpStatus.OK, "로그인을 성공했습니다.", 0, memberLoginResponse);
         } catch (BadCredentialsException e) {
@@ -169,24 +178,28 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 1. Access Token 검증
-        if (!jwtTokenProvider.validateToken(logout.getAccessToken())) {
+
+        // 1. request에서 Access Token 가져오기
+        String accessToken = HeaderUtil.getAccessToken(request);
+
+        // 2. Access Token 검증
+        if (!jwtTokenProvider.validateToken(accessToken)) {
             return Response.badRequest("잘못된 요청입니다.");
         }
 
-        // 2. Access Token 에서 User email 을 가져옵니다.
-        Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
+        // 3. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
-        // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        // 4. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
         if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
             // Refresh Token 삭제
             redisTemplate.delete("RT:" + authentication.getName());
         }
-        // ==============쿠키 Refresh Token 삭제 로직 필요==================
+        // 5. 쿠키에서 Refresh Token 삭제
 
-        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
-        Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
-        redisTemplate.opsForValue().set(logout.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+        // 5. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        Long expiration = jwtTokenProvider.getExpiration(accessToken);
+        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
 
         return Response.ok("로그아웃 되었습니다.");
     }

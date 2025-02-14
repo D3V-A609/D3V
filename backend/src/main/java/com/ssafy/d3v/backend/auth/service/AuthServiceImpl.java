@@ -9,6 +9,7 @@ import com.ssafy.d3v.backend.common.constant.EmailTemplate;
 import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.CodeGenerator;
+import com.ssafy.d3v.backend.common.util.CookieUtil;
 import com.ssafy.d3v.backend.common.util.EmailSender;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.member.entity.Member;
@@ -110,6 +111,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+
+        // 1. 쿠키에서 Refresh Token 가져오기
+        String refreshToken = CookieUtil.
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
             return Response.badRequest("Refresh Token 정보가 유효하지 않습니다.");

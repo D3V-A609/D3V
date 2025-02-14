@@ -54,7 +54,9 @@ public class WebSecurityConfig {
                                 "/api/**",//원할한 테스트를 위해서 다 풀어둠
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/api/member/**",
+                                "/api/member/login",
+                                "/api/member/signup",
+                                "/api/member/email/**",
                                 "/api/question/daily",
                                 "/api/question/top10",
                                 "/api/job/**"
