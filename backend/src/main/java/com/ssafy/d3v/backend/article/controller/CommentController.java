@@ -6,6 +6,7 @@ import com.ssafy.d3v.backend.article.service.CommentService;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +55,11 @@ public class CommentController {
                                        @PathVariable("comment_id") long commentId) {
         commentService.delete(articleId, commentId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "내가 작성한 댓글")
+    @GetMapping("/{member_id}/feedback")
+    public ResponseEntity<List<CommentResponse>> getComment(@PathVariable("member_id") Long memberId) {
+        return ResponseEntity.ok().body(commentService.getMyComments(memberId));
     }
 }
