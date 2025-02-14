@@ -7,18 +7,18 @@ import googleIcon from '../../assets/images/social/google-icon.svg'
 
 const SocialLogin: React.FC = () => {  
   const handleGoogleLogin = () => {
-    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/google';
-    window.location.href = `http://${REDIRECT_URI}`;
+    const REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+    window.location.href = `${REDIRECT_URI}`;
   };
   
   const handleKakaoLogin = () => {
-    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/kakao';
-    window.location.href = `http://${REDIRECT_URI}`;
+    const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
+    window.location.href = `${REDIRECT_URI}`;
   };
 
   const handleNaverLogin = () => {
-    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/naver';
-    window.location.href = `http://${REDIRECT_URI}`;
+    const REDIRECT_URI = import.meta.env.VITE_NAVER_REDIRECT_URI;
+    window.location.href = `${REDIRECT_URI}`;
   };
 
   return (
