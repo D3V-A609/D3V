@@ -6,31 +6,11 @@
 /* 상단 네비게이션 버튼 */
 .detail-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
+  margin-top: 10px;
+  padding: 10px 0px 8px 0px; /* 상하좌우 여백 */
   border-bottom: 3px solid #d9e9ff;
-}
-
-.left-buttons {
-  display: flex;
-  gap: 5px;
-}
-
-.nav-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 8px;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 3px;
-  height: 35px;
-  width: 70px;
-  background-color: #ffffff;
-  color: #00518d;
-  border: 1px solid #00518d;
 }
 
 .back-button {
@@ -46,12 +26,6 @@
   background-color: #00518d;
   color: #ffffff;
   border: none;
-}
-
-.nav-button {
-  border: 1px solid #00518d;
-  background-color: white;
-  width: 70px;
 }
 
 .back-button {
@@ -163,3 +137,37 @@
   font-size: 16px;
 }
 
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 0px 0px 30px;
+}
+
+.comment-count {
+  text-align: left;
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  
+}
+
+.edit-button,
+.delete-button {
+  background-color: white;
+  color: #00518d;
+  border: 1px solid #00518d;
+  padding: 6px 16px !important;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  background-color: #00518d;
+  color: white;
+}

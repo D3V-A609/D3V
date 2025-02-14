@@ -19,28 +19,33 @@ const categoryNameMap: Record<string, string> = {
 
 interface ArticleDetailProps {
   articleId: number;
-  onBackClick: () => void;
+  onBackClick: (isDeleted?: boolean) => void;
 }
 
 const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick }) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const { currentArticle, loading, error } = useAppSelector(
-    (state) => state.articles || { currentArticle: null, loading: false, error: null }
+  const { currentArticle, error } = useAppSelector(
+    (state) => state.articles || { currentArticle: null, error: null }
   );
 
   const currentUserId = 1; // 현재 사용자의 memberId를 1로 고정
 
-  useEffect(() => {
-    if (!currentArticle || currentArticle.id !== articleId) {
+  const fetchArticleData = useCallback(() => {
+    if (articleId) {
       dispatch(fetchArticle(articleId));
     }
-  }, [dispatch, articleId, currentArticle]);
+  }, [dispatch, articleId]);
+  
+  useEffect(() => {
+    if (!isDeleting) {
+      fetchArticleData();
+    }
+  }, [fetchArticleData, isDeleting]);
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+  if (!currentArticle) return null;
 
   const member = dummyUsers.find(user => user.memberId === currentArticle?.memberId);
   const isAuthor = currentUserId === currentArticle?.memberId;
@@ -49,41 +54,29 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
     setIsEditing(true);
   };
 
-  const handleDelete = useCallback(async () => {
-    if (isDeleting) return; // 이미 삭제 중이면 실행하지 않음
-    if (currentArticle && window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+  const handleDelete = async () => {
+    if (isDeleting) return;
+    if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
       try {
-        setIsDeleting(true); // 삭제 중 상태 설정
+        setIsDeleting(true);
         await dispatch(deleteArticle(currentArticle.id)).unwrap();
         alert("게시글이 성공적으로 삭제되었습니다.");
-        onBackClick(); // 게시글 목록으로 이동
+        onBackClick(true); // 삭제 성공 여부를 전달
       } catch (error) {
         console.error("게시글 삭제 중 오류 발생:", error);
         alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
       } finally {
-        setIsDeleting(false); // 삭제 완료 후 상태 초기화
+        setIsDeleting(false);
       }
     }
-  }, [currentArticle, isDeleting, dispatch, onBackClick]);
-
+  };
+  
   return (
     <div className="article-detail">
       <div className="detail-header">
-        <div className="left-buttons">
-          {isAuthor && !isEditing && (
-            <>
-              <button className="edit-button" onClick={handleEdit}>수정</button>
-              <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
-                {isDeleting ? "삭제 중..." : "삭제"}
-              </button>
-            </>
-          )}
-        </div>
-        <div className="right-buttons">
-          <button className="back-button" onClick={onBackClick}>
-            목록
-          </button>
-        </div>
+        <button className="back-button" onClick={() => onBackClick(false)}>
+          목록
+        </button>
       </div>
 
       {currentArticle && (
@@ -150,6 +143,20 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
                   dangerouslySetInnerHTML={{ __html: currentArticle.content }}
                   className="article-content"
                 ></div>
+              </div>
+
+              <div className="comment-header">
+                <p className="comment-count">
+                  총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
+                </p>
+                {isAuthor && !isEditing && (
+                  <div className="action-buttons">
+                    <button className="edit-button" onClick={handleEdit}>수정</button>
+                    <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
+                      {isDeleting ? "삭제 중..." : "삭제"}
+                    </button>
+                  </div>
+                )}
               </div>
 
             {/* 댓글 목록 */}
