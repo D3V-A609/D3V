@@ -218,7 +218,8 @@ public class AnswerServiceImpl implements AnswerService {
                         answer.getCreatedAt(),
                         answer.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(answer),
-                        likesRepository.countByAnswer(answer)
+                        likesRepository.countByAnswer(answer),
+                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), answer)
                 ))
                 .collect(Collectors.toList());
     }
