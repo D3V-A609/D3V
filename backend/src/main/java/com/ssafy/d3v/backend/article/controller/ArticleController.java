@@ -75,4 +75,10 @@ public class ArticleController {
         articleService.delete(articleId);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "내가 작성한 자유게시판 게시글")
+    @GetMapping("/{member_id}/article")
+    public ResponseEntity<List<ArticleResponse>> getMyArticles(@PathVariable("member_id") long memberId) {
+        return ResponseEntity.ok().body(articleService.getMyArticles(memberId));
+    }
 }
