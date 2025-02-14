@@ -20,4 +20,6 @@ public interface MemberService {
     ResponseEntity<?> login(HttpServletResponse response, MemberReqDto.Login login);
 
     ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response);
+
+    Long getMemberId();
 }

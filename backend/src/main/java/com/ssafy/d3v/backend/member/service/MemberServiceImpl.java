@@ -9,6 +9,7 @@ import com.ssafy.d3v.backend.common.util.CookieUtil;
 import com.ssafy.d3v.backend.common.util.HeaderUtil;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
+import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.member.dto.MemberLoginResponse;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
@@ -66,6 +67,12 @@ public class MemberServiceImpl implements MemberService {
                 .followerCount(followRepository.countByFollower(member))
                 .followingCount(followRepository.countByFollowing(member))
                 .build();
+    }
+
+    @Override
+    public Long getMemberId() {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        return memberRepository.findByEmail(memberEmail).orElseThrow().getId();
     }
 
     @Override

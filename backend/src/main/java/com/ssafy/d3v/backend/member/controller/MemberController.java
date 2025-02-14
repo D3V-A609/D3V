@@ -56,6 +56,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "로그인 되어있는 멤버ID 조회")
+    @GetMapping("/id")
+    public ResponseEntity<Long> getUser() {
+        return ResponseEntity.ok().body(memberService.getMemberId());
+    }
+
+
     @Operation(summary = "회원가입", responses = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "회원가입 실패"),
