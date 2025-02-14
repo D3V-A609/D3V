@@ -13,4 +13,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByAnswer(Answer answer);
 
     Optional<Feedback> findByIdAndMember(long feedbackId, Member member);
+
+    List<Feedback> findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(Member member);
 }

@@ -22,4 +22,6 @@ public interface AnswerService {
     List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved);
 
     TextAnswerResponse convertSpeechToText(byte[] speech);
+
+    List<AnswerResponse> getAnswerByLike();
 }
