@@ -9,16 +9,21 @@ export const fetchArticles = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log('in article action: ', error);
-      throw new Error('게시글 목록을 불러오는데 에러가 발생했습니다.');
+      throw new Error('게시글 목록을 불러오는데 문제가가 발생했습니다.');
     }
   }
 );
 
 export const fetchArticle = createAsyncThunk(
   "articles/fetchArticle",
-  async (articleId: number) => {
-    const response = await articleApi.getArticleById(articleId);
-    return response.data;
+  async (articleId: number, {rejectWithValue}) => {
+    try{
+      const response = await articleApi.getArticleById(articleId);
+      return response.data;
+    }catch(error){
+      console.log('in article error 2: ', error);
+      return rejectWithValue('게시글을 조회하는데 문제가 발생했습니다.')
+    }
   }
 );
 
@@ -30,8 +35,36 @@ export const createArticle = createAsyncThunk(
       const response = await articleApi.createArticle(formData);
       return response.data;
     } catch (error) {
-      console.error("Error creating article:", error);
-      return rejectWithValue("게시글 생성에 실패했습니다.");
+      console.error("in article action 3:", error);
+      return rejectWithValue("게시글을 등록하는데 문제가 발생했습니다.");
+    }
+  }
+);
+
+// 내 게시글 조회
+export const fetchMyArticles = createAsyncThunk(
+  'articles/myArticles',
+  async (memberId:number, {rejectWithValue}) => {
+    try{
+      const response = await articleApi.getMyArticles(memberId);
+      return response.data;
+    }catch(error){
+      console.log("in acticle action 4: ", error)
+      return rejectWithValue("내 게시글을 불러오는데 문제가 발생했습니다.")
+    }
+  }
+);
+
+// 내가 작성한 게시글 댓글 조회
+export const fetMyArticleComments = createAsyncThunk(
+  'articles/myArticleComments',
+  async (memberId: number, {rejectWithValue}) => {
+    try{
+      const response = await articleApi.getMyArticleComments(memberId);
+      return response.data;
+    }catch(error){
+      console.log('in article action 5: ', error)
+      return rejectWithValue("내가 작성한 게시글 댓글을 불러오는데 문제가 발생했습니다.")
     }
   }
 );
