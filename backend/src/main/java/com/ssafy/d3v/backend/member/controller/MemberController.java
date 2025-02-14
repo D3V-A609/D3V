@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     @Operation(summary = "로그인 되어있는 멤버ID 조회")
-    @GetMapping
+    @GetMapping("/memberId")
     public ResponseEntity<Long> getUser() {
         return ResponseEntity.ok().body(memberService.getMemberId());
     }
