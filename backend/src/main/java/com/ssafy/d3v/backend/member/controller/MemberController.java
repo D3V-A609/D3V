@@ -56,7 +56,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "회원가입 API", responses = {
+    @Operation(summary = "회원가입", responses = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "회원가입 실패"),
     })
@@ -65,7 +65,7 @@ public class MemberController {
     public ResponseEntity<?> signUp(@ModelAttribute MemberReqDto.SignUp signUp
             , @RequestParam(value = "profile_image", required = false) MultipartFile profileImage
             , Errors errors) {
-        
+
         log.info("SignUp DTO: {}", signUp);
         log.info("Profile Image: {}", profileImage != null ? profileImage.getOriginalFilename() : "No file uploaded");
         // validation check
@@ -78,7 +78,7 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "로그인 API", responses = {
+    @Operation(summary = "로그인", responses = {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             @ApiResponse(responseCode = "400", description = "로그인 실패"),
     })
@@ -97,7 +97,7 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "로그아웃 API", responses = {
+    @Operation(summary = "로그아웃", responses = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "400", description = "로그아웃 실패"),
     })
