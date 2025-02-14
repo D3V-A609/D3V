@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchArticles, fetchArticle } from "../actions/articleActions";
+import { fetchArticles, fetchArticle, createArticle } from "../actions/articleActions";
 
 export interface Article {
   id: number;
@@ -83,6 +83,24 @@ const articleSlice = createSlice({
       .addCase(fetchArticle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch the article.";
+      })
+
+      // 글쓰기 기능 추가
+      .addCase(createArticle.pending, (state) => {
+        state.loading = true; // 글쓰기 요청 중 로딩 상태 활성화
+        state.error = null; // 에러 초기화
+      })
+      .addCase(createArticle.fulfilled, (state, action) => {
+        state.loading = false; // 요청 완료 후 로딩 상태 비활성화
+        state.error = null; // 에러 초기화
+        if (action.payload) {
+          // 새로 생성된 게시글을 목록에 추가
+          state.articles.unshift(action.payload);
+        }
+      })
+      .addCase(createArticle.rejected, (state, action) => {
+        state.loading = false; // 요청 실패 후 로딩 상태 비활성화
+        state.error = action.payload as string; // 에러 메시지 저장
       });
   },
 });

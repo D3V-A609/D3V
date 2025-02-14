@@ -68,17 +68,6 @@
   font-weight: bold;
 }
 
-/* 정렬 아이콘 스타일 */
-.article-list th::after {
-  content: '▽';
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.7em; /* 삼각형 크기 축소 */
-  color: #ccc; /* 비활성화 상태 색상 */
-}
-
 .article-list th.active::after {
   content: '▼';
   color: #000; /* 활성화 상태 색상 */

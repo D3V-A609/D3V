@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { fetchQuestions } from '../store/actions/questionActions';
 import { fetchJobs, fetchSkillsByJobs } from '../store/actions/jobActions';
@@ -18,6 +19,8 @@ import { ImFolderOpen } from 'react-icons/im';
  * 직무/기술/상태 필터링, 정렬, 페이지네이션 기능 포함
  */
 const AllQuestionPage:React.FC = () => {
+  const location = useLocation();
+  const initialJobFilter = location.state?.initialJobFilter || [];
   // Redux 상태 관리
   const dispatch = useAppDispatch();
   const { questions, error, pagination } = useAppSelector((state) => state.questions as QuestionState);
@@ -38,7 +41,7 @@ const AllQuestionPage:React.FC = () => {
     size: 15,
     sort: 'acnt',
     order: 'desc',
-    jobs: [],
+    jobs: initialJobFilter,
     skills: [],
     solved: undefined,
     keyword: undefined
@@ -48,6 +51,17 @@ const AllQuestionPage:React.FC = () => {
   useEffect(() => {
     dispatch(fetchJobs());
   }, [dispatch]);
+
+  // initialJobFilter가 변경될 때 params 업데이트 및 관련 스킬 조회
+  useEffect(() => {
+    if (initialJobFilter.length > 0) {
+      setParams(prev => ({
+        ...prev,
+        jobs: initialJobFilter,
+      }));
+      dispatch(fetchSkillsByJobs(initialJobFilter));
+    }
+  }, [initialJobFilter, dispatch]);
 
   // params 변경 시 질문 목록 다시 조회
   useEffect(() => {

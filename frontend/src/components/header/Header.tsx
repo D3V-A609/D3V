@@ -49,6 +49,10 @@ const Header: React.FC = () => {
     setIsUserInfoOpen(false);
   }
 
+  const goToLogin = () => {
+    navigate('/auth/login');
+  };
+
   return (
     <header className="header-container">
       <div className="header-container_logo-div">
@@ -90,7 +94,7 @@ const Header: React.FC = () => {
             )}
           </>
         ) : (
-          <div className="login-btn" onClick={login}>
+          <div className="login-btn" onClick={goToLogin}>
             로그인
           </div>
         )}
