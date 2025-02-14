@@ -100,3 +100,83 @@
   }
 }
 
+.question-cards.--unLogined{
+  filter: blur(0.5rem);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  position: relative;
+}
+
+.unlogin-text{
+  display: none;
+}
+
+
+.unlogin-text.--unLogined {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.unlogin-info-section-1{
+  padding-top: 2rem;
+}
+
+.unlogin-service-info-img-1{
+  width: 80%;
+}
+
+.unlogin-info-section-2 {
+  width: 100vw;  /* ✅ 화면 전체 너비로 확장 */
+  background-color: #F4FAFF;
+  position: relative; /* ✅ 부모 컨텍스트를 유지하면서 전체 너비 설정 */
+  left: 50%;
+  transform: translateX(-50%); /* ✅ 가운데 정렬 */
+}
+
+.unlogin-info-section-2 .service-info{
+  padding: 3rem 2em;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.unlogin-info-section-2 .service-info{
+  align-items: center;
+  padding: 3rem 2em;
+  display: flex;
+  justify-content: center;
+  gap: 3em;
+}
+
+.unlogin-info-section-2 .service-info .service-info-img{
+  width: 35%;
+}
+
+.unlogin-info-section-2 .service-info .service-info-img img{
+  width: 100%;
+}
+
+.unlogin-info-section-2 .service-info .service-info-text{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: start;
+}
+
+.service-info-text-div{
+  height: fit-content;
+  width: 30em;
+  padding: 0.5rem 1em;
+  border-radius: 8px;
+  background-color: white;
+}

@@ -13,6 +13,8 @@ import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import { format, subMonths } from 'date-fns';
 import { fetchJobs } from '../store/actions/jobActions';
+import serviceInfo from "../assets/images/service-info.png";
+import serviceScreen from "../assets/images/service-screen.png";
 
 type JobType = string;
 
@@ -30,7 +32,7 @@ const HomePage: React.FC = () => {
     error 
   } = useAppSelector((state) => state.questions as QuestionState);
   
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   const getPreviousMonth = () => {
     return format(subMonths(new Date(), 1), 'yyyy-MM');
@@ -84,7 +86,9 @@ const HomePage: React.FC = () => {
         iconStyle="check-icon"
       />
       <section className="today-questions">
-        <div className="question-cards">
+        {!isLoggedIn && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
+        <div className={`question-cards ${isLoggedIn? "" : "--unLogined"}`}>
+        {/* <span className={`unlogin-text ${isLoggedIn? "" : "--unLogined"}`}>로그인 후 사용해주세요.</span> */}
           {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
             <TodayQuestionCard
               key={question.id}
@@ -96,6 +100,38 @@ const HomePage: React.FC = () => {
           ))}
         </div>
       </section>
+
+      {!isLoggedIn && (
+        <>
+        <br />
+        <hr style={{width: '80%', color: '#CEC7C7', opacity: '0.3' }}/>
+        <section className='unlogin-info-section-1'>
+          <h3> 여러 개발 직무와 기술 Skill에 맞는</h3>
+          <h3>개발자 면접 질문과 답변들을 한눈에 확인해보세요!</h3>
+          <br />
+          <img src={serviceInfo} className='unlogin-service-info-img-1'/>
+        </section>
+        <br />
+        <section className='unlogin-info-section-2'>
+          <div className='service-info'>
+            <div className='service-info-img'>
+              <img src={serviceScreen} className='unlogin-service-info-img-2' />
+            </div>
+            <div className='service-info-text'>
+              <h4 style={{margin: 0}}>개발자에게 꼭 필요한 지식!</h4>
+              <p style={{margin: 0}}>개발 직무와 기술 스택에 맞는 면접 질문과 답변으로 </p>
+              <p style={{margin: 0}}>취뽀의 길에 함께 한 발자국 더 나아가요 ~ 😊</p>
+              <div className='service-info-text-div'>
+                000개 이상의 개발자를 위한 면접 질문과 다양한 답변!
+              </div>
+              <div className='service-info-text-div'>
+                다양한 직무의 사용자들과 지식 통찰 및 공유
+              </div>
+            </div>
+          </div>
+        </section>
+        </>
+      )}
 
       <section className="top10-section">
         <div className="section-header">
