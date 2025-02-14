@@ -66,8 +66,6 @@ public class MemberController {
             , @RequestParam(value = "profile_image", required = false) MultipartFile profileImage
             , Errors errors) {
 
-        log.info("SignUp DTO: {}", signUp);
-        log.info("Profile Image: {}", profileImage != null ? profileImage.getOriginalFilename() : "No file uploaded");
         // validation check
         if (errors.hasErrors()) {
             log.error("signUp 에러 : {}", errors.getAllErrors());
