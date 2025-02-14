@@ -60,7 +60,7 @@ public class CommentController {
 
     @Operation(summary = "내가 작성한 댓글")
     @GetMapping("member/{member_id}/comment")
-    public ResponseEntity<List<CommentResponse>> getComment(@PathVariable("member_id") Long memberId) {
+    public ResponseEntity<List<CommentResponse>> getComment(@PathVariable("member_id") long memberId) {
         return ResponseEntity.ok().body(commentService.getMyComments(memberId));
     }
 }
