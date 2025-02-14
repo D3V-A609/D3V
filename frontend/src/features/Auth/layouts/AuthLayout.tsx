@@ -1,3 +1,4 @@
+//features/Auth/layouts/AuthLayout.tsx
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import logoImg from '../../../assets/images/logo.gif';

@@ -1,3 +1,4 @@
+// components/Auth/socialLogin
 import React from 'react';
 import './SocialLogin.css'
 import kakaoIcon from '../../assets/images/social/kakao-icon.png'
@@ -6,15 +7,18 @@ import googleIcon from '../../assets/images/social/google-icon.svg'
 
 const SocialLogin: React.FC = () => {  
   const handleGoogleLogin = () => {
-    // 구글 로그인 로직
+    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/google';
+    window.location.href = `http://${REDIRECT_URI}`;
   };
   
   const handleKakaoLogin = () => {
-    // 카카오 로그인 로직
+    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/kakao';
+    window.location.href = `http://${REDIRECT_URI}`;
   };
 
   const handleNaverLogin = () => {
-    // 네이버 로그인 로직
+    const REDIRECT_URI = 'localhost:8080/oauth2/authorization/naver';
+    window.location.href = `http://${REDIRECT_URI}`;
   };
 
   return (
