@@ -47,7 +47,7 @@ public class MemberReqDto {
         private String email;
 
         @NotEmpty(message = "비밀번호는 필수 입력값입니다.")
-        @Schema(description = "비밀번호", example = "ssafy1234")
+        @Schema(description = "비밀번호", example = "ssafy!1234")
         private String password;
 
         public UsernamePasswordAuthenticationToken toAuthentication() {
