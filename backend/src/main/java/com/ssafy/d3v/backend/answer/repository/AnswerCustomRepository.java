@@ -1,6 +1,7 @@
 package com.ssafy.d3v.backend.answer.repository;
 
 import static com.ssafy.d3v.backend.answer.entity.QAnswer.answer;
+import static com.ssafy.d3v.backend.like.entity.QLikes.likes;
 import static com.ssafy.d3v.backend.member.entity.QFollow.follow;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -56,5 +57,14 @@ public class AnswerCustomRepository {
                 .from(follow)
                 .where(follow.follower.eq(viewer), follow.following.eq(owner))
                 .exists();
+    }
+
+    public List<Answer> getAnswerByLike(Member member) {
+        return queryFactory
+                .select(likes.answer)
+                .from(likes)
+                .where(likes.member.eq(member))
+                .orderBy(likes.answer.createdAt.desc())
+                .fetch();
     }
 }
