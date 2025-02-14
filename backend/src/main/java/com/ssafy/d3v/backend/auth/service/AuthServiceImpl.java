@@ -1,5 +1,8 @@
 package com.ssafy.d3v.backend.auth.service;
 
+import static com.ssafy.d3v.backend.common.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
+import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
+
 import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
 import com.ssafy.d3v.backend.auth.entity.VerificationCodeCache;
@@ -11,9 +14,11 @@ import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.CodeGenerator;
 import com.ssafy.d3v.backend.common.util.CookieUtil;
 import com.ssafy.d3v.backend.common.util.EmailSender;
+import com.ssafy.d3v.backend.common.util.HeaderUtil;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -113,31 +118,38 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         // 1. 쿠키에서 Refresh Token 가져오기
-        String refreshToken = CookieUtil.
-        // 1. Refresh Token 검증
-        if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
+        String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN).map(Cookie::getValue).orElse(null);
+
+        // 2. Refresh Token 검증
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
             return Response.badRequest("Refresh Token 정보가 유효하지 않습니다.");
         }
+        // 1. Request Header 에서 Access Token 추출
+        String accessToken = HeaderUtil.getAccessToken(request);
 
-        // 2. Access Token 에서 User email 을 가져옵니다.
-        Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
+        // 5. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
-        // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
-        String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
+        // 6. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
+        String redisRefreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
         // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
-        if (ObjectUtils.isEmpty(refreshToken)) {
+        if (ObjectUtils.isEmpty(redisRefreshToken)) {
             return Response.badRequest("잘못된 요청입니다.");
         }
-        if (!refreshToken.equals(reissue.getRefreshToken())) {
+        if (!redisRefreshToken.equals(refreshToken)) {
             return Response.badRequest("Refresh Token 정보가 일치하지 않습니다.");
         }
 
-        // 4. 새로운 토큰 생성
+        // 7. 새로운 토큰 생성
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
-        // 5. RefreshToken Redis 업데이트
+        // 8. RefreshToken Redis 업데이트
         redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+
+        // 9. 쿠키에 Refresh Token 저장
+        CookieUtil.addCookie(response, REFRESH_TOKEN, tokenInfo.getRefreshToken(),
+                getRefreshTokenExpireTimeCookie());
 
         return Response.makeResponse(HttpStatus.OK, "토큰 재발급을 성공하였습니다.", 0, tokenInfo);
     }

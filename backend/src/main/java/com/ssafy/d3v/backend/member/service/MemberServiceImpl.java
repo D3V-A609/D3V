@@ -117,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
         if (memberRepository.existsByEmail(signUp.getEmail())) {
             return Response.badRequest("이미 회원가입된 이메일입니다.");
         }
-        String profileImg = null;
+        String profileImg = "empty";
         if (!profileImage.isEmpty()) {
             profileImg = s3ImageUploader.upload(profileImage);
         }
@@ -150,13 +150,18 @@ public class MemberServiceImpl implements MemberService {
             if (member.getProviderType() != ProviderType.LOCAL) {
                 return Response.badRequest("소셜 로그인을 이용해주세요.");
             }
+            // username & password 검사 후 유저 정보 가져옴
+            UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            Authentication authentication = authenticateUser(login);
+            // 토큰 생성
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
             // Redis에 RefreshToken 저장
-            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
             storeRefreshTokenInRedis(authentication.getName(), tokenInfo);
 
+            log.info("로그인 토큰 생성 Access Token: " + tokenInfo.getAccessToken());
+            log.info("로그인 토큰 생성 Refresh Token: " + tokenInfo.getRefreshToken());
             // 쿠키에 Refresh Token 저장
             CookieUtil.addCookie(response, REFRESH_TOKEN, tokenInfo.getRefreshToken(),
                     getRefreshTokenExpireTimeCookie());
@@ -179,7 +184,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        // 1. request에서 Access Token 가져오기
+        // 1. Request Header 에서 Access Token 추출
         String accessToken = HeaderUtil.getAccessToken(request);
 
         // 2. Access Token 검증
@@ -187,7 +192,7 @@ public class MemberServiceImpl implements MemberService {
             return Response.badRequest("잘못된 요청입니다.");
         }
 
-        // 3. Access Token 에서 User email 을 가져옵니다.
+        // 3. Access Token 에서 Member 정보를 가져옵니다.
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // 4. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
@@ -196,8 +201,9 @@ public class MemberServiceImpl implements MemberService {
             redisTemplate.delete("RT:" + authentication.getName());
         }
         // 5. 쿠키에서 Refresh Token 삭제
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
 
-        // 5. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        // 6. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         Long expiration = jwtTokenProvider.getExpiration(accessToken);
         redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
 

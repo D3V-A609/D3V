@@ -1,8 +1,7 @@
 package com.ssafy.d3v.backend.member.controller;
 
 import com.ssafy.d3v.backend.common.util.Response;
-import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
-import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
+import com.ssafy.d3v.backend.member.dto.MemberReqDto;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import com.ssafy.d3v.backend.member.service.MemberService;
@@ -62,12 +61,14 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "회원가입 실패"),
     })
 
-    @PostMapping("")
-    public ResponseEntity<?> signUp(@RequestBody @Validated SignUp signUp
+    @PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> signUp(@ModelAttribute MemberReqDto.SignUp signUp
             , @RequestParam(value = "profile_image", required = false) MultipartFile profileImage
             , Errors errors) {
+        
+        log.info("SignUp DTO: {}", signUp);
+        log.info("Profile Image: {}", profileImage != null ? profileImage.getOriginalFilename() : "No file uploaded");
         // validation check
-        log.info(signUp.toString());
         if (errors.hasErrors()) {
             log.error("signUp 에러 : {}", errors.getAllErrors());
             return Response.badRequest("회원가입에 실패하였습니다.");
@@ -84,7 +85,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             HttpServletResponse response,
-            @RequestBody @Validated Login login,
+            @RequestBody @Validated MemberReqDto.Login login,
             Errors errors) {
         // validation  check
         log.info(login.toString());

@@ -43,11 +43,11 @@ public class MemberReqDto {
 
         @NotEmpty(message = "이메일은 필수 입력값입니다.")
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
-        @Schema(description = "이메일", example = "ssafy123@gmail.com")
+        @Schema(description = "이메일", example = "ssafy@gmail.com")
         private String email;
 
         @NotEmpty(message = "비밀번호는 필수 입력값입니다.")
-        @Schema(description = "비밀번호", example = "ssafy!1234")
+        @Schema(description = "비밀번호", example = "ssafy1234")
         private String password;
 
         public UsernamePasswordAuthenticationToken toAuthentication() {
