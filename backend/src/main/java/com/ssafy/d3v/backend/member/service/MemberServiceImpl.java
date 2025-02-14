@@ -4,6 +4,7 @@ import com.ssafy.d3v.backend.common.util.S3ImageUploader;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
 import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.member.repository.FollowRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final FollowRepository followRepository;
     private final S3ImageUploader s3ImageUploader;
     private final PasswordEncoder passwordEncoder;
     private final Long memberId = 1L;
@@ -34,6 +36,8 @@ public class MemberServiceImpl implements MemberService {
                 .providerType(member.getProviderType().name())
                 .createdAt(member.getCreatedAt())
                 .favoriteJob(member.getFavoriteJob())
+                .followerCount(followRepository.countByFollower(member))
+                .followingCount(followRepository.countByFollowing(member))
                 .build();
     }
 
@@ -66,6 +70,8 @@ public class MemberServiceImpl implements MemberService {
                 .providerType(updated.getProviderType().name())
                 .createdAt(updated.getCreatedAt())
                 .favoriteJob(updated.getFavoriteJob())
+                .followerCount(followRepository.countByFollowing(member))
+                .followingCount(followRepository.countByFollower(member))
                 .build();
     }
 

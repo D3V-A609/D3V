@@ -7,5 +7,5 @@ import lombok.Builder;
 @Builder
 public record MemberResponse(long memberId, String nickname, String email, String profileImg,
                              String githubUrl, long maxStreak, long ongoingStreak, String providerType,
-                             LocalDateTime createdAt, JobRole favoriteJob) {
+                             LocalDateTime createdAt, JobRole favoriteJob, int followerCount, int followingCount) {
 }
