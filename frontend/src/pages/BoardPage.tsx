@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchArticles, fetchArticle } from "../store/actions/articleActions";
-import { updateArticleInList } from "../store/slices/articleSlice";
+import { fetchArticles } from "../store/actions/articleActions";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
+import WriteArticle from "../features/Article/WriteArticle";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
@@ -19,45 +19,56 @@ const categoryMap: Record<string, string> = {
 
 const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { articles, loading, error, pagination } = useAppSelector(
-    (state) => state.articles || { articles: [], loading: false, error: null, pagination: undefined }
+  const { articles, error, pagination } = useAppSelector(
+    (state) => state.articles || { articles: [], error: null, pagination: undefined }
   );
-  const [category, setCategory] = useState<string>("전체");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortField, setSortField] = useState<string>("LATEST");
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [params, setParams] = useState({
+    category: "전체",
+    searchQuery: "",
+    sortField: "LATEST",
+    sortOrder: 'DESC' as 'ASC' | 'DESC',
+    page: 1,
+    size: 15
+  });
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
 
-  useEffect(() => {
+  const fetchArticlesData = useCallback(() => {
     if (currentView === "list") {
-      const apiCategory = categoryMap[category];
-      dispatch(fetchArticles({ category: apiCategory, keyword: searchQuery, sort: sortField, order: sortOrder }));
+      const apiCategory = categoryMap[params.category];
+      dispatch(fetchArticles({ 
+        category: apiCategory, 
+        keyword: params.searchQuery, 
+        sort: params.sortField, 
+        order: params.sortOrder,
+        page: params.page,
+        size: params.size
+      }));
     }
-  }, [dispatch, category, searchQuery, sortField, sortOrder, currentView]);
+  }, [dispatch, currentView, params.category, params.searchQuery, params.sortField, params.sortOrder, params.page, params.size]);
 
-  const handleCategoryChange = (newCategory: string) => setCategory(newCategory);
-  const handleSearch = (query: string) => setSearchQuery(query);
-  const handleSort = (field: string, order: 'asc' | 'desc') => {
-    setSortField(field);
-    setSortOrder(order);
+  useEffect(() => {
+    fetchArticlesData();
+  }, [fetchArticlesData]);
+
+  const handleParamChange = (newParams: Partial<typeof params>) => {
+    setParams(prev => ({ ...prev, ...newParams, page: 1 }));
   };
 
   const handleWriteClick = () => setCurrentView("create");
-  
+
   const handleArticleClick = (articleId: number) => {
     setSelectedArticleId(articleId);
     setCurrentView("detail");
-    dispatch(fetchArticle(articleId)).then((action) => {
-      if (fetchArticle.fulfilled.match(action)) {
-        dispatch(updateArticleInList(action.payload));
-      }
-    });
   };
-  
-  const handleBackToList = () => setCurrentView("list");
 
-  if (loading) return <div>Loading...</div>;
+  const handleBackToList = useCallback((isDeleted: boolean = false) => {
+    setCurrentView("list");
+    if (isDeleted) {
+      fetchArticlesData();
+    }
+  }, [fetchArticlesData]);
+
   if (error) return <div>Error occurred: {error}</div>;
 
   return (
@@ -76,8 +87,8 @@ const BoardPage: React.FC = () => {
               {Object.keys(categoryMap).map((cat) => (
                 <button
                   key={cat}
-                  className={category === cat ? "active" : ""}
-                  onClick={() => handleCategoryChange(cat)}
+                  className={params.category === cat ? "active" : ""}
+                  onClick={() => handleParamChange({ category: cat })}
                 >
                   {cat}
                 </button>
@@ -88,17 +99,18 @@ const BoardPage: React.FC = () => {
             </button>
           </div>
 
-          <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
+          <SearchBar 
+            searchQuery={params.searchQuery} 
+            onSearch={(query) => handleParamChange({ searchQuery: query })} 
+          />
 
           <ArticleList
             articles={articles}
             pagination={pagination}
-            onPageChange={(pageNumber) =>
-              dispatch(fetchArticles({ category: categoryMap[category], keyword: searchQuery, sort: sortField, order: sortOrder, page: pageNumber }))
-            }
-            onSort={handleSort}
+            onPageChange={(pageNumber) => handleParamChange({ page: pageNumber - 1 })}
+            onSort={(field, order) => handleParamChange({ sortField: field, sortOrder: order })}
             onArticleClick={handleArticleClick}
-            currentSort={{ field: sortField, order: sortOrder }}
+            currentSort={{ field: params.sortField, order: params.sortOrder }}
           />
         </>
       )}
@@ -108,6 +120,10 @@ const BoardPage: React.FC = () => {
           articleId={selectedArticleId}
           onBackClick={handleBackToList}
         />
+      )}
+
+      {currentView === "create" && (
+        <WriteArticle onCancel={() => setCurrentView("list")} />
       )}
     </div>
   );

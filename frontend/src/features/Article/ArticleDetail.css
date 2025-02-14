@@ -6,10 +6,10 @@
 /* 상단 네비게이션 버튼 */
 .detail-header {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
+  margin-top: 10px;
+  padding: 10px 0px 8px 0px; /* 상하좌우 여백 */
   border-bottom: 3px solid #d9e9ff;
 }
 
@@ -25,12 +25,7 @@
   width: 70px;
   background-color: #00518d;
   color: #ffffff;
-}
-
-.nav-button {
-  border: 1px solid #00518d;
-  background-color: white;
-  width: 70px;
+  border: none;
 }
 
 .back-button {
@@ -127,8 +122,10 @@
 }
 
 .detail-content img {
-  max-width: 100%; /* 이미지가 콘텐츠 영역을 넘지 않도록 제한 */
+  max-width: 70%; /* 이미지 너비를 컨테이너의 70%로 제한 */
   height: auto; /* 비율 유지 */
+  display: block; /* 적절한 정렬을 위해 블록 레벨 요소로 설정 */
+  margin: 0 auto; /* 이미지를 가로로 중앙 정렬 */
 }
 
 .detail-content p {
@@ -140,3 +137,37 @@
   font-size: 16px;
 }
 
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 0px 0px 30px;
+}
+
+.comment-count {
+  text-align: left;
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  
+}
+
+.edit-button,
+.delete-button {
+  background-color: white;
+  color: #00518d;
+  border: 1px solid #00518d;
+  padding: 6px 16px !important;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  background-color: #00518d;
+  color: white;
+}

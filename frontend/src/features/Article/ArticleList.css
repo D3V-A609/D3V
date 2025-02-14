@@ -15,7 +15,7 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
   font-weight: bold;
-  color: #000000;
+  color: #535353;
   border-top: 2px solid #d9e9ff;
   border-bottom: 2px solid #d9e9ff;
   cursor: pointer;
@@ -66,17 +66,6 @@
 .article-list td:first-child {
   color: #00518d;
   font-weight: bold;
-}
-
-/* 정렬 아이콘 스타일 */
-.article-list th::after {
-  content: '▽';
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.7em; /* 삼각형 크기 축소 */
-  color: #ccc; /* 비활성화 상태 색상 */
 }
 
 .article-list th.active::after {

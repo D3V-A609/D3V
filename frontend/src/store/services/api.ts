@@ -1,12 +1,26 @@
 import axios, { AxiosInstance } from 'axios';
+import TokenService from './token/tokenService';
 
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,  // 10초
 });
+
+api.interceptors.request.use(
+  (config) => {
+    const token = TokenService.getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // 추후 필요시 요청 인터셉터 추가
 api.interceptors.request.use(

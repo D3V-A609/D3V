@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa"; // 햄버거 메뉴 아이콘
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useSelector } from "react-redux"; // UseSelector -> useSelector로 수정
+import { toast } from 'react-toastify'; // toast import 추가
+import { RootState } from "../../store"; // RootState import 추가
 
 import "./Header.css";
-
 import Logo from "../../assets/images/logo.gif";
-import Nav from "./Nav.tsx";
-import UserProfileImg from "./UserProfileImg.tsx";
+import Nav from "./Nav";
+import UserProfileImg from "./UserProfileImg";
 
 const Header: React.FC = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
-  const [isLogined, setIsLogined] = useState(false);
+  
+  // isLogined state 제거하고 Redux의 isAuthenticated 사용
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const navigate = useNavigate();
 
@@ -34,14 +38,9 @@ const Header: React.FC = () => {
   };
 
   const logout = () => {
-    setIsLogined(false);
+    // Redux logout action 추가 필요
     setIsUserInfoOpen(false);
     navigate("/");
-  };
-
-  const login = () => {
-    setIsLogined(true);
-    setIsUserInfoOpen(false); // 로그인 시 드롭다운 닫기
   };
 
   const goMyPage = () => {
@@ -49,10 +48,24 @@ const Header: React.FC = () => {
     setIsUserInfoOpen(false);
   }
 
+  const goToLogin = () => {
+    navigate('/auth/login');
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('로그인되었습니다.', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        toastId: 'login-success' // 고유 ID 추가
+      });
+    }
+  }, [isAuthenticated]);
+
   return (
     <header className="header-container">
       <div className="header-container_logo-div">
-        {/* 햄버거 메뉴 버튼 */}
         <div className="hamburger-menu" onClick={toggleNav}>
           {isNavOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </div>
@@ -61,22 +74,17 @@ const Header: React.FC = () => {
           src={Logo}
           className="header-container_logo-svg"
           onClick={handleLogoClick}
+          alt="Logo"
         />
       </div>
 
-      <nav
-        className={`header-container_nav-section ${
-          isNavOpen ? "active" : ""
-        }`}
-      >
+      <nav className={`header-container_nav-section ${isNavOpen ? "active" : ""}`}>
         <Nav toggleClose={navToggleClose} />
       </nav>
 
-      {/* 유저 프로필 및 로그인 상태 */}
       <div className="header-user-profile">
-        {isLogined ? (
+        {isAuthenticated ? (
           <>
-            {/* SimpleUserInfo 클릭 시 유저 드롭다운 토글 */}
             <div onClick={toggleUserInfo}>
               <UserProfileImg />
             </div>
@@ -90,7 +98,7 @@ const Header: React.FC = () => {
             )}
           </>
         ) : (
-          <div className="login-btn" onClick={login}>
+          <div className="login-btn" onClick={goToLogin}>
             로그인
           </div>
         )}

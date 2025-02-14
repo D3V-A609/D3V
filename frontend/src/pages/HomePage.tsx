@@ -1,5 +1,4 @@
-// Pages/HomePage.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux'
 import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
@@ -8,16 +7,23 @@ import TodayQuestionCard from '../components/TodayQuestionCard/TodayQuestionCard
 import Top10QuestionCard from '../components/Top10/Top10QuestionCard';
 import Top10Filter from '../components/Top10/Top10Filter';
 import PageHeader from '../components/PageHeader/PageHeader';
-import { BsFillTrophyFill } from "react-icons/bs";
+import { BsFillTrophyFill, BsFillCalendarCheckFill } from "react-icons/bs";
 import './HomePage.css';
 import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
-import { BsFillCalendarCheckFill } from "react-icons/bs";
+import { format, subMonths } from 'date-fns';
+import { fetchJobs } from '../store/actions/jobActions';
+import serviceInfo from "../assets/images/service-info.png";
+import serviceScreen from "../assets/images/service-screen.png";
+
+type JobType = string;
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [selectedJob, setSelectedJob] = useState<string[]>(['Front-end']);
+  const [selectedJob, setSelectedJob] = useState<JobType>('FRONTEND');
+  const [jobCategories, setJobCategories] = useState<{ [key: string]: string }>({});
+  const scrollRef = useRef<HTMLDivElement>(null);
   
   const { 
     dailyQuestions, 
@@ -26,25 +32,42 @@ const HomePage: React.FC = () => {
     error 
   } = useAppSelector((state) => state.questions as QuestionState);
   
-  const isLoggedIn = true;
+  const isLoggedIn = false;
+
+  const getPreviousMonth = () => {
+    return format(subMonths(new Date(), 1), 'yyyy-MM');
+  };
 
   useEffect(() => {
     dispatch(fetchDailyQuestions());
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedJob.length > 0) {
-      // Front-end -> FRONTEND로 변환
-      const formattedJob = selectedJob[0].toUpperCase().replace('-', '');
-      
-      dispatch(fetchTop10Questions({
-        month: '2025-01', // 현재가 2025-02이므로 지난달인 2025-01로 설정
-        job: formattedJob
-      }));
-    }
+    const previousMonth = getPreviousMonth();
+    dispatch(fetchTop10Questions({
+      month: previousMonth,
+      job: selectedJob,
+    }));
   }, [dispatch, selectedJob]);
-  
-  
+
+  useEffect(() => {
+    dispatch(fetchJobs())
+      .unwrap()
+      .then((jobs: JobType[]) => {
+        const formattedJobs = jobs.reduce((acc, job) => {
+          acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+          return acc;
+        }, {} as { [key: string]: string });
+        setJobCategories(formattedJobs);
+      })
+      .catch((error) => console.error('Failed to fetch jobs:', error));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedJob]);  
 
   const QuestionCardClick = (id: number) => {
     dispatch(setSelectedQuestionId(id));
@@ -55,7 +78,7 @@ const HomePage: React.FC = () => {
   if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
 
   return (
-    <div className="home-page">
+    <div className="home-page" ref={scrollRef}>
       <PageHeader 
         title="오늘의 면접 질문"
         description="D3V's pick"
@@ -63,7 +86,9 @@ const HomePage: React.FC = () => {
         iconStyle="check-icon"
       />
       <section className="today-questions">
-        <div className="question-cards">
+        {!isLoggedIn && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
+        <div className={`question-cards ${isLoggedIn? "" : "--unLogined"}`}>
+        {/* <span className={`unlogin-text ${isLoggedIn? "" : "--unLogined"}`}>로그인 후 사용해주세요.</span> */}
           {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
             <TodayQuestionCard
               key={question.id}
@@ -76,20 +101,58 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Top 10 섹션 */}
+      {!isLoggedIn && (
+        <>
+        <br />
+        <hr style={{width: '80%', color: '#CEC7C7', opacity: '0.3' }}/>
+        <section className='unlogin-info-section-1'>
+          <h3> 여러 개발 직무와 기술 Skill에 맞는</h3>
+          <h3>개발자 면접 질문과 답변들을 한눈에 확인해보세요!</h3>
+          <br />
+          <img src={serviceInfo} className='unlogin-service-info-img-1'/>
+        </section>
+        <br />
+        <section className='unlogin-info-section-2'>
+          <div className='service-info'>
+            <div className='service-info-img'>
+              <img src={serviceScreen} className='unlogin-service-info-img-2' />
+            </div>
+            <div className='service-info-text'>
+              <h4 style={{margin: 0}}>개발자에게 꼭 필요한 지식!</h4>
+              <p style={{margin: 0}}>개발 직무와 기술 스택에 맞는 면접 질문과 답변으로 </p>
+              <p style={{margin: 0}}>취뽀의 길에 함께 한 발자국 더 나아가요 ~ 😊</p>
+              <div className='service-info-text-div'>
+                000개 이상의 개발자를 위한 면접 질문과 다양한 답변!
+              </div>
+              <div className='service-info-text-div'>
+                다양한 직무의 사용자들과 지식 통찰 및 공유
+              </div>
+            </div>
+          </div>
+        </section>
+        </>
+      )}
+
       <section className="top10-section">
         <div className="section-header">
           <PageHeader           
-            title={`${selectedJob[0]} 주간 TOP 10`}
+            title={`${jobCategories[selectedJob] || selectedJob} 주간 TOP 10`}
             icon={<BsFillTrophyFill />}
             iconStyle="trophy-icon"
           />
         </div>
-        <Top10Filter jobFilter={selectedJob} onJobFilterChange={setSelectedJob} />
+        <Top10Filter 
+          selectedJob={selectedJob} 
+          onJobChange={setSelectedJob} 
+          jobCategories={jobCategories} 
+        />
         <button
           className="more-button"
           onClick={() =>
-            navigate('/all-questions', { state: { selectedJob: selectedJob[0] } })
+            navigate('/all-questions', { 
+              state: { initialJobFilter: [selectedJob] },
+              replace: true 
+            })
           }
         >
           더보기
