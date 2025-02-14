@@ -1,8 +1,8 @@
 package com.ssafy.d3v.backend.oauth.handler;
 
 
+import com.ssafy.d3v.backend.common.util.CookieUtil;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.ssafy.d3v.backend.oauth.utils.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

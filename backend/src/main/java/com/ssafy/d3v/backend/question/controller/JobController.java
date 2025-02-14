@@ -34,10 +34,5 @@ public class JobController {
     public List<SkillType> getSkillsByJobs(@RequestBody List<String> jobs) {
         return jobService.getSkillsByJobs(jobs).stream().map(Skill::getName).toList();
     }
-
-//    @GetMapping("/{jobRole}/questions")
-//    @Operation(summary = "한 직무에 대한 질문들 조회", description = "하나의 직무에 대한 질문을 전부 조회합니다.")
-//    public List<Question> getQuestionsByJob(@PathVariable String jobRole) {
-//        return jobService.getQuestionsByJob(jobRole);
-//    }
+    
 }

@@ -1,35 +1,38 @@
 package com.ssafy.d3v.backend.bookmark.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.d3v.backend.bookmark.entity.Bookmark;
 import java.util.List;
 import lombok.Builder;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public record BookmarkResponse(
         @JsonProperty("bookmarks")
-        List<BookmarkDto> bookmarks
+        List<BookmarkDto> bookmarks,
+
+        @JsonProperty("selectedBookmarks")
+        List<Long> selectedBookmarks
 ) {
-    @Builder
-    public record BookmarkDto(
-            @JsonProperty("bookmarkId")
-            Long id,
+    public static BookmarkResponse from(List<Bookmark> bookmarks) {
+        List<BookmarkDto> bookmarkDtos = bookmarks.stream()
+                .map(bookmark -> BookmarkDto.from(bookmark, bookmark.getBookmarkQuestions().size()))
+                .toList();
 
-            String name,
+        return BookmarkResponse.builder()
+                .bookmarks(bookmarkDtos)
+                .build();
+    }
 
-            @JsonProperty("accessLevel")
-            String accessLevel,
+    public static BookmarkResponse from(List<Bookmark> bookmarks, List<Long> selectedBookmarks) {
+        List<BookmarkDto> bookmarkDtos = bookmarks.stream()
+                .map(BookmarkDto::from)
+                .toList();
 
-            @JsonProperty("questionCount")
-            int questionCount
-    ) {
-        public static BookmarkDto from(Bookmark bookmark, int questionCount) {
-            return BookmarkDto.builder()
-                    .id(bookmark.getId())
-                    .name(bookmark.getName())
-                    .accessLevel(bookmark.getAccessLevel().toString())
-                    .questionCount(questionCount)
-                    .build();
-        }
+        return BookmarkResponse.builder()
+                .bookmarks(bookmarkDtos)
+                .selectedBookmarks(selectedBookmarks)
+                .build();
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,8 +21,7 @@ public class HistoryController {
 
     @Operation(summary = "히스토리 조회")
     @GetMapping("/{member_id}")
-    public ResponseEntity<List<HistoryResponse>> getHistory(@PathVariable(value = "member_id") Long memberId,
-                                                            @RequestParam int year) {
-        return ResponseEntity.ok().body(historyService.getHistory(memberId, year));
+    public ResponseEntity<List<HistoryResponse>> getHistory(@PathVariable(value = "member_id") Long memberId) {
+        return ResponseEntity.ok().body(historyService.getHistory(memberId));
     }
 }

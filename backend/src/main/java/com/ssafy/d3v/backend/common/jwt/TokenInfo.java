@@ -1,4 +1,4 @@
-package com.ssafy.d3v.backend.jwt;
+package com.ssafy.d3v.backend.common.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

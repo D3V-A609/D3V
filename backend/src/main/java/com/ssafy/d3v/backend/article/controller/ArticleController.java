@@ -25,13 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/article")
+@RequestMapping("/api")
 @Tag(name = "게시글", description = "게시글 API")
 public class ArticleController {
     private final ArticleService articleService;
 
     @Operation(summary = "카테고리별 게시글 조회")
-    @GetMapping
+    @GetMapping("/article")
     public ResponseEntity<PagedResponse<ArticleResponse>> get(
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -43,7 +43,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "게시글 생성")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/article", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArticleDetailResponse> create(@RequestParam("category_id") long categoryId,
                                                         @RequestParam("title") String title,
                                                         @RequestParam("content") String content,
@@ -53,13 +53,13 @@ public class ArticleController {
     }
 
     @Operation(summary = "게시글 상세 조회")
-    @GetMapping("/{article_id}")
+    @GetMapping("/article/{article_id}")
     public ResponseEntity<ArticleDetailResponse> getDetail(@PathVariable("article_id") long articleId) {
         return ResponseEntity.ok().body(articleService.getDetail(articleId));
     }
 
     @Operation(summary = "게시글 수정")
-    @PatchMapping(value = "/{article_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/article/{article_id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArticleDetailResponse> update(@PathVariable("article_id") long articleId,
                                                         @RequestParam("category_id") long categoryId,
                                                         @RequestParam("title") String title,
@@ -70,9 +70,15 @@ public class ArticleController {
     }
 
     @Operation(summary = "게시글 삭제")
-    @DeleteMapping("/{article_id}")
+    @DeleteMapping("/article/{article_id}")
     public ResponseEntity delete(@PathVariable("article_id") long articleId) {
         articleService.delete(articleId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "내가 작성한 자유게시판 게시글")
+    @GetMapping("/member/{member_id}/article")
+    public ResponseEntity<List<ArticleResponse>> getMyArticles(@PathVariable("member_id") long memberId) {
+        return ResponseEntity.ok().body(articleService.getMyArticles(memberId));
     }
 }

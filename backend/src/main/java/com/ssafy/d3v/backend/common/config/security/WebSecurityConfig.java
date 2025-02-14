@@ -1,7 +1,7 @@
 package com.ssafy.d3v.backend.common.config.security;
 
-import com.ssafy.d3v.backend.jwt.JwtAuthenticationFilter;
-import com.ssafy.d3v.backend.jwt.JwtTokenProvider;
+import com.ssafy.d3v.backend.common.jwt.JwtAuthenticationFilter;
+import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.ssafy.d3v.backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
@@ -54,7 +54,9 @@ public class WebSecurityConfig {
                                 "/api/**",//원할한 테스트를 위해서 다 풀어둠
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/api/member/**",
+                                "/api/member/login",
+                                "/api/member/signup",
+                                "/api/member/email/**",
                                 "/api/question/daily",
                                 "/api/question/top10",
                                 "/api/job/**"
@@ -131,6 +133,7 @@ public class WebSecurityConfig {
         allowedHttpMethods.add("POST");
         allowedHttpMethods.add("PUT");
         allowedHttpMethods.add("DELETE");
+        allowedHttpMethods.add("PATCH");
         configuration.setAllowedMethods(allowedHttpMethods);
 
         configuration.setAllowedHeaders(Collections.singletonList("*"));
