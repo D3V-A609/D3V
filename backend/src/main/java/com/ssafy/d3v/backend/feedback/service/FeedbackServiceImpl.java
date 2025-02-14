@@ -72,7 +72,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 피드백입니다."));
     }
 
-    private static FeedbackResponse getFeedbackResponse(Feedback feedback) {
+    private FeedbackResponse getFeedbackResponse(Feedback feedback) {
         return FeedbackResponse.builder()
                 .feedbackId(feedback.getId())
                 .answerId(feedback.getAnswer().getAnswerId())
@@ -90,5 +90,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         feedback.delete();
         feedbackRepository.saveAndFlush(feedback);
+    }
+
+    @Override
+    public List<FeedbackResponse> getMyFeedbacks() {
+        Member member = getMember(memberId);
+
+        return feedbackRepository.findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(member)
+                .stream()
+                .map(this::getFeedbackResponse)
+                .toList();
     }
 }
