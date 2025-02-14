@@ -70,7 +70,7 @@ const HeatMap: React.FC<HeatmapProps> = ({ className, history }) => {
         }}
         tooltipDataAttrs={(value) => {
           if (!value || !value.date) return { "data-tooltip-content": "" } as TooltipDataAttrs;
-          console.log("value:", value);
+          // console.log("value:", value);
           return {
             "data-tooltip-id": "heatmap-tooltip",
             "data-tooltip-content": `${value.date}: ${value.count || 0} 문제`,

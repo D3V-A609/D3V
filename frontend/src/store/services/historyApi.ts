@@ -2,9 +2,9 @@ import api from './api';
 
 export const historyApi = {
 
-  getHistory: async (payload: {memberId: number, year: number}) => {
+  getHistory: async (memberId: number) => {
     try{
-      const response = await api.get(`/history/${payload.memberId}?year=${payload.year}`);
+      const response = await api.get(`/history/${memberId}`);
       return response;
     } catch(error){
       console.log('in voice api error: ', error)

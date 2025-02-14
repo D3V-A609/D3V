@@ -19,6 +19,10 @@
   width: 80vw;
 }
 
+.streak-img-div{
+  order: 1;
+}
+
 .streak-img-div img{
   /* padding-top: 1rem; */
   height: 100px;
@@ -28,11 +32,26 @@
 .streak-text-div{
   text-align: center;
   padding: 1rem 0 0 0;
+  order: 2;
 }
 
 .heatmap-title{
   justify-self: start;
 }
+
+/* ✅ home-streak 클래스가 추가되면 순서를 바꿈 */
+.home-streak .streak-img-div {
+  order: 2;
+}
+
+.home-streak .streak-text-div {
+  order: 1;
+}
+
+.home-streak .streak-container{
+  display: flex;
+}
+
 
 /** ===heatmap color== **/
 .react-calendar-heatmap .color-empty{

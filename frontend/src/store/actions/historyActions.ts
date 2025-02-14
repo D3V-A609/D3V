@@ -3,9 +3,9 @@ import { historyApi } from "../services/historyApi";
 
 export const fetchHistory = createAsyncThunk(
   'history',
-  async (payload: {memberId: number, year: number}, {rejectWithValue }) => {
+  async (memberId: number, {rejectWithValue }) => {
     try{
-      const response = await historyApi.getHistory(payload);
+      const response = await historyApi.getHistory(memberId);
       return response.data;
     }catch(error){
       console.log('in heatmap action: ', error);
