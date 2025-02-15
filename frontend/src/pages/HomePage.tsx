@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux'
 import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
@@ -15,8 +15,12 @@ import { format, subMonths } from 'date-fns';
 import { fetchJobs } from '../store/actions/jobActions';
 import serviceInfo from "../assets/images/service-info.png";
 import serviceScreen from "../assets/images/service-screen.png";
+import { shallowEqual } from 'react-redux';
 
 type JobType = string;
+
+const TodayQuestionCardMemo = React.memo(TodayQuestionCard);
+const Top10QuestionCardMemo = React.memo(Top10QuestionCard);
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,50 +33,50 @@ const HomePage: React.FC = () => {
     dailyQuestions, 
     top10Questions, 
     error 
-  } = useAppSelector((state) => state.questions as QuestionState);
+  } = useAppSelector((state) => state.questions as QuestionState, shallowEqual);
   
-  
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
 
-  const getPreviousMonth = () => {
-    return format(subMonths(new Date(), 1), 'yyyy-MM');
-  };
+  const getPreviousMonth = useCallback(() => format(subMonths(new Date(), 1), 'yyyy-MM'), []);
 
+  const hasFetched = useRef(false);
+  // api 병렬 요청으로 api 중복 호출을 막고, 최적화함
+  // 초기 로딩 시 최조 한번만 실행행
   useEffect(() => {
-    dispatch(fetchDailyQuestions());
-  }, [dispatch]);
+    if(!hasFetched.current){
+      hasFetched.current = true;
+      Promise.all([
+        dispatch(fetchDailyQuestions()),
+        dispatch(fetchJobs()).unwrap().then((jobs: JobType[]) => {
+          setJobCategories(jobs.reduce((acc, job) => {
+            acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+            return acc;
+          }, {} as { [key: string]: string }));
+        }).catch((error) => console.error('Failed to fetch jobs:', error))
+      ])
+    }
+  }, [dispatch])
 
+  // selectedJob 변경 시 실행
   useEffect(() => {
-    const previousMonth = getPreviousMonth();
     dispatch(fetchTop10Questions({
-      month: previousMonth,
+      month: getPreviousMonth(),
       job: selectedJob,
     }));
-  }, [dispatch, selectedJob]);
+  }, [dispatch, selectedJob, getPreviousMonth]);
 
-  useEffect(() => {
-    dispatch(fetchJobs())
-      .unwrap()
-      .then((jobs: JobType[]) => {
-        const formattedJobs = jobs.reduce((acc, job) => {
-          acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
-          return acc;
-        }, {} as { [key: string]: string });
-        setJobCategories(formattedJobs);
-      })
-      .catch((error) => console.error('Failed to fetch jobs:', error));
-  }, [dispatch]);
-
+  // 스크롤 이동(selectedJob이 변경될 때 실행행)
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+      scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [selectedJob]);  
 
-  const QuestionCardClick = (id: number) => {
+  // 질문 상세 페이지 이동 함수(useCallback)
+  const QuestionCardClick = useCallback((id: number) => {
     dispatch(setSelectedQuestionId(id));
     navigate(`/question`);
-  };
+  }, [dispatch, navigate])
 
   // if (loading) return <LoadingPage />;
   if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
@@ -88,9 +92,8 @@ const HomePage: React.FC = () => {
       <section className="today-questions">
         {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
         <div className={`question-cards ${isAuthenticated? "" : "--unLogined"}`}>
-        {/* <span className={`unlogin-text ${isLoggedIn? "" : "--unLogined"}`}>로그인 후 사용해주세요.</span> */}
           {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
-            <TodayQuestionCard
+            <TodayQuestionCardMemo
               key={question.id}
               title={question.content}
               category={question.skillList?.[0] || 'General'}
@@ -160,7 +163,7 @@ const HomePage: React.FC = () => {
         <div className="cards-container">
           <div className="cards-wrapper">
             {top10Questions.map((question) => (
-              <Top10QuestionCard
+              <Top10QuestionCardMemo
                 key={question.id}
                 title={question.content}
                 category={question.skillList[0]}
