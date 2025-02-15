@@ -5,6 +5,7 @@ import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.Skill;
+import com.ssafy.d3v.backend.question.service.DailyQuestionService;
 import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final ServedQuestionService servedQuestionService;
+    private final DailyQuestionService dailyQuestionService;
 
     @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
     @GetMapping
@@ -41,16 +43,9 @@ public class QuestionController {
             @RequestParam(defaultValue = "15") int size, // 페이지 크기 (기본값: 15)
             @RequestParam(required = false) String keyword // 키워드 검색
     ) {
-        Page<QuestionResponse> questions = questionService.getQuestions(
-                jobs,
-                skills,
-                solved,
-                order,
-                sort,
-                page,
-                size,
-                keyword
-        ).map(QuestionDto::from).map(this::createQuestionResponse);
+        Page<QuestionResponse> questions = questionService.getQuestions(jobs, skills, solved, order, sort, page, size,
+                        keyword)
+                .map(QuestionDto::from).map(this::createQuestionResponse);
         return ResponseEntity.ok(questions);
     }
 
@@ -65,7 +60,7 @@ public class QuestionController {
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        return getListResponseEntity(questionService.getDailyQuestions());
+        return getListResponseEntity(dailyQuestionService.getDailyQuestions());
     }
 
     // /api/question/top10?month={month}&job={job}

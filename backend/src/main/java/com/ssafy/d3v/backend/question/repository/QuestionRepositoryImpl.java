@@ -15,6 +15,7 @@ import com.ssafy.d3v.backend.question.entity.QServedQuestion;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,12 +23,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class QuestionRepositoryImpl implements QuestionCustomRepository {
@@ -95,10 +98,10 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
                 Optional.ofNullable(solvedFilter)
                         .map(filter -> {
                             if ("solved".equals(filter)) {
-                                return servedQuestion.member.eq(member)
+                                return servedQuestion.member.id.eq(member.getId())
                                         .and(servedQuestion.isSolved.isTrue());
                             } else if ("unSolved".equals(filter)) {
-                                return servedQuestion.member.eq(member)
+                                return servedQuestion.member.id.eq(member.getId())
                                         .and(servedQuestion.isSolved.isFalse());
                             } else if ("notSolved".equals(filter)) {
                                 return servedQuestion.isNull();
@@ -107,7 +110,7 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
                         })
                         .orElse(null),
 
-                // 검색어 필터링
+                // 검색어 제목 필터링
                 Optional.ofNullable(keyword)
                         .filter(k -> !k.isEmpty())
                         .map(k -> question.content.containsIgnoreCase(k))
@@ -121,26 +124,38 @@ public class QuestionRepositoryImpl implements QuestionCustomRepository {
                 "avg", asc -> asc ? question.answerAverage.asc() : question.answerAverage.desc()
         );
 
-        OrderSpecifier<?> orderSpecifier = Optional.ofNullable(sort)
+        // 선택된 기준과 나머지 기준의 정렬 처리
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        // 선택된 정렬 기준 추가
+        Optional.ofNullable(sort)
                 .map(sortMapping::get)
                 .map(func -> func.apply("asc".equalsIgnoreCase(order)))
-                .orElseThrow(() -> new IllegalArgumentException("Invalid sort field: " + sort));
+                .ifPresent(orderSpecifiers::add);
+
+        // 선택되지 않은 나머지 정렬 기준은 고정된 우선순위로 desc 추가
+        List<String> sortPriority = List.of("acnt", "ccnt", "avg");
+        sortPriority.stream()
+                .filter(key -> !key.equals(sort)) // 선택된 기준 제외
+                .forEach(key -> orderSpecifiers.add(sortMapping.get(key).apply(false))); // desc로 정렬
 
         Pageable pageable = PageRequest.of(page, size);
 
         // 쿼리 생성
+        log.info("질문 필터링 쿼리=========================");
         JPAQuery<Question> query = queryFactory.selectFrom(question)
                 .distinct()
-                .leftJoin(servedQuestion).on(servedQuestion.question.eq(question)) // ServedQuestion과 left join
-                .leftJoin(question.questionJobs, questionJob)      // QuestionJob과 left join
-                .leftJoin(question.questionSkills, questionSkill)    // QuestionSkill과 left join
-                .where(predicates.toArray(new BooleanExpression[0]))
-                .orderBy(orderSpecifier);
+                .leftJoin(servedQuestion).on(servedQuestion.question.id.eq(question.id))
+                .leftJoin(question.questionJobs, questionJob)
+                .leftJoin(question.questionSkills, questionSkill)
+                .where(predicates.toArray(new BooleanExpression[0]));
 
         long total = query.fetch().size();
-        // 페이징
-        System.out.println("메인 쿼리=========================");
+
+        // 페이징 및 정렬 처리
+        log.info("질문 페이징 쿼리=========================");
         List<Question> results = query
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0])) // 다중 정렬 적용
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
