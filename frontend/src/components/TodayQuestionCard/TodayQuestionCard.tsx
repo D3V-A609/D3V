@@ -13,7 +13,7 @@ import "./TodayQuestionCard.css";
 interface QuestionCardProps {
   title: string;          // 질문 제목
   category: string;       // 기술 카테고리
-  isLoggedIn?: boolean;   // 로그인 상태
+  status?: string;
   onClick?: () => void;   // 클릭 이벤트 핸들러
 }
 
@@ -21,7 +21,7 @@ interface QuestionCardProps {
 const TodayQuestionCard: React.FC<QuestionCardProps> = ({
   title,
   category,
-  isLoggedIn, 
+  status,
   onClick,
 }) => {
   // 현재 날짜 포맷팅
@@ -70,8 +70,9 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
         </div>
       </div>
       
-      {/* 질문 제목 (로그인 상태에 따른 블러 처리) */}
-      <h3 className={`card-title ${!isLoggedIn ? 'blur-content' : ''}`}>
+    
+      {/* 질문 제목 (풀이 상태에 따른 블러 처리) */}
+      <h3 className={`card-title ${status !== "solved" ? 'blur-content' : ''}`}>
         {title}
       </h3>
       
@@ -90,7 +91,7 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
         </div>
         {/* 답변 링크 (로그인 상태에 따라 다른 텍스트 표시) */}
         <div className="answer-link">
-          {isLoggedIn ? '답변하러 가기' : '로그인하고 답변하기'} <HiArrowRight size={16} />
+          {status === "solved" ? '다시 풀어보기' : '답변하러 가기'} <HiArrowRight size={16} />
         </div>
       </div>
     </div>
