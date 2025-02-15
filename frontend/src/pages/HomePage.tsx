@@ -9,7 +9,7 @@ import Top10Filter from '../components/Top10/Top10Filter';
 import PageHeader from '../components/PageHeader/PageHeader';
 import { BsFillTrophyFill, BsFillCalendarCheckFill } from "react-icons/bs";
 import './HomePage.css';
-import LoadingPage from '../components/ErrorHandling/LoadingPage';
+// import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
 import { format, subMonths } from 'date-fns';
 import { fetchJobs } from '../store/actions/jobActions';
@@ -27,12 +27,12 @@ const HomePage: React.FC = () => {
   
   const { 
     dailyQuestions, 
-    top10Questions,
-    loading, 
+    top10Questions, 
     error 
   } = useAppSelector((state) => state.questions as QuestionState);
   
-  const isLoggedIn = false;
+  
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const getPreviousMonth = () => {
     return format(subMonths(new Date(), 1), 'yyyy-MM');
@@ -74,7 +74,7 @@ const HomePage: React.FC = () => {
     navigate(`/question`);
   };
 
-  if (loading) return <LoadingPage />;
+  // if (loading) return <LoadingPage />;
   if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
 
   return (
@@ -86,22 +86,22 @@ const HomePage: React.FC = () => {
         iconStyle="check-icon"
       />
       <section className="today-questions">
-        {!isLoggedIn && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
-        <div className={`question-cards ${isLoggedIn? "" : "--unLogined"}`}>
+        {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
+        <div className={`question-cards ${isAuthenticated? "" : "--unLogined"}`}>
         {/* <span className={`unlogin-text ${isLoggedIn? "" : "--unLogined"}`}>로그인 후 사용해주세요.</span> */}
           {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
             <TodayQuestionCard
               key={question.id}
               title={question.content}
               category={question.skillList?.[0] || 'General'}
-              isLoggedIn={isLoggedIn}
+              status={question.status}
               onClick={() => QuestionCardClick(question.id)}
             />
           ))}
         </div>
       </section>
 
-      {!isLoggedIn && (
+      {!isAuthenticated && (
         <>
         <br />
         <hr style={{width: '80%', color: '#CEC7C7', opacity: '0.3' }}/>
