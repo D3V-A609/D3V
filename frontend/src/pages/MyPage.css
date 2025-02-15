@@ -25,6 +25,11 @@
 .my-answer-commu-activity{
   width: 100%;
 }
+
 .my-commu-info-container{
   gap: 50px
+}
+
+.my-streak{
+  padding-bottom: 1rem;
 }

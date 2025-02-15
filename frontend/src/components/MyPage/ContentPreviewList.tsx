@@ -5,7 +5,7 @@ import QuestionSkillTag from "../QuestionDetail/Question/QuestionSkillTag";
 interface ContentPreviewProps {
   title: string;
   titleIcon?: JSX.Element;
-  contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[];
+  contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
   handleMoreBtn?: () => void;
   handleDetailContent?: (id: number) => void
   className?: string;

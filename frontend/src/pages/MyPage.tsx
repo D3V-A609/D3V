@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { shallowEqual } from 'react-redux';
 
@@ -20,6 +20,8 @@ import { QuestionState } from '../store/slices/questionSlice';
 import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 import { ArticleState } from '../store/slices/articleSlice';
 import { fetchMyArticles, fetMyArticleComments } from '../store/actions/articleActions';
+import { AnswerState } from '../store/slices/answerSlice';
+import { fetchLikedAnswers, fetchMyFeedback } from '../store/actions/answerActions';
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
     const user = {
@@ -52,20 +54,31 @@ const MyPage:React.FC = () => {
 
     //========== 데이터 불러오기===========
     const { MySolvedQuestions, MyUnsolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
-    const { myArticles, myArticleComments } = useAppSelector((state) => state.articles as ArticleState)
+    const { myArticles, myArticleComments } = useAppSelector((state) => state.articles as ArticleState, shallowEqual)
+    const { likedAnswers, myFeedbacks } = useAppSelector((state) => state.answers as AnswerState, shallowEqual)
 
     const memberId = 3;
 
-    useEffect(() => {
-        Promise.all([
-            // 답변(푼, 못푼) 로드
-            dispatch(fetchMyLastedQuestions(true)),
-            dispatch(fetchMyLastedQuestions(false)),
+    // ✅ API 중복 호출 방지
+    const hasFetched = useRef(false);
 
-            // 내가 작성한 게시글/댓글
-            dispatch(fetchMyArticles(memberId)),
-            dispatch(fetMyArticleComments(memberId)),
-        ]);
+    useEffect(() => {
+        if(!hasFetched.current){   
+            hasFetched.current = true;
+            Promise.all([
+                // 답변(푼, 못푼) 로드
+                dispatch(fetchMyLastedQuestions(true)),
+                dispatch(fetchMyLastedQuestions(false)),
+                
+                // 내가 작성한 게시글/댓글
+                dispatch(fetchMyArticles(memberId)),
+                dispatch(fetMyArticleComments(memberId)),
+                
+                // 내가 추천 누른 답변 / 작성한 피드백
+                dispatch(fetchLikedAnswers()),
+                dispatch(fetchMyFeedback()),
+            ]);
+        }
     }, [dispatch])
 
     return (
@@ -84,17 +97,15 @@ const MyPage:React.FC = () => {
         {/* <SectionContainerMemo className='my-ai-container' title='AI 면접 연습' icon={icons.AIIcon} /> */}
 
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
-            <div className="my-streak"></div>
-            <div className='my-answer-commu-activity'>
-                <div className='my-answer-info-container'>
-                    <ContentPreviewListMemo contents={MySolvedQuestions} title='추천한 답변' titleIcon={icons.thumbup} className='my-question-info'/>
-                    <ContentPreviewListMemo contents={MyUnsolvedQuestions} title='댓글' titleIcon={icons.goComment} className='my-question-info' />
-                </div>
-            </div>
             <div className="my-streak">
                 <StreakHeatMap />
             </div>
-            <div className='my-answer-commu-activity'></div>
+            <div className='my-answer-commu-activity'>
+                <div className='my-answer-info-container'>
+                    <ContentPreviewListMemo contents={likedAnswers} title='추천한 답변' titleIcon={icons.thumbup} className='my-question-info'/>
+                    <ContentPreviewListMemo contents={myFeedbacks} title='나의 피드백' titleIcon={icons.goComment} className='my-question-info' />
+                </div>
+            </div>
         </SectionContainerMemo>
 
         <SectionContainerMemo className='my-commu-info-container' title='커뮤니티 활동' icon={icons.CommuIcon} >
