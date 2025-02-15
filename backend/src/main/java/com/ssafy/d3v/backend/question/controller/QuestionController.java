@@ -87,7 +87,7 @@ public class QuestionController {
         String solved = servedQuestionService.getIsSolvedStatus(question.id());
         List<Skill> skills = questionService.getSkillsByQuestionId(question.id());
         List<Job> jobs = questionService.getJobsByQuestionId(question.id());
-        return QuestionResponse.from(question, solved, skills, jobs);
+        return QuestionResponse.of(question, solved, skills, jobs);
     }
 }
 

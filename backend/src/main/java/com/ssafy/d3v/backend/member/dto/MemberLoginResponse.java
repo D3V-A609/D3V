@@ -20,7 +20,7 @@ public record MemberLoginResponse(
         JobRole favoriteJob,
         String AccessToken
 ) {
-    public static MemberLoginResponse from(Member member, String accessToken) {
+    public static MemberLoginResponse of(Member member, String accessToken) {
         return MemberLoginResponse.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())

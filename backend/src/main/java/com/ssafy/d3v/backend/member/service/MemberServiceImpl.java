@@ -174,7 +174,7 @@ public class MemberServiceImpl implements MemberService {
             CookieUtil.addCookie(response, REFRESH_TOKEN, tokenInfo.getRefreshToken(),
                     getRefreshTokenExpireTimeCookie());
 
-            MemberLoginResponse memberLoginResponse = MemberLoginResponse.from(member, tokenInfo.getAccessToken());
+            MemberLoginResponse memberLoginResponse = MemberLoginResponse.of(member, tokenInfo.getAccessToken());
 
             return Response.makeResponse(HttpStatus.OK, "로그인을 성공했습니다.", 0, memberLoginResponse);
         } catch (BadCredentialsException e) {

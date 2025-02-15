@@ -19,7 +19,7 @@ public record QuestionResponse(
         List<SkillType> skillList,
         List<JobRole> jobList
 ) {
-    public static QuestionResponse from(QuestionDto q, String solved, List<Skill> skills, List<Job> jobs) {
+    public static QuestionResponse of(QuestionDto q, String solved, List<Skill> skills, List<Job> jobs) {
         return QuestionResponse.builder()
                 .id(q.id())
                 .content(q.content())
