@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./QuestionDetailPage.css";
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store/hooks/useRedux';
 
 import {  QuestionState } from '../store/slices/questionSlice';
@@ -22,6 +22,7 @@ const QuestionDetailPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentQuestionDetailView, setQuestionDetailView] = useState<
     "input" | "community"
   >("input");
@@ -62,6 +63,13 @@ const QuestionDetailPage: React.FC = () => {
       setQuestionDetailView("community");
     }
   };
+
+  // location.state 값 확인하고 커뮤니티 탭 자동 활성화
+  useEffect(() => {
+    if (location.state?.showCommunity) {
+      setQuestionDetailView("community"); // 커뮤니티 탭으로 변경
+    }
+  }, [location.state]);
 
   // 로딩 상태 처리
   if (loading) return <div>Loading...</div>;
