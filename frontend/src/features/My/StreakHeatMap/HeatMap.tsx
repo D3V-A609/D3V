@@ -45,7 +45,6 @@ const HeatMap: React.FC<HeatmapProps> = ({ className, history }) => {
   };
 
   useEffect(() => {
-    // ✅ 최신 버전에서는 rebuild 필요 없음!
   }, [history]);
 
   return (
