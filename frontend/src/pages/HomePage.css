@@ -83,8 +83,9 @@
 
 .cards-wrapper {
   display: grid;
-  grid-template-columns: repeat(5, minmax(194px, auto));
-  gap: 20px 10px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  justify-content: center;
 }
 
 /* 비로그인 상태 스타일 */
@@ -170,8 +171,10 @@
     width: 100%;
     padding: 40px 20px;
   }
+  .cards-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 }
-
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .home-page {
@@ -224,5 +227,13 @@
 
   .service-info-text-div {
     width: 100%;
+  }
+  .cards-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .cards-wrapper {
+    grid-template-columns: 1fr;
   }
 }
