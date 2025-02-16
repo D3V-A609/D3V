@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class QuestionScheduler {
 
     private final QuestionService questionService;
-    private final DailyQuestionService dailyQuestionService;
 
     /**
      * 매월 1일 오전 2시에 실행하여 모든 직무의 Top 10 질문 생성 및 저장.
@@ -30,7 +29,7 @@ public class QuestionScheduler {
     @Scheduled(cron = "0 0 2 * * ?") // 매일 오전 2시 실행
     public void scheduleDailyQuestions() {
         // getDailyQuestions 호출
-        List<QuestionDto> dailyQuestions = dailyQuestionService.getDailyQuestions();
+        List<QuestionDto> dailyQuestions = questionService.getDailyQuestions();
 
         // 로그 출력 (필요 시 추가 로직 작성 가능)
         System.out.println("Daily Questions executed for date: " + LocalDate.now());
