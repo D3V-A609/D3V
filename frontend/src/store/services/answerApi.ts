@@ -78,5 +78,25 @@ export const answerApi = {
       throw new Error('첫 답변 등록하는데 문제가 발생했습니다.')
     }
   },
+
+  // 추천을 누른 답변들 
+  getLikedAnswers: () => {
+    try{
+      return api.get<Answer[]>(`/member/liked_answer`);
+    }catch(error){
+      console.log('in answer api error-8:', error);
+      throw new Error('추천한 답변들을 불러오는데 문제가 발생했습니다.');
+    }
+  },
+
+  // 내가 작성한 피드백
+  getMyFeedbacks: () => {
+    try{
+      return api.get<Feedback[]>(`/my_feedback`);
+    }catch(error){
+      console.log('in answer api error-9:', error)
+      throw new Error('내가 작성한 피드백을 불러오는데 문제가 발생했습니다.')
+    }
+  }
   
 };

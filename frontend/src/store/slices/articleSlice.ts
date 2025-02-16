@@ -1,32 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchArticles, fetchArticle, createArticle } from "../actions/articleActions";
-
-export interface Article {
-  id: number;
-  categoryId: number;
-  memberId: number;
-  name: string;
-  title: string;
-  content: string;
-  images?: { id: number; originImageName: string; imageUrl: string }[];
-  createdAt: string;
-  updatedAt: string | null;
-  view: number;
-  commentCount: number;
-}
-
-export interface Pagination {
-  totalRecords: number;
-  currentPage: number;
-  totalPages: number;
-}
+import { fetchArticles, fetchArticle, createArticle, fetchMyArticles, fetMyArticleComments, updateArticle, deleteArticle } from "../actions/articleActions";
 
 export interface ArticleState {
   articles: Article[];
   currentArticle: Article | null;
   loading: boolean;
   error: string | null;
-  pagination: Pagination;
+  pagination: ArticlePagination;
+
+  myArticles: ArticleItem[];
+  myArticleComments: ArticleComment[];
 }
 
 const initialState: ArticleState = {
@@ -39,6 +22,8 @@ const initialState: ArticleState = {
     currentPage: 1,
     totalPages: 1,
   },
+  myArticles: [],
+  myArticleComments: []
 };
 
 const articleSlice = createSlice({
@@ -101,7 +86,71 @@ const articleSlice = createSlice({
       .addCase(createArticle.rejected, (state, action) => {
         state.loading = false; // 요청 실패 후 로딩 상태 비활성화
         state.error = action.payload as string; // 에러 메시지 저장
+      })
+
+      // 내 게시글 목록 불러오기
+      .addCase(fetchMyArticles.pending, (state) => {
+        state.loading = true;
+        state.error = null; 
+      })
+      .addCase(fetchMyArticles.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null; 
+        state.myArticles = action.payload;
+      })
+      .addCase(fetchMyArticles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // 내가 작성한 게시글 댓글 목록 불러오기
+      .addCase(fetMyArticleComments.pending, (state) => {
+        state.loading = true;
+        state.error = null; 
+      })
+      .addCase(fetMyArticleComments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null; 
+        state.myArticleComments = action.payload;
+      })
+      .addCase(fetMyArticleComments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // 게시글 수정
+      .addCase(updateArticle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateArticle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentArticle = action.payload;
+        const index = state.articles.findIndex(article => article.id === action.payload.id);
+        if (index !== -1) {
+          state.articles[index] = action.payload;
+        }
+      })
+      .addCase(updateArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to update the article.";
+      })
+
+      // 게시글 삭제
+      .addCase(deleteArticle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteArticle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.articles = state.articles.filter(article => article.id !== action.payload);
+        state.currentArticle = null;
+      })
+      .addCase(deleteArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to delete the article.";
       });
+
   },
 });
 

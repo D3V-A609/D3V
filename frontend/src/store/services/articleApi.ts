@@ -56,9 +56,13 @@ export const articleApi = {
     }
   },
 
-  updateArticle: async (id: number, data: { title?: string; content?: string }) => {
+  updateArticle: async (id: number, data: FormData) => {
     try {
-      return await api.put(`/article/${id}`, data);
+      return await api.patch(`/article/${id}`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     } catch (error) {
       console.log('in article api error-4: ', error);
       throw new Error('게시글을 수정하는데 문제가 발생했습니다.');
@@ -73,6 +77,24 @@ export const articleApi = {
       throw new Error('게시글을 삭제하는데 문제가 발생했습니다.');
     }
   },
+
+  getMyArticles: async (memberId: number) => {
+    try{
+      return await api.get(`/member/${memberId}/article`);
+    }catch(error){
+      console.log('in article api error-5: ', error);
+      throw new Error('내 게시글 목록을 불러오는데 문제가 발생했습니다.')
+    }
+  },
+
+  getMyArticleComments: async (memberId: number) => {
+    try{
+      return await api.get(`member/${memberId}/comment`);
+    }catch(error){
+      console.log('in article api error-6: ', error);
+      throw new Error("내가 작성한 게시글 댓글을 불러오는데 문제가 발생했습니다.")
+    }
+  }
 };
 
 export default articleApi;

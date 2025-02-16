@@ -1,127 +1,135 @@
-/* components/TodayQuestionCard/TodayQuestionCard.css */
+/* 카드 기본 스타일 */
 .question-card {
-    background-color: #F8FAFC;
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 340px;
-    height: 300x;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
+  background-color: var(--color-card-bg);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .question-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* 카드 헤더 스타일 */
 .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .card-date {
-    color: #555;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  color: #555;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .calendar-icon {
-    font-size: 16px;
+  font-size: 16px;
 }
 
+/* 북마크 아이콘 스타일 */
 .bookmark-icon {
-    color: #1976D2;
-    font-size: 20px;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
+  color: var(--color-blue);
+  font-size: 20px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
 }
 
 .bookmark-icon:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
+/* 카드 제목 스타일 */
 .card-title {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.5;
-    color: #333;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    text-overflow: ellipsis;
-    word-break: keep-all;
-    word-wrap: break-word;
-    text-align: left;
-    align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #333;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+  word-wrap: break-word;
+  text-align: left;
+  align-items: center;
+  /* WebKit 브라우저(Safari, Chrome 등)를 위한 벤더 프리픽스(vendor prefix) 속성 대부분의 모던 브라우저에서 지원하지만, 표준 속성이 아직 완전히 정립되지 않아서 경고문이 뜸 */
+  /* 대부분의 브라우저에서 정상 작동 - 경고 무시해도 됨 */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 텍스트의 줄 수를 제한하고 말줄임표(...)를 표시하는 CSS 속성 - 원하는 줄 수 지정 */
+  -webkit-box-orient: vertical;
 }
 
-
+/* 카드 푸터 스타일 */
 .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    padding-top: 16px;
-    border-top: 1px solid #e0e0e0
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0
 }
 
+/* 카테고리 스타일 */
 .card-category {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .category-icon {
-    font-size: 16px;
+  font-size: 12px;
 }
 
+/* 답변 링크 스타일 */
 .answer-link {
-    color: #555;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.2s ease;
+  color: #555;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
 }
 
 .answer-link:hover {
-    color: #1976D2;
+  color: #1976D2;
 }
 
+/* 블러 효과 스타일 */
 .blur-content {
-    filter: blur(4px);
-    user-select: none;
-    pointer-events: none;
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
 }
 
 .question-card:hover .blur-content {
-    filter: blur(6px);
+  filter: blur(6px);
 }
 
-/* 로그인하지 않은 상태에서 커서 스타일 변경 */
+/* 블러 컨텐츠가 있는 카드의 커서 스타일 */
 .question-card:has(.blur-content) {
-    cursor: not-allowed;
+  cursor: not-allowed;
 }
 
-
-@media (max-width: 480px) {
-    .question-card {
-        width: 100%;
-        height: auto;
-        min-height: 180px;
-    }
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .question-card {
+    min-width: 340px;
+    min-height: 180px;
+  }
 }

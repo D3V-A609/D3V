@@ -5,7 +5,7 @@ import QuestionSkillTag from "../QuestionDetail/Question/QuestionSkillTag";
 interface ContentPreviewProps {
   title: string;
   titleIcon?: JSX.Element;
-  contents: string[] | myQuestion[] | Answer[];
+  contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
   handleMoreBtn?: () => void;
   handleDetailContent?: (id: number) => void
   className?: string;
@@ -47,7 +47,7 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
               )}
 
               <div className={styles["text-container"]}>
-                {typeof content === "string" ? content : content.content}
+                {typeof content === "string" ? content : "title" in content ? content.title :  content.content}
               </div>
             </div> )
           )) : (

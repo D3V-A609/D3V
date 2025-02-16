@@ -21,7 +21,7 @@ const transformSelectedQuestionId = createTransform(
 const persistConfig = {
   key: 'root',
   storage, // local storage에 저장
-  whitelist: ['questions'], // questionReducer만 localStorage에 저장
+  whitelist: ['questions', 'isAuthenticated'], // questionReducer만 localStorage에 저장
   // blacklist: 저장하지 않아야 하는 reducers 정의
   transforms: [transformSelectedQuestionId],  // transform 적용
 };

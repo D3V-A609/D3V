@@ -6,6 +6,7 @@ declare type Answer = {
   createdAt: string;
   accessLevel: "PUBLIC" | "PRIVATE" | "PROTECTED";
   like: number;
+  // commentCount: number;
   count: number;
   isLiked?: boolean; // 내가 추천했는지 여부
 };

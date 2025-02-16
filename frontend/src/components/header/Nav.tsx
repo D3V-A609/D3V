@@ -10,10 +10,9 @@ const Nav: React.FC<NavProps> = ({toggleClose}) => {
 
     const links = [
         { to: '/', label: 'Home' },
-        { to: '/all-questions', label: 'CS 질문 모음' },
+        { to: '/all-questions', label: '면접 질문 모음' },
         { to: '/ai', label: 'AI 면접 연습' },
         { to: '/board', label: '자유게시판' },
-        { to: '/video', label: '면접 영상 추천' },
     ];
 
     const handleClick = (to: string) => {

@@ -7,6 +7,11 @@
   padding: 3em;
 }
 
+.my-learning-info-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .my-detail-info-container{
   justify-items: anchor-center;
 }
@@ -15,4 +20,16 @@
   display: flex;
   justify-content: space-between;
   gap: 50px;
+}
+
+.my-answer-commu-activity{
+  width: 100%;
+}
+
+.my-commu-info-container{
+  gap: 50px
+}
+
+.my-streak{
+  padding-bottom: 1rem;
 }

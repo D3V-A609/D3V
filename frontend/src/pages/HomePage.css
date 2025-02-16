@@ -1,16 +1,20 @@
+/* 메인 페이지 레이아웃 */
 .home-page {
   padding: 40px 40px;
   width: 1200px;
   margin: 0 auto;
 }
 
+/* 질문 카드 그리드 레이아웃 */
 .question-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   justify-content: center;
-  gap: 2em; /* 4em에서 2em으로 갭 축소 */
+  margin-top: 24px;
 }
 
+/* 섹션 공통 스타일 */
 .today-section,
 .top10-section {
   margin-bottom: 60px;
@@ -21,14 +25,12 @@
   margin-top: 60px;
 }
 
+/* 아이콘 스타일 */
 .gold-trophy-icon {
   color: #FFD700;
 }
 
-.question-cards {
-  margin-top: 24px;
-}
-
+/* 섹션 헤더 스타일 */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -42,6 +44,7 @@
   gap: 12px;
 }
 
+/* 직무 배지 스타일 */
 .job-badge {
   padding: 6px 12px;
   border: 1px solid #000;
@@ -49,6 +52,7 @@
   font-weight: 500;
 }
 
+/* 필터 관련 스타일 */
 .filter-container {
   margin-bottom: 24px;
 }
@@ -57,46 +61,168 @@
   display: flex;
 }
 
+/* '더보기' 버튼 스타일 */
 .more-button {
   color: #666;
   font-size: 12px;
   border: none;
   background: none;
   cursor: pointer;
-  text-align: right; /* 오른쪽 정렬 */
-  margin-left: auto; /* 왼쪽 여백 자동 설정 */
-  margin-bottom: 8px; /* 아래로 추가 간격 */
+  text-align: right;
+  margin-left: auto;
+  margin-bottom: 8px;
   margin-top: -20px;
-  display: block; /* 블록 요소로 변경 */
+  display: block;
 }
 
-
+/* 카드 컨테이너 스타일 */
 .cards-container {
-  width: 100%; /* 좌우 패딩을 제외한 너비 설정 */
-  margin: auto; /* 가운데 정렬 */
+  width: 100%;
+  margin: auto;
 }
 
 .cards-wrapper {
-  display: grid; /* 그리드 레이아웃 사용 */
-  grid-template-columns: repeat(5, minmax(194px, auto)); /* 카드가 한 줄에 최대 5개 배치되도록 설정 */
-  gap: 20px 10px; /* 카드 간격 (가로 및 세로) */
+  display: grid;
+  grid-template-columns: repeat(5, minmax(194px, auto));
+  gap: 20px 10px;
 }
 
+/* 비로그인 상태 스타일 */
+.question-cards.--unLogined {
+  filter: blur(0.5rem);
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  justify-content: center;
+  align-content: center;
+  position: relative;
+  min-height: 200px;
+}
 
-/* 반응형 디자인 개선 */
+.unlogin-text {
+  display: none;
+}
+
+.unlogin-text.--unLogined {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 서비스 소개 섹션 스타일 */
+.unlogin-info-section-1 {
+  padding-top: 2rem;
+}
+
+.unlogin-service-info-img-1 {
+  width: 80%;
+}
+
+/* 서비스 소개 섹션 2 스타일 */
+.unlogin-info-section-2 {
+  width: 100vw;
+  background-color: #F4FAFF;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.unlogin-info-section-2 .service-info {
+  align-items: center;
+  padding: 3rem 2em;
+  display: flex;
+  justify-content: center;
+  gap: 3em;
+}
+
+.unlogin-info-section-2 .service-info .service-info-img {
+  width: 35%;
+}
+
+.unlogin-info-section-2 .service-info .service-info-img img {
+  width: 100%;
+}
+
+.unlogin-info-section-2 .service-info .service-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: start;
+}
+
+.service-info-text-div {
+  height: fit-content;
+  width: 30em;
+  padding: 0.5rem 1em;
+  border-radius: 8px;
+  background-color: white;
+}
+
 @media (max-width: 1280px) {
-  .question-cards {
-    gap: 1.5em;
-  }
-}
-
-@media (max-width: 1024px) {
   .home-page {
+    width: 100%;
     padding: 40px 20px;
   }
-  
-  .question-cards {
-    gap: 1em;
-  }
 }
 
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .home-page {
+    width: 100%;
+    padding: 20px;
+    max-width: 390px; /* iPhone 12 Pro 기준 */
+  }
+
+  /* 모바일 카드 레이아웃 */
+  .question-cards {
+    grid-template-columns: 1fr;
+    max-width: 390px;
+    margin: 0 auto;
+  }
+
+  .question-card {
+    width: 100%;
+    min-width: 340px;
+  }
+  
+  .question-cards.--unLogined {
+    grid-template-columns: 1fr;
+    min-height: 200px; /* 모바일에서 높이 조정 */
+  }
+
+  .unlogin-text.--unLogined {
+    display: block;
+    position: absolute;
+    z-index: 20;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* 모바일 서비스 정보 레이아웃 */
+  .unlogin-info-section-2 .service-info {
+    flex-direction: column;
+    padding: 2rem 1em;
+    gap: 2em;
+  }
+
+  .unlogin-info-section-2 .service-info .service-info-img {
+    width: 80%;
+  }
+
+  .service-info-text-div {
+    width: 100%;
+  }
+}
