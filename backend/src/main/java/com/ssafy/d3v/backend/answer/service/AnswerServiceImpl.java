@@ -189,7 +189,7 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getId(),
                         ele.getQuestion().getContent(),
                         ele.getIsSolved(),
-                        questionService.getSkillsByQuestionId(ele.getId())))
+                        questionService.getSkillsByQuestionId(ele.getQuestion().getId())))
                 .collect(toList());
     }
 
