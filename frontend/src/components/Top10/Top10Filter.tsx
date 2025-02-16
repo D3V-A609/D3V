@@ -19,7 +19,7 @@ const Top10Filter: React.FC<Top10FilterProps> = ({
   };
 
   return (
-    <div className="filter-container">
+    <div className="top10-filter-container">
       <div className="filter-section">
         <div className="filter-buttons">
           {Object.entries(jobCategories).map(([jobKey, jobName]) => (
