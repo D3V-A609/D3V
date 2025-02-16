@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import './UserInfoComp.css'
-import UserProfileImg from '../../components/header/UserProfileImg';
+// import UserProfileImg from '../../components/header/UserProfileImg';
 import { FaGithub } from "react-icons/fa";
 import { CiMail } from "react-icons/ci";
+// import Profile from '../../components/Profile/Profile';
 
 interface UserInfoProps {
   user: User | null;
@@ -12,7 +13,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
   useEffect(() => {}, [user])
 
   if(!user){
-    return <div>사용자 정보를 불러오는 중입니다..</div>
+    return <div style={{padding: "1rem 0"}}>사용자 정보를 불러오는 중입니다..</div>
   }
 
   return (
@@ -20,7 +21,14 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
       {/* 왼쪽 프로필 이미지 */}
       <div className="profile-image-container">
         {/* <img src={user.profileImage} alt="프로필" className="profile-image" /> */}
-        <UserProfileImg className="profile-image" />
+        {/* <UserProfileImg className="profile-image" /> */}
+        {/* <div className="profile-avatar"> */}
+        {user.profileImg ? (
+          <img src={user.profileImg} alt="프로필" />
+        ) : (
+          <div className="avatar-fallback">{user.nickname[0].toUpperCase()}</div>
+        )}
+      {/* </div> */}
       </div>
 
       {/* 오른쪽 유저 정보 */}
@@ -31,7 +39,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
 
         <div className="user-sub-info">
           <div className="user-sub-info-left">
-            <span className="nickname">[<span className='text-blue'>{user.favoriteJob}</span>] developer</span>
+            {user.favoriteJob? <span className="nickname">[<span className='text-blue'>{user.favoriteJob}</span>] developer</span> : <span className='text-blue'>개발자(D3V)</span>}
             <p className='mail-info'>
               <CiMail /> <span style={{ color: '#0072EF' }}>{user.email}</span>
             </p>
@@ -46,9 +54,9 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
             </span>
 
             <p >
-              <a href={`https://${user.githubUrl}`} target="_blank" rel="noopener noreferrer" className='github-info'>
+              {user.githubUrl && <a href={`https://${user.githubUrl}`} target="_blank" rel="noopener noreferrer" className='github-info'>
                 <FaGithub /> <span style={{ color: '#0072EF' }}>{user.githubUrl}</span>
-              </a>
+              </a>}
             </p>
           </div>
         </div>
