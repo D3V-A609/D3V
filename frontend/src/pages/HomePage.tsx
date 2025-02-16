@@ -16,6 +16,7 @@ import { fetchJobs } from '../store/actions/jobActions';
 import serviceInfo from "../assets/images/service-info.png";
 import serviceScreen from "../assets/images/service-screen.png";
 import { shallowEqual } from 'react-redux';
+import { throttle } from 'lodash';
 
 type JobType = string;
 
@@ -40,6 +41,25 @@ const HomePage: React.FC = () => {
   const getPreviousMonth = useCallback(() => format(subMonths(new Date(), 1), 'yyyy-MM'), []);
 
   const hasFetched = useRef(false);
+
+  const saveScrollPosition = useCallback(
+    throttle(() => {
+      sessionStorage.setItem('scrollPosition', window.pageYOffset.toString());
+    }, 500), // 500ms마다 실행
+    []
+  );
+
+  // 스크롤 위치 저장 및 복원
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('scrollPosition');
+    if (savedScrollPosition) {
+      window.scrollTo(0, parseInt(savedScrollPosition));
+    }
+
+    window.addEventListener('scroll', saveScrollPosition);
+    return () => window.removeEventListener('scroll', saveScrollPosition);
+  }, [saveScrollPosition]);
+  
   // api 병렬 요청으로 api 중복 호출을 막고, 최적화함
   // 초기 로딩 시 최조 한번만 실행행
   useEffect(() => {
@@ -64,13 +84,6 @@ const HomePage: React.FC = () => {
       job: selectedJob,
     }));
   }, [dispatch, selectedJob, getPreviousMonth]);
-
-  // 스크롤 이동(selectedJob이 변경될 때 실행행)
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [selectedJob]);  
 
   // 질문 상세 페이지 이동 함수(useCallback)
   const QuestionCardClick = useCallback((id: number) => {
