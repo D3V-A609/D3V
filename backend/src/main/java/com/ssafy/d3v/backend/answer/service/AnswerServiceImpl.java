@@ -196,7 +196,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         return servedQuestions.stream()
                 .map(ele -> AnswerQuestionResponse.from(
-                        ele.getId(),
+                        ele.getQuestion().getId(),
                         ele.getQuestion().getContent(),
                         ele.getIsSolved(),
                         questionService.getSkillsByQuestionId(ele.getQuestion().getId())))
