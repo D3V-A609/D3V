@@ -99,3 +99,29 @@ export const toggleLike = createAsyncThunk(
     }
   }
 );
+
+export const fetchLikedAnswers = createAsyncThunk(
+  'answers/likedAnswer',
+  async (_, {rejectWithValue}) => {
+    try{
+      const response = await answerApi.getLikedAnswers();
+      return response.data;
+   }catch(error){
+    console.log('in answer action -7: ', error);
+    return rejectWithValue('추천한 답변을 불러오는데 문제가 발생했습니다.')
+   }
+  }
+);
+
+export const fetchMyFeedback = createAsyncThunk(
+  'feedbacks/my_feedback',
+  async (_, { rejectWithValue}) => {
+    try{
+      const response = await answerApi.getMyFeedbacks();
+      return response.data;
+    }catch(error){
+      console.log('in answer action -8:', error);
+      return rejectWithValue('내가 작성한 피드백을 불러오는데 문제가 발생했습니다.');
+    }
+  }
+)
