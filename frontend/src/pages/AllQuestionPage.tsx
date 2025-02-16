@@ -68,6 +68,14 @@ const AllQuestionPage:React.FC = () => {
     dispatch(fetchQuestions(params));
   }, [dispatch, params]);
 
+  // 마이페이지로부터 이동 되었을 때 solved 상태 확인 후 필터링 해준다
+  useEffect(() => {
+    if (location.state?.solved) {
+      handleStatusFilterChange(location.state.solved); // ✅ 이동 시 받은 solved 값 적용
+    }
+  }, [location.state?.solved]);
+  
+
   /**
    * 필터 핸들러 함수들
    */

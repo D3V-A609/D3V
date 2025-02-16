@@ -6,16 +6,18 @@ interface ContentPreviewProps {
   title: string;
   titleIcon?: JSX.Element;
   contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
-  handleMoreBtn?: () => void;
+  handleMoreBtn?: (isSolved?: boolean) => void;
   handleDetailContent?: (id: number) => void
   className?: string;
 }
 
-const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, className}) => {
+const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, className, handleDetailContent, handleMoreBtn}) => {
 
   const filledContents = (contents.length < 5 && contents.length > 0)
-  ? contents.concat(Array(5 - contents.length).fill({ content: " " })) // ✅ 빈 값 추가
+  ? contents.concat(Array(5 - contents.length).fill({ content: " " })) // 빈 값 추가
   : contents;
+
+  const isMoreBtnDisabled = contents.length <= 5 || !handleMoreBtn; // 더보기 버튼 비활성화 조건
 
   return (
       <div className={`${styles["content-section-container"]} ${className}`}>
@@ -24,7 +26,7 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
             <span className={styles["content-title-icon"]}>{titleIcon}</span> 
             <span className={styles["content-title-text"]}>{title}</span>
           </div>
-          <div className={styles["more-button"]}>더보기</div>
+          <div className={`${styles["more-button"]} ${isMoreBtnDisabled ? styles["disabled-btn"] : ""}`} onClick={()=> handleMoreBtn?.()}>더보기</div>
         </div>
 
         <div className={styles["content-list"]}>
@@ -38,7 +40,13 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
                 ? styles["last-item"]
                 : styles["middle-item"]
             }`}
-            // onClick={() => handleDetailContent(index)}
+            onClick={() => {
+              if(content !== null && typeof content === 'object'){
+                if("questionId" in content) {return handleDetailContent?.(content.questionId);}
+                if("articleId" in content) {return handleDetailContent?.(content.articleId);}
+                if("id" in content) {return handleDetailContent?.(content.id);}
+              }
+            }}
             >
               {typeof content !== "string" && "skillList" in content && content.skillList && (
                 <div className={`${styles["icon-container"]} `}>
