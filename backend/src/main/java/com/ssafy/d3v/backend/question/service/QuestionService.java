@@ -4,14 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
+import com.ssafy.d3v.backend.question.dto.SkillDto;
 import com.ssafy.d3v.backend.question.entity.Job;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.QuestionJob;
 import com.ssafy.d3v.backend.question.entity.QuestionSkill;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
-import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import com.ssafy.d3v.backend.question.entity.TopQuestionCache;
 import com.ssafy.d3v.backend.question.exception.QuestionNotFoundException;
@@ -34,12 +35,14 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -55,12 +58,10 @@ public class QuestionService {
     private final RedisTemplate<String, Object> redisTemplate;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, Object> listValueOperations;
+    private static final String JOBS_CACHE_PREFIX = "jobsByQuestion:";
+    private static final String SKILLS_CACHE_PREFIX = "skillsByQuestion:";
     private static final String DAILY_QUESTIONS_CACHE_PREFIX = "dailyQuestions:";
 
-    public Question getById(Long questionId) {
-        return questionRepository.findById(questionId)
-                .orElseThrow(() -> new QuestionNotFoundException("Question not found with id: " + questionId));
-    }
 
     @Transactional
     public List<QuestionDto> getDailyQuestions() {
@@ -179,7 +180,7 @@ public class QuestionService {
         for (Question question : selectedQuestions) {
             // 이미 존재하는 ServedQuestion 조회
             Optional<ServedQuestion> existingServedQuestion = servedQuestionRepository
-                    .findByMemberAndQuestion_Id(member, question.getId());
+                    .findByMember_IdAndQuestion_Id(member.getId(), question.getId());
 
             if (existingServedQuestion.isPresent()) {
                 // 1. 기존 레코드가 존재하면 isDaily=true, servedAt=오늘 날짜로 업데이트
@@ -198,6 +199,12 @@ public class QuestionService {
             }
         }
         return selectedQuestions;
+    }
+
+    public Question getById(Long questionId) {
+        return questionRepository.findById(questionId)
+                .orElseThrow(
+                        () -> new QuestionNotFoundException("Question not found with id: " + questionId));
     }
 
     /**
@@ -233,7 +240,7 @@ public class QuestionService {
 
         // "yyyy-MM" 형식의 문자열을 YearMonth로 변환
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        YearMonth yearMonth = YearMonth.parse(month, formatter).minusMonths(1); // 이전 달 계산
+        YearMonth yearMonth = YearMonth.parse(month, formatter);
 
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay(); // 월의 첫 번째 날 00:00:00
         LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 월의 마지막 날 23:59:59
@@ -269,24 +276,6 @@ public class QuestionService {
         }
     }
 
-    public List<Job> getJobsByQuestionId(Long questionId) {
-        // Question 엔티티에서 연관된 QuestionJob을 통해 Job 리스트를 추출
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
-        return question.getQuestionJobs().stream()
-                .map(QuestionJob::getJob)
-                .collect(Collectors.toList());
-    }
-
-    public List<Skill> getSkillsByQuestionId(Long questionId) {
-        // Question 엔티티에서 연관된 QuestionSkill을 통해 Skill 리스트를 추출
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
-        return question.getQuestionSkills().stream()
-                .map(QuestionSkill::getSkill)
-                .collect(Collectors.toList());
-    }
-
     public Page<Question> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
                                        String order,
                                        String sort, int page, int size, String keyword) {
@@ -308,14 +297,70 @@ public class QuestionService {
         );
     }
 
-    /**
-     * 문자열 리스트를 Enum 리스트로 변환하는 유틸리티 메서드.
-     *
-     * @param <E>       Enum 타입
-     * @param values    문자열 리스트
-     * @param enumClass Enum 클래스 타입
-     * @return 변환된 Enum 리스트
-     */
+    public List<JobDto> getJobsByQuestionId(Long questionId) {
+        String cacheKey = JOBS_CACHE_PREFIX + questionId;
+
+        // 1. Redis에서 캐시 조회
+        listValueOperations = redisTemplate.opsForValue();
+        List<JobDto> cachedJobs =
+                objectMapper.convertValue(
+                        listValueOperations.get(cacheKey),
+                        new TypeReference<>() {
+                        }
+                );
+        if (cachedJobs != null) {
+            log.info("== 캐시에서 jobs 데이터 조회: questionId={} ==", questionId);
+            return cachedJobs;
+        }
+
+        // 2. 캐시에 데이터가 없으면 DB에서 조회
+        log.info("== DB에서 jobs 데이터 조회: questionId={} ==", questionId);
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
+
+        List<JobDto> jobs = question.getQuestionJobs().stream()
+                .map(QuestionJob::getJob)
+                .map(JobDto::from)
+                .collect(Collectors.toList());
+
+        // 3. 결과를 Redis에 저장 (TTL: 1일)
+        listValueOperations.set(cacheKey, jobs, Duration.ofDays(1));
+
+        return jobs;
+    }
+
+    public List<SkillDto> getSkillsByQuestionId(Long questionId) {
+        String cacheKey = SKILLS_CACHE_PREFIX + questionId;
+
+        // 1. Redis에서 캐시 조회
+        listValueOperations = redisTemplate.opsForValue();
+        List<SkillDto> cachedskills =
+                objectMapper.convertValue(
+                        listValueOperations.get(cacheKey),
+                        new TypeReference<>() {
+                        }
+                );
+        if (cachedskills != null) {
+            log.info("== 캐시에서 skills 데이터 조회: questionId={} ==", questionId);
+            return cachedskills;
+        }
+
+        // 2. 캐시에 데이터가 없으면 DB에서 조회
+        log.info("== DB에서 skills 데이터 조회: questionId={} ==", questionId);
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
+
+        List<SkillDto> skills = question.getQuestionSkills().stream()
+                .map(QuestionSkill::getSkill)
+                .map(SkillDto::from)
+                .collect(Collectors.toList());
+
+        // 3. 결과를 Redis에 저장 (TTL: 1일)
+        listValueOperations.set(cacheKey, skills, Duration.ofDays(1));
+
+        return skills;
+    }
+
     private <E extends Enum<E>> List<E> convertToEnum(List<String> values, Class<E> enumClass) {
         if (values == null || values.isEmpty()) {
             return List.of(); // 빈 리스트 반환
