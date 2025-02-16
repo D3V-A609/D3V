@@ -162,14 +162,18 @@ const HomePage: React.FC = () => {
         </button>
         <div className="cards-container">
           <div className="cards-wrapper">
-            {top10Questions.map((question) => (
+          {Array.isArray(top10Questions) && top10Questions.length > 0 ? (
+            top10Questions.map((question) => (
               <Top10QuestionCardMemo
                 key={question.id}
                 title={question.content}
-                category={question.skillList[0]}
+                category={question.skillList[0] || ''}
                 onClick={() => QuestionCardClick(question.id)}
               />
-            ))}
+            ))
+          ) : (
+            <p>No questions available.</p>
+          )}
           </div>
         </div>
       </section>
