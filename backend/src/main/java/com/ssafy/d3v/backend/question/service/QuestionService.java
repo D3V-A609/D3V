@@ -110,8 +110,11 @@ public class QuestionService {
     @Transactional
     public List<Question> CreateRandomQuestions(Member member) {
 
-        // 데일리 생성 로직이 현재는 로그인 시 생성하는 방식인데 스케줄러 써서 개선할 수 있을 것 같다.
-        // 추가로 개인별 맞춤으로 다른 가중치도 추가할 예정
+        // 가중치 계산
+        // 푼 날짜, 풀었는지 여부 가중치만 설정되어있음
+        // 답변 수, 도전 수 가중치 추가
+        // 직무 추가
+
         // 현재 날짜
         LocalDate currentDate = LocalDate.now();
 
@@ -124,7 +127,7 @@ public class QuestionService {
         Map<Long, Long> questionWeights = new HashMap<>();
 
         for (ServedQuestion servedQuestion : recentServedQuestions) {
-            long daysSinceServed = (long) ChronoUnit.DAYS.between(servedQuestion.getServedAt(), currentDate);
+            long daysSinceServed = ChronoUnit.DAYS.between(servedQuestion.getServedAt(), currentDate);
             long weight;
             long notSolvedQWeight = 2; // 못 푼 문제 가중치 상수
             long solvedQWeight = 1; // 푼 문제 가중치 상수
@@ -150,7 +153,38 @@ public class QuestionService {
             }
         }
 
-        // 5. 가중치 기반 랜덤 선택
+        // [추가] 5. 추가 가중치 적용: 답변 수, 도전 수, 희망 직무
+        long answerWeight = 1; // 답변 수당 가중치
+        long challengeWeight = 1; // 도전 수당 가중치
+        long jobMatchWeight = 100; // 희망 직무 일치 시 추가 가중치
+
+        String favoriteJob = member.getFavoriteJob().name(); // Member에서 희망 직무 가져오기
+
+        for (Question question : allQuestions) {
+            long currentWeight = questionWeights.get(question.getId());
+
+            // 답변 수 가중치 추가
+            currentWeight += question.getAnswerCount() * answerWeight;
+
+            // 도전 수 가중치 추가
+            currentWeight += question.getChallengeCount() * challengeWeight;
+
+            // 희망 직무 일치 여부 확인
+            if (favoriteJob != null) {
+                List<String> questionJobs = question.getQuestionJobs().stream()
+                        .map(QuestionJob::getJob)
+                        .map(Job::getJobRole)
+                        .map(JobRole::name)
+                        .toList();
+                if (questionJobs.contains(favoriteJob)) {
+                    currentWeight += jobMatchWeight;
+                }
+            }
+
+            questionWeights.put(question.getId(), currentWeight);
+        }
+
+        // 6. 가중치 기반 랜덤 선택
         List<Question> selectedQuestions = new ArrayList<>();
         Random random = new Random();
 
@@ -173,7 +207,7 @@ public class QuestionService {
                 }
             }
         }
-        // 6. 선택된 질문 저장 및 업데이트
+        // 7. 선택된 질문 저장 및 업데이트
         LocalDate today = LocalDate.now();
 
         for (Question question : selectedQuestions) {
@@ -275,7 +309,7 @@ public class QuestionService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Question ID"));
         return question.getQuestionJobs().stream()
                 .map(QuestionJob::getJob)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<Skill> getSkillsByQuestionId(Long questionId) {

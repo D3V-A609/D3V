@@ -7,7 +7,6 @@ import com.ssafy.d3v.backend.question.entity.QuestionJob;
 import com.ssafy.d3v.backend.question.entity.Skill;
 import com.ssafy.d3v.backend.question.repository.JobRepository;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class JobService {
 
         return job.getQuestionJobs().stream()
                 .map(QuestionJob::getQuestion)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<Skill> getSkillsByJobs(List<String> jobs) {
