@@ -44,22 +44,22 @@
 }
 
 /* 기술 카테고리 */
-.card-category {
+.top10-question-card .card-category {
   display: flex;
   align-items: center;
   gap: 3px;
   font-size: 10px;
 }
 
-.category-tech-icon {
+.top10-question-card .category-tech-icon {
   font-size: 8px; /* 기술 아이콘 크기 축소 */
 }
 
-.card-category span {
+.top10-question-card .card-category span {
   font-size: 6px; /* 기술 텍스트 크기 축소 */
 }
 
 /* 답변 링크 */
-.answer-link {
+.top10-question-card .answer-link {
   font-size: 9px; /* 답변하러 가기 텍스트 크기 축소 */
 }

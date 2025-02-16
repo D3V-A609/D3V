@@ -82,7 +82,7 @@
 }
 
 /* 검색창 스타일 */
-.search-bar-container {
+.board-page .search-bar-container {
   display: flex;
   align-items: center;
   border: 1px solid #D9E9FF;
@@ -92,7 +92,7 @@
   margin-bottom: 8px;
 }
 
-.search-bar-input {
+.board-page .search-bar-input {
   flex-grow: 1;
 }
 
@@ -101,7 +101,7 @@
     padding: 20px;
   }
 
-  .search-bar-container {
+  .board-page .search-bar-container {
     position: static;
     margin-top: 20px;
     width: 100%;

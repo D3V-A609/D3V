@@ -57,15 +57,18 @@
   font-weight: 500;
   line-height: 1.5;
   color: #333;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   word-break: keep-all;
   word-wrap: break-word;
   text-align: left;
   align-items: center;
+  /* WebKit 브라우저(Safari, Chrome 등)를 위한 벤더 프리픽스(vendor prefix) 속성 대부분의 모던 브라우저에서 지원하지만, 표준 속성이 아직 완전히 정립되지 않아서 경고문이 뜸 */
+  /* 대부분의 브라우저에서 정상 작동 - 경고 무시해도 됨 */
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 텍스트의 줄 수를 제한하고 말줄임표(...)를 표시하는 CSS 속성 - 원하는 줄 수 지정 */
+  -webkit-box-orient: vertical;
 }
 
 /* 카드 푸터 스타일 */
@@ -85,18 +88,18 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .category-icon {
-  font-size: 16px;
+  font-size: 12px;
 }
 
 /* 답변 링크 스타일 */
 .answer-link {
   color: #555;
-  font-size: 14px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   gap: 4px;
