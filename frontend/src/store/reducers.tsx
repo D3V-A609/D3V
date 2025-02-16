@@ -8,6 +8,7 @@ import jobReducer from './slices/jobSlice';
 import commentReducer from './slices/commentSlice';
 import historyReducer from './slices/historySlice'
 import authReducer from './slices/authSlice';
+import userReducer from './slices/userSlice';
 
 const rootReducer = combineReducers({
   questions: questionReducer,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   jobs: jobReducer,
   comments: commentReducer,
   historys: historyReducer,
-  auth: authReducer
+  auth: authReducer,
+  user: userReducer,
 }) as Reducer<{
   questions: ReturnType<typeof questionReducer>;
   answers: ReturnType<typeof answerReducer>;
@@ -27,6 +29,7 @@ const rootReducer = combineReducers({
   comments: ReturnType<typeof commentReducer>;
   historys: ReturnType<typeof historyReducer>;
   auth: ReturnType<typeof authReducer>;
+  user: ReturnType<typeof userReducer>;
 }>;
 
 
