@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -231,6 +230,6 @@ public class AnswerServiceImpl implements AnswerService {
                         likesRepository.countByAnswer(answer),
                         likesRepository.existsByMemberAndAnswer(getMemberById(memberId), answer)
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
