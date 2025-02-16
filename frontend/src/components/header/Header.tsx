@@ -65,7 +65,7 @@ const Header: React.FC = () => {
     toast.success('로그아웃되었습니다.', {
       position: "top-right",
       autoClose: 1000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘
       pauseOnHover: false, // 마우스를 토스트 위에 올려도 자동 닫힘 타이머가 계속 실행됨
       toastId: 'logout-success'

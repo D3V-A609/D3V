@@ -52,9 +52,9 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
       toast.warning('로그인이 필요한 서비스입니다.', {
         position: "top-right", // 토스트 메시지가 표시될 위치 (top-right: 우측 상단)
         autoClose: 1500, // 자동으로 닫히는 시간 (1500ms = 1.5초)
-        hideProgressBar: false, // false: 토스트가 닫히기까지 남은 시간을 보여주는 프로그레스 바 표시
+        hideProgressBar: true, // false: 토스트가 닫히기까지 남은 시간을 보여주는 프로그레스 바 표시
         closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘
-        pauseOnHover: false, // 마우스를 토스트 위에 올려도 자동 닫힘 타이머가 계속 실행됨
+        pauseOnHover: false, // 마우스를 토스트 위에 올리면 자동 닫힘 타이머 일시 중지
         draggable: true, // 사용자가 토스트를 드래그하여 닫을 수 있음
         toastId: 'login-required' // 토스트의 고유 ID (동일 ID의 토스트가 이미 표시 중이면 중복 표시되지 않음)
       });
