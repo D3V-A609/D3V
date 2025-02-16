@@ -62,6 +62,7 @@ public class QuestionController {
         return ResponseEntity.ok(getListResponse(questionService.getDailyQuestions()));
     }
 
+    // /api/question/top10?month={month}&job={job}
     @GetMapping("/top10")
     @Operation(summary = "월간 TOP10 질문을 조회합니다", description = "선택한 직무에 대한 저번 달의 답변수 TOP10 질문을 조회합니다.")
     public ResponseEntity<List<Top10QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
