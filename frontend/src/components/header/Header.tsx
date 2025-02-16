@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // useEffect 제거
+import React, { useEffect, useState } from "react"; // useEffect 제거
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -20,6 +20,26 @@ const Header: React.FC = () => {
   // Local state
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
+
+  // 외부 클릭 시 userInfo 모달창 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isUserInfoOpen) {
+        const userInfoModal = document.querySelector(".user-info-dropdown"); // 모달 요소 찾기
+        if (userInfoModal && userInfoModal.contains(event.target as Node)) {
+          return; // ✅ 내부 클릭이면 아무 동작 안 함
+        }
+        setIsUserInfoOpen(false); // ✅ 외부 클릭 시 닫기
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserInfoOpen]);
+  
 
   // Navigation handlers
   const handleLogoClick = () => navigate("/");
