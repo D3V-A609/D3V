@@ -19,16 +19,19 @@ import { QuestionState } from '../store/slices/questionSlice';
 import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 import { ArticleState } from '../store/slices/articleSlice';
 import { fetchMyArticles, fetMyArticleComments } from '../store/actions/articleActions';
+import SecureStorage from '../store/services/token/SecureStorage';
+import { UserState } from '../store/slices/userSlice';
+import { fetchUserInfo } from '../store/actions/userActions';
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
-    const user = {
-    nickName: '혜워니이이잉',
-    job: 'Front-end',
-    email: 'n417759@gmail.com',
-    githubUri: 'github.com/D3V',
-    following: 50,
-    follower: 97
-    }
+    // const user = {
+    // nickName: '혜워니이이잉',
+    // job: 'Front-end',
+    // email: 'n417759@gmail.com',
+    // githubUri: 'github.com/D3V',
+    // following: 50,
+    // follower: 97
+    // }
 
     const UserInfoCompMemo = React.memo(UserInfoComp);
     const SectionContainerMemo = React.memo(SectionContainer);
@@ -51,24 +54,34 @@ const MyPage:React.FC = () => {
     const { MySolvedQuestions, MyUnsolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
     const { myArticles, myArticleComments } = useAppSelector((state) => state.articles as ArticleState)
 
-    const memberId = 3;
+    const { me } = useAppSelector((state) => state.user as UserState)
+
+    // const memberId = 3;
+    const memberId = SecureStorage.getMemberId();
 
     useEffect(() => {
-        Promise.all([
-            // 답변(푼, 못푼) 로드
-            dispatch(fetchMyLastedQuestions(true)),
-            dispatch(fetchMyLastedQuestions(false)),
+        if(memberId !== null){
+            Promise.all([
+                // 답변(푼, 못푼) 로드
+                dispatch(fetchMyLastedQuestions(true)),
+                dispatch(fetchMyLastedQuestions(false)),
+    
+                // 내가 작성한 게시글/댓글
+                dispatch(fetchMyArticles(memberId)),
+                dispatch(fetMyArticleComments(memberId)),
 
-            // 내가 작성한 게시글/댓글
-            dispatch(fetchMyArticles(memberId)),
-            dispatch(fetMyArticleComments(memberId)),
-        ]);
-    }, [dispatch])
+                // 내 정보 불러오기
+                dispatch(fetchUserInfo(null)),
+            ]);
+        }
+    }, [dispatch, memberId])
+
+    // console
 
     return (
     <div className='my-page-container'>
         <div className='my-detail-info-container'>
-            <UserInfoCompMemo user={user} />
+            <UserInfoCompMemo user={me} />
         </div>
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
