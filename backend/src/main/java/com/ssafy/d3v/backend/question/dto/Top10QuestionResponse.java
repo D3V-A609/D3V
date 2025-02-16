@@ -6,26 +6,24 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record QuestionResponse(
+public record Top10QuestionResponse(
         Long id,
         String content,
         String standardAnswer,
         Long answerCount,
         Long challengeCount,
         Double answerAverage,
-        String status,
         List<SkillType> skillList,
         List<JobRole> jobList
 ) {
-    public static QuestionResponse of(QuestionDto q, String solved, List<SkillDto> skills, List<JobDto> jobs) {
-        return QuestionResponse.builder()
+    public static Top10QuestionResponse of(QuestionDto q, List<SkillDto> skills, List<JobDto> jobs) {
+        return Top10QuestionResponse.builder()
                 .id(q.id())
                 .content(q.content())
                 .standardAnswer(q.standardAnswer())
                 .answerCount(q.answerCount())
                 .challengeCount(q.challengeCount())
                 .answerAverage(q.answerAverage())
-                .status(solved)
                 .skillList(skills.stream().map(SkillDto::name).toList())
                 .jobList(jobs.stream().map(JobDto::jobRole).toList())
                 .build();

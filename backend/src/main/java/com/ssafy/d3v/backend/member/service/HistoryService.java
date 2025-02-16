@@ -7,4 +7,6 @@ public interface HistoryService {
     List<HistoryResponse> getHistory(Long memberId);
 
     void createDailyHistory();
+
+    void calculateStreak();
 }

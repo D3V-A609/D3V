@@ -54,4 +54,49 @@ public class HistoryServiceImpl implements HistoryService {
             historyRepository.save(history);
         }
     }
+
+    @Override
+    @Scheduled(cron = "0 50 23 * * ?")
+    @Transactional
+    public void calculateStreak() {
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            History history = historyRepository.findByMemberIdAndDate(member.getId(), LocalDate.now())
+                    .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
+
+            List<History> historys = historyRepository.findByMemberOrderByDateAsc(member)
+                    .stream()
+                    .filter(ele -> ele.getCount() >= 1)
+                    .toList();
+
+            long maxStreak = 0;
+            long ongoingStreak = 0;
+            long currentStreak = 0;
+            LocalDate prevDate = null;
+
+            for (History ele : historys) {
+                if (prevDate == null || ele.getDate().equals(prevDate.plusDays(1))) {
+                    currentStreak++;
+                } else {
+                    maxStreak = Math.max(maxStreak, currentStreak);
+                    currentStreak = 1;
+                }
+                prevDate = ele.getDate();
+            }
+
+            maxStreak = Math.max(maxStreak, currentStreak);
+
+            if (history.getCount() == 0) {
+                ongoingStreak = 0;
+            } else {
+                ongoingStreak += 1;
+            }
+
+            memberRepository.saveAndFlush(member.toBuilder()
+                    .maxStreak(maxStreak)
+                    .ongoingStreak(ongoingStreak)
+                    .build());
+        }
+    }
 }

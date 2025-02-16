@@ -17,7 +17,9 @@ import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.common.util.SpeechToTextConverter;
 import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
+import com.ssafy.d3v.backend.member.entity.History;
 import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.member.repository.HistoryRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
@@ -27,6 +29,7 @@ import com.ssafy.d3v.backend.question.repository.ServedQuestionRepository;
 import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +51,7 @@ public class AnswerServiceImpl implements AnswerService {
     private final MemberRepository memberRepository;
     private final FeedbackCustomRepository feedbackCustomRepository;
     private final QuestionService questionService;
+    private final HistoryRepository historyRepository;
     private final SpeechToTextConverter textConverter;
     private final Long memberId = 1L;
 
@@ -61,7 +65,7 @@ public class AnswerServiceImpl implements AnswerService {
             throw new IllegalStateException("작성한 답변이 없습니다. 질문 ID: " + questionId);
         }
 
-        boolean isSolved = servedQuestionRepository.findByMemberAndQuestion_Id(member, questionId)
+        boolean isSolved = servedQuestionRepository.findByMember_IdAndQuestion_Id(member.getId(), questionId)
                 .map(ServedQuestion::getIsSolved)
                 .orElse(false);
 
@@ -73,6 +77,8 @@ public class AnswerServiceImpl implements AnswerService {
     public List<AnswerResponse> create(long questionId, AnswerRequest answerRequest) {
         Question question = getQuestionById(questionId);
         Member member = getMemberById(memberId);
+        History history = historyRepository.findByMemberIdAndDate(memberId, LocalDate.now())
+                .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
 
         Answer answer = Answer.builder()
                 .member(member)
@@ -91,6 +97,10 @@ public class AnswerServiceImpl implements AnswerService {
 
         servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
+        historyRepository.saveAndFlush(
+                history.toBuilder()
+                        .count(history.getCount() + 1)
+                        .build());
 
         return getAnswerResponses(question, member);
     }
@@ -186,7 +196,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         return servedQuestions.stream()
                 .map(ele -> AnswerQuestionResponse.from(
-                        ele.getId(),
+                        ele.getQuestion().getId(),
                         ele.getQuestion().getContent(),
                         ele.getIsSolved(),
                         questionService.getSkillsByQuestionId(ele.getQuestion().getId())))

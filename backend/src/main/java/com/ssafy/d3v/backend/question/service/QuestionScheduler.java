@@ -19,8 +19,8 @@ public class QuestionScheduler {
      */
     @Scheduled(cron = "0 0 2 1 * ?") // 매월 1일 오전 2시 실행
     public void scheduleMonthlyTop10Questions() {
-        String currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        questionService.generateAndSaveTop10QuestionsForAllJobs(currentMonth);
+        String previousMonth = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        questionService.generateAndSaveTop10QuestionsForAllJobs(previousMonth);
     }
 
     /**

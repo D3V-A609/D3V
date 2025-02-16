@@ -47,12 +47,12 @@ public class ServedQuestionController {
                 servedQuestionCreateRequest, false));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{questionId}")
     @Operation(summary = "제공된 질문 수정", description = "제공된 질문을 수정합니다. {isSolved, isDaily, servedAt} 수정 가능")
     public ResponseEntity<ServedQuestionDto> updateServedQuestion(
-            @PathVariable Long id,
+            @PathVariable Long questionId,
             @RequestBody ServedQuestionUpdateRequest servedQuestionUpdateRequest) {
-        return ResponseEntity.ok(servedQuestionService.updateServedQuestion(id, servedQuestionUpdateRequest));
+        return ResponseEntity.ok(servedQuestionService.updateServedQuestion(questionId, servedQuestionUpdateRequest));
     }
 
     @GetMapping("/member/{memberId}")

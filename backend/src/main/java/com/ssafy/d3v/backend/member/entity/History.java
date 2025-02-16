@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class History {
