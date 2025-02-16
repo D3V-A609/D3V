@@ -6,10 +6,22 @@ import { IoIosEyeOff } from "react-icons/io";
 import { IoMdEye } from "react-icons/io";
 import './Login.css';
 
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import authApi from '../../store/services/authApi';
+import tokenService from '../../store/services/token/tokenService';
+import { loginSuccess } from '../../store/slices/authSlice';
+
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -21,12 +33,55 @@ const Login: React.FC = () => {
 
   // 한글 입력 시작 시 이벤트 처리
   const handleCompositionStart = (e: React.CompositionEvent<HTMLInputElement>) => {
-    e.preventDefault();
+      e.preventDefault();
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        // 로딩 토스트 표시 (선택사항)
+        // toast.loading('로그인 중...', { toastId: 'login-loading' });
+
+        const response = await authApi.login({ email, password });
+        
+        // AccessToken 저장 (tokenService 사용)
+        tokenService.setAccessToken(response.result.AccessToken);
+        
+        // Redux store 업데이트
+        dispatch(loginSuccess({ 
+          isAuthenticated: true,
+          user: {
+            memberId: response.result.memberId,
+            nickname: response.result.nickname,
+            email: response.result.email,
+            profileImg: response.result.profileImg,
+          }
+        }));
+    
+        // 로딩 토스트 제거 (선택사항)
+        // toast.dismiss('login-loading');
+
+        // 성공 토스트 표시 (시간 단축)
+        toast.success('로그인되었습니다.', {
+          position: "top-right",
+          autoClose: 1000, // 500ms로 단축
+          hideProgressBar: true, // 프로그레스바 숨김
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false, // 드래그 비활성화로 성능 개선
+          toastId: 'login-success'
+        });
+
+        // 즉시 네비게이션
+        navigate('/');
+      } catch (error) {
+        toast.error('로그인에 실패했습니다.', {
+          autoClose: 500,
+          hideProgressBar: true
+        });
+      }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
 
   return (
     <div className="login-container">
