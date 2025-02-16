@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import { useAppDispatch } from "../../store/hooks/useRedux";
 import { updateArticle } from "../../store/actions/articleActions";
-import { Article } from "../../types/article";
 import "./EditArticle.css";
 
 const categories = [
