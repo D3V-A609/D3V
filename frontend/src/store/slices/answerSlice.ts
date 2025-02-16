@@ -1,9 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fetchMyAnswer, fetchOtherAnswers, toggleLike, fetchAllMyAnswersByQID, registAnswer, registServedAnswer, fetchLikedAnswers, fetchMyFeedback } from '../actions/answerActions';
+
+interface Pagable {
+  totalRecords: number;
+  currentPage: number;
+  totalPages: number;
+  nextPage: number | null;
+  prevPage: number | null;
+}
+
+export interface AnswerResponse {
+  data: Answer[];
+  pagable: Pagable;
+}
 
 export interface AnswerState  {
   myAnswer: Answer | null; // 내 답변 
-  otherAnswers: Answer[];  // 다른 사람의 답변 (답변 커뮤)
+  otherAnswers: AnswerResponse | null;
   loading: boolean;
   error: string | null;
   myAnswerArr: Answer[]; // 내 답변 기록들(답변 등록)
@@ -14,7 +27,7 @@ export interface AnswerState  {
 
 const initialState: AnswerState = {
   myAnswer: null,
-  otherAnswers: [],
+  otherAnswers: null,
   loading: false,
   error: null,
   myAnswerArr: [],
@@ -47,30 +60,30 @@ const answerSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchOtherAnswers.fulfilled, (state, action) => {
+      .addCase(fetchOtherAnswers.fulfilled, (state, action: PayloadAction<AnswerResponse>) => {
         state.loading = false;
-        state.otherAnswers = action.payload || [];
+        state.otherAnswers = action.payload;
         state.error = null;
       })
       .addCase(fetchOtherAnswers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        state.otherAnswers = [];
+        state.otherAnswers = null;
       })
       .addCase(toggleLike.pending, (state) => {
-        state.loading = true;
         state.error = null;
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
         const { answerId, isLiked, like } = action.payload;
-        const answerToUpdate = state.otherAnswers.find(answer => answer.answerId === answerId);
-        if (answerToUpdate) {
-          answerToUpdate.isLiked = isLiked;
-          answerToUpdate.like = like;
+        if (state.otherAnswers && state.otherAnswers.data) {
+          const answerToUpdate = state.otherAnswers.data.find(answer => answer.answerId === answerId);
+          if (answerToUpdate) {
+            answerToUpdate.isLiked = isLiked;
+            answerToUpdate.like = like;
+          }
         }
       })
       .addCase(toggleLike.rejected, (state, action) => {
-        state.loading = false;
         state.error = action.error.message || '추천 처리 중 오류가 발생했습니다.';
       })
 

@@ -1,10 +1,13 @@
 .my-page-container{
-  width: 100%;
+  /* width: 100%; */
+  width: 1200px;
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
   justify-content: center;
-  padding: 3em;
+  /* padding: 3em; */
+  padding: 40px 40px;
+  margin: 0 auto;
 }
 
 .my-learning-info-container{

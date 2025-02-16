@@ -9,6 +9,7 @@ interface OtherAnswersProps {
 }
 
 const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
+  console.log('OtherAnswers received answers:', answers);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortType, setSortType] = useState<'latest' | 'comments' | 'likes'>('latest');
   const answersPerPage = 10;
@@ -19,7 +20,7 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
       if (sortType === 'comments') {
-        return b.commentCount - a.commentCount;
+        return b.count - a.count;
       }
       return b.like - a.like;
     });

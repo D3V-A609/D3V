@@ -8,6 +8,7 @@ import WriteArticle from "../features/Article/WriteArticle";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
+import { useLocation } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -19,6 +20,7 @@ const categoryMap: Record<string, string> = {
 
 const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const { articles, error, pagination } = useAppSelector(
     (state) => state.articles || { articles: [], error: null, pagination: undefined }
   );
@@ -50,6 +52,13 @@ const BoardPage: React.FC = () => {
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData]);
+
+  useEffect(() => {
+    if(location.state?.selectedArticleId && location.state?.currentView){
+      setSelectedArticleId(location.state.selectedArticleId);
+      setCurrentView(location.state.currentView);
+    }
+  }, [location.state])
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => ({ ...prev, ...newParams, page: 1 }));

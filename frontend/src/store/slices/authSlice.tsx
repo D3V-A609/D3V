@@ -4,12 +4,20 @@ import SecureStorage from '../services/token/SecureStorage';
 
 interface AuthState {
   currentStep: number;
-  isAuthenticated: boolean; // 로그인 여부를 저장
+  isAuthenticated: boolean;
+  user: {
+    memberId: number;
+    nickname: string;
+    email: string;
+    profileImg: string;
+    // ... 필요한 사용자 정보
+  } | null;
   formData: {
     email: string;
     password: string;
   }
 }
+
 // 세션 스토리지에서 로그인 상태 가지고 오기
 const getInitialAuthState = (): boolean => {
   const storedAuth = sessionStorage.getItem('isAuthenticated');
@@ -18,7 +26,8 @@ const getInitialAuthState = (): boolean => {
 
 const initialState: AuthState = {
   currentStep: 1,
-  isAuthenticated: getInitialAuthState(), // 세션에서 초기값 가지고오기기
+  isAuthenticated: getInitialAuthState(),
+  user: null,
   formData: {
     email: '',
     password: '',
@@ -35,10 +44,12 @@ const authSlice = createSlice({
     updateFormData: (state, action) => {
       state.formData = { ...state.formData, ...action.payload };
     },
-    loginSuccess: (state, action: PayloadAction<{ isAuthenticated: boolean }>) => {
+    loginSuccess: (state, action: PayloadAction<{ 
+      isAuthenticated: boolean;
+      user: AuthState['user'];
+    }>) => {
       state.isAuthenticated = action.payload.isAuthenticated;
-
-      // 세션 스토리지에 로그인 상태 저장
+      state.user = action.payload.user;
       sessionStorage.setItem('isAuthenticated', JSON.stringify(action.payload.isAuthenticated));
 
       // 로그인 후 현재 로그인한 사용자의 memberId 값을 가지고 온다

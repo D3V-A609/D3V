@@ -38,7 +38,7 @@
   color: #333;
   text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .no-answers-message {
