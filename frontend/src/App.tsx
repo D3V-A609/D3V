@@ -19,7 +19,8 @@ import OAuthCallback from './components/Auth/OAuthCallback.ts';
 import HomePage from './pages/HomePage.tsx';
 import AllQuestionPage from './pages/AllQuestionPage.tsx';
 import BoardPage from './pages/BoardPage.tsx';
-import AIPage from './pages/AIPage.tsx';
+// import AIPage from './pages/AIPage.tsx';
+import VideoPage from './pages/VideoPage.tsx';
 import MyPage from './pages/MyPage.tsx';
 import QuestionDetailPage from './pages/QuestionDetailPage.tsx';
 
@@ -111,7 +112,7 @@ function App() {
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/all-questions', element: <ProtectedRoute><AllQuestionPage /></ProtectedRoute> },
-        { path: '/ai', element: <AIPage /> },
+        { path: '/video', element: <VideoPage /> },
         { 
           path: '/my', 
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
