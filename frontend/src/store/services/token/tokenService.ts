@@ -1,7 +1,7 @@
 // services/token/tokenService.ts
 class TokenService {
   private static instance: TokenService;
-  private accessToken: string | null = null;
+  // private accessToken: string | null = null;
 
   private constructor() {}
 
@@ -14,19 +14,23 @@ class TokenService {
   }
 
   setAccessToken(token: string): void {
-    this.accessToken = token;
+    // this.accessToken = token;
+    sessionStorage.setItem('accessToken', token);
   }
 
   getAccessToken(): string | null {
-    return this.accessToken;
+    // return this.accessToken;
+    return sessionStorage.getItem('accessToken');
   }
 
   removeAccessToken(): void {
-    this.accessToken = null;
+    // this.accessToken = null;
+    sessionStorage.removeItem('accessToken');
   }
 
   isAuthenticated(): boolean {
-    return !!this.accessToken;
+    // return !!this.accessToken;
+    return !!sessionStorage.getItem('accessToken');
   }
 }
 
