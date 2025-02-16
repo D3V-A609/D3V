@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react"; // useEffect 제거
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { useSelector } from "react-redux"; // UseSelector -> useSelector로 수정
-import { toast } from 'react-toastify'; // toast import 추가
-import { RootState } from "../../store"; // RootState import 추가
+import { toast } from 'react-toastify';
+import { RootState } from "../../store";
+import { logout } from "../../store/slices/authSlice";
 
 import "./Header.css";
 import Logo from "../../assets/images/logo.gif";
@@ -11,57 +12,68 @@ import Nav from "./Nav";
 import UserProfileImg from "./UserProfileImg";
 
 const Header: React.FC = () => {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
-  
-  // isLogined state 제거하고 Redux의 isAuthenticated 사용
+  // Redux hooks
+  const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-
   const navigate = useNavigate();
 
-  const handleLogoClick = () => {
-    navigate("/");
-  };
+  // Local state
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
 
-  const toggleUserInfo = () => {
-    setIsUserInfoOpen(!isUserInfoOpen);
-  };
-
-  const toggleNav = () => {
-    setIsNavOpen(!isNavOpen);
-  };
-
-  const navToggleClose = () => {
-    if (isNavOpen) {
-      setIsNavOpen(!isNavOpen);
-    }
-  };
-
-  const logout = () => {
-    // Redux logout action 추가 필요
-    setIsUserInfoOpen(false);
-    navigate("/");
-  };
-
+  // Navigation handlers
+  const handleLogoClick = () => navigate("/");
+  const goToLogin = () => navigate('/auth/login');
   const goMyPage = () => {
     navigate('/my');
     setIsUserInfoOpen(false);
-  }
-
-  const goToLogin = () => {
-    navigate('/auth/login');
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      toast.success('로그인되었습니다.', {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        toastId: 'login-success' // 고유 ID 추가
-      });
-    }
-  }, [isAuthenticated]);
+  // Toggle handlers
+  const toggleUserInfo = () => setIsUserInfoOpen(!isUserInfoOpen);
+  const toggleNav = () => setIsNavOpen(!isNavOpen);
+  const navToggleClose = () => {
+    if (isNavOpen) setIsNavOpen(false);
+  };
+
+  // Auth handlers
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsUserInfoOpen(false);
+    navigate("/");
+    
+    toast.success('로그아웃되었습니다.', {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘
+      pauseOnHover: false, // 마우스를 토스트 위에 올려도 자동 닫힘 타이머가 계속 실행됨
+      toastId: 'logout-success'
+    });
+  };
+
+  // Render user profile section
+  const renderUserProfile = () => (
+    isAuthenticated ? (
+      <>
+        <div onClick={toggleUserInfo}>
+          <UserProfileImg />
+        </div>
+        {isUserInfoOpen && (
+          <div className="user-info-dropdown">
+            <ul>
+              <li onClick={goMyPage}>마이 페이지</li>
+              <li onClick={handleLogout}>로그아웃</li>
+            </ul>
+          </div>
+        )}
+      </>
+    ) : (
+      <div className="login-btn" onClick={goToLogin}>
+        로그인
+      </div>
+    )
+  );
 
   return (
     <header className="header-container">
@@ -69,7 +81,6 @@ const Header: React.FC = () => {
         <div className="hamburger-menu" onClick={toggleNav}>
           {isNavOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </div>
-
         <img
           src={Logo}
           className="header-container_logo-svg"
@@ -83,25 +94,7 @@ const Header: React.FC = () => {
       </nav>
 
       <div className="header-user-profile">
-        {isAuthenticated ? (
-          <>
-            <div onClick={toggleUserInfo}>
-              <UserProfileImg />
-            </div>
-            {isUserInfoOpen && (
-              <div className="user-info-dropdown">
-                <ul>
-                  <li onClick={goMyPage}>마이 페이지</li>
-                  <li onClick={logout}>로그아웃</li>
-                </ul>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="login-btn" onClick={goToLogin}>
-            로그인
-          </div>
-        )}
+        {renderUserProfile()}
       </div>
     </header>
   );
