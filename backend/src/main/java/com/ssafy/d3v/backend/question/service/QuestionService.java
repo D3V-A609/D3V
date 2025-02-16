@@ -180,7 +180,7 @@ public class QuestionService {
         for (Question question : selectedQuestions) {
             // 이미 존재하는 ServedQuestion 조회
             Optional<ServedQuestion> existingServedQuestion = servedQuestionRepository
-                    .findByMemberAndQuestion_Id(member, question.getId());
+                    .findByMember_IdAndQuestion_Id(member.getId(), question.getId());
 
             if (existingServedQuestion.isPresent()) {
                 // 1. 기존 레코드가 존재하면 isDaily=true, servedAt=오늘 날짜로 업데이트

@@ -19,7 +19,7 @@ public interface ServedQuestionRepository extends JpaRepository<ServedQuestion, 
 
     List<ServedQuestion> findByMemberAndIsDailyAndServedAt(Member member, Boolean isDaily, LocalDate servedAt);
 
-    Optional<ServedQuestion> findByMemberAndQuestion_Id(Member member, Long questionId);
+    Optional<ServedQuestion> findByMember_IdAndQuestion_Id(Long memberId, Long questionId);
 
     @Query("SELECT sq.isSolved " +
             "FROM ServedQuestion sq " +
