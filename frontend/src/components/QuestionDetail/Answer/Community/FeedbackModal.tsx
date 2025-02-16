@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux
 import { fetchFeedbacks, createFeedback, updateFeedback, deleteFeedback } from '../../../../store/actions/feedbackActions';
 import { toggleLike } from '../../../../store/actions/answerActions';
 import Profile from '../../../Profile/Profile';
-import dummyUsers from '../../../../constants/dummyUsers';
 import './FeedbackModal.css';
 
 interface FeedbackModalProps {
@@ -18,6 +17,7 @@ interface FeedbackModalProps {
 const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate }) => {
   const dispatch = useAppDispatch();
   const { feedbacks, error } = useAppSelector(state => state.feedbacks);
+  const { users } = useAppSelector(state => state.users);
   const [newFeedback, setNewFeedback] = useState('');
   const [editingFeedbackId, setEditingFeedbackId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
@@ -26,6 +26,22 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
   const observer = useRef<IntersectionObserver | null>(null);
 
   const lastFeedbackElementRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -143,7 +159,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
         <div className="feedbacks-section">
           {error && <p>Error: {error}</p>}
           {feedbacks.map((feedback: Feedback, index: number) => {
-            const user = dummyUsers.find(user => user.memberId === feedback.memberId);
+            const user = users.find(user => user.memberId === feedback.memberId);
             return (
               <div 
                 key={feedback.feedbackId} 

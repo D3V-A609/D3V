@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../../../store/hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import FeedbackModal from './FeedbackModal';
 import Profile from '../../../Profile/Profile';
-import dummyUsers from '../../../../constants/dummyUsers';
 import "./AnswerItem.css";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoChatboxOutline } from "react-icons/io5";
 import { toggleLike } from '../../../../store/actions/answerActions';
+import { RootState } from '../../../../store/reducers';
 
 interface AnswerItemProps {
   answer: Answer;
@@ -18,8 +18,8 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   const [localLikeCount, setLocalLikeCount] = useState(answer.like);
   const [localIsLiked, setLocalIsLiked] = useState(answer.isLiked);
 
-  // dummyUsers에서 멤버 데이터 조회
-  const member = dummyUsers.find(user => user.memberId === answer.memberId);
+  const { users } = useAppSelector((state: RootState) => state.auth);
+  const member = users.find((user: User) => user.memberId === answer.memberId);
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
