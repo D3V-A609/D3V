@@ -14,7 +14,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -69,7 +68,7 @@ public class ServedQuestionService {
     public List<ServedQuestionDto> getAllServedQuestions() {
         return servedQuestionRepository.findAll().stream()
                 .map(ServedQuestionDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -120,7 +119,7 @@ public class ServedQuestionService {
         // DTO로 변환하여 반환
         return servedQuestions.stream()
                 .map(ServedQuestionDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public String getIsSolvedStatus(Long questionId) {

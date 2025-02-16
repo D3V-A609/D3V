@@ -20,7 +20,6 @@ import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,7 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
                         .view(a.getView())
                         .commentCount(a.getCommentCount())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
         return new PagedResponse<>(articleResponses, PaginationInfo.from(articles));
     }
@@ -217,6 +216,6 @@ public class ArticleServiceImpl implements ArticleService {
                         .view(a.getView())
                         .commentCount(a.getCommentCount())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 }
