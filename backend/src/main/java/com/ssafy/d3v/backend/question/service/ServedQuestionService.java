@@ -57,7 +57,6 @@ public class ServedQuestionService {
 
             return ServedQuestionDto.from(savedServedQuestion);
         } catch (DataIntegrityViolationException e) {
-            // ConstraintViolationException 처리
             throw new IllegalStateException("동일한 memberId와 questionId를 가진 ServedQuestion이 이미 존재합니다.", e);
         }
     }

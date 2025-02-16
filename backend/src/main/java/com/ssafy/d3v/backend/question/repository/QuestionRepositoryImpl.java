@@ -36,7 +36,6 @@ import org.springframework.stereotype.Repository;
 public class QuestionRepositoryImpl implements QuestionCustomRepository {
 
     private final JPAQueryFactory queryFactory;
-    private final ServedQuestionRepository servedQuestionRepository; // solved 값을 가져오기 위한 Repository
 
     @Override
     public List<Question> findTop10QuestionsByAnswerCount(LocalDateTime startDate, LocalDateTime endDate,

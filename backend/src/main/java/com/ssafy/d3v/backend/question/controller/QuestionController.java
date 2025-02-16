@@ -4,6 +4,7 @@ import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
 import com.ssafy.d3v.backend.question.dto.SkillDto;
+import com.ssafy.d3v.backend.question.dto.Top10QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.service.QuestionService;
 import com.ssafy.d3v.backend.question.service.ServedQuestionService;
@@ -63,9 +64,10 @@ public class QuestionController {
 
     @GetMapping("/top10")
     @Operation(summary = "월간 TOP10 질문을 조회합니다", description = "선택한 직무에 대한 저번 달의 답변수 TOP10 질문을 조회합니다.")
-    public ResponseEntity<List<QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
-                                                                    @RequestParam("job") String job) {
-        return ResponseEntity.ok(getListResponse(questionService.getTop10Questions(month, job)));
+    public ResponseEntity<List<Top10QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
+                                                                         @RequestParam("job") String job) {
+        return ResponseEntity.ok(questionService.getTop10Questions(month, job)
+                .stream().map(this::getTop10QuestionResponse).toList());
     }
 
     private List<QuestionResponse> getListResponse(List<QuestionDto> questions) {
@@ -79,6 +81,12 @@ public class QuestionController {
         List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
         List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
         return QuestionResponse.of(question, solved, skills, jobs);
+    }
+
+    private Top10QuestionResponse getTop10QuestionResponse(QuestionDto question) {
+        List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
+        List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return Top10QuestionResponse.of(question, skills, jobs);
     }
 }
 
