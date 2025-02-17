@@ -99,7 +99,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
                     {member ? (
                       <Profile
                         profileImg={member?.profileImg}
-                        jobField={member.jobField}
+                        favoriteJob={member.jobField}
                         nickname={member.nickname}
                       />
                     ) : (
