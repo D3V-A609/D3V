@@ -56,7 +56,7 @@ export const fetchMyArticles = createAsyncThunk(
 );
 
 // 내가 작성한 게시글 댓글 조회
-export const fetMyArticleComments = createAsyncThunk(
+export const fetchMyArticleComments = createAsyncThunk(
   'articles/myArticleComments',
   async (memberId: number, {rejectWithValue}) => {
     try{

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchArticles, fetchArticle, createArticle, fetchMyArticles, fetMyArticleComments, updateArticle, deleteArticle } from "../actions/articleActions";
+import { fetchArticles, fetchArticle, createArticle, fetchMyArticles, fetchMyArticleComments, updateArticle, deleteArticle } from "../actions/articleActions";
 
 export interface ArticleState {
   articles: Article[];
@@ -104,16 +104,16 @@ const articleSlice = createSlice({
       })
 
       // 내가 작성한 게시글 댓글 목록 불러오기
-      .addCase(fetMyArticleComments.pending, (state) => {
+      .addCase(fetchMyArticleComments.pending, (state) => {
         state.loading = true;
         state.error = null; 
       })
-      .addCase(fetMyArticleComments.fulfilled, (state, action) => {
+      .addCase(fetchMyArticleComments.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null; 
         state.myArticleComments = action.payload;
       })
-      .addCase(fetMyArticleComments.rejected, (state, action) => {
+      .addCase(fetchMyArticleComments.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
