@@ -108,8 +108,8 @@ public class MemberServiceImpl implements MemberService {
                 .providerType(updated.getProviderType())
                 .createdAt(updated.getCreatedAt())
                 .favoriteJob(updated.getFavoriteJob())
-                .followerCount(followRepository.countByFollowing(member))
-                .followingCount(followRepository.countByFollower(member))
+                .followerCount(followRepository.countByFollower(member))
+                .followingCount(followRepository.countByFollowing(member))
                 .build();
     }
 
