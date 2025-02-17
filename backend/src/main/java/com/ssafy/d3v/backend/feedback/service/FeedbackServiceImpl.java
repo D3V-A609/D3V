@@ -73,10 +73,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     private FeedbackResponse getFeedbackResponse(Feedback feedback) {
+        Answer answer = answerRepository.findById(feedback.getAnswer().getAnswerId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변입니다."));
         return FeedbackResponse.builder()
                 .feedbackId(feedback.getId())
                 .answerId(feedback.getAnswer().getAnswerId())
                 .memberId(feedback.getMember().getId())
+                .questionId(answer.getQuestion().getId())
                 .content(feedback.getContent())
                 .createdAt(feedback.getCreatedAt())
                 .updatedAt(feedback.getUpdatedAt())
