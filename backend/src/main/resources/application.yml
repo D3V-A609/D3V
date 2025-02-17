@@ -37,9 +37,14 @@ logging:
     org.hibernate: INFO
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
   endpoint:
     mappings:
       access: unrestricted
+
       
 ---
 
