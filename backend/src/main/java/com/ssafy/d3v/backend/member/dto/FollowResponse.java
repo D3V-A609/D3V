@@ -7,14 +7,16 @@ import lombok.Builder;
 public record FollowResponse(
         Long memberId,
         String nickname,
-        long maxStreak,
-        long ongoingStreak
+        String profileImg,
+        String favoriteJob,
+        Long ongoingStreak
 ) {
     public static FollowResponse from(Member member) {
         return FollowResponse.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
-                .maxStreak(member.getMaxStreak())
+                .profileImg(member.getProfileImg())
+                .favoriteJob(String.valueOf(member.getFavoriteJob()))
                 .ongoingStreak(member.getOngoingStreak())
                 .build();
     }
