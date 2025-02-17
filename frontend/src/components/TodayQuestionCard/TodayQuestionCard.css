@@ -123,7 +123,7 @@
 
 /* 블러 컨텐츠가 있는 카드의 커서 스타일 */
 .question-card:has(.blur-content) {
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 
 /* 반응형 스타일 */

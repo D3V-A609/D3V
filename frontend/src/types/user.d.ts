@@ -26,3 +26,17 @@ interface User {
   followerCount: number;
   followingCount: number;
 }
+
+interface FollowUser {
+  memberId: number;
+  nickname: string;
+  profileImg: string;
+  favoriteJob: string;
+  maxStreak: number;
+  ongoningStreak: number;
+}
+
+interface responseFollow {
+  memberId: number;
+  follows: FollowUser[];
+}

@@ -101,3 +101,12 @@ display: none;
   padding-bottom: 1rem;
   cursor: pointer;
 }
+
+.value.text-blue{
+  cursor: pointer;
+}
+
+.value.text-blue:hover{
+  text-decoration: dashed;
+  color: black;
+}

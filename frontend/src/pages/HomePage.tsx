@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux'
 import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
@@ -38,8 +38,21 @@ const HomePage: React.FC = () => {
   
   const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
 
-  const getPreviousMonth = useCallback(() => format(subMonths(new Date(), 1), 'yyyy-MM'), []);
+  const previousMonth = useMemo(() => format(subMonths(new Date(), 1), 'yyyy-MM'), []);
 
+  const prevSelectedJob = useRef<JobType | null>(null);
+  // selectedJob 변경 시 실행
+  useEffect(() => {
+    if (prevSelectedJob.current !== selectedJob) {
+      prevSelectedJob.current = selectedJob;
+      dispatch(fetchTop10Questions({
+        month: previousMonth,
+        job: selectedJob,
+      }));
+    }
+  }, [dispatch, selectedJob, previousMonth]);
+
+  
   const hasFetched = useRef(false);
 
   const saveScrollPosition = useCallback(
@@ -48,6 +61,12 @@ const HomePage: React.FC = () => {
     }, 500), // 500ms마다 실행
     []
   );
+
+  const dummyDailyQuestions = [
+    { id: 1, content: 'React에서 상태 관리는 어떻게 해야 할까요?', skillList: ['React'], status: 'pending' },
+    { id: 2, content: '자바스크립트에서 클로저(Closure)란?', skillList: ['JavaScript'], status: 'pending' },
+    { id: 3, content: 'CSS에서 flex와 grid의 차이점은?', skillList: ['CSS'], status: 'pending' },
+  ];
 
   // 스크롤 위치 저장 및 복원
   useEffect(() => {
@@ -61,29 +80,37 @@ const HomePage: React.FC = () => {
   }, [saveScrollPosition]);
   
   // api 병렬 요청으로 api 중복 호출을 막고, 최적화함
-  // 초기 로딩 시 최조 한번만 실행행
+  // 초기 로딩 시 최조 한번만 실행
   useEffect(() => {
-    if(!hasFetched.current){
+    if (!hasFetched.current) {
       hasFetched.current = true;
-      Promise.all([
-        dispatch(fetchDailyQuestions()),
+      
+      const requests = [
         dispatch(fetchJobs()).unwrap().then((jobs: JobType[]) => {
-          setJobCategories(jobs.reduce((acc, job) => {
-            acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
-            return acc;
-          }, {} as { [key: string]: string }));
+          setJobCategories(
+            jobs.reduce((acc, job) => {
+              acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+              return acc;
+            }, {} as { [key: string]: string })
+          );
         }).catch((error) => console.error('Failed to fetch jobs:', error))
-      ])
+      ];
+  
+      if (isAuthenticated) {
+        requests.push(dispatch(fetchDailyQuestions()).unwrap().then(() => void 0));
+      }
+  
+      Promise.all(requests);
     }
-  }, [dispatch])
+  }, [dispatch, isAuthenticated]); // ✅ isAuthenticated 추가
 
-  // selectedJob 변경 시 실행
-  useEffect(() => {
-    dispatch(fetchTop10Questions({
-      month: getPreviousMonth(),
-      job: selectedJob,
-    }));
-  }, [dispatch, selectedJob, getPreviousMonth]);
+  // // selectedJob 변경 시 실행
+  // useEffect(() => {
+  //   dispatch(fetchTop10Questions({
+  //     month: getPreviousMonth(),
+  //     job: selectedJob,
+  //   }));
+  // }, [dispatch, selectedJob, getPreviousMonth]);
 
   // 질문 상세 페이지 이동 함수(useCallback)
   const QuestionCardClick = useCallback((id: number) => {
@@ -109,7 +136,8 @@ const HomePage: React.FC = () => {
       <section className="today-questions">
         {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
         <div className={`question-cards ${isAuthenticated? "" : "--unLogined"}`}>
-          {Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
+          {isAuthenticated ? 
+          (Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
             <TodayQuestionCardMemo
               key={question.id}
               title={question.content}
@@ -117,7 +145,18 @@ const HomePage: React.FC = () => {
               status={question.status}
               onClick={() => QuestionCardClick(question.id)}
             />
-          ))}
+          ))) : (
+            Array.isArray(dummyDailyQuestions) && dummyDailyQuestions.map((question) => (
+              <TodayQuestionCardMemo
+                key={question.id}
+                title={question.content}
+                category={question.skillList?.[0] || 'General'}
+                status={question.status}
+                onClick={() => QuestionCardClick(question.id)}
+              />
+            ))
+          )
+          }
         </div>
       </section>
 

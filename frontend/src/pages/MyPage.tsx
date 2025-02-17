@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { shallowEqual } from 'react-redux';
 
@@ -19,14 +19,15 @@ import { fetchMyLastedQuestions } from '../store/actions/questionActions';
 import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
 import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 import { ArticleState } from '../store/slices/articleSlice';
-import { fetchMyArticles, fetMyArticleComments } from '../store/actions/articleActions';
+import { fetchMyArticles, fetchMyArticleComments } from '../store/actions/articleActions';
 import SecureStorage from '../store/services/token/SecureStorage';
 import { UserState } from '../store/slices/userSlice';
-import { fetchUserInfo } from '../store/actions/userActions';
+import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, unFollow } from '../store/actions/userActions';
 import { AnswerState } from '../store/slices/answerSlice';
 import { fetchLikedAnswers, fetchMyFeedback } from '../store/actions/answerActions';
 import { useNavigate } from 'react-router-dom';
 import ContentMoreListView from '../components/MyPage/ContentMoreListView';
+import FollowModalView from '../components/MyPage/FollowModalView';
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const MyPage:React.FC = () => {
     });
 
     // ===== icon ======
-    const icons = useMemo(() => ({
+    const icons = {
         bookMarkIcon: <FaBookmark size={24} color="#0072EF" />,
         AIIcon: <BsRobot size={24} color='#00518D' />,
         BookIcon: <FaBook size={24} color='#8B4513' />,
@@ -49,7 +50,8 @@ const MyPage:React.FC = () => {
         goComment: <GoComment size={28} color='#0072EF' />,
         post: <BsPostcardHeart size={28} color='#40C463' />,
         post_answer: <GoComment size={28} color='#40C463' />
-    }), []);
+    };
+    
 
     //========== 데이터 불러오기===========
     const { MySolvedQuestions, MyUnsolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
@@ -58,7 +60,9 @@ const MyPage:React.FC = () => {
 
     const { me } = useAppSelector((state) => state.user as UserState)
 
-    const memberId = SecureStorage.getMemberId();
+    const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
+
+    const memberId = isAuthenticated ? SecureStorage.getMemberId() : 0;;
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
@@ -73,7 +77,7 @@ const MyPage:React.FC = () => {
                 
                 // 내가 작성한 게시글/댓글
                 dispatch(fetchMyArticles(memberId)),
-                dispatch(fetMyArticleComments(memberId)),
+                dispatch(fetchMyArticleComments(memberId)),
                 
                 // 내가 추천 누른 답변 / 작성한 피드백
                 dispatch(fetchLikedAnswers()),
@@ -81,22 +85,26 @@ const MyPage:React.FC = () => {
 
                 // 내 정보 불러오기
                 dispatch(fetchUserInfo(null)),
+
+                // 내 팔로워, 팔로잉 목록 불러오기기
+                dispatch(fetchUserFollowers(null)),
+                dispatch(fetchUserFollowings(null)),
             ]);
         }
     }, [dispatch, memberId])
 
     // 질문 상세 페이지 이동(in 내가 푼/못푼 질문문)
-    const moveDetailQ = useCallback((id: number) => {
-    dispatch(setSelectedQuestionId(id));
-    navigate(`/question`);
-    }, [dispatch, navigate])
-
-    const moveAllQ = useCallback((isSolved: boolean) => {
+    const moveDetailQ = (id: number) => {
+        dispatch(setSelectedQuestionId(id));
+        navigate(`/question`);
+    };
+    
+    const moveAllQ = (isSolved: boolean) => {
         navigate('/all-questions', {
-            state: {solved: isSolved?"solved":"unSolved"},
+            state: {solved: isSolved ? "solved" : "unSolved"},
             replace: true
-        })
-    }, [navigate]);
+        });
+    };    
 
     // 질문 상세 페이지 and commu 이동
     const moveDetailCommuQ = useCallback((id: number) => {
@@ -135,15 +143,33 @@ const MyPage:React.FC = () => {
         },
         []
     );
-    
 
     // 모달 닫기
     const closeModal = () => { setIsOpenMoreModal(false); }
 
+    // === 팔로워/팔로잉 모달 열기 
+    const [isFollowModalOpen, setIsFollowModalOpen ] = useState(false);
+    const [FollowMode, setFollowMode] = useState("follower")
+
+    const { followings } = useAppSelector((state) => state.user, shallowEqual)
+
+    const openFollowModal = (mode: string) => { 
+        setFollowMode(mode);
+        setIsFollowModalOpen(true)
+    };
+
+    const onUnfollow = (memberId: number) => {
+        dispatch(unFollow(memberId));
+    }   
+
+    useEffect(()=>{
+        dispatch(fetchUserInfo(null));
+    }, [followings])
+
     return (
     <div className='my-page-container'>
         <div className='my-detail-info-container'>
-            <UserInfoCompMemo user={me} />
+            <UserInfoCompMemo user={me} openFollowModal={openFollowModal} />
         </div>
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
@@ -152,9 +178,7 @@ const MyPage:React.FC = () => {
             <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetailContent={moveDetailQ} handleMoreBtn={() => moveAllQ(true)}/>
             <ContentPreviewListMemo contents={MyUnsolvedQuestions} title='답변하지 못한 질문' titleIcon={icons.xbox} className='my-question-info' handleDetailContent={moveDetailQ} handleMoreBtn={() => moveAllQ(false)}/>
         </div>
-
-        {/* <SectionContainerMemo className='my-ai-container' title='AI 면접 연습' icon={icons.AIIcon} /> */}
-
+        
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
             <div className="my-streak">
                 <StreakHeatMap />
@@ -174,7 +198,10 @@ const MyPage:React.FC = () => {
 
         {/* 모달 렌더링 */}
         {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} handleDetailContent={modalData.handleDetailContent} onClose={closeModal} />}  
+        {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} />}
     </div>)
 }
+
+
 
 export default MyPage;

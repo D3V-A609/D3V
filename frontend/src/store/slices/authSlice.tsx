@@ -85,7 +85,8 @@ const authSlice = createSlice({
       sessionStorage.setItem('isAuthenticated', JSON.stringify(action.payload.isAuthenticated));
 
       // 로그인 후 현재 로그인한 사용자의 memberId 값을 가지고 온다
-      SecureStorage.setMemberId(null);
+      SecureStorage.updateAuthStatus(true)
+      // SecureStorage.setMemberId(null);
     },
     logout: (state) => {
       state.isAuthenticated = false;
