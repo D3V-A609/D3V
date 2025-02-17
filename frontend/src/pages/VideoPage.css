@@ -6,11 +6,6 @@
     box-sizing: border-box;
   }
   
-  .search-container {
-    margin-bottom: 24px;
-  }
-  
-  .loading-message,
   .error-message {
     text-align: center;
     font-size: 18px;
