@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../store/hooks/useRedux";
+import { fetchMultipleUserInfo } from "../../store/actions/userActions";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ArticleList.css";
 
@@ -11,6 +13,7 @@ const categoryNameMap: Record<string, string> = {
 
 interface Article {
   id: number;
+  memberId: number;
   name: string;
   title: string;
   view: number;
@@ -44,6 +47,16 @@ const ArticleList: React.FC<ArticleListProps> = ({
   onArticleClick,
   currentSort,
 }) => {
+  const dispatch = useAppDispatch();
+  const users = useAppSelector((state) => state.user.users);
+
+  useEffect(() => {
+    if (articles.length > 0) {
+      const uniqueMemberIds = [...new Set(articles.map(article => article.memberId))];
+      dispatch(fetchMultipleUserInfo(uniqueMemberIds));
+    }
+  }, [articles, dispatch]);
+
   const handleSort = (field: string) => {
     const newOrder = currentSort.field === field && currentSort.order === 'DESC' ? 'ASC' : 'DESC';
     onSort(field, newOrder);
@@ -53,6 +66,8 @@ const ArticleList: React.FC<ArticleListProps> = ({
     if (currentSort.field !== field) return '▽';
     return currentSort.order === 'ASC' ? '▲' : '▼';
   };
+
+  
 
   return (
     <div className="article-list">
@@ -77,6 +92,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
             <tr key={article.id} onClick={() => onArticleClick(article.id)}>
               <td>{categoryNameMap[article.name] || article.name}</td>
               <td>{article.title}</td>
+              <td>{users[article.memberId]?.nickname || '알 수 없음'}</td>
               <td>{new Date(article.createdAt).toLocaleDateString()}</td>
               <td>{article.commentCount}</td>
               <td>{article.view}</td>

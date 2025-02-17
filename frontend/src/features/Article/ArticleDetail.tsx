@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { fetchArticle, deleteArticle } from "../../store/actions/articleActions";
+import { fetchMultipleUserInfo } from "../../store/actions/userActions";
 import CommentInput from "../Comment/CommentInput";
 import Profile from "../../components/Profile/Profile";
-import dummyUsers from "../../constants/dummyUsers";
 import CommentList from "../Comment/CommentList";
 import EditArticle from "./EditArticle";
 import { FaEye, FaComment } from "react-icons/fa6";
+import SecureStorage from "../../store/services/token/SecureStorage";
 
 import "./ArticleDetail.css";
 
@@ -26,29 +27,33 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { currentArticle, error } = useAppSelector(
-    (state) => state.articles || { currentArticle: null, error: null }
-  );
-
-  const currentUserId = 1; // 현재 사용자의 memberId를 1로 고정
+  const { currentArticle, error } = useAppSelector(state => state.articles);
+  const users = useAppSelector(state => state.user.users);
+  const currentUserId = SecureStorage.getMemberId();
 
   const fetchArticleData = useCallback(() => {
     if (articleId) {
       dispatch(fetchArticle(articleId));
     }
   }, [dispatch, articleId]);
-  
+
   useEffect(() => {
     if (!isDeleting) {
       fetchArticleData();
     }
   }, [fetchArticleData, isDeleting]);
 
+  useEffect(() => {
+    if (currentArticle) {
+      dispatch(fetchMultipleUserInfo([currentArticle.memberId]));
+    }
+  }, [dispatch, currentArticle]);
+
   if (error) return <div>{error}</div>;
   if (!currentArticle) return null;
 
-  const member = dummyUsers.find(user => user.memberId === currentArticle?.memberId);
-  const isAuthor = currentUserId === currentArticle?.memberId;
+  const author = users[currentArticle.memberId];
+  const isAuthor = currentArticle.memberId === currentUserId;
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -61,7 +66,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
         setIsDeleting(true);
         await dispatch(deleteArticle(currentArticle.id)).unwrap();
         alert("게시글이 성공적으로 삭제되었습니다.");
-        onBackClick(true); // 삭제 성공 여부를 전달
+        onBackClick(true);
       } catch (error) {
         console.error("게시글 삭제 중 오류 발생:", error);
         alert("게시글 삭제에 실패했습니다. 다시 시도해주세요.");
@@ -79,93 +84,82 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
         </button>
       </div>
 
-      {currentArticle && (
+      {isEditing ? (
+        <EditArticle
+          article={currentArticle}
+          onCancel={() => setIsEditing(false)}
+        />
+      ) : (
         <>
-          {isEditing ? (
-            <EditArticle
-              article={currentArticle}
-              onCancel={() => setIsEditing(false)}
-            />
-          ) : (
-            <>
-              {/* 게시글 정보 */}
-              <div className="detail-info">
-                <div className="title-row">
-                  <span className="category">{categoryNameMap[currentArticle.name] || currentArticle.name}</span>
-                  <h1 className="title">{currentArticle.title}</h1>
-                </div>
-                <div className="meta-row">
-                  <div className="left-section">
-                    {member ? (
-                      <Profile
-                        profileImg={member?.profileImg}
-                        favoriteJob={member.jobField}
-                        nickname={member.nickname}
-                      />
-                    ) : (
-                      <span>작성자 정보를 불러올 수 없습니다.</span>
-                    )}
-                    <span className="date">
-                    {new Date(currentArticle.createdAt).toLocaleString('ko-KR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                      hour12: false
-                    })}
-                  </span>
-                  </div>
-
-                  <div className="right-section">
-                    <div className="stat-item">
-                      <FaEye className="icon" />
-                      <span>{currentArticle.view}</span>
-                    </div>
-                    <div className="stat-item">
-                      <FaComment className="icon" />
-                      <span>{currentArticle.commentCount}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 게시글 내용 */}
-              <div className="detail-content">
-                {currentArticle.images?.length ? (
-                  currentArticle.images.map((image) => (
-                    <img key={image.id} src={image.imageUrl} alt={image.originImageName} />
-                  ))
-                ) : null}
-                {/* HTML 태그를 렌더링 */}
-                <div
-                  dangerouslySetInnerHTML={{ __html: currentArticle.content }}
-                  className="article-content"
-                ></div>
-              </div>
-
-              <div className="comment-header">
-                <p className="comment-count">
-                  총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
-                </p>
-                {isAuthor && !isEditing && (
-                  <div className="action-buttons">
-                    <button className="edit-button" onClick={handleEdit}>수정</button>
-                    <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
-                      {isDeleting ? "삭제 중..." : "삭제"}
-                    </button>
-                  </div>
+          <div className="detail-info">
+            <div className="title-row">
+              <span className="category">{categoryNameMap[currentArticle.name] || currentArticle.name}</span>
+              <h1 className="title">{currentArticle.title}</h1>
+            </div>
+            <div className="meta-row">
+              <div className="left-section">
+                {author ? (
+                  <Profile
+                    profileImg={author.profileImg}
+                    favoriteJob={author.favoriteJob}
+                    nickname={author.nickname}
+                  />
+                ) : (
+                  <span>작성자 정보를 불러올 수 없습니다.</span>
                 )}
+                <span className="date">
+                  {new Date(currentArticle.createdAt).toLocaleString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                  })}
+                </span>
               </div>
+              <div className="right-section">
+                <div className="stat-item">
+                  <FaEye className="icon" />
+                  <span>{currentArticle.view}</span>
+                </div>
+                <div className="stat-item">
+                  <FaComment className="icon" />
+                  <span>{currentArticle.commentCount}</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            {/* 댓글 목록 */}
-            <CommentList articleId={articleId} />
+          <div className="detail-content">
+            {currentArticle.images?.length ? (
+              currentArticle.images.map((image) => (
+                <img key={image.id} src={image.imageUrl} alt={image.originImageName} />
+              ))
+            ) : null}
+            <div
+              dangerouslySetInnerHTML={{ __html: currentArticle.content }}
+              className="article-content"
+            ></div>
+          </div>
 
-            {/* 댓글 작성란 */}
-            <CommentInput articleId={articleId} />
-            </>
-          )}
+          <div className="comment-header">
+            <p className="comment-count">
+              총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
+            </p>
+            {isAuthor && (
+              <div className="action-buttons">
+                <button className="edit-button" onClick={handleEdit}>수정</button>
+                <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
+                  {isDeleting ? "삭제 중..." : "삭제"}
+                </button>
+              </div>
+            )}
+          </div>
+
+          <CommentList articleId={articleId} />
+          <CommentInput articleId={articleId} />
         </>
       )}
     </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
 import { fetchArticles } from "../store/actions/articleActions";
+import { fetchMultipleUserInfo } from "../store/actions/userActions";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
@@ -47,18 +48,25 @@ const BoardPage: React.FC = () => {
         size: params.size
       }));
     }
-  }, [dispatch, currentView, params.category, params.searchQuery, params.sortField, params.sortOrder, params.page, params.size]);
+  }, [dispatch, currentView, params]);
 
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData]);
 
   useEffect(() => {
+    if (articles.length > 0) {
+      const userIds = articles.map(article => article.memberId);
+      dispatch(fetchMultipleUserInfo(userIds));
+    }
+  }, [dispatch, articles]);
+
+  useEffect(() => {
     if(location.state?.selectedArticleId && location.state?.currentView){
       setSelectedArticleId(location.state.selectedArticleId);
       setCurrentView(location.state.currentView);
     }
-  }, [location.state])
+  }, [location.state]);
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => ({ ...prev, ...newParams, page: 1 }));
