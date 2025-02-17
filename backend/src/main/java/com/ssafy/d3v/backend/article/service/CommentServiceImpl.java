@@ -8,6 +8,7 @@ import com.ssafy.d3v.backend.article.repository.ArticleRepository;
 import com.ssafy.d3v.backend.article.repository.CommentRepository;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
+import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import java.util.List;
@@ -26,7 +27,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
-    private final Long memberId = 1L;
 
     @Override
     public PagedResponse<CommentResponse> get(Long articleId, int page, int size) {
@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponse create(Long articleId, CommentRequest commentRequest) {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         Article article = getArticleById(articleId);
 
         Comment comment = Comment.builder()
@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentResponse update(Long articleId, Long commentId, CommentRequest commentRequest) {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         Comment comment = getComment(commentId, member);
 
         Comment updated = commentRepository.save(
@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void delete(Long articleId, Long commentId) {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         Comment comment = getComment(commentId, member);
         Article article = getArticleById(articleId);
 
@@ -123,15 +123,15 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다." + articleId));
     }
 
-    private Member getMemberById(long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
-        return member;
+    private Member getMember() {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        return memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
     }
 
     @Override
     public List<CommentResponse> getMyComments(Long memberId) {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         List<Comment> comments = commentRepository.findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(member);
         System.out.println(comments);
         return comments.stream()

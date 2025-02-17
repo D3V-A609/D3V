@@ -16,6 +16,7 @@ import com.ssafy.d3v.backend.article.repository.CategoryRepository;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
+import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ public class ArticleServiceImpl implements ArticleService {
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final S3ImageUploader s3ImageUploader;
-
-    private final Long memberId = 1L;
 
     @Override
     public PagedResponse<ArticleResponse> get(String categoryName, String keyword,
@@ -82,7 +81,7 @@ public class ArticleServiceImpl implements ArticleService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
 
-        Member member = getMember(memberId);
+        Member member = getMember();
 
         Article article = Article.builder()
                 .member(member)
@@ -111,9 +110,10 @@ public class ArticleServiceImpl implements ArticleService {
         return getArticleResponse(created);
     }
 
-    private Member getMember(long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다." + memberId));
+    private Member getMember() {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        return memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
     }
 
     @Override
@@ -202,7 +202,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleResponse> getMyArticles(long memberId) {
-        Member member = getMember(memberId);
+        Member member = getMember();
         List<Article> articles = articleRepository.findByMemberAndDeletedAtIsNullOrderByCreatedAtDesc(member);
 
         return articles.stream()
