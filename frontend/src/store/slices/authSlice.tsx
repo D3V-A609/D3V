@@ -1,5 +1,6 @@
 // store/slices/authSlice.tsx
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import SecureStorage from '../services/token/SecureStorage';
 
 interface AuthState {
   currentStep: number;
@@ -50,12 +51,16 @@ const authSlice = createSlice({
       state.isAuthenticated = action.payload.isAuthenticated;
       state.user = action.payload.user;
       sessionStorage.setItem('isAuthenticated', JSON.stringify(action.payload.isAuthenticated));
+
+      // 로그인 후 현재 로그인한 사용자의 memberId 값을 가지고 온다
+      SecureStorage.setMemberId(null);
     },
     logout: (state) => {
       state.isAuthenticated = false;
 
       // 세션 스토리지에서도 삭제
       sessionStorage.removeItem('isAuthenticated');
+      SecureStorage.removeId();
     }
   }
 });

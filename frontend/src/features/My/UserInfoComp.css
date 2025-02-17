@@ -36,6 +36,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border: none!important;
+  align-self: anchor-center;
 }
 
 .profile-image {
