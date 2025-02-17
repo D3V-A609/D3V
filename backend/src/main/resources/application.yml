@@ -7,10 +7,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 50MB
   mail:
-    host: smtp.gmail.com # ${MAIL_HOST}
-    port: 587 # ${MAIL_PORT}
-    username: by28287@gmail.com # ${MAIL_USERNAME}
-    password: jtreizizqqjpurwu # ${MAIL_PASSWORD}
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -70,13 +70,13 @@ spring:
       client:
         registration:
           google:
-            clientId: '854121372939-8i1cfqakibmpnd7rkv6es8mrdmng9eqs.apps.googleusercontent.com'
-            clientSecret: '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'
+            clientId: ${GOOGLE_CLIENTID}
+            clientSecret: ${GOOGLE_CLIENTSECRET}
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             scope: profile, email
           naver:
-            clientId: 'VnJRiFxpOMCmT8LiFHNQ'
-            clientSecret: 'K8ejEfwUnW'
+            clientId: ${NAVER_CLIENTID}
+            clientSecret: ${NAVER_CLIENTSECRET}
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
             scope:
@@ -85,8 +85,8 @@ spring:
               - profile_image
             client-name: Naver
           kakao:
-            clientId: '35f76fac7038d1387a29167f210fd236'
-            clientSecret: 'c3sObhFT30F9sXjdUs8njysOCrUgrpMU'
+            clientId: ${KAKAO_CLIENTID}
+            clientSecret: ${KAKAO_CLIENTSECRET}
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
             scope:
@@ -107,7 +107,7 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 jwt:
-  secret: UDVaY0VRREoyaEl2d2JlWXFFN2haOWF3ekRxbFBzTnpscEFFaE5mdDBSZw==
+  secret: ${JWT_SECRET_KEY}
 
 app:
   oauth2:
