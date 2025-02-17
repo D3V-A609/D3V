@@ -32,6 +32,7 @@ import ForgotPasswordPage from './pages/Auth/ForgotPassword.tsx';
 import Step1 from './pages/Auth/SignupSteps/Step1.tsx';
 import Step2 from './pages/Auth/SignupSteps/Step2.tsx';
 import Step3 from './pages/Auth/SignupSteps/Step3.tsx';
+import ProtectedSignupRoute from './components/Auth/ProtectedSignupRoute.tsx';
 
 // Context Providers
 import { RecordingProvider } from './context/RecordingContext.tsx';
@@ -89,9 +90,18 @@ function App() {
               path: 'signup',
               element: <SignupLayout />,
               children: [
-                { path: '', element: <Step1 /> },
-                { path: 'profile', element: <Step2 /> },
-                { path: 'complete', element: <Step3 /> }
+                { 
+                  path: '', 
+                  element: <ProtectedSignupRoute step={1}><Step1 /></ProtectedSignupRoute> 
+                },
+                { 
+                  path: 'profile', 
+                  element: <ProtectedSignupRoute step={2}><Step2 /></ProtectedSignupRoute> 
+                },
+                { 
+                  path: 'complete', 
+                  element: <ProtectedSignupRoute step={3}><Step3 /></ProtectedSignupRoute> 
+                }
               ]
             }
           ]
