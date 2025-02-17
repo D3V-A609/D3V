@@ -39,7 +39,7 @@ logging:
 management:
   endpoint:
     mappings:
-      access: read_only
+      access: unrestricted
       
 ---
 
