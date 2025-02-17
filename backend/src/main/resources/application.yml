@@ -36,6 +36,11 @@ logging:
     org.springframework.web.cors: DEBUG
     org.hibernate: INFO
 
+management:
+  endpoint:
+    mappings:
+      access: read_only
+      
 ---
 
 spring:
