@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
-    List<Feedback> findByAnswerOrderByCreatedAtDesc(Answer answer);
+    List<Feedback> findByAnswerAndDeletedAtIsNullOrderByCreatedAtDesc(Answer answer);
 
     Optional<Feedback> findByIdAndMember(long feedbackId, Member member);
 
