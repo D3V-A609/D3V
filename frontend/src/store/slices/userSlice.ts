@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, unFollow } from "../actions/userActions";
+import { fetchUserFollowers, fetchUserFollowings, fetchMultipleUserInfo, fetchUserInfo, unFollow } from "../actions/userActions";
 import SecureStorage from "../services/token/SecureStorage";
 
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -8,6 +8,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 export interface UserState {
   me: User | null,
   other: User | null,
+  users: { [key: number]: User },
   loading: boolean;
   error: string | null;
   followers: FollowUser[];
@@ -20,6 +21,7 @@ export interface UserState {
 const initialState: UserState = {
   me: null,
   other: null,
+  users: {},
   loading: false,
   error: null,
   followers: [],
@@ -121,9 +123,25 @@ const userSlice = createSlice({
     .addCase(unFollow.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
-    });
+    })
 
-
+    .addCase(fetchMultipleUserInfo.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchMultipleUserInfo.fulfilled, (state, action) => {
+      state.loading = false;
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((user: User) => {
+          state.users[user.memberId] = user;
+        });
+      }
+      state.error = null;
+    })
+    .addCase(fetchMultipleUserInfo.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
   }
 });
 

@@ -53,7 +53,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isAuthor, articleId 
       {member ? (
         <Profile
           profileImg={member.profileImg}
-          jobField={member.jobField}
+          favoriteJob={member.jobField}
           nickname={member.nickname}
         />
       ) : (

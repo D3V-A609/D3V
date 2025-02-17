@@ -114,9 +114,13 @@ const HomePage: React.FC = () => {
 
   // 질문 상세 페이지 이동 함수(useCallback)
   const QuestionCardClick = useCallback((id: number) => {
-    dispatch(setSelectedQuestionId(id));
-    navigate(`/question`);
-  }, [dispatch, navigate])
+    if (!isAuthenticated) {
+      navigate('/auth', { state: { from: location.pathname } });
+    } else {
+      dispatch(setSelectedQuestionId(id));
+      navigate(`/question`);
+    }
+  }, [dispatch, navigate, isAuthenticated, location]);
 
   // if (loading) return <LoadingPage />;
   if (error) return <ErrorPage message='예상치 못한 에러가 발생했습니다. 잠시 후 다시 시도해주세요' />;
@@ -203,12 +207,16 @@ const HomePage: React.FC = () => {
         />
         <button
           className="more-button"
-          onClick={() =>
-            navigate('/all-questions', { 
-              state: { initialJobFilter: [selectedJob] },
-              replace: true 
-            })
-          }
+          onClick={() => {
+            if (!isAuthenticated) {
+              navigate('/auth', { state: { from: '/all-questions' } });
+            } else {
+              navigate('/all-questions', { 
+                state: { initialJobFilter: [selectedJob] },
+                replace: true 
+              });
+            }
+          }}
         >
           더보기
         </button>

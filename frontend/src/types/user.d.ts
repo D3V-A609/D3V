@@ -22,7 +22,7 @@ interface User {
   ongoingStreak: number;
   providerType: string;
   createdAt: string;
-  favoriteJob: string;
+  favoriteJob: string;  // 소셜 로그인 시 값 없음
   followerCount: number;
   followingCount: number;
 }
