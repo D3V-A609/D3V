@@ -28,11 +28,10 @@ const userSlice = createSlice({
     })
     .addCase(fetchUserInfo.fulfilled, (state, action) => {
       state.loading = false;
-      console.log("과연 어떤 객체..?:", action.payload)
       const requestedMemberId = action.meta.arg; // API 요청 시 사용한 memberId
-      const storedMemberId = SecureStorage.getMemberId(); // 현재 내 ID
+      // const storedMemberId = SecureStorage.getMemberId(); // 현재 내 ID
 
-      if (requestedMemberId === storedMemberId) {
+      if (requestedMemberId === null) {
         state.me = action.payload as User; // 내 정보 저장
       } else {
         state.other = action.payload as User; // 다른 유저 정보 저장
