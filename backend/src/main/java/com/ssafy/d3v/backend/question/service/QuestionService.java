@@ -3,6 +3,7 @@ package com.ssafy.d3v.backend.question.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.d3v.backend.member.entity.Member;
+import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
@@ -49,6 +50,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
+    private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final JobRepository jobRepository;
     private final TopQuestionCacheRepository topQuestionCacheRepository; // Redis 캐시 저장소
