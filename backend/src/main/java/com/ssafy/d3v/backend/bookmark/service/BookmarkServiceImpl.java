@@ -18,6 +18,7 @@ import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +29,14 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final QuestionRepository questionRepository;
     private final BookmarkQuestionRepository bookmarkQuestionRepository;
-    private final Long testId = 1L;
     private final FollowRepository followRepository;
 
     // 북마크 생성
     @Override
     @Transactional
     public void create(BookmarkCreateDto request) {
-        Member member = memberRepository.findById(testId)
-                .orElseThrow(() -> new RuntimeException("사용자가 없습니다."));
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = Bookmark.builder()
                 .member(member)
                 .name(request.name())
@@ -52,14 +50,13 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public void update(Long id, BookmarkCreateDto request) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
-        Member member = memberRepository.findById(testId).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(id)
                 .orElseThrow();
 
         // 본인 소유 북마크 확인
-        if (!bookmark.getMember().getId().equals(id)) {
+        if (!bookmark.getMember().getId().equals(member.getId())) {
             throw new SecurityException("본인의 북마크만 수정 가능합니다");
         }
 
@@ -81,12 +78,12 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public void delete(Long id) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(id)
                 .orElseThrow();
         // memberId -> member.getId() 로 수정 예정
-        if (!bookmark.getMember().getId().equals(testId)) {
+        if (!bookmark.getMember().getId().equals(member.getId())) {
             throw new SecurityException("본인의 북마크만 삭제 가능");
         }
         bookmarkRepository.delete(bookmark);
@@ -95,8 +92,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     // 북마크 단일 조회
     @Override
     public BookmarkDetailResponse get(Long id) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(id).orElseThrow();
         if (!isAccessible(bookmark)) {
             throw new RuntimeException("접근 권한이 없습니다.");
@@ -125,9 +122,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     // 질문의 북마크들 조회
     @Override
     public BookmarkSelectionResponse getQuestionBookmarks(Long questionId) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
-        Member member = memberRepository.findById(testId).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         List<Bookmark> bookmarks = bookmarkRepository.findByMember(member);
         List<Long> bookmarkIds = bookmarkQuestionRepository.findBookmarkIdsByQuestionIdAndMemberId(questionId,
                 member.getId());
@@ -138,8 +134,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public BookmarkSelectionResponse updateQuestionBookmarks(Long questionId, List<Long> newBookmarkIds) {
-        Member member = memberRepository.findById(testId)
-                .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
 
         List<Bookmark> userBookmarks = bookmarkRepository.findByMember(member);
         List<Long> userBookmarkIds = userBookmarks.stream()
@@ -185,12 +181,11 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public void addQuestions(Long bookmarkId, List<Long> questionIds) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
-        Member member = memberRepository.findById(testId).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new RuntimeException("해당 북마크가 존재하지 않습니다."));
-        if (!bookmark.getMember().getId().equals(testId)) {
+        if (!bookmark.getMember().getId().equals(member.getId())) {
             throw new RuntimeException("본인의 북마크에만 질문을 추가할 수 있습니다.");
         }
         List<Long> existingQuestionIds = bookmarkQuestionRepository.findQuestionIdsByBookmarkIdAndMemberId(bookmarkId,
@@ -217,18 +212,20 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     @Transactional
     public void deleteQuestion(Long bookmarkId, Long questionId) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
-        Member member = memberRepository.findById(testId).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow();
+        if (!bookmark.getMember().equals(member)) {
+            throw new RuntimeException("본인 북마크가 아니어요");
+        }
         bookmarkQuestionRepository.deleteByBookmarkIdAndQuestionId(bookmarkId, questionId);
 
     }
 
 
     private boolean isAccessible(Bookmark bookmark) {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//        Member member = memberRepository.findMemberByEmail(userName).orElseThrow();
-        Member member = memberRepository.findById(testId).orElseThrow();
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(userName);
         Member owner = bookmark.getMember();
         if (bookmark.getAccessLevel() == AccessLevel.PUBLIC) {
             return true;
@@ -244,11 +241,4 @@ public class BookmarkServiceImpl implements BookmarkService {
         return false;
 
     }
-
-//    private boolean isValid(Long bookmarkId, Member member) {
-//        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new RuntimeException("북마크가 없습니다."));
-//        Member owner = bookmark.getMember();
-//        return owner.equals(member);
-//    }
-
 }
