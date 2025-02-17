@@ -22,6 +22,7 @@ import com.ssafy.d3v.backend.member.repository.FollowRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
+import com.ssafy.d3v.backend.question.entity.JobRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -138,6 +139,7 @@ public class MemberServiceImpl implements MemberService {
             ImgUrl = s3ImageUploader.upload(profileImage);
         }
         String nickname = signUp.getNickname();
+        String job = signUp.getFavoriteJob();
         Member member = Member.builder()
                 .email(signUp.getEmail())
                 .nickname(nickname.substring(0, Math.min(15, nickname.length())))
@@ -148,7 +150,7 @@ public class MemberServiceImpl implements MemberService {
                 .ongoingStreak(0L)
                 .role(RoleType.ROLE_USER)
                 .providerType(ProviderType.LOCAL)
-                .favoriteJob(signUp.getFavoriteJob())
+                .favoriteJob(JobRole.valueOf(job.toUpperCase()))
                 .build();
 
         memberRepository.save(member);

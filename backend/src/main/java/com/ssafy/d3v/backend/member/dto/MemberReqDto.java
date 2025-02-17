@@ -1,6 +1,5 @@
 package com.ssafy.d3v.backend.member.dto;
 
-import com.ssafy.d3v.backend.question.entity.JobRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -33,7 +32,7 @@ public class MemberReqDto {
 
         private String githubUrl;
 
-        private JobRole favoriteJob;
+        private String favoriteJob;
     }
 
     @Getter
