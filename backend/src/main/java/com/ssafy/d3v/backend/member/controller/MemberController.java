@@ -117,7 +117,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 간단 정보 조회")
-    @PostMapping("/member/basic")
+    @PostMapping("/basic")
     public ResponseEntity<List<BasicMemberResponse>> getBasicInfo(
             @RequestBody List<BasicMemberRequest> basicMemberRequest) {
         return ResponseEntity.ok(memberService.getBasicInfo(basicMemberRequest));
