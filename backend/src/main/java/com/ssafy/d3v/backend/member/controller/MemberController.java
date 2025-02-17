@@ -1,6 +1,8 @@
 package com.ssafy.d3v.backend.member.controller;
 
 import com.ssafy.d3v.backend.common.util.Response;
+import com.ssafy.d3v.backend.member.dto.BasicMemberRequest;
+import com.ssafy.d3v.backend.member.dto.BasicMemberResponse;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -111,5 +114,12 @@ public class MemberController {
             HttpServletRequest request,
             HttpServletResponse response) {
         return memberService.logout(request, response);
+    }
+
+    @Operation(summary = "회원 간단 정보 조회")
+    @PostMapping("/member/basic")
+    public ResponseEntity<List<BasicMemberResponse>> getBasicInfo(
+            @RequestBody List<BasicMemberRequest> basicMemberRequest) {
+        return ResponseEntity.ok(memberService.getBasicInfo(basicMemberRequest));
     }
 }

@@ -10,6 +10,8 @@ import com.ssafy.d3v.backend.common.util.HeaderUtil;
 import com.ssafy.d3v.backend.common.util.Response;
 import com.ssafy.d3v.backend.common.util.S3ImageUploader;
 import com.ssafy.d3v.backend.common.util.SecurityUtil;
+import com.ssafy.d3v.backend.member.dto.BasicMemberRequest;
+import com.ssafy.d3v.backend.member.dto.BasicMemberResponse;
 import com.ssafy.d3v.backend.member.dto.MemberLoginResponse;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
@@ -22,6 +24,8 @@ import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -240,5 +244,22 @@ public class MemberServiceImpl implements MemberService {
                 TimeUnit.MILLISECONDS
         );
         log.info("Redis refresh token stored: {}", redisTemplate.keys("RT:*"));
+    }
+
+    @Override
+    public List<BasicMemberResponse> getBasicInfo(List<BasicMemberRequest> basicMemberRequest) {
+        List<BasicMemberResponse> responses = new ArrayList<>();
+        for (BasicMemberRequest memberRequest : basicMemberRequest) {
+            Member member = memberRepository.findMemberById(memberRequest.memberId())
+                    .orElseThrow(() -> new IllegalArgumentException("회원이 일치하지 않습니다."));
+
+            responses.add(BasicMemberResponse.builder()
+                    .memberId(member.getId())
+                    .nickname(member.getNickname())
+                    .profileImg(member.getProfileImg())
+                    .favoriteJob(member.getFavoriteJob())
+                    .build());
+        }
+        return responses;
     }
 }
