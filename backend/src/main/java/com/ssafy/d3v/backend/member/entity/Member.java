@@ -67,6 +67,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private RoleType role;
 
     @Column(name = "favorite_job")
+    @Enumerated(EnumType.STRING)
     private JobRole favoriteJob;
 
     @Builder
