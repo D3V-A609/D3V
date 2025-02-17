@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import FeedbackModal from './FeedbackModal';
 import Profile from '../../../Profile/Profile';
@@ -7,7 +7,6 @@ import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoChatboxOutline } from "react-icons/io5";
 import { toggleLike } from '../../../../store/actions/answerActions';
 import { RootState } from '../../../../store/reducers';
-import { fetchUserInfo } from '../../../../store/actions/userActions';
 
 interface AnswerItemProps {
   answer: Answer;
@@ -20,15 +19,8 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   const [localIsLiked, setLocalIsLiked] = useState(answer.isLiked);
 
   const user = useAppSelector((state: RootState) => 
-    state.user.me?.memberId === answer.memberId ? state.user.me : state.user.other
+    state.user.users[answer.memberId]
   );
-  
-
-  useEffect(() => {
-    if (!user) {
-      dispatch(fetchUserInfo(answer.memberId));
-    }
-  }, [dispatch, user, answer.memberId]);
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

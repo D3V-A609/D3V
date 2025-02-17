@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchUserInfo } from "../actions/userActions";
+import { fetchUserInfo, fetchMultipleUserInfo } from "../actions/userActions";
 import SecureStorage from "../services/token/SecureStorage";
 
 export interface UserState {
   me: User | null,
   other: User | null,
+  users: { [key: number]: User },
   loading: boolean;
   error: string | null;
 }
@@ -12,6 +13,7 @@ export interface UserState {
 const initialState: UserState = {
   me: null,
   other: null,
+  users: {},
   loading: false,
   error: null,
 }
@@ -49,6 +51,23 @@ const userSlice = createSlice({
       } else {
         state.other = null;
       }
+    })
+    .addCase(fetchMultipleUserInfo.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchMultipleUserInfo.fulfilled, (state, action) => {
+      state.loading = false;
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((user: User) => {
+          state.users[user.memberId] = user;
+        });
+      }
+      state.error = null;
+    })
+    .addCase(fetchMultipleUserInfo.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
     })
   }
 });

@@ -1,34 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useAppDispatch } from '../../../../store/hooks/useRedux';
+import React, { useState } from 'react';
 import AnswerItem from './AnswerItem';
 import "./OtherAnswers.css";
 import PageHeader from '../../../PageHeader/PageHeader';
 import { PiEyesFill } from "react-icons/pi";
-import { fetchUserInfo } from '../../../../store/actions/userActions';
 
 interface OtherAnswersProps {
   answers: Answer[];
 }
 
 const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
-  const dispatch = useAppDispatch();
   // console.log('OtherAnswers received answers:', answers);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortType, setSortType] = useState<'latest' | 'comments' | 'likes'>('latest');
   const answersPerPage = 10;
-
-  useEffect(() => {
-    const uniqueMemberIds = [...new Set(answers.map(answer => answer.memberId))];
-    uniqueMemberIds.forEach(memberId => {
-      dispatch(fetchUserInfo(memberId));
-    });
-  }, [answers, dispatch]);
-
-  useEffect(() => {
-    answers.forEach(answer => {
-      dispatch(fetchUserInfo(answer.memberId));
-    });
-  }, [answers, dispatch]);
 
   const getSortedAnswers = () => {
     return [...answers].sort((a, b) => {

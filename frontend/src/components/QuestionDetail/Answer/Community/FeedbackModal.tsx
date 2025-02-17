@@ -6,7 +6,7 @@ import { fetchFeedbacks, createFeedback, updateFeedback, deleteFeedback } from '
 import { toggleLike } from '../../../../store/actions/answerActions';
 import Profile from '../../../Profile/Profile';
 import './FeedbackModal.css';
-import { fetchUserInfo } from '../../../../store/actions/userActions';
+import { fetchMultipleUserInfo } from '../../../../store/actions/userActions';
 import { RootState } from '../../../../store/reducers';
 import SecureStorage from '../../../../store/services/token/SecureStorage';
 
@@ -20,7 +20,7 @@ interface FeedbackModalProps {
 const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate }) => {
   const dispatch = useAppDispatch();
   const { feedbacks, error } = useAppSelector(state => state.feedbacks);
-  const { me, other } = useAppSelector((state: RootState) => state.user);
+  const { users } = useAppSelector((state: RootState) => state.user);
   const [newFeedback, setNewFeedback] = useState('');
   const [editingFeedbackId, setEditingFeedbackId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
@@ -35,12 +35,16 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
 
   useEffect(() => {
     if (isOpen) {
-      dispatch(fetchUserInfo(answer.memberId));
-      feedbacks.forEach(feedback => {
-        dispatch(fetchUserInfo(feedback.memberId));
-      });
+      dispatch(fetchFeedbacks(answer.answerId))
+        .then((action) => {
+          if (fetchFeedbacks.fulfilled.match(action)) {
+            setHasMore(action.payload.length === 10);
+            const uniqueUserIds = new Set([answer.memberId, ...action.payload.map(feedback => feedback.memberId)]);
+            dispatch(fetchMultipleUserInfo(Array.from(uniqueUserIds)));
+          }
+        });
     }
-  }, [isOpen, answer.memberId, feedbacks, dispatch]);
+  }, [dispatch, answer.answerId, answer.memberId, isOpen]);
   
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -82,9 +86,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
     }
   }, [hasMore]);
 
-  const getUserInfo = (memberId: number) => {
-    return memberId === me?.memberId ? me : other;
-  };
+  const getUserInfo = (memberId: number) => users[memberId];
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
