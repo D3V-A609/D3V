@@ -2,6 +2,7 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionDto;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
@@ -29,10 +30,10 @@ public class ServedQuestionService {
 
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final QuestionRepository questionRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String SOLVED_CACHE_PREFIX = "solvedStatus:";
-    private final Long tempMemberId = 1L; // 임시 아이디
 
     @Transactional
     public ServedQuestionDto createServedQuestion(ServedQuestionCreateRequest dto, Boolean isDaily) {
@@ -73,7 +74,9 @@ public class ServedQuestionService {
 
     @Transactional
     public ServedQuestionDto updateServedQuestion(Long questionId, ServedQuestionUpdateRequest dto) {
-        ServedQuestion servedQuestion = servedQuestionRepository.findByMember_IdAndQuestion_Id(tempMemberId, questionId)
+        Long memberId = memberService.getMemberId();
+
+        ServedQuestion servedQuestion = servedQuestionRepository.findByMember_IdAndQuestion_Id(memberId, questionId)
                 .orElseThrow(() -> new EntityNotFoundException("ServedQuestion not found"));
 
         ServedQuestion updatedServedQuestion = ServedQuestion.builder()
@@ -122,20 +125,20 @@ public class ServedQuestionService {
                 .toList();
     }
 
-    public String getIsSolvedStatus(Long questionId) {
-        String cacheKey = SOLVED_CACHE_PREFIX + tempMemberId + ":" + questionId; // Redis 캐시 키 생성
+    public String getIsSolvedStatus(Long memberId, Long questionId) {
+        String cacheKey = SOLVED_CACHE_PREFIX + memberId + ":" + questionId; // Redis 캐시 키 생성
 
         // 1. Redis에서 캐시 조회
         String cachedStatus = (String) redisTemplate.opsForValue().get(cacheKey);
         if (cachedStatus != null) {
-            log.info("== 캐시에서 solved 데이터 조회: memberId={}, questionId={} ==", tempMemberId, questionId);
+            log.info("== 캐시에서 solved 데이터 조회: memberId={}, questionId={} ==", memberId, questionId);
             return cachedStatus;
         }
 
         // 2. 캐시에 데이터가 없으면 DB에서 조회
-        log.info("== DB에서 solved 데이터 조회: memberId={}, questionId={} ==", tempMemberId, questionId);
+        log.info("== DB에서 solved 데이터 조회: memberId={}, questionId={} ==", memberId, questionId);
         Optional<ServedQuestion> servedQuestionOptional =
-                servedQuestionRepository.findByMember_IdAndQuestion_Id(tempMemberId, questionId);
+                servedQuestionRepository.findByMember_IdAndQuestion_Id(memberId, questionId);
 
         String status;
         if (servedQuestionOptional.isPresent()) {

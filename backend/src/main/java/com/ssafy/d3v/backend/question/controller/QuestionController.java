@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.question.controller;
 
+import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
@@ -31,6 +32,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final ServedQuestionService servedQuestionService;
+    private final MemberService memberService;
 
     @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
     @GetMapping
@@ -44,8 +46,9 @@ public class QuestionController {
             @RequestParam(defaultValue = "15") int size, // 페이지 크기 (기본값: 15)
             @RequestParam(required = false) String keyword // 키워드 검색
     ) {
+        Long memberId = memberService.getMemberId();
         return ResponseEntity.ok(questionService.getQuestions(jobs, skills, solved, order, sort, page, size, keyword)
-                .map(QuestionDto::from).map(this::getQuestionResponse));
+                .map(QuestionDto::from).map(question -> getQuestionResponse(memberId, question)));
     }
 
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
@@ -53,13 +56,15 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
-        return ResponseEntity.ok(getQuestionResponse(QuestionDto.from(question)));
+        Long memberId = memberService.getMemberId();
+        return ResponseEntity.ok(getQuestionResponse(memberId, QuestionDto.from(question)));
     }
 
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        return ResponseEntity.ok(getListResponse(questionService.getDailyQuestions()));
+        Long memberId = memberService.getMemberId();
+        return ResponseEntity.ok(getListResponse(memberId, questionService.getDailyQuestions()));
     }
 
     // /api/question/top10?month={month}&job={job}
@@ -71,14 +76,14 @@ public class QuestionController {
                 .stream().map(this::getTop10QuestionResponse).toList());
     }
 
-    private List<QuestionResponse> getListResponse(List<QuestionDto> questions) {
+    private List<QuestionResponse> getListResponse(Long memberId, List<QuestionDto> questions) {
         return questions.stream()
-                .map(this::getQuestionResponse)
+                .map(question -> getQuestionResponse(memberId, question))
                 .toList();
     }
 
-    private QuestionResponse getQuestionResponse(QuestionDto question) {
-        String solved = servedQuestionService.getIsSolvedStatus(question.id());
+    private QuestionResponse getQuestionResponse(Long memberId, QuestionDto question) {
+        String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
         List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
         List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
         return QuestionResponse.of(question, solved, skills, jobs);

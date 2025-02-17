@@ -87,7 +87,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .accessLevel(AccessLevel.valueOf(answerRequest.accessLevel()))
                 .build();
 
-        String isSolvedStatus = servedQuestionService.getIsSolvedStatus(questionId);
+        String isSolvedStatus = servedQuestionService.getIsSolvedStatus(memberId, questionId);
         if (isSolvedStatus.equals("notSolved")) {
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
