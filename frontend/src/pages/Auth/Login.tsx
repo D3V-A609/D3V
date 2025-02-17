@@ -1,18 +1,13 @@
-//pages/Auth/Login.tsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import SocialLogin from '../../components/Auth/SocialLogin';
-import { IoIosEyeOff } from "react-icons/io";
-import { IoMdEye } from "react-icons/io";
-import './Login.css';
-
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from 'react-toastify';
+import SocialLogin from '../../components/Auth/SocialLogin';
 import authApi from '../../store/services/authApi';
 import tokenService from '../../store/services/token/tokenService';
-import { loginSuccess } from '../../store/slices/authSlice';
-
+import { loginSuccess, setError } from '../../store/slices/authSlice';
+import './Login.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,66 +17,62 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // 영문, 숫자, 특수문자만 허용하는 정규식
     if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value)) {
       setPassword(value);
     }
   };
 
-  // 한글 입력 시작 시 이벤트 처리
   const handleCompositionStart = (e: React.CompositionEvent<HTMLInputElement>) => {
-      e.preventDefault();
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      try {
-        // 로딩 토스트 표시 (선택사항)
-        // toast.loading('로그인 중...', { toastId: 'login-loading' });
-
-        const response = await authApi.login({ email, password });
-        
-        // AccessToken 저장 (tokenService 사용)
-        tokenService.setAccessToken(response.result.AccessToken);
-        
-        // Redux store 업데이트
-        dispatch(loginSuccess({ 
-          isAuthenticated: true,
-          user: {
-            memberId: response.result.memberId,
-            nickname: response.result.nickname,
-            email: response.result.email,
-            profileImg: response.result.profileImg,
-          }
-        }));
-    
-        // 로딩 토스트 제거 (선택사항)
-        // toast.dismiss('login-loading');
-
-        // 성공 토스트 표시 (시간 단축)
-        toast.success('로그인되었습니다.', {
-          position: "top-right",
-          autoClose: 1000, // 500ms로 단축
-          hideProgressBar: true, // 프로그레스바 숨김
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false, // 드래그 비활성화로 성능 개선
-          toastId: 'login-success'
-        });
-
-        // 즉시 네비게이션
-        navigate('/');
-      } catch (error) {
-        toast.error('로그인에 실패했습니다.', {
-          autoClose: 500,
-          hideProgressBar: true
-        });
-      }
+    e.preventDefault();
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      dispatch(setError(null)); // 에러 상태 초기화
+
+      const response = await authApi.login({ email, password });
+      
+      tokenService.setAccessToken(response.result.AccessToken);
+      
+      dispatch(loginSuccess({ 
+        isAuthenticated: true,
+        user: {
+          memberId: response.result.memberId,
+          nickname: response.result.nickname,
+          email: response.result.email,
+          profileImg: response.result.profileImg,
+        }
+      }));
+
+      toast.success('로그인되었습니다.', {
+        position: "bottom-left",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        toastId: 'login-success'
+      });
+
+      navigate('/', { replace: true });
+    } catch (error: unknown) {
+      dispatch(setError('로그인에 실패했습니다.'));
+      console.error('Login failed:', error);
+      
+      toast.error('로그인에 실패했습니다.', {
+        position: "bottom-left",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        toastId: 'login-error'
+      });
+    }
+  };
 
   return (
     <div className="login-container">
@@ -102,6 +93,7 @@ const Login: React.FC = () => {
                 placeholder="이메일 주소 *"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
             <div className="form-group">
@@ -114,6 +106,7 @@ const Login: React.FC = () => {
                   onChange={handlePasswordChange}
                   onCompositionStart={handleCompositionStart}
                   autoComplete="off"
+                  required
                 />
                 <button 
                   type="button" 

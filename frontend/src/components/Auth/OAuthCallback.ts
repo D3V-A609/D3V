@@ -28,7 +28,7 @@ const OAuthCallback = () => {
         
         // 로그인 성공 토스트 표시
         toast.success('로그인되었습니다.', {
-          position: "top-right",
+          position: "bottom-left",
           autoClose: 1000,
           hideProgressBar: true,
           closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘

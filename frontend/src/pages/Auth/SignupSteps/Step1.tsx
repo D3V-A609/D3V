@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setCurrentStep, updateSignupForm } from "../../../store/slices/authSlice";
 import { IoIosEyeOff } from "react-icons/io";
 import { IoMdEye } from "react-icons/io";
 import './Step1.css';
 
 const Step1: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -81,9 +85,15 @@ const Step1: React.FC = () => {
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      dispatch(updateSignupForm({
+        email: formData.email,
+        password: formData.password
+      }));
+      dispatch(setCurrentStep(2));
       navigate('/auth/signup/profile');
     }
   };
+  
 
   return (
     <div className="signup-step">

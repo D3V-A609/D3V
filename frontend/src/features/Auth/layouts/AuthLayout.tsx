@@ -1,6 +1,6 @@
 //features/Auth/layouts/AuthLayout.tsx
 import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Link } from 'react-router-dom';
 import logoImg from '../../../assets/images/logo.gif';
 import loginImg from '../../../assets/images/login-illust.svg'
 import './AuthLayout.css';
@@ -29,7 +29,9 @@ return (
     <div className="auth-page">
       <div className={getBackgroundClass()}>
         <div className="logo">
-          <img src={logoImg} alt="Logo" />
+          <Link to="/">
+            <img src={logoImg} alt="Logo" />
+          </Link>
         </div>
         <div className="auth-illustration">
           <img src={getIllustration()} alt="Auth illustration" />
