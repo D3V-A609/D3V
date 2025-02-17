@@ -53,7 +53,7 @@ public class FollowServiceImpl implements FollowService {
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         List<FollowResponse> follows = followRepository.findAllByFollowing(member)
                 .stream()
-                .map(follow -> FollowResponse.from(follow.getFollower())) // ✅ 한 줄로 변환
+                .map(follow -> FollowResponse.from(follow.getFollower()))
                 .toList();
         return FollowsResponse.builder()
                 .memberId(memberId)
@@ -68,7 +68,7 @@ public class FollowServiceImpl implements FollowService {
 
         List<FollowResponse> follows = followRepository.findAllByFollower(member)
                 .stream()
-                .map(follow -> FollowResponse.from(follow.getFollowing())) // ✅ 한 줄로 변환
+                .map(follow -> FollowResponse.from(follow.getFollowing()))
                 .toList();
         return FollowsResponse.builder()
                 .memberId(memberId)
