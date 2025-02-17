@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
 import FeedbackModal from './FeedbackModal';
 import Profile from '../../../Profile/Profile';
@@ -7,6 +7,7 @@ import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { IoChatboxOutline } from "react-icons/io5";
 import { toggleLike } from '../../../../store/actions/answerActions';
 import { RootState } from '../../../../store/reducers';
+import { fetchUserInfo } from '../../../../store/actions/userActions';
 
 interface AnswerItemProps {
   answer: Answer;
@@ -18,8 +19,16 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   const [localLikeCount, setLocalLikeCount] = useState(answer.like);
   const [localIsLiked, setLocalIsLiked] = useState(answer.isLiked);
 
-  const { users } = useAppSelector((state: RootState) => state.auth);
-  const member = users.find((user: User) => user.memberId === answer.memberId);
+  const user = useAppSelector((state: RootState) => 
+    state.user.me?.memberId === answer.memberId ? state.user.me : state.user.other
+  );
+  
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(fetchUserInfo(answer.memberId));
+    }
+  }, [dispatch, user, answer.memberId]);
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -45,16 +54,16 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
     }
   };
 
-  if (!member) return null; // 멤버 데이터가 없으면 렌더링 안 함
-
   return (
     <>
       <div className="answer-item">
-        <Profile
-          profileImg={member.profileImg}
-          jobField={member.jobField}
-          nickname={member.nickname}
-        />
+      {user && (
+          <Profile
+            profileImg={user.profileImg}
+            favoriteJob={user.favoriteJob}
+            nickname={user.nickname}
+          />
+        )}
         <div className="answer-content">{answer.content}</div>
         <div className="answer-footer">
           <div className="answer-date">{formatDate(answer.createdAt)}</div>

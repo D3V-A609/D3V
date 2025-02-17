@@ -6,6 +6,9 @@ import { fetchFeedbacks, createFeedback, updateFeedback, deleteFeedback } from '
 import { toggleLike } from '../../../../store/actions/answerActions';
 import Profile from '../../../Profile/Profile';
 import './FeedbackModal.css';
+import { fetchUserInfo } from '../../../../store/actions/userActions';
+import { RootState } from '../../../../store/reducers';
+import SecureStorage from '../../../../store/services/token/SecureStorage';
 
 interface FeedbackModalProps {
   answer: Answer;
@@ -17,16 +20,28 @@ interface FeedbackModalProps {
 const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate }) => {
   const dispatch = useAppDispatch();
   const { feedbacks, error } = useAppSelector(state => state.feedbacks);
-  const { users } = useAppSelector(state => state.users);
+  const { me, other } = useAppSelector((state: RootState) => state.user);
   const [newFeedback, setNewFeedback] = useState('');
   const [editingFeedbackId, setEditingFeedbackId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const lastFeedbackElementRef = useRef<HTMLDivElement | null>(null);
 
+  const currentUserId = SecureStorage.getMemberId();
+
+  useEffect(() => {
+    if (isOpen) {
+      dispatch(fetchUserInfo(answer.memberId));
+      feedbacks.forEach(feedback => {
+        dispatch(fetchUserInfo(feedback.memberId));
+      });
+    }
+  }, [isOpen, answer.memberId, feedbacks, dispatch]);
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -66,6 +81,10 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
       observer.current.observe(lastFeedbackElementRef.current);
     }
   }, [hasMore]);
+
+  const getUserInfo = (memberId: number) => {
+    return memberId === me?.memberId ? me : other;
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -110,26 +129,24 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
     }
   };
 
-  const currentUserId = 1; // 현재 사용자의 ID
-
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        {/* 닫기 버튼 */}
+      <div className="modal-content" ref={modalRef}>
         <div className="modal-header">
           <IoClose className="close-button" onClick={onClose} />
         </div>
 
-        {/* 답변 섹션 */}
         <div className="answer-section">
           <div className="answer-header">
-            <Profile
-              profileImg={dummyUsers.find(user => user.memberId === answer.memberId)?.profileImg || ''}
-              jobField={dummyUsers.find(user => user.memberId === answer.memberId)?.jobField || ''}
-              nickname={dummyUsers.find(user => user.memberId === answer.memberId)?.nickname || ''}
-            />
+            {getUserInfo(answer.memberId) && (
+              <Profile
+                profileImg={getUserInfo(answer.memberId)?.profileImg || ''}
+                favoriteJob={getUserInfo(answer.memberId)?.favoriteJob || ''}
+                nickname={getUserInfo(answer.memberId)?.nickname || ''}
+              />
+            )}
           </div>
           <div className="answer-body">
             <p className="answer-text">{answer.content}</p>
@@ -159,7 +176,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
         <div className="feedbacks-section">
           {error && <p>Error: {error}</p>}
           {feedbacks.map((feedback: Feedback, index: number) => {
-            const user = users.find(user => user.memberId === feedback.memberId);
+            const user = getUserInfo(feedback.memberId);
             return (
               <div 
                 key={feedback.feedbackId} 
@@ -170,9 +187,9 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                   <div className="feedback-profile">
                     {user && (
                       <Profile
-                        profileImg={user.profileImg}
-                        jobField={user.jobField}
-                        nickname={user.nickname}
+                        profileImg={getUserInfo(answer.memberId)?.profileImg || ''}
+                        favoriteJob={getUserInfo(answer.memberId)?.favoriteJob || ''}
+                        nickname={getUserInfo(answer.memberId)?.nickname || ''}
                       />
                     )}
                   </div>
@@ -202,11 +219,10 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                 <div className="feedback-footer">
                   <span className="feedback-date">{formatDate(feedback.createdAt)}</span>
                 </div>
-              </div>
+                </div>
             );
           })}
         </div>
-
       </div>
     </div>
   );

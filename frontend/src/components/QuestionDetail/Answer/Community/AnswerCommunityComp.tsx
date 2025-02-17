@@ -13,7 +13,7 @@ type AnswerCommunityCompProps = {
 
 const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
   const dispatch = useAppDispatch();
-  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers as AnswerState);
+  const { myAnswer, otherAnswers, error } = useAppSelector(state => state.answers as AnswerState);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -28,7 +28,6 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
     setCurrentPage(newPage);
   };
 
-  if (loading) return <div>답변을 불러오는 중입니다...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
