@@ -5,6 +5,7 @@ import com.ssafy.d3v.backend.member.dto.BasicMemberResponse;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
+import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -25,6 +26,8 @@ public interface MemberService {
     ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response);
 
     Long getMemberId();
+
+    Member getMember();
 
     List<BasicMemberResponse> getBasicInfo(List<BasicMemberRequest> basicMemberRequest);
 }

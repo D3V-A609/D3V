@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -37,11 +38,14 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(name = "email", length = 63, nullable = false)
     private String email;
 
+    @Setter
     @Column(name = "nickname", length = 15, nullable = false)
     private String nickname;
 
+    @Setter
     private String password;
 
+    @Setter
     @Column(name = "profile_img")
     private String profileImg;
 
@@ -72,24 +76,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.password = password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setProfileImg(String profileImg) {
-        this.profileImg = profileImg;
-    }
-
     public Member update(String nickname, String profileImg) {
         this.nickname = nickname;
         this.profileImg = profileImg;
         return this;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

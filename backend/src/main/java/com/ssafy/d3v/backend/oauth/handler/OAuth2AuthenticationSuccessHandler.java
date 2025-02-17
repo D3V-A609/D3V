@@ -71,9 +71,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new IllegalArgumentException(
                     "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
-        log.info("=============================redirectUri: " + redirectUri);
-        //String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String targetUrl = "http://localhost:5173/oauth/redirect"; // @Value가 안먹어서 임시로 하드코딩해둠. 바꿔야 됨.
+
+        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         log.info("=============================targetUrl: " + targetUrl);
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());

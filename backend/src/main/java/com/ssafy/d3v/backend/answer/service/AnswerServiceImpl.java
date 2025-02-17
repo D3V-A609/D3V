@@ -14,6 +14,7 @@ import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import com.ssafy.d3v.backend.common.dto.PaginationInfo;
 import com.ssafy.d3v.backend.common.exception.SpeechToTextException;
 import com.ssafy.d3v.backend.common.util.AccessLevel;
+import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.common.util.SpeechToTextConverter;
 import com.ssafy.d3v.backend.feedback.repository.FeedbackCustomRepository;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
@@ -52,12 +53,11 @@ public class AnswerServiceImpl implements AnswerService {
     private final QuestionService questionService;
     private final HistoryRepository historyRepository;
     private final SpeechToTextConverter textConverter;
-    private final Long memberId = 1L;
 
     @Override
     public StandardAnswerResponse getStandardAnswer(long questionId) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById(memberId);
+        Member member = getMember();
 
         boolean hasAnswer = answerRepository.existsByQuestionAndMember(question, member);
         if (!hasAnswer) {
@@ -75,8 +75,9 @@ public class AnswerServiceImpl implements AnswerService {
     @Transactional
     public List<AnswerResponse> create(long questionId, AnswerRequest answerRequest) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById(memberId);
-        History history = historyRepository.findByMemberIdAndDate(memberId, LocalDate.now())
+        Member member = getMember();
+
+        History history = historyRepository.findByMemberIdAndDate(member.getId(), LocalDate.now())
                 .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
 
         Answer answer = Answer.builder()
@@ -87,7 +88,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .accessLevel(AccessLevel.valueOf(answerRequest.accessLevel()))
                 .build();
 
-        String isSolvedStatus = servedQuestionService.getIsSolvedStatus(questionId);
+        String isSolvedStatus = servedQuestionService.getIsSolvedStatus(member.getId(), questionId);
         if (isSolvedStatus.equals("notSolved")) {
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
@@ -107,7 +108,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<AnswerResponse> getMyAnswers(long questionId) {
         Question question = getQuestionById(questionId);
-        Member member = getMemberById(memberId);
+        Member member = getMember();
 
         return getAnswerResponses(question, member);
     }
@@ -134,10 +135,10 @@ public class AnswerServiceImpl implements AnswerService {
         return question;
     }
 
-    private Member getMemberById(long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
-        return member;
+    private Member getMember() {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        return memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
     }
 
     @Override
@@ -145,8 +146,7 @@ public class AnswerServiceImpl implements AnswerService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 질문입니다. ID: " + questionId));
 
-        Member viewer = getMemberById(memberId);
-
+        Member viewer = getMember();
         List<Answer> answerList = answerCustomRepository.findAnswersByAccessLevel(question, viewer, size, page);
         long totalRecords = answerCustomRepository.countAnswersByAccessLevel(question, viewer);
 
@@ -160,7 +160,7 @@ public class AnswerServiceImpl implements AnswerService {
                         ele.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(ele),
                         likesRepository.countByAnswer(ele),
-                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), ele)))
+                        likesRepository.existsByMemberAndAnswer(viewer, ele)))
                 .collect(toList());
 
         int totalPages = (int) Math.ceil((double) totalRecords / size);
@@ -189,7 +189,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved) {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         List<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
                 isSolved);
 
@@ -215,7 +215,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerResponse> getAnswerByLike() {
-        Member member = getMemberById(memberId);
+        Member member = getMember();
         List<Answer> answers = answerCustomRepository.getAnswerByLike(member);
 
         return answers.stream()
@@ -228,7 +228,7 @@ public class AnswerServiceImpl implements AnswerService {
                         answer.getAccessLevel(),
                         (int) feedbackCustomRepository.countFeedbackByAnswer(answer),
                         likesRepository.countByAnswer(answer),
-                        likesRepository.existsByMemberAndAnswer(getMemberById(memberId), answer)
+                        likesRepository.existsByMemberAndAnswer(member, answer)
                 ))
                 .toList();
     }

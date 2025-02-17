@@ -46,7 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-    private final Long memberId = 1L;
     private final MemberRepository memberRepository;
     private final FollowRepository followRepository;
     private final S3ImageUploader s3ImageUploader;
@@ -56,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse get(long memberId) {
-        Member member = getMember(memberId);
+        Member member = getMember();
         return MemberResponse.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
@@ -82,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage) {
-        Member member = getMember(memberId);
+        Member member = getMember();
 
         if (!profileImage.isEmpty()) {
             s3ImageUploader.deleteImageFromS3(member.getProfileImg());
@@ -116,14 +115,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void delete() {
-        Member member = getMember(memberId);
+        Member member = getMember();
         member.delete();
         memberRepository.saveAndFlush(member);
     }
 
-    private Member getMember(long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalStateException("해당 회원이 존재하지 않습니다. 회원 ID: " + memberId));
+    @Override
+    public Member getMember() {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        return memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
     }
 
     @Override

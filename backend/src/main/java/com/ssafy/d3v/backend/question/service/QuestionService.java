@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.SkillDto;
@@ -47,10 +48,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class QuestionService {
 
-    private final Long TempMemeberId = 1L; // 임시 아이디
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final JobRepository jobRepository;
     private final TopQuestionCacheRepository topQuestionCacheRepository; // Redis 캐시 저장소
     private final ObjectMapper objectMapper;
@@ -64,13 +65,11 @@ public class QuestionService {
 
     @Transactional
     public List<QuestionDto> getDailyQuestions() {
-        Long memberId = TempMemeberId; // 임시 코드, 실제로는 토큰에서 가져오도록 수정 필요
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+        Member member = memberService.getMember();
 
         // 현재 날짜
         LocalDate today = LocalDate.now();
-        String cacheKey = DAILY_QUESTIONS_CACHE_PREFIX + memberId + ":" + today;
+        String cacheKey = DAILY_QUESTIONS_CACHE_PREFIX + member.getId() + ":" + today;
 
         // 1. Redis에서 캐시된 데일리 질문 조회
         listValueOperations = redisTemplate.opsForValue();
@@ -312,9 +311,7 @@ public class QuestionService {
     public Page<Question> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
                                        String order,
                                        String sort, int page, int size, String keyword) {
-        Long memberId = TempMemeberId; // 임시코드, MemberId를 토큰에서 가져오도록 변경해야함
-        Member member = memberRepository.findById(memberId).orElseThrow();
-
+        Member member = memberService.getMember();
         List<JobRole> jobs = convertToEnum(jobStrings, JobRole.class);
         List<SkillType> skills = convertToEnum(skillStrings, SkillType.class);
         return questionRepository.searchQuestions(
