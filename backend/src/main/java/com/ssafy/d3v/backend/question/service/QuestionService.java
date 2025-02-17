@@ -2,9 +2,8 @@ package com.ssafy.d3v.backend.question.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.d3v.backend.common.util.SecurityUtil;
 import com.ssafy.d3v.backend.member.entity.Member;
-import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.SkillDto;
@@ -50,7 +49,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final ServedQuestionRepository servedQuestionRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final JobRepository jobRepository;
     private final TopQuestionCacheRepository topQuestionCacheRepository; // Redis 캐시 저장소
     private final ObjectMapper objectMapper;
@@ -64,9 +63,7 @@ public class QuestionService {
 
     @Transactional
     public List<QuestionDto> getDailyQuestions() {
-        String memberEmail = SecurityUtil.getCurrentMemberEmail();
-        Member member = memberRepository.findByEmail(memberEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with Email: " + memberEmail));
+        Member member = memberService.getMember();
 
         // 현재 날짜
         LocalDate today = LocalDate.now();
@@ -312,10 +309,7 @@ public class QuestionService {
     public Page<Question> getQuestions(List<String> jobStrings, List<String> skillStrings, String solvedFilter,
                                        String order,
                                        String sort, int page, int size, String keyword) {
-        String memberEmail = SecurityUtil.getCurrentMemberEmail();
-        Member member = memberRepository.findByEmail(memberEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with Email: " + memberEmail));
-
+        Member member = memberService.getMember();
         List<JobRole> jobs = convertToEnum(jobStrings, JobRole.class);
         List<SkillType> skills = convertToEnum(skillStrings, SkillType.class);
         return questionRepository.searchQuestions(
