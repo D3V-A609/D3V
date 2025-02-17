@@ -52,7 +52,6 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/**",
                                 "/actuator/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -61,10 +60,11 @@ public class WebSecurityConfig {
                                 "/api/member/email/**",
                                 "/api/question/daily",
                                 "/api/question/top10",
-                                "/api/job/**"
+                                "/api/job/**",
+                                "/api/**"
                         )
-                        .permitAll()
-                        .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN"))
+                        .permitAll())
+//                        .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN"))
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authEndpoint -> authEndpoint
                                 .baseUri("/oauth2/authorization")
