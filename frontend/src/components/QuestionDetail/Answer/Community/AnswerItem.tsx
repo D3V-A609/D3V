@@ -17,22 +17,16 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [localLikeCount, setLocalLikeCount] = useState(answer.like);
   const [localIsLiked, setLocalIsLiked] = useState(answer.isLiked);
+  const [localFeedbackCount, setLocalFeedbackCount] = useState(answer.count || 0);
 
-  const user = useAppSelector((state: RootState) => 
-    state.user.users[answer.memberId]
-  );
-  
+  const users = useAppSelector((state: RootState) => state.user.users);
+  const user = users[answer.memberId];
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}. ${month}. ${day}. ${hours}:${minutes}:${seconds}`;
+    return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')}. ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
   };
-  
+
   const handleLikeClick = async () => {
     try {
       const resultAction = await dispatch(toggleLike(answer.answerId));
@@ -49,11 +43,11 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
   return (
     <>
       <div className="answer-item">
-      {user && (
+        {user && (
           <Profile
             profileImg={user.profileImg}
             favoriteJob={user.favoriteJob}
-            nickname={user.nickname}
+            nickname={user.nickname || ''}
           />
         )}
         <div className="answer-content">{answer.content}</div>
@@ -62,7 +56,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
           <div className="answer-buttons">
             <button className="btn-comment" onClick={() => setIsModalOpen(true)}>
               <IoChatboxOutline className="button-icon" />
-              댓글 보기 ({answer.count || 0})
+              피드백 보기 ({localFeedbackCount})
             </button>
             <button 
               className="btn-like"
@@ -78,7 +72,6 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
           </div>
         </div>
       </div>
-      {/* FeedbackModal에 answer 객체를 전달 */}
       <FeedbackModal
         answer={{...answer, isLiked: localIsLiked, like: localLikeCount}}
         isOpen={isModalOpen}
@@ -87,6 +80,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
           setLocalIsLiked(isLiked);
           setLocalLikeCount(likeCount);
         }}
+        onFeedbackCountUpdate={(count) => setLocalFeedbackCount(count)}
       />
     </>
   );

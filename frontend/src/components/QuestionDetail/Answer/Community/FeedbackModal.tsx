@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { IoClose } from "react-icons/io5";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from '../../../../store/hooks/useRedux';
@@ -15,23 +15,44 @@ interface FeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLikeUpdate: (isLiked: boolean, likeCount: number) => void;
+  onFeedbackCountUpdate: (count: number) => void; 
 }
 
-const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate }) => {
+const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, onLikeUpdate, onFeedbackCountUpdate }) => {
   const dispatch = useAppDispatch();
   const { feedbacks, error } = useAppSelector(state => state.feedbacks);
   const { users } = useAppSelector((state: RootState) => state.user);
   const [newFeedback, setNewFeedback] = useState('');
   const [editingFeedbackId, setEditingFeedbackId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const observer = useRef<IntersectionObserver | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-
   const lastFeedbackElementRef = useRef<HTMLDivElement | null>(null);
 
   const currentUserId = SecureStorage.getMemberId();
+
+  const fetchMoreFeedbacks = useCallback(async () => {
+    if (isLoading || !hasMore) return;
+    setIsLoading(true);
+    try {
+      const action = await dispatch(fetchFeedbacks(answer.answerId));
+      if (fetchFeedbacks.fulfilled.match(action)) {
+        const newFeedbacks = action.payload;
+        if (newFeedbacks.length > 0) {
+          setHasMore(newFeedbacks.length === 10);
+        } else {
+          setHasMore(false);
+        }
+        const uniqueUserIds = new Set(newFeedbacks.map(feedback => feedback.memberId));
+        dispatch(fetchMultipleUserInfo(Array.from(uniqueUserIds)));
+      }
+    } catch (error) {
+      console.error('피드백 가져오기 실패:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dispatch, answer.answerId, isLoading, hasMore]);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +66,13 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
         });
     }
   }, [dispatch, answer.answerId, answer.memberId, isOpen]);
-  
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchMoreFeedbacks();
+    }
+  }, [isOpen, fetchMoreFeedbacks]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -63,28 +90,28 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (isOpen) {
-      dispatch(fetchFeedbacks(answer.answerId))
-        .then((action) => {
-          if (fetchFeedbacks.fulfilled.match(action)) {
-            setHasMore(action.payload.length === 10);
-          }
-        });
+    if (!hasMore || isLoading) return;
+    
+    const currentRef = lastFeedbackElementRef.current;
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          fetchMoreFeedbacks();
+        }
+      },
+      { threshold: 1.0 }
+    );
+    
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-  }, [dispatch, answer.answerId, isOpen, page]);
-
-  useEffect(() => {
-    if (!hasMore) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        setPage(prevPage => prevPage + 1);
+    
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
-    });
-    if (lastFeedbackElementRef.current) {
-      observer.current.observe(lastFeedbackElementRef.current);
-    }
-  }, [hasMore]);
+    };
+  }, [hasMore, isLoading, fetchMoreFeedbacks]);
 
   const getUserInfo = (memberId: number) => users[memberId];
 
@@ -108,8 +135,14 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newFeedback.trim()) {
-      await dispatch(createFeedback({ answerId: answer.answerId, content: newFeedback }));
-      setNewFeedback('');
+      const result = await dispatch(createFeedback({ answerId: answer.answerId, content: newFeedback }));
+      if (createFeedback.fulfilled.match(result)) {
+        setNewFeedback('');
+        const feedbacksAction = await dispatch(fetchFeedbacks(answer.answerId));
+        if (fetchFeedbacks.fulfilled.match(feedbacksAction)) {
+          onFeedbackCountUpdate(feedbacksAction.payload.length);
+        }
+      }
     }
   };
 
@@ -127,9 +160,22 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
 
   const handleDelete = async (feedbackId: number) => {
     if (window.confirm('정말로 이 피드백을 삭제하시겠습니까?')) {
-      await dispatch(deleteFeedback({ answerId: answer.answerId, feedbackId }));
+      try {
+        const result = await dispatch(deleteFeedback({ answerId: answer.answerId, feedbackId }));
+        if (deleteFeedback.fulfilled.match(result)) {
+          // 삭제 성공 시 피드백 목록 다시 불러오기
+          const feedbacksAction = await dispatch(fetchFeedbacks(answer.answerId));
+          if (fetchFeedbacks.fulfilled.match(feedbacksAction)) {
+            // 상태 업데이트
+            onFeedbackCountUpdate(feedbacksAction.payload.length);
+          }
+        }
+      } catch (error) {
+        console.error('피드백 삭제 실패:', error);
+      }
     }
   };
+
 
   if (!isOpen) return null;
 
@@ -189,13 +235,13 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                   <div className="feedback-profile">
                     {user && (
                       <Profile
-                        profileImg={getUserInfo(answer.memberId)?.profileImg || ''}
-                        favoriteJob={getUserInfo(answer.memberId)?.favoriteJob || ''}
-                        nickname={getUserInfo(answer.memberId)?.nickname || ''}
+                        profileImg={user.profileImg || ''}
+                        favoriteJob={user.favoriteJob || ''}
+                        nickname={user.nickname || ''}
                       />
                     )}
                   </div>
-                  {feedback.memberId === currentUserId && !editingFeedbackId && (
+                  {feedback.memberId === currentUserId && editingFeedbackId !== feedback.feedbackId && (
                     <div className="feedback-actions">
                       <button onClick={() => handleEdit(feedback.feedbackId, feedback.content)}>수정</button>
                       <button onClick={() => handleDelete(feedback.feedbackId)}>삭제</button>
@@ -221,7 +267,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                 <div className="feedback-footer">
                   <span className="feedback-date">{formatDate(feedback.createdAt)}</span>
                 </div>
-                </div>
+              </div>
             );
           })}
         </div>

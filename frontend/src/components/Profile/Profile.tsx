@@ -27,7 +27,7 @@ const Profile: React.FC<ProfileProps> = ({ profileImg, favoriteJob, nickname }) 
           </div>
         )}
         <div className="profile-name">
-          <span className="name">{nickname}</span>
+          <span className="name">{nickname || '익명 사용자'}</span>
           <span className="suffix">님</span>
         </div>
       </div>
