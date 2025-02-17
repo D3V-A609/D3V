@@ -7,13 +7,18 @@ import { CiMail } from "react-icons/ci";
 
 interface UserInfoProps {
   user: User | null;
+  openFollowModal: (mode: string) => void;
 }
-const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
+const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
 
   useEffect(() => {}, [user])
 
   if(!user){
     return <div style={{padding: "1rem 0"}}>사용자 정보를 불러오는 중입니다..</div>
+  }
+
+  const openFollowModalView = (count: number, mode: string) => {
+    if(count > 0) return openFollowModal(mode);
   }
 
   return (
@@ -47,10 +52,10 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user }) => {
           <div className='user-sub-info-right'>
             <span className="followers">
               <span className="label">팔로워</span>
-              <span className="value text-blue">{user.followerCount}</span>
+              <span className="value text-blue" onClick={() => openFollowModalView(user.followerCount, 'follower')}>{user.followerCount}</span>
               <span className="separator">|</span>
               <span className="label">팔로잉</span>
-              <span className="value text-blue">{user.followingCount}</span>
+              <span className="value text-blue" onClick={() => openFollowModalView(user.followingCount, 'following')}>{user.followingCount}</span>
             </span>
 
             <p >
