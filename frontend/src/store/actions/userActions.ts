@@ -18,3 +18,19 @@ export const fetchUserInfo = createAsyncThunk(
     }
   }
 )
+
+export const fetchMultipleUserInfo = createAsyncThunk(
+  'user/multipleUserInfo',
+  async (memberIds: number[], {rejectWithValue}) => {
+    try {
+      const response = await UserApi.getMultipleUserInfo(memberIds);
+      if (typeof response === "string") {
+        return rejectWithValue(response);
+      }
+      return response;
+    } catch(error) {
+      console.log("in user action -2: ", error);
+      return rejectWithValue('여러 사용자 정보를 불러오는데 문제가 발생했습니다.')
+    }
+  }
+)

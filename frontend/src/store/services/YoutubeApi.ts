@@ -36,7 +36,7 @@ export const useYoutubeApi = (): UseYoutubeApiReturn => {
         params: {
           part: 'snippet',
           maxResults: 10,
-          q: '면접',
+          q: `${query} 면접`,
           type: 'video',
           relevanceLanguage: 'ko',
           regionCode: 'KR',
@@ -49,6 +49,7 @@ export const useYoutubeApi = (): UseYoutubeApiReturn => {
       setNextPageToken(response.data.nextPageToken || null);
     } catch (err) {
       setError('Failed to fetch videos');
+      console.error('Error fetching videos:', err);
     } finally {
       setLoading(false);
     }

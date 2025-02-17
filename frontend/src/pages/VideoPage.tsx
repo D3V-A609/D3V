@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useYoutubeApi } from '../store/services/YoutubeApi';
+import { useYoutubeApi } from '../store/services/youtubeApi';
 import VideoList from '../features/Video/VideoList';
 import VideoDetail from '../features/Video/VideoDetail';
 import PageHeader from "../components/PageHeader/PageHeader"

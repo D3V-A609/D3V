@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux";
 import MyAnswer from "./MyAnswer";
 import OtherAnswers from "./OtherAnswers";
-import Pagination from "../../../Pagination/Pagination";
 import "./AnswerCommunityComp.css";
 import { AnswerState } from "../../../../store/slices/answerSlice";
 import { fetchMyAnswer, fetchOtherAnswers } from "../../../../store/actions/answerActions";
+import { fetchMultipleUserInfo } from "../../../../store/actions/userActions";
 
 type AnswerCommunityCompProps = {
   questionId: number;
@@ -13,22 +13,25 @@ type AnswerCommunityCompProps = {
 
 const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId }) => {
   const dispatch = useAppDispatch();
-  const { myAnswer, otherAnswers, loading, error } = useAppSelector(state => state.answers as AnswerState);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { myAnswer, otherAnswers, error } = useAppSelector(state => state.answers as AnswerState);
   const pageSize = 10;
 
   useEffect(() => {
     if (questionId) {
       dispatch(fetchMyAnswer(questionId));
-      dispatch(fetchOtherAnswers({ questionId, page: currentPage, size: pageSize }));
+      dispatch(fetchOtherAnswers({ questionId, page: 1, size: pageSize }))
+        .then((action) => {
+          if (fetchOtherAnswers.fulfilled.match(action)) {
+            const uniqueMemberIds = [...new Set([
+              ...action.payload.data.map(answer => answer.memberId),
+              ...(myAnswer?.memberId ? [myAnswer.memberId] : [])
+            ])];
+            dispatch(fetchMultipleUserInfo(uniqueMemberIds));
+          }
+        });
     }
-  }, [dispatch, questionId, currentPage]);
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
-
-  if (loading) return <div>답변을 불러오는 중입니다...</div>;
+  }, [dispatch, questionId, myAnswer]);
+  
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -37,13 +40,6 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
       {otherAnswers && otherAnswers.data && otherAnswers.data.length > 0 ? (
         <>
           <OtherAnswers answers={otherAnswers.data} />
-          <Pagination
-            currentPage={otherAnswers.pagable.currentPage}
-            totalPages={otherAnswers.pagable.totalPages}
-            first={otherAnswers.pagable.prevPage === null}
-            last={otherAnswers.pagable.nextPage === null}
-            onPageChange={handlePageChange}
-          />
         </>
       ) : (
         <div className="no-answers-message">
