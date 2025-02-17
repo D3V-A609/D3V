@@ -116,7 +116,8 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.saveAndFlush(member);
     }
 
-    private Member getMember() {
+    @Override
+    public Member getMember() {
         String memberEmail = SecurityUtil.getCurrentMemberEmail();
         return memberRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
