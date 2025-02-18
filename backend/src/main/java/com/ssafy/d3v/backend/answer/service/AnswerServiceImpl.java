@@ -97,10 +97,10 @@ public class AnswerServiceImpl implements AnswerService {
                             .isSolved(answerRequest.isSolved())
                             .build()
                     , false);
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
         }
+        question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
 
         servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);

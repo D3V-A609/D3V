@@ -24,4 +24,6 @@ public interface AnswerService {
     TextAnswerResponse convertSpeechToText(byte[] speech);
 
     List<AnswerResponse> getAnswerByLike();
+
+
 }
