@@ -67,8 +67,10 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
     }
   }, [dispatch, answer.answerId, answer.memberId, isOpen]);
 
+  const hasFetched = useRef(false);
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !hasFetched.current) {
+      hasFetched.current = true;
       fetchMoreFeedbacks();
     }
   }, [isOpen, fetchMoreFeedbacks]);
