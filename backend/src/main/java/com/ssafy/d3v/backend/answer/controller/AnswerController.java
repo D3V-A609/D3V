@@ -9,6 +9,8 @@ import com.ssafy.d3v.backend.answer.service.AnswerService;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,9 +76,13 @@ public class AnswerController {
     }
 
     @Operation(summary = "음성 답변 텍스트로 변환")
-    @PostMapping(value = "/speech/text", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<TextAnswerResponse> convertSpeechToText(@RequestBody byte[] speech) {
-        return ResponseEntity.ok().body(answerService.convertSpeechToText(speech));
+    @PostMapping(value = "/speech/text", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TextAnswerResponse> convertSpeechToText(@RequestBody MultipartFile speech) {
+        try {
+            return ResponseEntity.ok().body(answerService.convertSpeechToText(speech.getBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Operation(summary = "내가 추천을 누른 다른 사람의 답변")
