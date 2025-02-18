@@ -17,7 +17,6 @@ public enum JobRole {
     SECURITY,
     BLOCKCHAIN,
     TESTING,
-    BIG_DATA,
     CLOUD_ARCHITECTURE,
     PROJECT_MANAGER,
 }
