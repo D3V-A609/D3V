@@ -23,6 +23,7 @@ import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.HistoryRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
@@ -97,12 +98,17 @@ public class AnswerServiceImpl implements AnswerService {
                             .isSolved(answerRequest.isSolved())
                             .build()
                     , false);
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
+            servedQuestionService.updateServedQuestion(questionId,
+                    ServedQuestionUpdateRequest.builder()
+                            .isSolved(answerRequest.isSolved())
+                            .servedAt(LocalDate.now())
+                            .build());
         }
+        question.updateQuestion(answerRepository.countAnswersByQuestionId(questionId),
+                answerRepository.countDistinctMembersByQuestionId(questionId));
+        questionRepository.saveAndFlush(question);
 
-        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
         historyRepository.saveAndFlush(
                 history.toBuilder()
