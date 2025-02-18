@@ -8,7 +8,7 @@ interface VideoDetailProps {
 
 const VideoDetail: React.FC<VideoDetailProps> = ({ videoId, onBack }) => (
   <div className="video-detail">
-    <button onClick={onBack} className="back-button">뒤로 가기</button>
+    <button onClick={onBack} className="video-back-button">뒤로 가기</button>
     <div className="video-wrapper">
       <iframe
         width="560"

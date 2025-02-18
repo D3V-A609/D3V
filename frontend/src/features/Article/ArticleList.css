@@ -4,7 +4,7 @@
 }
 
 .article-list th {
-  padding: 14px;
+  padding: 14px 5px;
   text-align: center;
   position: relative;
 }
@@ -27,10 +27,32 @@
 
 /* 게시글 목록 스타일 */
 .article-list td {
-  padding: 13px;
+  padding: 13px 5px;
   text-align: center;
   vertical-align: middle;
   border-bottom: 1px solid #d9e9ff;
+}
+
+.author-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* 간격을 좁힘 */
+  padding: 0 5px; /* 좌우 패딩 추가 */
+}
+
+.author-profile-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover; 
+  border: 0.3px solid #00518d;
+}
+
+.author-cell span {
+  max-width: 70px; /* 닉네임 최대 너비 설정 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .article-list tbody tr:hover {
@@ -48,17 +70,25 @@
 }
 
 .article-list td:nth-child(1) {
-  width: 150px;
+  width: 120px;
 }
 
-/* 작성일, 댓글 수, 조회 수 컬럼 스타일 */
-.article-list th:nth-child(3),
-.article-list th:nth-child(4),
-.article-list th:nth-child(5),
-.article-list td:nth-child(3),
+/* 작성자 칼럼 (6번째 칼럼) 너비 조정 */
+.article-list th:nth-child(6),
+.article-list td:nth-child(6) {
+  width: 120px; 
+  max-width: 120px; 
+  padding-right: 20px;
+}
+
+.article-list td:nth-child(3) {
+  width: 110px;
+  text-align: center;
+}
+
 .article-list td:nth-child(4),
 .article-list td:nth-child(5) {
-  width: 110px;
+  width: 100px;
   text-align: center;
 }
 

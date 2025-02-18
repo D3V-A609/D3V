@@ -36,7 +36,7 @@ export const useYoutubeApi = (): UseYoutubeApiReturn => {
         params: {
           part: 'snippet',
           maxResults: 10,
-          q: `${query} 면접`,
+          q: `intitle:면접 ${query}`,
           type: 'video',
           relevanceLanguage: 'ko',
           regionCode: 'KR',
