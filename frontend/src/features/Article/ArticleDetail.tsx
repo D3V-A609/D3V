@@ -96,6 +96,15 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
             <div className="title-row">
               <span className="category">{categoryNameMap[currentArticle.name] || currentArticle.name}</span>
               <h1 className="title">{currentArticle.title}</h1>
+          
+              {isAuthor && (
+                <div className="action-buttons">
+                  <button className="edit-button" onClick={handleEdit}>수정</button>
+                  <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
+                    {isDeleting ? "삭제 중..." : "삭제"}
+                  </button>
+                </div>
+              )}
             </div>
             <div className="meta-row">
               <div className="left-section">
@@ -149,14 +158,6 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
             <p className="comment-count">
               총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
             </p>
-            {isAuthor && (
-              <div className="action-buttons">
-                <button className="edit-button" onClick={handleEdit}>수정</button>
-                <button className="delete-button" onClick={handleDelete} disabled={isDeleting}>
-                  {isDeleting ? "삭제 중..." : "삭제"}
-                </button>
-              </div>
-            )}
           </div>
 
           <CommentList articleId={articleId} />
