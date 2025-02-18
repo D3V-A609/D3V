@@ -22,6 +22,7 @@ import com.ssafy.d3v.backend.member.entity.History;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.HistoryRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
@@ -90,6 +91,12 @@ public class AnswerServiceImpl implements AnswerService {
 
         String isSolvedStatus = servedQuestionService.getIsSolvedStatus(member.getId(), questionId);
         if (isSolvedStatus.equals("notSolved")) {
+            servedQuestionService.createServedQuestion(ServedQuestionCreateRequest.builder()
+                            .memberId(member.getId())
+                            .questionId(questionId)
+                            .isSolved(answerRequest.isSolved())
+                            .build()
+                    , false);
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
