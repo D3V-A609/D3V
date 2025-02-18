@@ -27,9 +27,9 @@
 /* Form Layout */
 .login-content {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  width: 100%;
+  height: 80vh;
 }
 
 .login-form-wrapper {

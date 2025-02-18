@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from 'react-toastify';
-import SocialLogin from '../../components/Auth/SocialLogin';
+// import SocialLogin from '../../components/Auth/SocialLogin';
 import authApi from '../../store/services/authApi';
 import tokenService from '../../store/services/token/tokenService';
 import { loginSuccess, setError } from '../../store/slices/authSlice';
@@ -129,7 +129,7 @@ const Login: React.FC = () => {
             <button type="submit" className="register-button">
               로그인하기
             </button>
-            <SocialLogin />
+            {/* <SocialLogin /> */}
             <div className="signup-prompt">
               계정이 없으신가요? <Link to="/auth/signup">회원가입</Link>
             </div>
