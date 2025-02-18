@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                                 .baseUri("/api/oauth2/authorization")
                                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                         .redirectionEndpoint(redirection -> redirection
-                                .baseUri("/*/oauth2/code/*"))
+                                .baseUri("/api/*/oauth2/code/*"))
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                         .successHandler(oAuth2AuthenticationSuccessHandler())
                         .failureHandler(oAuth2AuthenticationFailureHandler()));
