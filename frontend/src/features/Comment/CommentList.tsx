@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { fetchComments } from "../../store/actions/commentActions";
+import { fetchMultipleUserInfo } from "../../store/actions/userActions";
 import CommentItem from "./CommentItem";
 import Pagination from "../../components/Pagination/Pagination";
 import "./CommentList.css";
@@ -11,13 +12,19 @@ interface CommentListProps {
 
 const CommentList: React.FC<CommentListProps> = ({ articleId }) => {
   const dispatch = useAppDispatch();
-  const { comments, loading, error, pagination } = useAppSelector((state) => state.comments);
+  const { comments, error, pagination } = useAppSelector((state) => state.comments);
 
   useEffect(() => {
     dispatch(fetchComments({ articleId, page: 1, size: 10 }));
   }, [dispatch, articleId]);
 
-  if (loading) return <div>댓글을 불러오는 중...</div>;
+  useEffect(() => {
+    if (comments.length > 0) {
+      const userIds = [...new Set(comments.map(comment => comment.memberId))];
+      dispatch(fetchMultipleUserInfo(userIds));
+    }
+  }, [dispatch, comments]);
+
   if (error) return <div>댓글을 불러오는데 실패했습니다: {error}</div>;
 
   const handlePageChange = (page: number) => {
