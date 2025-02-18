@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record ArticleResponse(long id, long categoryId, CategoryName name,
+public record ArticleResponse(long id, long categoryId, long memberId, CategoryName name,
                               String title, LocalDateTime createdAt, LocalDateTime updatedAt,
                               int view, int commentCount) {
 }

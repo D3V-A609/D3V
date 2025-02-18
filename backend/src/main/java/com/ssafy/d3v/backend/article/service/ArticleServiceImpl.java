@@ -63,6 +63,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .map(a -> ArticleResponse.builder()
                         .id(a.getId())
                         .categoryId((a.getCategory() != null) ? a.getCategory().getId() : null)
+                        .memberId(a.getMember().getId())
                         .name((a.getCategory() != null) ? a.getCategory().getName() : null)
                         .title(a.getTitle())
                         .createdAt(a.getCreatedAt())
