@@ -29,7 +29,7 @@ const VideoPage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchVideos(`면접 ${jobCategories[selectedJob] || selectedJob}`));
+    dispatch(fetchVideos(`${jobCategories[selectedJob] || selectedJob}`));
   }, [dispatch, selectedJob, jobCategories]);
 
   return (

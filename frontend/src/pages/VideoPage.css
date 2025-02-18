@@ -1,9 +1,7 @@
 .video-page {
-  width: 100%;
-  max-width: 1200px;
-  padding: 40px;
+  padding: 40px 40px;
+  width: 1200px;
   margin: 0 auto;
-  box-sizing: border-box;
 }
 
 .error-message {
