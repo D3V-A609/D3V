@@ -17,14 +17,17 @@ import com.ssafy.d3v.backend.member.dto.MemberReqDto.Login;
 import com.ssafy.d3v.backend.member.dto.MemberReqDto.SignUp;
 import com.ssafy.d3v.backend.member.dto.MemberRequest;
 import com.ssafy.d3v.backend.member.dto.MemberResponse;
+import com.ssafy.d3v.backend.member.entity.History;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.FollowRepository;
+import com.ssafy.d3v.backend.member.repository.HistoryRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.oauth.entity.ProviderType;
 import com.ssafy.d3v.backend.oauth.entity.RoleType;
 import com.ssafy.d3v.backend.question.entity.JobRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
+    private final HistoryRepository historyRepository;
 
     @Override
     public MemberResponse get(long memberId) {
@@ -153,10 +157,16 @@ public class MemberServiceImpl implements MemberService {
                 .favoriteJob(JobRole.valueOf(job.toUpperCase()))
                 .build();
 
+        History history = History.builder()
+                .member(member)
+                .date(LocalDate.now())
+                .count(0)
+                .build();
+
         memberRepository.save(member);
+        historyRepository.save(history);
 
         return Response.ok("회원가입에 성공하였습니다.");
-
     }
 
     @Override
