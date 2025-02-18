@@ -29,8 +29,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-    private final String serverUrl = "https://localhost:8080";
-    private final String clientUrl = "https://localhost:5173";
+    private final String serverUrl = "https://i12a609.p.ssafy.io";
+    private final String clientUrl = "https://i12a609.p.ssafy.io";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000L;          // 1일
