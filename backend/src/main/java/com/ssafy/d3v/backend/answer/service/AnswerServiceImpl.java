@@ -23,6 +23,7 @@ import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.member.repository.HistoryRepository;
 import com.ssafy.d3v.backend.member.repository.MemberRepository;
 import com.ssafy.d3v.backend.question.dto.ServedQuestionCreateRequest;
+import com.ssafy.d3v.backend.question.dto.ServedQuestionUpdateRequest;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.entity.ServedQuestion;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
@@ -99,6 +100,11 @@ public class AnswerServiceImpl implements AnswerService {
                     , false);
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
+            servedQuestionService.updateServedQuestion(questionId,
+                    ServedQuestionUpdateRequest.builder()
+                            .isSolved(answerRequest.isSolved())
+                            .servedAt(LocalDate.now())
+                            .build());
             question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
         }
 
