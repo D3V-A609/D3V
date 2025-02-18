@@ -75,12 +75,12 @@ spring:
           google:
             clientId: ${GOOGLE_CLIENTID}
             clientSecret: ${GOOGLE_CLIENTSECRET}
-            redirect-uri: 'https://d3v.asia/api/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/api/{action}/oauth2/code/{registrationId}'
             scope: profile, email
           naver:
             clientId: ${NAVER_CLIENTID}
             clientSecret: ${NAVER_CLIENTSECRET}
-            redirect-uri: 'https://d3v.asia/api/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/api/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
             scope:
               - name
@@ -90,7 +90,7 @@ spring:
           kakao:
             clientId: ${KAKAO_CLIENTID}
             clientSecret: ${KAKAO_CLIENTSECRET}
-            redirect-uri: 'https://d3v.asia/api/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/api/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname
