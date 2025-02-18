@@ -7,12 +7,13 @@ import "./Answer.css"
 
 interface AnswerProps  {
   standardAnswer: string;
-  myAnswers?: Answer[];
+  myAnswers: Answer[];
   questionId: number | null;
+  hasMyAnswers: string;
 }
 
-const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, questionId}) => {
-  const hasMyAnswers = myAnswers && myAnswers.length > 0; // 첫 등록 답변인지 여부를 저장
+const AnswerInput: React.FC<AnswerProps> = ({standardAnswer, myAnswers, questionId, hasMyAnswers}) => {
+  // const hasMyAnswers = myAnswers && myAnswers.length > 0; // 첫 등록 답변인지 여부를 저장
 
 
   const [isToggleOpen, setIsToggleOpen] = useState(false);

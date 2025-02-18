@@ -18,10 +18,10 @@ export const store = configureStore({
       serializableCheck: {
         // redux-persist 사용시 비직렬화된 데이터(예: 함수, 클래스 인스턴스 등)를 상태에 저장하려고 할 때 경고가 발생
         // 특정 액션에 대한 직렬화 무시(직렬화 검사 비활성화)
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'voice/sendVoiceRecording'],
 
         // 추가: profileImage 관련 직렬화 검사 무시
-        ignoredActionPaths: ['payload.profileImage'],
+        ignoredActionPaths: ['payload.profileImage', 'meta.arg'],
         ignoredPaths: ['auth.signupForm.profileImage']
       },
     }),

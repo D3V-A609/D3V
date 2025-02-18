@@ -3,21 +3,22 @@ import { CiMicrophoneOn } from "react-icons/ci";
 import TimerSetting from "../Input/Timer/TimerSetting";
 import SelectPublicBtn from "../../../../features/Answer/SelectPublicBtn";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks/useRedux";
-import { registServedAnswer, registAnswer } from "../../../../store/actions/answerActions";
+import { registAnswer } from "../../../../store/actions/answerActions";
 import { useRecordingContext } from "../../../../context/RecordingContext"
 import { VoiceState } from "../../../../store/slices/voiceSlice";
 import PageHeader from "../../../PageHeader/PageHeader";
 import { BsChatSquareQuote } from "react-icons/bs";
+import SecureStorage from "../../../../store/services/token/SecureStorage";
 
 interface AnswerInputCompProps {
   questionId: number;  // 질문 ID
-  hasMyAnswers: boolean | undefined;  // 사용자가 이미 답변했는지 여부
+  hasMyAnswers: string;  // 사용자가 이미 답변했는지 여부
   handleRegistAnswerSuccess: () => void;  // 답변 등록 성공 시 호출되는 콜백
 }
 
 const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
   questionId,
-  hasMyAnswers,
+  // hasMyAnswers,
   handleRegistAnswerSuccess,
 }) => {
   // 타이머 관련 상태 및 변수 관리
@@ -69,27 +70,14 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
     // 서버에 전송할 답변 데이터 생성
     const answerPayload = {
-      memberId: 3,  // 예제 멤버 ID (실제 코드에서는 동적 설정 필요)
+      memberId: Number(SecureStorage.getMemberId()),
       content: content,
       accessLevel: selectedPublicOption,
       questionId: questionId,
       isSolved: !isIDK,
     };
 
-    // 풀었는지 여부를 서버에 전송하기 위한 데이터
-    const solvedAnswerPayload = {
-      memberId: 3,
-      questionId: questionId,
-      isSolved: !isIDK,
-    };
-
     try {
-      // 사용자가 첫 답변을 등록하는 경우, 추가 정보 전송
-      if (hasMyAnswers !== undefined && !hasMyAnswers) {
-        await dispatch(registServedAnswer(solvedAnswerPayload)).unwrap();
-      }
-
-      // 답변 데이터 서버에 전송
       await dispatch(registAnswer(answerPayload)).unwrap();
       
       // 성공적으로 답변이 등록된 경우 입력 필드를 초기화
@@ -106,13 +94,6 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
   return (
     <div className="answer-input-container">
-      {/* <div className="answer-title">
-        <span className="text-brackets">{"{"}</span> 답변하기 <span className="text-brackets">{"}"}</span>
-      </div>
-      <div className="answer-subtitle text-gray2">
-        면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!
-      </div> */}
-
       <PageHeader 
         title="답변하기"
         description="면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!"

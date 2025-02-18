@@ -10,6 +10,7 @@ import { FaEye, FaComment } from "react-icons/fa6";
 import SecureStorage from "../../store/services/token/SecureStorage";
 
 import "./ArticleDetail.css";
+import SecureStorage from "../../store/services/token/SecureStorage";
 
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
@@ -28,9 +29,10 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
   const { currentArticle, error } = useAppSelector(state => state.articles);
   const users = useAppSelector(state => state.user.users);
-  const currentUserId = SecureStorage.getMemberId();
+  const currentUserId = Number(SecureStorage.getMemberId());
 
   const fetchArticleData = useCallback(() => {
     if (articleId) {

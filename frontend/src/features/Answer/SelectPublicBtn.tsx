@@ -17,10 +17,10 @@ const SelectPublicBtn:React.FC<VisibilityOptionsProps> = ({selectedOption, onCha
         checked={selectedOption === 'PUBLIC'}
         onChange={onChange}
       />
-      <label htmlFor="PUBLIC">전체 공개</label>
+      <label htmlFor="PUBLIC" className='select-public-btn-item'>전체 공개</label>
     </div>
 
-    <div>
+    <div> 
       <input
         type="radio"
         id="PROTECTED"
@@ -29,7 +29,7 @@ const SelectPublicBtn:React.FC<VisibilityOptionsProps> = ({selectedOption, onCha
         checked={selectedOption === 'PROTECTED'}
         onChange={onChange}
       />
-      <label htmlFor="PROTECTED">친구 공개</label>
+      <label htmlFor="PROTECTED" className='select-public-btn-item'>친구 공개</label>
     </div>
 
     <div>
@@ -41,7 +41,7 @@ const SelectPublicBtn:React.FC<VisibilityOptionsProps> = ({selectedOption, onCha
         checked={selectedOption === 'PRIVATE'}
         onChange={onChange}
       />
-      <label htmlFor="PRIVATE">나만 보기</label>
+      <label htmlFor="PRIVATE" className='select-public-btn-item'>나만 보기</label>
     </div>
   </div>);
 }
