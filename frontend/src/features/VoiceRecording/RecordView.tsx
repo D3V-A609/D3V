@@ -42,7 +42,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
     if (!showButtons || isPaused || isRecordingStopped) return;
 
     startTimeRef.current = Date.now() - elapsedTime;
-    
+
   }, [showButtons, isPaused, isRecordingStopped]);
 
   // 타이머가 종료되었을 때 녹음을 자동으로 중지
@@ -137,7 +137,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
           padding: "10px",
           transition: "border-width 0.1s ease-in-out",  // 부드러운 애니메이션 효과
           boxShadow: isRecording
-          ? `0 0 ${borderSize * 7}px ${borderSize}px rgb(217, 233, 255)`
+          ? `0 0 ${borderSize * 10}px ${borderSize}px rgb(0, 114, 239)`
           : 'none',
         }}
         onClick={handleStartRecording}>
