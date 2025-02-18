@@ -3,6 +3,7 @@ package com.ssafy.d3v.backend.member.service;
 import static com.ssafy.d3v.backend.common.jwt.JwtTokenProvider.getRefreshTokenExpireTimeCookie;
 import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
+import com.ssafy.d3v.backend.bookmark.service.BookmarkService;
 import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
 import com.ssafy.d3v.backend.common.jwt.TokenInfo;
 import com.ssafy.d3v.backend.common.util.CookieUtil;
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.QueryTimeoutException;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,8 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
     private final HistoryRepository historyRepository;
+    @Lazy
+    private final BookmarkService bookmarkService;
 
     @Override
     public MemberResponse get(long memberId) {
@@ -165,6 +169,7 @@ public class MemberServiceImpl implements MemberService {
 
         memberRepository.save(member);
         historyRepository.save(history);
+        bookmarkService.createDefault(member);
 
         return Response.ok("회원가입에 성공하였습니다.");
     }

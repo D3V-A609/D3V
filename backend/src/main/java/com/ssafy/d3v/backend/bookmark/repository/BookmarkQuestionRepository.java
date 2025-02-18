@@ -34,6 +34,11 @@ public interface BookmarkQuestionRepository extends JpaRepository<BookmarkQuesti
     void deleteByQuestionIdAndBookmarkIds(@Param("questionId") Long questionId,
                                           @Param("bookmarkIds") List<Long> bookmarkIds);
 
+    @Query("SELECT COUNT(bq) > 0 FROM BookmarkQuestion bq " +
+            "JOIN bq.bookmark b " +
+            "WHERE bq.question.id = :questionId " +
+            "AND b.member.id = :memberId")
+    boolean existsByQuestionIdAndMemberId(@Param("questionId") Long questionId, @Param("memberId") Long memberId);
 
     void deleteByBookmarkIdAndQuestionId(Long bookmarkId, Long questionId);
 }
