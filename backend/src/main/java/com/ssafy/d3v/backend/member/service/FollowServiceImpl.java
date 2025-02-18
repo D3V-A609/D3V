@@ -23,7 +23,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     @Transactional
-    public void follow(Long followId) {
+    public FollowsResponse follow(Long followId) {
         String memberName = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberRepository.findMemberByEmail(memberName);
         Member followingMember = memberRepository.findById(followId).orElseThrow(() -> new RuntimeException("유저가 없어요"));
@@ -40,6 +40,15 @@ public class FollowServiceImpl implements FollowService {
                 .follower(member)
                 .following(followingMember)
                 .build());
+
+        List<FollowResponse> follows = followRepository.findAllByFollower(member)
+                .stream()
+                .map(follow -> FollowResponse.from(follow.getFollowing()))
+                .toList();
+        return FollowsResponse.builder()
+                .memberId(member.getId())
+                .follows(follows)
+                .build();
     }
 
     @Override
