@@ -15,6 +15,7 @@ interface RecordingContextProps {
   togglePauseResume: () => void; // 녹임 일시정지 및 재개 함수수
   stopRecording: () => void;  // 녹음 정지 함수
   resetRecording: () => void;
+  elapsedTime: number;
 }
 
 const RecordingContext = createContext<RecordingContextProps | undefined>(undefined);
@@ -29,6 +30,10 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [mediaBlob, setMediaBlob] = useState<Blob | undefined>(undefined);  // 녹음된 오디오 URL 저장
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recorderChunksRef = useRef<Blob[]>([]);
+
+  const [elapsedTime, setElapsedTime] = useState(0); // 녹음 경과 시간 관리
+  const [startTime, setStartTime] = useState(0);
+
 
   // audio visualizer을 위한 설정
   const [audioLevel, setAudioLevel] = useState(0);
@@ -64,10 +69,7 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if(recorderChunksRef.current.length > 0){
           const blob = new Blob(recorderChunksRef.current, { type: 'audio/webm'});
           setMediaBlob(blob);
-        }
-        // const url = URL.createObjectURL(blob);
-        // setMediaBlobUrl(url);
-        
+        }        
       };
 
       mediaRecorder.start();
@@ -76,6 +78,9 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setIsRecordingStopped(false);  // 녹음 종료 상태 초기화
       setStartRecordFirst(true);
       setAudioLevel(0);
+
+      // 정확한 시간 계산을 위해 startTime 설정
+      setStartTime(Date.now() - elapsedTime * 1000);
     });
   };
 
@@ -88,15 +93,24 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     stopAudioAnalysis();
 
     mediaRecorderRef.current?.stop();
+
+    setElapsedTime(0);
+    setStartTime(0);
   }
 
   // 녹음 일시정지/재개 핸들러
   const togglePauseResume = () => {
     if (isPaused) {
       mediaRecorderRef.current?.resume();  // 녹음 재개
+
+      // 일시정지 해제 시, 기존 경과 시간 유지
+      setStartTime(Date.now() - elapsedTime * 1000);
       setIsRecording(true);
     } else {
       mediaRecorderRef.current?.pause();  // 녹음 일시정지
+
+      setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+
       setIsRecording(false);
     }
     setIsPaused(!isPaused);  // 상태 반전
@@ -111,8 +125,27 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setMediaBlob(undefined);  // 오디오 URL 초기화
       setStartRecordFirst(false);
       recorderChunksRef.current = [];  // 녹음 데이터 초기화
+
+      setElapsedTime(0);
     }, 10);  // 상태 업데이트를 비동기적으로 반영
   };
+
+  useEffect(() => {
+    let animationFrameId: number;
+
+    const updateElapsedTime = () => {
+      if(isRecording && !isPaused){
+        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+        animationFrameId = requestAnimationFrame(updateElapsedTime);
+      }
+    };
+
+    if(isRecording){
+      animationFrameId = requestAnimationFrame(updateElapsedTime);
+    }
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isRecording, isPaused, startTime])
   
 
   // 오디오 비주얼라이저 설정
@@ -176,6 +209,7 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         stopRecording,
         togglePauseResume,
         resetRecording,
+        elapsedTime,
       }}
     >
       {children}
