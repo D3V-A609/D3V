@@ -2,12 +2,13 @@ import React from 'react'
 import FireFalse from '../../../assets/images/navbar/fire-false.png';
 import FireTrue from '../../../assets/images/navbar/fire-false.png';
 import { useAppSelector } from '../../../store/hooks/useRedux';
+import SecureStorage from '../../../store/services/token/SecureStorage';
 
 interface StreakProp {
   className?: string;
 }
 const Streak:React.FC<StreakProp> = ({className}) => {
-  const memberId = 3;
+  const memberId = Number(SecureStorage.getMemberId());
   const streak = useAppSelector((state) => state.historys.streak[memberId] || 0);
 
   return (

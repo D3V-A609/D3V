@@ -6,11 +6,12 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux';
 import { fetchHistory } from '../../../store/actions/historyActions';
 import Streak from './Streak';
 import { shallowEqual } from 'react-redux';
+import SecureStorage from '../../../store/services/token/SecureStorage';
 
 
 
 const StreakHeatMap: React.FC = () => {
-  const memberId = 3;
+  const memberId = Number(SecureStorage.getMemberId());
   const dispatch = useAppDispatch();
 
   const history = useAppSelector((state) => state.historys.history[memberId]?.data || [], shallowEqual);

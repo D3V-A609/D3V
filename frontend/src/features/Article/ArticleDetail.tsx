@@ -9,6 +9,7 @@ import EditArticle from "./EditArticle";
 import { FaEye, FaComment } from "react-icons/fa6";
 
 import "./ArticleDetail.css";
+import SecureStorage from "../../store/services/token/SecureStorage";
 
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
@@ -30,7 +31,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
     (state) => state.articles || { currentArticle: null, error: null }
   );
 
-  const currentUserId = 1; // 현재 사용자의 memberId를 1로 고정
+  const currentUserId = Number(SecureStorage.getMemberId()); 
 
   const fetchArticleData = useCallback(() => {
     if (articleId) {

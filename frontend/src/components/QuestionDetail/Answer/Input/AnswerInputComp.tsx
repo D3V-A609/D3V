@@ -69,7 +69,7 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
     // 서버에 전송할 답변 데이터 생성
     const answerPayload = {
-      memberId: 3,  // 예제 멤버 ID (실제 코드에서는 동적 설정 필요)
+      memberId: Number(SecureStorage.getMemberId()),
       content: content,
       accessLevel: selectedPublicOption,
       questionId: questionId,
@@ -106,13 +106,6 @@ const AnswerInputComp: React.FC<AnswerInputCompProps> = ({
 
   return (
     <div className="answer-input-container">
-      {/* <div className="answer-title">
-        <span className="text-brackets">{"{"}</span> 답변하기 <span className="text-brackets">{"}"}</span>
-      </div>
-      <div className="answer-subtitle text-gray2">
-        면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!
-      </div> */}
-
       <PageHeader 
         title="답변하기"
         description="면접 질문에 대한 답변을 연습하고, 타이머와 음성 기능으로 실전처럼 준비해보세요!"

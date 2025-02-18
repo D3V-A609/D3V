@@ -4,6 +4,7 @@ import { fetchComments } from "../../store/actions/commentActions";
 import CommentItem from "./CommentItem";
 import Pagination from "../../components/Pagination/Pagination";
 import "./CommentList.css";
+import SecureStorage from "../../store/services/token/SecureStorage";
 
 interface CommentListProps {
   articleId: number;
@@ -30,7 +31,7 @@ const CommentList: React.FC<CommentListProps> = ({ articleId }) => {
         <CommentItem
           key={comment.id}
           comment={comment}
-          isAuthor={comment.memberId === 1} // 현재 사용자의 ID를 1로 가정
+          isAuthor={comment.memberId === Number(SecureStorage.getMemberId())} 
           articleId={articleId}
         />
       ))}
