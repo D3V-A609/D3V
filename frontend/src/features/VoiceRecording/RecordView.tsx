@@ -18,8 +18,6 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   const dispatch = useAppDispatch();
 
   const { remainingTime, startTimer, resetTimer, formatTime, selectedTime } = useTimer();  // 타이머 관리
-  // const [elapsedRecordingTime, setElapsedRecordingTime] = useState(0);  // 경과 시간 관리
-  const [elapsedTime, setElapsedTime] = useState(0);  // 경과 시간
   const [showButtons, setShowButtons] = useState(false);  // 하단 버튼 표시 여부
 
   const {
@@ -33,7 +31,8 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
     stopRecording,
     togglePauseResume,
     resetRecording,
-    exitRecordingMode
+    exitRecordingMode,
+    elapsedTime,
   } = useRecordingContext();
 
   const startTimeRef = useRef<number | null>(null);
@@ -42,17 +41,8 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   useEffect(() => {
     if (!showButtons || isPaused || isRecordingStopped) return;
 
-    startTimeRef.current = Date.now();
+    startTimeRef.current = Date.now() - elapsedTime;
 
-    const timerId = setInterval(() => {
-      if(startTimeRef.current){
-        const now = Date.now();
-        const actualElapsedTime = Math.floor((now - startTimeRef.current) / 1000);
-        setElapsedTime(actualElapsedTime);
-      }
-    }, 1000);
-
-    return () => clearInterval(timerId);
   }, [showButtons, isPaused, isRecordingStopped]);
 
   // 타이머가 종료되었을 때 녹음을 자동으로 중지
@@ -73,7 +63,6 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   // 녹음 시작 핸들러
   const handleStartRecording = () => {
     if(isRecording || isStartRecordFirst) return;
-    setElapsedTime(0);  // 경과 시간 초기화
     setShowButtons(true);  // 하단 버튼 표시
 
     if(selectedTime){
@@ -98,7 +87,6 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
       resetTimer();  // 타이머 완전히 초기화
     }
 
-    setElapsedTime(0);  // 경과 시간 초기화
     setShowButtons(false);  // 하단 버튼 숨기기
   };
 
@@ -114,21 +102,12 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   // 서버로 녹음 파일 데이터 전송 버튼
   const uploadRecording = (mediaBlob: Blob) => {
     if(mediaBlob){
-      // const formData = new FormData();
-      // formData.append('audio', mediaBlob);
       dispatch(sendVoiceRecording(mediaBlob));
     }
-      // fetch(mediaBlob)
-      //   .then((response) => response.blob())
-      //   .then((blob) => {
-      //     dispatch(sendVoiceRecording(blob));  // 녹음 데이터 서버로 전송
-      //   });
-    // }
   }
 
   const handleSubmitRecording = (mediaBlob: Blob | undefined) => {
     if(!mediaBlob) return;
-    // const blobUrl = URL.createObjectURL(mediaBlob);
     uploadRecording(mediaBlob);
     exitRecordingMode();
   }
@@ -158,7 +137,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
           padding: "10px",
           transition: "border-width 0.1s ease-in-out",  // 부드러운 애니메이션 효과
           boxShadow: isRecording
-          ? `0 0 ${borderSize * 7}px ${borderSize}px rgb(217, 233, 255)`
+          ? `0 0 ${borderSize * 10}px ${borderSize}px rgb(0, 114, 239)`
           : 'none',
         }}
         onClick={handleStartRecording}>
