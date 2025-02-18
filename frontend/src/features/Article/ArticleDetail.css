@@ -10,7 +10,7 @@
   align-items: center;
   margin-top: 10px;
   padding: 10px 0px 8px 0px; /* 상하좌우 여백 */
-  border-bottom: 3px solid #d9e9ff;
+  border-bottom: 2px solid #d9e9ff;
 }
 
 .back-button {
@@ -40,7 +40,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0px 30px 5px;
   background-color: #ffffff;
   width: 100%;
   border-bottom: 1px solid #d9e9ff; /* 하단 선 */
@@ -48,10 +47,10 @@
 
 .detail-info .title-row {
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  gap: 20px;
+  padding: 0px 0px 0px 30px;
 }
 
 .detail-info .category {
@@ -65,13 +64,16 @@
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 22px;
   font-weight: bold;
+  text-align: left;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .meta-row {
   display: flex;
   justify-content: space-between; /* 양쪽 끝 정렬 */
   align-items: center; /* 세로 정렬 */
-  padding: 0px;
+  padding: 0px 30px 0px;
   width: 100%; /* 전체 너비 */
 }
 

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../../store/hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
 import { updateComment, deleteComment } from "../../store/actions/commentActions";
-import dummyUsers from "../../constants/dummyUsers";
 import { Comment } from "../../store/slices/commentSlice";
 import Profile from "../../components/Profile/Profile";
 import "./CommentItem.css";
@@ -17,7 +16,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isAuthor, articleId 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
 
-  const member = dummyUsers.find((user) => user.memberId === comment.memberId);
+  const users = useAppSelector(state => state.user.users);
+  const author = users[comment.memberId];
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -50,13 +50,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isAuthor, articleId 
   return (
     <li className="comment-item">
     <div className="comment-profile">
-      {member ? (
+      {author ? (
         <Profile
-          profileImg={member.profileImg}
-          favoriteJob={member.jobField}
-          nickname={member.nickname}
+          profileImg={author.profileImg}
+          favoriteJob={author.favoriteJob}
+          nickname={author.nickname}
         />
-      ) : (
+        ) : (
         <span>사용자 정보 없음</span>
       )}
     </div>
