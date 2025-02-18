@@ -43,6 +43,10 @@ interface DuplicationResponse {
   status?: number;
 }
 
+interface UpdateProfileResponse {
+  message: string;
+}
+
 // API 함수 정의
 export const authApi = {
   // 로컬 로그인
@@ -60,6 +64,16 @@ export const authApi = {
   // 회원가입
   signup: async (data: FormData) => { 
     const response = await api.post<SignupResponse>('/member/signup', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // 회원 정보 수정
+  updateProfile: async (data: FormData): Promise<UpdateProfileResponse> => {
+    const response = await api.patch<UpdateProfileResponse>('/member', data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -100,7 +114,45 @@ export const authApi = {
       };
     }
   }
-  
+
+  // CORS 부분 해결하면 아래 코드로 대체하고자 함
+  // // 이메일 중복 확인
+  // checkEmailDuplication: async (email: string): Promise<DuplicationResponse> => {
+  //   try {
+  //     const response = await api.get<DuplicationResponse>(`/member/email/duplication?email=${email}`);
+  //     return {
+  //       message: response.data.message,
+  //       result: false // 사용 가능한 경우
+  //     };
+  //   } catch (error: any) {
+  //     if (error.response?.status === 400) {
+  //       return {
+  //         message: error.response.data.message,
+  //         result: true // 중복인 경우
+  //       };
+  //     }
+  //     throw error; // 기타 에러의 경우 상위로 전파
+  //   }
+  // },
+
+  // // 닉네임 중복 확인
+  // checkNicknameDuplication: async (nickname: string): Promise<DuplicationResponse> => {
+  //   try {
+  //     const response = await api.get<DuplicationResponse>(`/member/nickname/duplication?nickname=${nickname}`);
+  //     return {
+  //       message: response.data.message,
+  //       result: false // 사용 가능한 경우
+  //     };
+  //   } catch (error: any) {
+  //     if (error.response?.status === 400) {
+  //       return {
+  //         message: error.response.data.message,
+  //         result: true // 중복인 경우
+  //       };
+  //     }
+  //     throw error; // 기타 에러의 경우 상위로 전파
+  //   }
+  // }
 };
 
 export default authApi;

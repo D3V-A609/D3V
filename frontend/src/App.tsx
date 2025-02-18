@@ -33,6 +33,7 @@ import Step1 from './pages/Auth/SignupSteps/Step1.tsx';
 import Step2 from './pages/Auth/SignupSteps/Step2.tsx';
 import Step3 from './pages/Auth/SignupSteps/Step3.tsx';
 import ProtectedSignupRoute from './components/Auth/ProtectedSignupRoute.tsx';
+import EditProfile from './pages/Auth/EditProfile/EditProfile';
 
 // Context Providers
 import { RecordingProvider } from './context/RecordingContext.tsx';
@@ -139,6 +140,10 @@ function App() {
               </RecordingProvider>
             </ProtectedRoute>
           )
+        },
+        { 
+          path: '/EditProfile', 
+          element: <ProtectedRoute><EditProfile /></ProtectedRoute>
         }
       ],
     },

@@ -1,0 +1,222 @@
+/* EditProfile.css */
+.edit-profile-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.edit-profile-container .edit-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid #eee;
+  height: 88px;
+}
+
+.edit-profile-container .edit-profile-header h1 {
+  font-size: 24px;
+  color: #333;
+  font-weight: 500;
+  margin: 0;
+}
+
+.edit-profile-container .edit-profile-body {
+  display: flex;
+}
+
+.edit-profile-container .profile-sidebar {
+  width: 30%;
+  padding: 30px;
+}
+
+.edit-profile-container .profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.edit-profile-container .profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 5px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-profile-container .change-profile-button {
+  padding: 12px 20px;
+  background-color: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.edit-profile-container .change-profile-button:hover {
+  background-color: #ddd;
+}
+
+.edit-profile-container .profile-content {
+  width: 70%;
+  padding-left: 30px;
+}
+
+.edit-profile-container .form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.edit-profile-container .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-profile-container .form-group label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.edit-profile-container .form-group input {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s;
+}
+
+.edit-profile-container .form-group input:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.edit-profile-container .email-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-profile-container .email-input-wrapper input {
+  flex-grow: 1;
+}
+
+.edit-profile-container .email-verified {
+  display: flex;
+  align-items: center;
+  color: #28a745;
+  font-size: 16px;
+}
+
+.edit-profile-container .email-verified svg {
+  margin-right: 8px;
+}
+
+.edit-profile-container .verify-email-button {
+  padding: 10px 16px;
+  background-color: var(--color-blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  white-space: nowrap;
+  height: 48px;
+  line-height: 24px;
+}
+
+.edit-profile-container .verify-email-button:hover {
+  background-color: #0056b3;
+}
+
+.edit-profile-container .save-button {
+  padding: 16px 25px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 18px;
+  margin-top: 40px;
+}
+
+.edit-profile-container .save-button:hover {
+  background-color: #1e7e34;
+}
+
+.edit-profile-container .password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.edit-profile-container .password-input-wrapper input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.edit-profile-container .password-input-wrapper input:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.edit-profile-container .password-toggle {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.edit-profile-container .password-toggle:hover {
+  color: var(--color-blue);
+}
+
+.edit-profile-container .password-toggle:focus {
+  outline: none;
+}
+
+.edit-profile-container .error-message {
+  color: #dc3545; /* Bootstrap의 에러 색상 */
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+.edit-profile-container .success-message {
+  color: #198754;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  text-align: left;
+}
