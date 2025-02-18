@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "../../../pages/QuestionDetailPage.css";
 
 import { MdCalendarToday } from "react-icons/md";
 import { RiBookmarkLine } from "react-icons/ri";
 import QuestionSkillTag from './QuestionSkillTag';
+import BookmarkModal from '../../Bookmark/BookmarkModal';
 
 interface QuestionContentCardProps {
   question: Question;
@@ -17,6 +18,16 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
   }).format(new Date());
 
 
+  const [isBookmarkModalOpen, setBookmarkModalOpen] = useState(false); // 모달 상태
+
+  const handleBookmarkClick = () => {
+    setBookmarkModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setBookmarkModalOpen(false); // 모달 닫기
+  };
+
   return (
   <div className="question-detail_question-content">
     {/* today 질문의 경우에만 달력으로 날짜 표시 */}
@@ -29,7 +40,7 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
     <div className="question-content_question-card-body">
       <div className="question-content_question-card-body_top">
         <span className="question-label">Q.</span>
-        <RiBookmarkLine size={20} />
+        <RiBookmarkLine size={20} onClick={handleBookmarkClick} style={{ cursor: 'pointer' }} />
       </div>
       <div className="question-text">
         {question.content}
@@ -40,6 +51,10 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
         ))}
       </div>
     </div>
+    {/* 북마크 모달 */}
+    {isBookmarkModalOpen && (
+        <BookmarkModal questionId={question.id} onClose={handleCloseModal} />
+    )}
   </div>);
 }
 

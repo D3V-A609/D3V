@@ -10,7 +10,6 @@ import { FaEye, FaComment } from "react-icons/fa6";
 import SecureStorage from "../../store/services/token/SecureStorage";
 
 import "./ArticleDetail.css";
-import SecureStorage from "../../store/services/token/SecureStorage";
 
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
