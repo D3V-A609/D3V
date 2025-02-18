@@ -132,6 +132,7 @@ public class WebSecurityConfig {
 
         // 허용할 Origin 설정 (와일드카드 제거, 정확한 도메인만 허용)
         configuration.setAllowedOriginPatterns(List.of(
+                "https://i12a609.p.ssafy.io/",
                 "https://d3v.asia",
                 "http://localhost:5173"
         ));
