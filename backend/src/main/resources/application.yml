@@ -111,4 +111,4 @@ jwt:
 
 app:
   oauth2:
-    authorizedRedirectUris: https://i12a609.p.ssafy.io/oauth/redirect
+    authorizedRedirectUris: https://d3v.asia/oauth/redirect
