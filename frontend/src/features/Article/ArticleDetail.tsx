@@ -21,9 +21,10 @@ const categoryNameMap: Record<string, string> = {
 interface ArticleDetailProps {
   articleId: number;
   onBackClick: (isDeleted?: boolean) => void;
+  userInfo: { [key: number]: User };
 }
 
-const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick }) => {
+const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, userInfo }) => {
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -44,15 +45,15 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick })
   }, [fetchArticleData, isDeleting]);
 
   useEffect(() => {
-    if (currentArticle) {
+    if (currentArticle && !userInfo[currentArticle.memberId]) {
       dispatch(fetchMultipleUserInfo([currentArticle.memberId]));
     }
-  }, [dispatch, currentArticle]);
+  }, [dispatch, currentArticle, userInfo]);
 
   if (error) return <div>{error}</div>;
   if (!currentArticle) return null;
 
-  const author = users[currentArticle.memberId];
+  const author = userInfo[currentArticle.memberId] || users[currentArticle.memberId];
   const isAuthor = currentArticle.memberId === currentUserId;
 
   const handleEdit = () => {

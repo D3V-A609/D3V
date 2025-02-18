@@ -90,8 +90,7 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
   };
 
   return (
-    <div className="write-article">
-      {/* 상단 헤더 */}
+    <div className="article-write-article">
       <div className="detail-header">
         <button className="back-button" onClick={onCancel}>
           목록
@@ -99,17 +98,16 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* 카테고리 */}
-        <div className="form-group">
-          <label htmlFor="category" className="form-label">
-            카테고리<span className="required">*</span>
+        <div className="article-form-group">
+          <label htmlFor="category" className="article-form-label">
+            카테고리<span className="article-required">*</span>
           </label>
           <select
             id="category"
             value={categoryId || ""}
             onChange={(e) => setCategoryId(Number(e.target.value))}
             required
-            className={`form-select ${errors.category ? "error-border" : ""}`}
+            className={`article-form-select ${errors.category ? "article-error-border" : ""}`}
           >
             <option value="" disabled>
               카테고리를 선택해주세요
@@ -120,13 +118,12 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
               </option>
             ))}
           </select>
-          {errors.category && <span className="error-message">{errors.category}</span>}
+          {errors.category && <span className="article-error-message">{errors.category}</span>}
         </div>
 
-        {/* 제목 */}
-        <div className="form-group">
-          <label htmlFor="title" className="form-label">
-            제목<span className="required">*</span>
+        <div className="article-form-group">
+          <label htmlFor="title" className="article-form-label">
+            제목<span className="article-required">*</span>
           </label>
           <input
             id="title"
@@ -135,15 +132,14 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className={`form-input ${errors.title ? "error-border" : ""}`}
+            className={`article-form-input ${errors.title ? "article-error-border" : ""}`}
           />
-          {errors.title && <span className="error-message">{errors.title}</span>}
+          {errors.title && <span className="article-error-message">{errors.title}</span>}
         </div>
 
-        {/* 내용 */}
-        <div className="form-group">
-          <label htmlFor="content" className="form-label">
-            내용<span className="required">*</span>
+        <div className="article-form-group">
+          <label htmlFor="content" className="article-form-label">
+            내용<span className="article-required">*</span>
           </label>
           <ReactQuill
             theme="snow"
@@ -151,17 +147,16 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
             onChange={setContent}
             placeholder="내용을 입력해주세요"
             modules={quillModules}
-            className="quill-editor"
+            className="article-quill-editor"
           />
-          {errors.content && <span className="error-message">{errors.content}</span>}
+          {errors.content && <span className="article-error-message">{errors.content}</span>}
         </div>
 
-        {/* 이미지 첨부 */}
-        <div className="form-group image-upload">
-          <label htmlFor="images" className="form-label">
+        <div className="article-form-group article-image-upload">
+          <label htmlFor="images" className="article-form-label">
             이미지 첨부
           </label>
-          <div className="form-group image-input">
+          <div className="article-form-group article-image-input">
             <input
                 id="images"
                 type="file"
@@ -169,20 +164,18 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
                 multiple
                 onChange={handleImageChange}
             />
-            {/* 설명 추가 */}
-            <small className="image-description">
+            <small className="article-image-description">
                 * 허용된 확장자: jpg, jpeg, png, gif / 파일 최대 크기: {MAX_FILE_SIZE_MB}MB
             </small>
-            {errors.images && <span className="error-message">{errors.images}</span>}
+            {errors.images && <span className="article-error-message">{errors.images}</span>}
           </div>
         </div>
 
-        {/* 버튼 */}
-        <div className="form-buttons">
-          <button type="button" className="cancel-button" onClick={onCancel}>
+        <div className="article-form-buttons">
+          <button type="button" className="article-cancel-button" onClick={onCancel}>
             취소
           </button>
-          <button type="submit" className="submit-button">
+          <button type="submit" className="article-submit-button">
             등록
           </button>
         </div>

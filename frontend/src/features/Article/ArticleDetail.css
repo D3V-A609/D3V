@@ -10,7 +10,7 @@
   align-items: center;
   margin-top: 10px;
   padding: 10px 0px 8px 0px; /* 상하좌우 여백 */
-  border-bottom: 3px solid #d9e9ff;
+  border-bottom: 2px solid #d9e9ff;
 }
 
 .back-button {

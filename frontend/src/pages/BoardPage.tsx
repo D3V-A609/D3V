@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchArticles } from "../store/actions/articleActions";
-import { fetchMultipleUserInfo } from "../store/actions/userActions";
+import { useAppSelector, useAppDispatch } from "../store/hooks/useRedux";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
@@ -9,7 +7,7 @@ import WriteArticle from "../features/Article/WriteArticle";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
-import { useLocation } from "react-router-dom";
+import { fetchArticles } from "../store/actions/articleActions";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -21,10 +19,7 @@ const categoryMap: Record<string, string> = {
 
 const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const { articles, error, pagination } = useAppSelector(
-    (state) => state.articles || { articles: [], error: null, pagination: undefined }
-  );
+  const { users } = useAppSelector(state => state.user);
   const [params, setParams] = useState({
     category: "전체",
     searchQuery: "",
@@ -37,39 +32,27 @@ const BoardPage: React.FC = () => {
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
 
   const fetchArticlesData = useCallback(() => {
-    if (currentView === "list") {
-      const apiCategory = categoryMap[params.category];
-      dispatch(fetchArticles({ 
-        category: apiCategory, 
-        keyword: params.searchQuery, 
-        sort: params.sortField, 
-        order: params.sortOrder,
-        page: params.page,
-        size: params.size
-      }));
-    }
-  }, [dispatch, currentView, params]);
-
+    const apiCategory = categoryMap[params.category];
+    dispatch(fetchArticles({ 
+      category: apiCategory, 
+      keyword: params.searchQuery, 
+      sort: params.sortField, 
+      order: params.sortOrder,
+      page: params.page,
+      size: params.size
+    }));
+  }, [dispatch, params]);
+  
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData]);
 
-  useEffect(() => {
-    if (articles.length > 0) {
-      const userIds = articles.map(article => article.memberId);
-      dispatch(fetchMultipleUserInfo(userIds));
-    }
-  }, [dispatch, articles]);
-
-  useEffect(() => {
-    if(location.state?.selectedArticleId && location.state?.currentView){
-      setSelectedArticleId(location.state.selectedArticleId);
-      setCurrentView(location.state.currentView);
-    }
-  }, [location.state]);
-
   const handleParamChange = (newParams: Partial<typeof params>) => {
-    setParams(prev => ({ ...prev, ...newParams, page: 1 }));
+    setParams(prev => {
+      const updatedParams = { ...prev, ...newParams, page: 1 };
+      fetchArticlesData();
+      return updatedParams;
+    });
   };
 
   const handleWriteClick = () => setCurrentView("create");
@@ -85,8 +68,6 @@ const BoardPage: React.FC = () => {
       fetchArticlesData();
     }
   }, [fetchArticlesData]);
-
-  if (error) return <div>Error occurred: {error}</div>;
 
   return (
     <div className="board-page">
@@ -122,12 +103,9 @@ const BoardPage: React.FC = () => {
           />
 
           <ArticleList
-            articles={articles}
-            pagination={pagination}
-            onPageChange={(pageNumber) => handleParamChange({ page: pageNumber - 1 })}
-            onSort={(field, order) => handleParamChange({ sortField: field, sortOrder: order })}
+            params={params}
+            onParamChange={handleParamChange}
             onArticleClick={handleArticleClick}
-            currentSort={{ field: params.sortField, order: params.sortOrder }}
           />
         </>
       )}
@@ -136,6 +114,7 @@ const BoardPage: React.FC = () => {
         <ArticleDetail
           articleId={selectedArticleId}
           onBackClick={handleBackToList}
+          userInfo={users}
         />
       )}
 

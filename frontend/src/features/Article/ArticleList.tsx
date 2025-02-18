@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../store/hooks/useRedux";
+import React, { useEffect, useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
+import { fetchArticles } from "../../store/actions/articleActions";
 import { fetchMultipleUserInfo } from "../../store/actions/userActions";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ArticleList.css";
@@ -11,63 +12,62 @@ const categoryNameMap: Record<string, string> = {
   ETC: "기타",
 };
 
-interface Article {
-  id: number;
-  memberId: number;
-  name: string;
-  title: string;
-  view: number;
-  commentCount: number;
-  createdAt: string;
-}
-
-interface Pagination {
-  totalRecords: number;
-  currentPage: number;
-  totalPages: number;
-}
-
 interface ArticleListProps {
-  articles: Article[];
-  pagination?: Pagination;
-  onPageChange(pageNumber: number): void;
-  onSort(field: string, order: 'ASC' | 'DESC'): void;
-  onArticleClick(articleId: number): void;
-  currentSort: {
-    field: string;
-    order: 'ASC' | 'DESC';
+  params: {
+    category: string;
+    searchQuery: string;
+    sortField: string;
+    sortOrder: 'ASC' | 'DESC';
+    page: number;
+    size: number;
   };
+  onParamChange: (newParams: Partial<ArticleListProps['params']>) => void;
+  onArticleClick: (articleId: number) => void;
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({
-  articles,
-  pagination,
-  onPageChange,
-  onSort,
+  params,
+  onParamChange,
   onArticleClick,
-  currentSort,
 }) => {
   const dispatch = useAppDispatch();
-  const users = useAppSelector((state) => state.user.users);
+  const { articles, error, pagination } = useAppSelector(
+    (state) => state.articles || { articles: [], error: null, pagination: undefined }
+  );
+  const { users } = useAppSelector((state) => state.user);
+
+  const fetchArticlesData = useCallback(() => {
+    const apiCategory = categoryNameMap[params.category] || "";
+    dispatch(fetchArticles({ 
+      category: apiCategory, 
+      keyword: params.searchQuery, 
+      sort: params.sortField, 
+      order: params.sortOrder,
+      page: params.page,
+      size: params.size
+    })).then((action) => {
+      if (fetchArticles.fulfilled.match(action)) {
+        const userIds = [...new Set(action.payload.data.map((article: Article) => article.memberId))] as number[];
+        dispatch(fetchMultipleUserInfo(userIds));
+      }
+    });
+  }, [dispatch, params]);
 
   useEffect(() => {
-    if (articles.length > 0) {
-      const uniqueMemberIds = [...new Set(articles.map(article => article.memberId))];
-      dispatch(fetchMultipleUserInfo(uniqueMemberIds));
-    }
-  }, [articles, dispatch]);
-
+    fetchArticlesData();
+  }, [fetchArticlesData, params]);
+  
   const handleSort = (field: string) => {
-    const newOrder = currentSort.field === field && currentSort.order === 'DESC' ? 'ASC' : 'DESC';
-    onSort(field, newOrder);
+    const newOrder = params.sortField === field && params.sortOrder === 'DESC' ? 'ASC' : 'DESC';
+    onParamChange({ sortField: field, sortOrder: newOrder });
   };
 
   const renderSortIcon = (field: string) => {
-    if (currentSort.field !== field) return '▽';
-    return currentSort.order === 'ASC' ? '▲' : '▼';
+    if (params.sortField !== field) return '▽';
+    return params.sortOrder === 'ASC' ? '▲' : '▼';
   };
 
-  
+  if (error) return <div>Error occurred: {error}</div>;
 
   return (
     <div className="article-list">
@@ -85,6 +85,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
             <th onClick={() => handleSort('VIEW')} style={{ cursor: 'pointer' }}>
               조회 수 {renderSortIcon('VIEW')}
             </th>
+            <th>작성자</th>
           </tr>
         </thead>
         <tbody>
@@ -92,10 +93,23 @@ const ArticleList: React.FC<ArticleListProps> = ({
             <tr key={article.id} onClick={() => onArticleClick(article.id)}>
               <td>{categoryNameMap[article.name] || article.name}</td>
               <td>{article.title}</td>
-              <td>{users[article.memberId]?.nickname || '알 수 없음'}</td>
               <td>{new Date(article.createdAt).toLocaleDateString()}</td>
               <td>{article.commentCount}</td>
               <td>{article.view}</td>
+              <td className="author-cell">
+                {users[article.memberId] && (
+                  <>
+                    <img 
+                      src={users[article.memberId].profileImg || '/default-profile.png'} 
+                      alt={users[article.memberId].nickname} 
+                      className="author-profile-image"
+                    />
+                    <span title={users[article.memberId].nickname}>
+                      {users[article.memberId].nickname || '알 수 없음'}
+                    </span>
+                  </>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -107,7 +121,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
           totalPages={pagination.totalPages}
           first={pagination.currentPage === 1}
           last={pagination.currentPage === pagination.totalPages}
-          onPageChange={(page) => onPageChange(page + 1)}
+          onPageChange={(page) => onParamChange({ page: page + 1 })}
         />
       )}
     </div>
