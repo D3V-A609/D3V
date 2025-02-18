@@ -7,8 +7,6 @@ import Profile from "../../components/Profile/Profile";
 import CommentList from "../Comment/CommentList";
 import EditArticle from "./EditArticle";
 import { FaEye, FaComment } from "react-icons/fa6";
-import SecureStorage from "../../store/services/token/SecureStorage";
-
 import "./ArticleDetail.css";
 import SecureStorage from "../../store/services/token/SecureStorage";
 
