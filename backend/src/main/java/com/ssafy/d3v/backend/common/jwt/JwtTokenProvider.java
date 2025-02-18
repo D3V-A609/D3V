@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
-    private final String serverUrl = "https://i12a609.p.ssafy.io";
+    private final String serverUrl = "https://d3v.asia";
     private final String clientUrl = "https://d3v.asia";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
