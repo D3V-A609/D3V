@@ -222,6 +222,25 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     }
 
+    @Override
+    @Transactional
+    public void createDefault(Member member) {
+        Bookmark defaultBookmark = Bookmark.builder()
+                .member(member)
+                .name("기본 북마크")
+                .accessLevel(AccessLevel.PUBLIC)
+                .description("기본 북마크입니다.")
+                .build();
+        bookmarkRepository.save(defaultBookmark);
+    }
+
+    @Override
+    public boolean isBookmarkedQuestion(Long questionId) {
+        String memberName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(memberName);
+        return bookmarkQuestionRepository.existsByQuestionIdAndMemberId(questionId, member.getId());
+    }
+
 
     private boolean isAccessible(Bookmark bookmark) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
