@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { setCurrentStep, updateSignupForm } from "../../../store/slices/authSlice";
+import authApi from '../../../store/services/authApi';
 import "./Step2.css";
 
 const Step2: React.FC = () => {
@@ -9,7 +10,9 @@ const Step2: React.FC = () => {
   const dispatch = useDispatch();
   const [profileImage, setProfileImage] = useState<File | undefined>(undefined);
   const [nickname, setNickname] = useState('');
-  const [githubUrl, setgithubUrl] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
   const MAX_FILE_SIZE_MB = 5;
   const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif"];
@@ -35,14 +38,54 @@ const Step2: React.FC = () => {
     }
   };
 
-  const handleNext = (e: React.FormEvent) => {
+  // 닉네임 중복 검사
+  const handleNicknameBlur = async () => {
+    if (!nickname.trim()) {
+      return;
+    }
+
+    try {
+      const response = await authApi.checkNicknameDuplication(nickname);
+      if (response.result) { // true면 중복
+        setError(response.message);
+        setMessage('');
+      } else { // false면 사용 가능
+        setMessage('사용 가능한 닉네임입니다.');
+        setError('');
+      }
+    } catch (error) {
+      setError('닉네임 중복 확인에 실패했습니다.');
+      setMessage('');
+    }
+  };
+
+  const validateForm = async () => {
+    if (!nickname.trim()) {
+      setError('닉네임을 입력해주세요.');
+      return false;
+    }
+
+    try {
+      const response = await authApi.checkNicknameDuplication(nickname);
+      if (response.result) {
+        setError(response.message);
+        return false;
+      }
+      return true;
+    } catch (error) {
+      setError('닉네임 중복 확인에 실패했습니다.');
+      return false;
+    }
+  };
+
+  const handleNext = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (nickname.trim()) {
-      // Redux store에는 기본 정보만 저장
+    
+    if (await validateForm()) {
       dispatch(updateSignupForm({
         nickname,
         githubUrl,
-        profileImage, // 이미지 파일도 함께 저장
+        profileImage,
       }));
       dispatch(setCurrentStep(3));      
       navigate('/auth/signup/complete');
@@ -77,22 +120,25 @@ const Step2: React.FC = () => {
             className="hidden"
           />
         </div>
-        <div className="form-group">
+        <div className="signup-form-group">
           <label>닉네임 *</label>
           <input
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
+            onBlur={handleNicknameBlur}
             placeholder="닉네임을 입력해주세요"
             required
           />
+          {error && <span className="signup-error-message">{error}</span>}
+          {message && <span className="signup-success-message">{message}</span>}
         </div>
-        <div className="form-group">
+        <div className="signup-form-group">
           <label>Github 아이디 (선택사항)</label>
           <input
             type="text"
             value={githubUrl}
-            onChange={(e) => setgithubUrl(e.target.value)}
+            onChange={(e) => setGithubUrl(e.target.value)}
             placeholder="Github 아이디를 입력해주세요"
           />
         </div>
