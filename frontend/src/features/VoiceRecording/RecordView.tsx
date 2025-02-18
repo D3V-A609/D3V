@@ -109,6 +109,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   const handleSubmitRecording = (mediaBlob: Blob | undefined) => {
     if(!mediaBlob) return;
     uploadRecording(mediaBlob);
+    handleReset();
     exitRecordingMode();
   }
 
