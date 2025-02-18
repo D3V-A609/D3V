@@ -4,16 +4,12 @@ import kakaoIcon from '../../assets/images/social/kakao-icon.png'
 import naverIcon from '../../assets/images/social/naver-icon.png'
 import googleIcon from '../../assets/images/social/google-icon.svg'
 
-
 const SocialLogin: React.FC = () => {  
   const handleSocialLogin = (provider: string) => (e: React.MouseEvent) => {
     e.preventDefault();
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const OAUTH_URI = import.meta.env[`VITE_${provider}_OAUTH_URI`];
-    const REDIRECT_URI = `${BASE_URL}/oauth/redirect`;
-    
-    const authUrl = `${OAUTH_URI}?redirect_uri=${REDIRECT_URI}`;
-    window.location.href = authUrl;    
+    const REDIRECT_URI = import.meta.env[`VITE_${provider}_OAUTH_URI`];
+    window.location.href = REDIRECT_URI;
+
   };
 
   return (

@@ -14,7 +14,6 @@ const OAuthCallback = () => {
     const handleCallback = () => {
       const searchParams = new URLSearchParams(location.search);
       const accessToken = searchParams.get('accessToken');
-
       if (accessToken) {
         // 토큰 저장
         TokenService.setAccessToken(accessToken);
