@@ -20,6 +20,7 @@ import { ImFolderOpen } from 'react-icons/im';
  */
 const AllQuestionPage:React.FC = () => {
   const location = useLocation();
+  const state = location.state as {solved?: string};
   const initialJobFilter = location.state?.initialJobFilter || [];
   // Redux 상태 관리
   const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ const AllQuestionPage:React.FC = () => {
     order: 'desc',
     jobs: initialJobFilter,
     skills: [],
-    solved: undefined,
+    solved: state?.solved as QuestionStatus || undefined,
     keyword: undefined
   });
 

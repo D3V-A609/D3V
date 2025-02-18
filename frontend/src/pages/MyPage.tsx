@@ -16,27 +16,26 @@ import { FiThumbsUp } from "react-icons/fi";
 import { GoComment } from "react-icons/go";
 import ContentPreviewList from '../components/MyPage/ContentPreviewList';
 import { fetchMyLastedQuestions } from '../store/actions/questionActions';
-import { QuestionState, setSelectedQuestionId } from '../store/slices/questionSlice';
+import { QuestionState } from '../store/slices/questionSlice';
 import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 import { ArticleState } from '../store/slices/articleSlice';
 import { fetchMyArticles, fetchMyArticleComments } from '../store/actions/articleActions';
 import SecureStorage from '../store/services/token/SecureStorage';
 import { UserState } from '../store/slices/userSlice';
-import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, unFollow } from '../store/actions/userActions';
+import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, follow, unFollow } from '../store/actions/userActions';
 import { AnswerState } from '../store/slices/answerSlice';
 import { fetchLikedAnswers, fetchMyFeedback } from '../store/actions/answerActions';
 import { useNavigate } from 'react-router-dom';
 import ContentMoreListView from '../components/MyPage/ContentMoreListView';
 import FollowModalView from '../components/MyPage/FollowModalView';
+import { moveToAllQuesitons } from '../utils/navigation';
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const UserInfoCompMemo = React.memo(UserInfoComp);
     const SectionContainerMemo = React.memo(SectionContainer);
-    const ContentPreviewListMemo = React.memo(ContentPreviewList, (prevProps, nextProps) => {
-        return prevProps.contents === nextProps.contents;
-    });
+    const ContentPreviewListMemo = React.memo(ContentPreviewList);
 
     // ===== icon ======
     const icons = {
@@ -92,52 +91,25 @@ const MyPage:React.FC = () => {
             ]);
         }
     }, [dispatch, memberId])
-
-    // 질문 상세 페이지 이동(in 내가 푼/못푼 질문문)
-    const moveDetailQ = (id: number) => {
-        dispatch(setSelectedQuestionId(id));
-        navigate(`/question`);
-    };
     
-    const moveAllQ = (isSolved: boolean) => {
-        navigate('/all-questions', {
-            state: {solved: isSolved ? "solved" : "unSolved"},
-            replace: true
-        });
-    };    
-
-    // 질문 상세 페이지 and commu 이동
-    const moveDetailCommuQ = useCallback((id: number) => {
-        dispatch(setSelectedQuestionId(id));
-        navigate(`/question`, {state: {showCommunity: true}});
-    }, [dispatch, navigate])
-
-    // 게시글 상세 페이지로 이동
-    const moveArticleDetail = useCallback((id: number) => {
-        navigate(`/board`, {
-            state: {selectedArticleId: id, currentView: 'detail' }
-        });
-    }, [navigate])
-
-
     // === 모달 관련
     const [isOpenMoreModal, setIsOpenMoreModal] = useState(false);
-    const [modalData, setModalData] = useState<{ title: string; titleIcon?: JSX.Element; contents: string[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[]; handleDetailContent: (id:number) => void }>({
+    const [modalData, setModalData] = useState<{ title: string; titleIcon?: JSX.Element; contents: string[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[]; handleDetail:string }>({
         title: '',
         titleIcon: undefined,
         contents: [],
-        handleDetailContent: () => {}
+        handleDetail: '',
     });
 
     // 모달 열기
     const openModal = useCallback(
-        (title: string, titleIcon: JSX.Element, contents: string[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[], handleDetailContent: (id: number) => void) => {
+        (title: string, titleIcon: JSX.Element, contents: string[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[], handleDetail: string) => {
             setModalData(prev => ({
                 ...prev,
                 title,
                 titleIcon,
                 contents,
-                handleDetailContent
+                handleDetail
             }));
             setIsOpenMoreModal(true);
         },
@@ -151,7 +123,7 @@ const MyPage:React.FC = () => {
     const [isFollowModalOpen, setIsFollowModalOpen ] = useState(false);
     const [FollowMode, setFollowMode] = useState("follower")
 
-    const { followings } = useAppSelector((state) => state.user, shallowEqual)
+    const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
 
     const openFollowModal = (mode: string) => { 
         setFollowMode(mode);
@@ -160,11 +132,15 @@ const MyPage:React.FC = () => {
 
     const onUnfollow = (memberId: number) => {
         dispatch(unFollow(memberId));
-    }   
+    }
+    
+    const onFollow = (memberId: number) => {
+        dispatch(follow(memberId));
+    }
 
     useEffect(()=>{
         dispatch(fetchUserInfo(null));
-    }, [followings])
+    }, [followings, followers])
 
     return (
     <div className='my-page-container'>
@@ -175,8 +151,8 @@ const MyPage:React.FC = () => {
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
 
         <div className='my-answer-info-container'>
-            <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetailContent={moveDetailQ} handleMoreBtn={() => moveAllQ(true)}/>
-            <ContentPreviewListMemo contents={MyUnsolvedQuestions} title='답변하지 못한 질문' titleIcon={icons.xbox} className='my-question-info' handleDetailContent={moveDetailQ} handleMoreBtn={() => moveAllQ(false)}/>
+            <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetail='answer-detail' handleMoreBtn={() => moveToAllQuesitons(navigate, true)}/>
+            <ContentPreviewListMemo contents={MyUnsolvedQuestions} title='답변하지 못한 질문' titleIcon={icons.xbox} className='my-question-info' handleDetail='answer-detail' handleMoreBtn={() => moveToAllQuesitons(navigate, false)}/>
         </div>
         
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
@@ -185,20 +161,20 @@ const MyPage:React.FC = () => {
             </div>
             <div className='my-answer-commu-activity'>
                 <div className='my-answer-info-container'>
-                    <ContentPreviewListMemo contents={likedAnswers} title='추천한 답변' titleIcon={icons.thumbup} className='my-question-info' handleDetailContent={moveDetailCommuQ} handleMoreBtn={() => openModal('추천한 답변', icons.thumbup, likedAnswers, moveDetailCommuQ)}/>
-                    <ContentPreviewListMemo contents={myFeedbacks} title='나의 피드백' titleIcon={icons.goComment} className='my-question-info'handleDetailContent={moveDetailCommuQ} handleMoreBtn={() => openModal('나의 피드백', icons.goComment, myFeedbacks, moveDetailCommuQ)} />
+                    <ContentPreviewListMemo contents={likedAnswers} title='추천한 답변' titleIcon={icons.thumbup} className='my-question-info' handleDetail='answer-commu' handleMoreBtn={() => openModal('추천한 답변', icons.thumbup, likedAnswers, 'answer-commu')}/>
+                    <ContentPreviewListMemo contents={myFeedbacks} title='나의 피드백' titleIcon={icons.goComment} className='my-question-info'handleDetail='answer-commu' handleMoreBtn={() => openModal('나의 피드백', icons.goComment, myFeedbacks, 'answer-commu')} />
                 </div>
             </div>
         </SectionContainerMemo>
 
         <SectionContainerMemo className='my-commu-info-container' title='커뮤니티 활동' icon={icons.CommuIcon} >
-            <ContentPreviewListMemo contents={myArticles} title='내 커뮤니티' titleIcon={icons.post} className='my-question-info' handleDetailContent={moveArticleDetail} handleMoreBtn={() => openModal('내 커뮤니티', icons.post, myArticles, moveArticleDetail)} />
-            <ContentPreviewListMemo contents={myArticleComments} title='내 댓글' titleIcon={icons.post_answer} className='my-question-info' handleDetailContent={moveArticleDetail} handleMoreBtn={() => openModal('내 댓글', icons.post_answer, myArticleComments, moveArticleDetail)} />
+            <ContentPreviewListMemo contents={myArticles} title='내 커뮤니티' titleIcon={icons.post} className='my-question-info' handleDetail='article' handleMoreBtn={() => openModal('내 커뮤니티', icons.post, myArticles, 'article')} />
+            <ContentPreviewListMemo contents={myArticleComments} title='내 댓글' titleIcon={icons.post_answer} className='my-question-info' handleDetail='article' handleMoreBtn={() => openModal('내 댓글', icons.post_answer, myArticleComments, 'acticle')} />
         </SectionContainerMemo>
 
         {/* 모달 렌더링 */}
-        {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} handleDetailContent={modalData.handleDetailContent} onClose={closeModal} />}  
-        {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} />}
+        {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} onClose={closeModal} handleDetail={modalData.handleDetail} />}  
+        {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} />}
     </div>)
 }
 

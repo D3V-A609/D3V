@@ -46,6 +46,16 @@ export const UserApi = {
     }
   },
 
+  createFollowing: async(memberId: number) => {
+    try{
+      const response = await api.post<responseFollow>(`/follow/${memberId}`);
+      return response.data;
+    }catch(error){
+      console.log('in user api-3:', error);
+      return new Error('팔로우하는데 문제가 발생했습니다.')
+    }
+  },
+
   getMultipleUserInfo: async (memberIds: number[]) => {
     try {
       const response = await api.post<User[]>('/member/basic', memberIds.map(id => ({ memberId: id })));

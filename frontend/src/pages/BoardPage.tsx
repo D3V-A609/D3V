@@ -8,6 +8,7 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
+import { useLocation } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -28,8 +29,12 @@ const BoardPage: React.FC = () => {
     page: 1,
     size: 15
   });
-  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
-  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+
+  const location = useLocation();
+  const state = location.state as {selectedArticleId?: number; currentView?: 'detail'};
+
+  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">(state?.currentView || "list");
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(state?.selectedArticleId || null);
 
   const fetchArticlesData = useCallback(() => {
     const apiCategory = categoryMap[params.category];
