@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store/hooks/useRedux";
+import { useAppDispatch} from "../../store/hooks/useRedux";
 import { setSelectedQuestionId } from "../../store/slices/questionSlice";
 import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
+import BookmarkModal from "../../components/Bookmark/BookmarkModal";
 
 // QuestionList 컴포넌트의 props 타입 정의
 interface QuestionListProps {
@@ -28,7 +29,9 @@ const QuestionList: React.FC<QuestionListProps> = ({
 
   // 선택된 질문들의 ID를 관리하는 state
   const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
-  
+
+  const [isBookmarkModalOpen, setBookmarkModalOpen] = useState(false);
+
   // 정렬 핸들러: 같은 필드를 다시 클릭하면 정렬 방향을 토글
   const handleSort = (field: SortField) => {
     const newOrder = currentSort.field === field && currentSort.order === 'desc' ? 'asc' : 'desc';
@@ -53,9 +56,12 @@ const QuestionList: React.FC<QuestionListProps> = ({
     );
   };
 
-  // 북마크 추가 핸들러
   const handleAddToBookmarks = () => {
-    console.log("Selected questions to bookmark:", selectedQuestions);
+    setBookmarkModalOpen(true);
+  };
+
+  const handleBookmarkModalClose = () => {
+    setBookmarkModalOpen(false);
   };
 
   // 질문 클릭 핸들러: 상세 페이지로 이동
@@ -148,6 +154,13 @@ const QuestionList: React.FC<QuestionListProps> = ({
               북마크에 추가하기 ({selectedQuestions.length})
             </button>
           </div>
+        )}
+
+{isBookmarkModalOpen && (
+          <BookmarkModal
+            questionIds={selectedQuestions}
+            onClose={handleBookmarkModalClose}
+          />
         )}
       </div>  
     </div>
