@@ -1,45 +1,54 @@
 .video-page {
-    width: 100%;
-    max-width: 1200px;
-    padding: 40px;
-    margin: 0 auto;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  padding: 40px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.error-message {
+  text-align: center;
+  font-size: 18px;
+  margin: 20px 0;
+  color: red;
+}
+
+.load-more-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #00518d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.load-more-button:hover {
+  background-color: #003b6f;
+}
+
+/* Add styles for job filter */
+.job-filter {
+  margin-bottom: 20px;
+}
+
+.job-filter select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+@media screen and (max-width: 1280px) {
+  .video-page {
+    padding: 20px;
   }
-  
-  .error-message {
-    text-align: center;
-    font-size: 18px;
-    margin: 20px 0;
+}
+
+@media screen and (max-width: 768px) {
+  .video-page {
+    padding: 10px;
   }
-  
-  .error-message {
-    color: red;
-  }
-  
-  .load-more-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #00518d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .load-more-button:hover {
-    background-color: #003b6f;
-  }
-  
-  @media screen and (max-width: 1280px) {
-    .video-page {
-      padding: 20px;
-    }
-  }
-  
-  @media screen and (max-width: 768px) {
-    .video-page {
-      padding: 10px;
-    }
-  }
+}
