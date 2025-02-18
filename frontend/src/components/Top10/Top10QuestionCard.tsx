@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TechIcon from "../TechIcon/TechIcon";
-import { RiBookmarkLine } from "react-icons/ri";
+// import { RiBookmarkLine } from "react-icons/ri";
 import { HiArrowRight } from "react-icons/hi";
 import "./Top10QuestionCard.css";
 

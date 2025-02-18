@@ -28,6 +28,9 @@ import { fetchLikedAnswers, fetchMyFeedback } from '../store/actions/answerActio
 import { useNavigate } from 'react-router-dom';
 import ContentMoreListView from '../components/MyPage/ContentMoreListView';
 import FollowModalView from '../components/MyPage/FollowModalView';
+import { fetchAllBookmarks } from '../store/actions/bookmarkActions';
+import BookmarkSlider from '../components/MyPage/BookmarkSlider';
+
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -62,7 +65,9 @@ const MyPage:React.FC = () => {
 
     const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
 
-    const memberId = isAuthenticated ? SecureStorage.getMemberId() : 0;;
+    const memberId = isAuthenticated ? SecureStorage.getMemberId() : 0;
+
+    const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
@@ -86,9 +91,12 @@ const MyPage:React.FC = () => {
                 // 내 정보 불러오기
                 dispatch(fetchUserInfo(null)),
 
-                // 내 팔로워, 팔로잉 목록 불러오기기
+                // 내 팔로워, 팔로잉 목록 불러오기
                 dispatch(fetchUserFollowers(null)),
                 dispatch(fetchUserFollowings(null)),
+
+                // 북마크 불러오기
+                dispatch(fetchAllBookmarks(memberId)),
             ]);
         }
     }, [dispatch, memberId])
@@ -172,7 +180,9 @@ const MyPage:React.FC = () => {
             <UserInfoCompMemo user={me} openFollowModal={openFollowModal} />
         </div>
 
-        <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
+        <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>
+            <BookmarkSlider bookmarks={bookmarks} />
+        </SectionContainerMemo>
 
         <div className='my-answer-info-container'>
             <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetailContent={moveDetailQ} handleMoreBtn={() => moveAllQ(true)}/>

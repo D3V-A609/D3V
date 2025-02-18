@@ -1,0 +1,65 @@
+.mypage-bookmark-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+}
+
+.mypage-bookmark-card {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mypage-bookmark-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mypage-bookmark-card-header span {
+  font-size: 12px;
+  background-color: #D9E9FF;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.mypage-bookmark-card-header svg {
+  color: #7D7D7E;
+}
+
+.mypage-bookmark-card-title {
+  font-weight: bold;
+  text-align: center;
+}
+
+.mypage-bookmark-card-detail-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #7D7D7E;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.mypage-bookmark-card-detail-btn svg {
+  color: #CEC7C7;
+  margin-left: 4px;
+}
+
+.mypage-bookmark-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
