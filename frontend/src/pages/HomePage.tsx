@@ -17,6 +17,7 @@ import serviceInfo from "../assets/images/service-info.png";
 import serviceScreen from "../assets/images/service-screen.png";
 import { shallowEqual } from 'react-redux';
 import { throttle } from 'lodash';
+import Streak from '../features/My/StreakHeatMap/Streak';
 
 type JobType = string;
 
@@ -127,12 +128,15 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="home-page" ref={scrollRef}>
+      <div className={`${isAuthenticated? "logined-home":""}`}>
       <PageHeader 
         title="오늘의 면접 질문"
         description="D3V's pick"
         icon={<BsFillCalendarCheckFill />}
         iconStyle="check-icon"
       />
+      {isAuthenticated && <Streak className='home-streak' />}
+      </div>
       <section className="today-questions">
         {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
         <div className={`question-cards ${isAuthenticated? "" : "--unLogined"}`}>
