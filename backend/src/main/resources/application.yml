@@ -111,4 +111,4 @@ jwt:
 
 app:
   oauth2:
-    authorizedRedirectUris: https://d3v.asia/oauth/redirect
+    authorizedRedirectUris: https://d3v.asia/api/oauth/redirect

@@ -67,7 +67,7 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN"))
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authEndpoint -> authEndpoint
-                                .baseUri("/oauth2/authorization")
+                                .baseUri("/api/oauth2/authorization")
                                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
                         .redirectionEndpoint(redirection -> redirection
                                 .baseUri("/*/oauth2/code/*"))
