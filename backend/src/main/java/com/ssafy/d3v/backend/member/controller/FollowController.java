@@ -24,8 +24,8 @@ public class FollowController {
     @PostMapping("/follow/{following_id}")
     public ResponseEntity<?> follow(@PathVariable(value = "following_id") Long memberId
     ) {
-        followService.follow(memberId);
-        return ResponseEntity.ok("팔로우에 성공했습니다.");
+        FollowsResponse response = followService.follow(memberId);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "팔로우 취소")
