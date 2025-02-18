@@ -2,6 +2,7 @@ package com.ssafy.d3v.backend.auth.controller;
 
 import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
+import com.ssafy.d3v.backend.auth.exception.DuplicateResourceException;
 import com.ssafy.d3v.backend.auth.service.AuthService;
 import com.ssafy.d3v.backend.common.util.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,16 +61,32 @@ public class AuthController {
 
     @Operation(summary = "닉네임 중복 확인")
     @GetMapping("/nickname/duplication")
-    public ResponseEntity<String> checkNicknameDuplication(@RequestParam("nickname") String nickname) {
-        authService.checkNicknameDuplication(nickname);
-        return ResponseEntity.ok().body("사용 가능한 닉네임 입니다.");
+    public ResponseEntity<?> checkNicknameDuplication(@RequestParam("nickname") String nickname) {
+        try {
+            authService.checkNicknameDuplication(nickname);
+            return ResponseEntity.ok().body("사용 가능한 닉네임 입니다.");
+        } catch (DuplicateResourceException e) {
+            return ResponseEntity.badRequest()
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                    .header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+                    .body("이미 사용 중인 닉네임입니다.");
+        }
     }
 
     @Operation(summary = "이메일 중복 확인")
     @GetMapping("/email/duplication")
-    public ResponseEntity<String> checkEmailDuplication(@RequestParam("email") String email) {
-        authService.checkEmailDuplication(email);
-        return ResponseEntity.ok().body("사용 가능한 이메일 입니다.");
+    public ResponseEntity<?> checkEmailDuplication(@RequestParam("email") String email) {
+        try {
+            authService.checkEmailDuplication(email);
+            return ResponseEntity.ok().body("사용 가능한 이메일 입니다.");
+        } catch (DuplicateResourceException e) {
+            return ResponseEntity.badRequest()
+                    .header("Access-Control-Allow-Origin", "*")
+                    .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+                    .header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+                    .body("이미 사용 중인 이메일입니다.");
+        }
     }
 
     @Operation(summary = "이메일 인증 코드 전송")
