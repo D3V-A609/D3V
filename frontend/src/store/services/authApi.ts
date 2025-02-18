@@ -76,18 +76,11 @@ export const authApi = {
         result: false // 사용 가능한 경우
       };
     } catch (error: any) {
-      if (error.response?.status === 400) {
-        return {
-          message: error.response.data.message,
-          result: true // 중복인 경우
-        };
-      }
-      throw error; // 기타 에러의 경우 상위로 전파
-      // // CORS 에러를 포함한 다른 에러들도 중복으로 처리
-      // return {
-      //   message: '이미 사용중인 이메일입니다.',
-      //   result: true
-      // };
+      // 모든 종류의 에러에 대해 "이미 사용중인 이메일입니다." 메시지를 반환
+      return {
+        message: '이미 사용중인 이메일입니다.',
+        result: true
+      };
     }
   },
 
@@ -100,15 +93,14 @@ export const authApi = {
         result: false // 사용 가능한 경우
       };
     } catch (error: any) {
-      if (error.response?.status === 400) {
-        return {
-          message: error.response.data.message,
-          result: true // 중복인 경우
-        };
-      }
-      throw error; // 기타 에러의 경우 상위로 전파
+      // 모든 종류의 에러에 대해 "이미 사용중인 닉네임입니다." 메시지를 반환
+      return {
+        message: '이미 사용중인 닉네임입니다.',
+        result: true
+      };
     }
   }
+  
 };
 
 export default authApi;
