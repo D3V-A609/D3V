@@ -10,6 +10,7 @@ import feedbackReducer from './slices/feedbackSlice';
 import historyReducer from './slices/historySlice'
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
+import bookmarkReducer from './slices/bookmarkSlice';
 
 const rootReducer = combineReducers({
   questions: questionReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   historys: historyReducer,
   auth: authReducer,
   user: userReducer,
+  bookmarks: bookmarkReducer,
 }) as Reducer<{
   questions: ReturnType<typeof questionReducer>;
   answers: ReturnType<typeof answerReducer>;
@@ -33,6 +35,7 @@ const rootReducer = combineReducers({
   historys: ReturnType<typeof historyReducer>;
   auth: ReturnType<typeof authReducer>;
   user: ReturnType<typeof userReducer>;
+  bookmarks: ReturnType<typeof bookmarkReducer>;
 }>;
 
 

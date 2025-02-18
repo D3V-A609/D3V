@@ -8,7 +8,6 @@ import CommentList from "../Comment/CommentList";
 import EditArticle from "./EditArticle";
 import { FaEye, FaComment } from "react-icons/fa6";
 import "./ArticleDetail.css";
-import SecureStorage from "../../store/services/token/SecureStorage";
 
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
