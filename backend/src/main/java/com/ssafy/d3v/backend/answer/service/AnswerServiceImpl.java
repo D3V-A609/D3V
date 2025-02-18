@@ -105,11 +105,12 @@ public class AnswerServiceImpl implements AnswerService {
                             .servedAt(LocalDate.now())
                             .build());
         }
+        answerRepository.saveAndFlush(answer);
+
         question.updateQuestion(answerRepository.countAnswersByQuestionId(questionId),
                 answerRepository.countDistinctMembersByQuestionId(questionId));
         questionRepository.saveAndFlush(question);
 
-        answerRepository.saveAndFlush(answer);
         historyRepository.saveAndFlush(
                 history.toBuilder()
                         .count(history.getCount() + 1)
