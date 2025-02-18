@@ -98,17 +98,16 @@ public class AnswerServiceImpl implements AnswerService {
                             .isSolved(answerRequest.isSolved())
                             .build()
                     , false);
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
         } else {
             servedQuestionService.updateServedQuestion(questionId,
                     ServedQuestionUpdateRequest.builder()
                             .isSolved(answerRequest.isSolved())
                             .servedAt(LocalDate.now())
                             .build());
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
         }
+        question.updateQuestion(answerRepository.countAnswersByQuestionId(questionId),
+                answerRepository.countDistinctMembersByQuestionId(questionId));
 
-        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
         historyRepository.saveAndFlush(
                 history.toBuilder()
