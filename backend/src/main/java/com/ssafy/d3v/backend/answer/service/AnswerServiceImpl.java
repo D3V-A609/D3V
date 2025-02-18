@@ -104,11 +104,10 @@ public class AnswerServiceImpl implements AnswerService {
                             .isSolved(answerRequest.isSolved())
                             .servedAt(LocalDate.now())
                             .build());
-            question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount());
         }
-        question.updateQuestion(question.getAnswerCount() + 1, question.getChallengeCount() + 1);
+        question.updateQuestion(answerRepository.countAnswersByQuestionId(questionId),
+                answerRepository.countDistinctMembersByQuestionId(questionId));
 
-        servedQuestionCustomRepository.updateIsSolvedByQuestionAndMember(question, member, answerRequest.isSolved());
         answerRepository.saveAndFlush(answer);
         historyRepository.saveAndFlush(
                 history.toBuilder()
