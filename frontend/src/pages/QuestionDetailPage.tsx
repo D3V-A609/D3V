@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "./QuestionDetailPage.css";
 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -28,23 +28,28 @@ const QuestionDetailPage: React.FC = () => {
   >("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
-  const { selectedQuestionId, question, dailyQuestions, loading, error } = useAppSelector(
+  const { selectedQuestionId, question, dailyQuestions, error } = useAppSelector(
     state => state.questions as QuestionState // 타입 단언문 사용
   );
   const { myAnswerArr } = useAppSelector(
     state => state.answers as AnswerState
   );
 
+  const hasFetched = useRef(false);
+
   // 컴포넌트 마운트 시 질문 상세 데이터를 fetch
   useEffect(() => {
-    if (selectedQuestionId !== null) {
-      dispatch(fetchQuestionById(selectedQuestionId))
-      .unwrap()
-        .catch(() => {
-          alert("죄송합니다. 잠시 후 다시 시도해주세요.") // question 로드 실패 시 홈으로 리다이렉트  
-          navigate('/')
-        });  // fetch 실패 시 리다이렉트;
-      dispatch(fetchAllMyAnswersByQID(selectedQuestionId))
+    if (selectedQuestionId !== null && !hasFetched.current) {
+      hasFetched.current = true;
+      Promise.all([
+        dispatch(fetchQuestionById(selectedQuestionId))
+        .unwrap()
+          .catch(() => {
+            alert("죄송합니다. 잠시 후 다시 시도해주세요.") // question 로드 실패 시 홈으로 리다이렉트  
+            navigate('/')
+          }), // fetch 실패 시 리다이렉트;
+        dispatch(fetchAllMyAnswersByQID(selectedQuestionId))
+      ])
     }
   }, [dispatch, selectedQuestionId]);  // selectedQuestionId가 변경될 때마다 실행
 
@@ -71,8 +76,6 @@ const QuestionDetailPage: React.FC = () => {
     }
   }, [location.state]);
 
-  // 로딩 상태 처리
-  if (loading) return <div>Loading...</div>;
   // 에러 상태 처리
   if (error) return <div>Error: {error}</div>;
   
@@ -100,7 +103,7 @@ const QuestionDetailPage: React.FC = () => {
           currentView={currentQuestionDetailView}
         />
 
-      {currentQuestionDetailView === "input" && <AnswerInput standardAnswer={question.standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
+      {currentQuestionDetailView === "input" && <AnswerInput hasMyAnswers={question.status} standardAnswer={question.standardAnswer} myAnswers={myAnswerArr} questionId={selectedQuestionId} />}
       {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
         <AnswerCommunityComp questionId={selectedQuestionId} />
       )}

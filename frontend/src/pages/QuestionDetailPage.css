@@ -229,6 +229,11 @@
   background-color: #005a9c;
   color: white;
   border-radius: 12px;
+  cursor: pointer;
+}
+
+.select-public-btn-item{
+  cursor: pointer;
 }
 
 .anwer-input-container__input
