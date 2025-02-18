@@ -74,7 +74,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/api/oauth/redirect',
+      path: '/oauth/redirect',
       element: <OAuthCallback />
     },
     {
