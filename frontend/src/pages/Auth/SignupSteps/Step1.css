@@ -16,28 +16,28 @@ h2 {
   color: #333;
 }
 
-.form {
+.signup-form {
   display: flex;
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
 }
 
-.form-group {
+.signup-form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 0;
+  margin: 1rem 0;
 }
 
-.form-group label {
+.signup-form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
   width: 100%;
 }
 
-.form-group input {
+.signup-form-group input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -46,7 +46,7 @@ h2 {
   box-sizing: border-box;
 }
 
-.form-group input:focus {
+.signup-form-group input:focus {
   outline: none;
   border-color: var(--color-blue);
 }
@@ -107,7 +107,7 @@ h2 {
   font-size: 0.9rem;
 }
 
-.error-message {
+.signup-error-message {
   color: #ff4444;
   font-size: 0.8rem;
   margin-top: 0.5rem;
@@ -130,4 +130,11 @@ h2 {
 
 .next-button:hover {
   background-color: var(--color-dark-blue);
+}
+
+.signup-success-message {
+  color: #28a745;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: block;
 }

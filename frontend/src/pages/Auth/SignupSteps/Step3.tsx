@@ -80,7 +80,7 @@ const Step3: React.FC = () => {
         관심있는 직무를 선택해주세요.
       </p>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="signup-form-group">
           <label>관심 직무</label>
           <select
             value={selectedJob}
