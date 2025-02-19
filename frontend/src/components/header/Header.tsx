@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { RootState } from "../../store";
-import { logout } from "../../store/slices/authSlice";
+import { authApi } from "../../store/services/authApi";
+import { logoutSuccess } from "../../store/slices/authSlice";
 
 import "./Header.css";
 import Logo from "../../assets/images/logo.gif";
@@ -56,20 +57,32 @@ const Header: React.FC = () => {
     if (isNavOpen) setIsNavOpen(false);
   };
 
-  // Auth handlers
-  const handleLogout = () => {
-    dispatch(logout());
-    setIsUserInfoOpen(false);
-    navigate("/");
-    
-    toast.success('로그아웃되었습니다.', {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: true,
-      closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘
-      pauseOnHover: false, // 마우스를 토스트 위에 올려도 자동 닫힘 타이머가 계속 실행됨
-      toastId: 'logout-success'
-    });
+  // Auth handlers  
+  const handleLogout = async () => {
+    try {
+      await authApi.logout(); // API 호출
+      dispatch(logoutSuccess()); // Redux 상태 업데이트
+      setIsUserInfoOpen(false);
+      navigate("/");
+      
+      toast.success('로그아웃되었습니다.', {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        toastId: 'logout-success'
+      });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      console.log(error)
+      toast.error('로그아웃 중 오류가 발생했습니다.', {
+        position: "bottom-left",
+        autoClose: 2000,
+        hideProgressBar: true,
+        toastId: 'logout-error'
+      });
+    }
   };
 
   // Render user profile section

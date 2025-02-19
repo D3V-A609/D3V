@@ -30,7 +30,7 @@ const AnswerCommunityComp: React.FC<AnswerCommunityCompProps> = ({ questionId })
           }
         });
     }
-  }, [dispatch, questionId, myAnswer]);
+  }, [dispatch, questionId]);
   
   if (error) return <div>Error: {error}</div>;
 

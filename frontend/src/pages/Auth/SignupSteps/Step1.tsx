@@ -104,6 +104,10 @@ const Step1: React.FC = () => {
     const value = e.target.value;
     if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
       setFormData({...formData, password: value});
+      // 비밀번호가 일치하면 에러 메시지 제거
+      if (value === formData.confirmPassword) {
+        setErrors(prev => ({...prev, confirmPassword: '', password: ''}));
+      }
     }
   };
 
@@ -111,8 +115,21 @@ const Step1: React.FC = () => {
     const value = e.target.value;
     if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
       setFormData({...formData, confirmPassword: value});
+      
+      // 비밀번호 확인이 비어있지 않은 경우에만 검증
+      if (value !== '') {
+        if (value === formData.password) {
+          setErrors(prev => ({...prev, confirmPassword: '비밀번호가 일치합니다'}));
+        } else {
+          setErrors(prev => ({...prev, confirmPassword: '비밀번호가 일치하지 않습니다'}));
+        }
+      } else {
+        // 입력값이 비어있으면 에러 메시지 제거
+        setErrors(prev => ({...prev, confirmPassword: ''}));
+      }
     }
   };
+
 
   const handleNext = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +204,11 @@ const Step1: React.FC = () => {
               {showConfirmPassword ? <IoMdEye /> : <IoIosEyeOff />}
             </button>
           </div>
-          {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+          {errors.confirmPassword && (
+            <span className={errors.confirmPassword === '비밀번호가 일치합니다' ? 'signup-success-message' : 'error-message'}>
+              {errors.confirmPassword}
+            </span>
+          )}
         </div>
         <div className="terms-group">
           <label className="terms-label">

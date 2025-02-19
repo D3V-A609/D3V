@@ -8,6 +8,7 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
+import { useLocation } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -28,8 +29,12 @@ const BoardPage: React.FC = () => {
     page: 1,
     size: 15
   });
-  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
-  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+
+  const location = useLocation();
+  const state = location.state as {selectedArticleId?: number; currentView?: 'detail'};
+
+  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">(state?.currentView || "list");
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(state?.selectedArticleId || null);
 
   const fetchArticlesData = useCallback(() => {
     const apiCategory = categoryMap[params.category];
@@ -46,6 +51,26 @@ const BoardPage: React.FC = () => {
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData]);
+
+  // detail 페이지에서 뒤로가기 시 list로 currentView 수정정
+  useEffect(() => {
+    const handlePopState = () => {
+      if (currentView === "detail") {
+        setCurrentView("list"); // ✅ currentView가 detail이면 list로 변경
+        window.history.pushState(null, "", location.pathname); // ✅ 뒤로 가기 무력화 (현재 페이지 유지)
+      } else {
+        window.history.back(); // ✅ currentView가 list이면 정상적인 뒤로 가기 수행
+      }
+    };
+  
+    // ✅ "뒤로 가기"를 막기 위해 현재 상태를 저장
+    window.history.pushState(null, "", location.pathname);
+    window.addEventListener("popstate", handlePopState);
+  
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [currentView, location.pathname]); // ✅ location.pathname 추가
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => {

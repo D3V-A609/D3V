@@ -63,9 +63,9 @@ export const fetchTop10Questions = createAsyncThunk(
 // 답변한 최신 질문 
 export const fetchMyLastedQuestions = createAsyncThunk(
   'questioins/latest',
-  async (isSolved: boolean, {rejectWithValue}) => {
+  async (payload: {isSolved: boolean, memberId: number}, {rejectWithValue}) => {
     try{
-      const response = await questionApi.getLatestQuestions(isSolved);
+      const response = await questionApi.getLatestQuestions(payload.isSolved, payload.memberId);
       return response;
     }catch(error){
       console.log('in question action -5: ', error);

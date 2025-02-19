@@ -1,5 +1,6 @@
 // React & Hooks
 import { useEffect } from 'react';
+// import useAuth from './store/hooks/useAuth';
 
 // React & Redux
 import { Provider } from 'react-redux';
@@ -46,6 +47,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Styles
 import './App.css';
 import './styles/TextStyle.css';
+import OtherPage from './pages/OtherPage.tsx';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -53,7 +55,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   useEffect(() => {
     if (!isAuthenticated) {
       toast.warning('로그인이 필요한 서비스입니다.', {
-        position: "top-right", // 토스트 메시지가 표시될 위치 (top-right: 우측 상단)
+        position: "bottom-left", // 토스트 메시지가 표시될 위치 (top-right: 우측 상단)
         autoClose: 1500, // 자동으로 닫히는 시간 (1500ms = 1.5초)
         hideProgressBar: true, // false: 토스트가 닫히기까지 남은 시간을 보여주는 프로그레스 바 표시
         closeOnClick: true, // 토스트 메시지를 클릭하면 즉시 닫힘
@@ -73,6 +75,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
 
 
 function App() {
+  // const authStatus = useAuth()
+  // console.log(authStatus)
   const router = createBrowserRouter([
     {
       path: '/oauth/redirect',
@@ -129,6 +133,10 @@ function App() {
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
         },
         { path: '/my/edit', element: <ProtectedRoute><EditProfile /></ProtectedRoute> },
+        { 
+          path: '/profile/:id', 
+          element: <ProtectedRoute><OtherPage /></ProtectedRoute> 
+        },
         { path: '/board', element: <BoardPage /> },
         { 
           path: '/question', 
@@ -144,7 +152,8 @@ function App() {
         },
       ],
     },
-  ]);
+  ],
+{basename: "/"});
 
   return (
     <Provider store={store}>

@@ -62,8 +62,14 @@ export const authApi = {
   
   // 로그아웃
   logout: async () => {
-    const response = await api.post('/member/logout');
-    return response.data;
+    try {
+      const response = await api.get('/member/logout', {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error('로그아웃 처리 중 오류가 발생했습니다.');
+    }
   },
   
   // 회원가입

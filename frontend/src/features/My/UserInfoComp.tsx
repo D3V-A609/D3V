@@ -8,8 +8,10 @@ import { CiMail } from "react-icons/ci";
 interface UserInfoProps {
   user: User | null;
   openFollowModal: (mode: string) => void;
+  onUnfollow?: (memberId: number) => void;
+  onFollow?: (memberId: number) => void;
 }
-const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
+const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfollow, onFollow }) => {
 
   useEffect(() => {}, [user])
 
@@ -29,7 +31,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
         {/* <UserProfileImg className="profile-image" /> */}
         {/* <div className="profile-avatar"> */}
         {user.profileImg ? (
-          <img src={user.profileImg} alt="프로필" />
+          <img src={user.profileImg} className='profile-image' alt="프로필" />
         ) : (
           <div className="avatar-fallback">{user.nickname[0].toUpperCase()}</div>
         )}
@@ -67,7 +69,12 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
         </div>
       </div>
       <div className='update-user-info-btn'>
-      <button className="edit-button">프로필 수정</button>
+        {user.isFollow === null ?
+        <button className="edit-button">프로필 수정</button> :(
+      user.isFollow === true ? 
+      <button className='edit-button' onClick={() => onUnfollow?.(user.memberId)}>Unfollow</button> :
+      <button className='edit-button' onClick={() => onFollow?.(user.memberId)}>Follow</button>)
+    }
       </div>
     </div>
   )
