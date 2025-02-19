@@ -58,6 +58,19 @@ export const unFollow = createAsyncThunk(
   }
 );
 
+export const follow = createAsyncThunk(
+  'user/follow',
+  async (memberId: number, {rejectWithValue}) => {
+    try{
+      const response = await UserApi.createFollowing(memberId);
+      return response;
+    }catch(error){
+      console.log('in user action-4:', error)
+      return rejectWithValue('팔로우하는데 문제가 발생했습니다.')
+    }
+  }
+);
+
 export const fetchMultipleUserInfo = createAsyncThunk(
   'user/multipleUserInfo',
   async (memberIds: number[], {rejectWithValue}) => {

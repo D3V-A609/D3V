@@ -1,17 +1,22 @@
 import React from "react";
 import styles from "./ContentPreviewList.module.css";
 import QuestionSkillTag from "../QuestionDetail/Question/QuestionSkillTag";
+import { moveToArticleDetail, moveToQuestionDetail } from "../../utils/navigation";
+import { useAppDispatch } from "../../store/hooks/useRedux";
+import { useNavigate } from "react-router-dom";
 
 interface ContentPreviewProps {
   title: string;
   titleIcon?: JSX.Element;
   contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
   handleMoreBtn?: (isSolved?: boolean) => void;
-  handleDetailContent?: (id: number) => void
   className?: string;
+  handleDetail: string;
 }
 
-const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, className, handleDetailContent, handleMoreBtn}) => {
+const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, contents, className, handleMoreBtn, handleDetail}) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const filledContents = (contents.length < 5 && contents.length > 0)
   ? contents.concat(Array(5 - contents.length).fill({ content: " " })) // 빈 값 추가
@@ -42,9 +47,10 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
             }`}
             onClick={() => {
               if(content !== null && typeof content === 'object'){
-                if("questionId" in content) {return handleDetailContent?.(content.questionId);}
-                if("articleId" in content) {return handleDetailContent?.(content.articleId);}
-                if("id" in content) {return handleDetailContent?.(content.id);}
+              if(handleDetail === 'answer-detail' && "questionId" in content) { moveToQuestionDetail(navigate, dispatch, content.questionId)}
+              else if(handleDetail === 'answer-commu' && "questionId" in content) { moveToQuestionDetail(navigate, dispatch, content.questionId, true)}
+              else if(handleDetail === 'article' && "articleId" in content) { moveToArticleDetail(navigate, content.articleId)}
+              else if(handleDetail === 'article' && "id" in content) { moveToArticleDetail(navigate, content.id)}
               }
             }}
             >

@@ -27,7 +27,7 @@ const MyAnswer: React.FC = () => {
       </div> */}
       <div className="my-answer-content">
         <div className="answer-label">A.</div>
-        <div className="answer-text">{recentAnswer.content}</div>
+        <div className="answer-text">{recentAnswer.content === "IDK" ? "모르겠어요":recentAnswer.content}</div>
       </div>
     </div>
   );

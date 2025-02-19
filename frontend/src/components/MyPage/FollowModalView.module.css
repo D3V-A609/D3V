@@ -75,6 +75,7 @@
 .follow-item-left{
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .user-info{

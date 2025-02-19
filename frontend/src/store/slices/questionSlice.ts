@@ -164,7 +164,7 @@ const questionSlice = createSlice({
       })
       .addCase(fetchMyLastedQuestions.fulfilled, (state, action) => {
         state.loading = false;
-        const key = action.meta.arg ? "MySolvedQuestions" : "MyUnsolvedQuestions";
+        const key = action.meta.arg.isSolved ? "MySolvedQuestions" : "MyUnsolvedQuestions";
         state[key] = action.payload;
         state.error = null;
       })

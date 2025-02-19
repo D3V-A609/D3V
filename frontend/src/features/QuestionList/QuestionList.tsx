@@ -6,6 +6,7 @@ import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
 import BookmarkModal from "../../components/Bookmark/BookmarkModal";
+import { moveToQuestionDetail } from "../../utils/navigation";
 
 // QuestionList 컴포넌트의 props 타입 정의
 interface QuestionListProps {
@@ -127,7 +128,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
                 </td>
                 <td 
                   className="question-content"
-                  onClick={() => handleQuestionClick(question.id)}
+                  onClick={() => moveToQuestionDetail(navigate, dispatch, question.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   {/* 기술 스택 아이콘 */}

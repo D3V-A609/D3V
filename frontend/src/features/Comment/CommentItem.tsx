@@ -55,6 +55,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isAuthor, articleId 
           profileImg={author.profileImg}
           favoriteJob={author.favoriteJob}
           nickname={author.nickname}
+          userId={author.memberId}
         />
         ) : (
         <span>사용자 정보 없음</span>

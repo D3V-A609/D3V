@@ -48,6 +48,7 @@ const AnswerItem: React.FC<AnswerItemProps> = ({ answer }) => {
             profileImg={user.profileImg}
             favoriteJob={user.favoriteJob}
             nickname={user.nickname || ''}
+            userId={user.memberId}
           />
         )}
         <div className="answer-content">{answer.content}</div>

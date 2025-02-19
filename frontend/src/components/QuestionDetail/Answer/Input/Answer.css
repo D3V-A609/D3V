@@ -33,16 +33,31 @@ display: none;
 }
 
 /* 타임라인 카드 스타일링 */
-.my-answer-records-container .chrono-card {
+.my-answer-records-container .chrono-card .iTRyMy,
+.TimelineItemContentWrapper-sc-d7qjm1-0.iTRyMy.timeline-card-content.active.rc-card {
   min-height: unset !important; /* 기본 min-height 제거 */
   padding: 20px;
   box-shadow: none;
   border: none;
+  filter: drop-shadow(rgba(0, 0, 0, 0.3) 0px 0px 1px);
+  text-align: start;
+}
+
+.TimelineContentDetailsWrapper-sc-d7qjm1-7.MdIhI.show-less.card-description.rc-card-text{
+  margin: 0;
+}
+.ToolbarWrapper-sc-exupb5-0.gjuTGZ{
+  display: none;
 }
 
 .my-answer-records-container .chrono-card-title,
 .chrono-card-detailed-text {
   padding-left: 20px;
+}
+
+.TitleWrapper-sc-13izrht-0.jcPcan.timeline-item-title.active.rc-title{
+  background-color: white;;
+  color: #ff9374;
 }
 
 .TitleWrapper-sc-13izrht-0.hnoVec.timeline-item-title.active.rc-title{
