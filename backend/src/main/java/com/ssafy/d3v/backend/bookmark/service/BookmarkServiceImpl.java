@@ -92,8 +92,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     // 북마크 단일 조회
     @Override
     public BookmarkDetailResponse get(Long id) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member member = memberRepository.findMemberByEmail(userName);
+        String memberName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(memberName);
         Bookmark bookmark = bookmarkRepository.findById(id).orElseThrow();
         if (!isAccessible(bookmark)) {
             throw new RuntimeException("접근 권한이 없습니다.");
