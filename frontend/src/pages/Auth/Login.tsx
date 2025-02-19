@@ -13,6 +13,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,15 +29,22 @@ const Login: React.FC = () => {
     e.preventDefault();
   };
 
+  // 로그인 성공 시 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       dispatch(setError(null)); // 에러 상태 초기화
 
+      // 로그인 API 호출
       const response = await authApi.login({ email, password });
-      
+
+      // // 로그인 유지 체크박스가 체크된 경우 useAuth()를 하도록 함
+      // if (rememberMe) {}
+
+      // AccessToken을 저장
       tokenService.setAccessToken(response.result.AccessToken);
-      
+
+      // 로그인 성공 후 처리
       dispatch(loginSuccess({ 
         isAuthenticated: true,
         user: {
@@ -118,10 +126,15 @@ const Login: React.FC = () => {
               </div>
             </div>
             <div className="login-options">
-              <div className="remember-me">
-                <input type="checkbox" id="remember" />
+              {/* <div className="remember-me">
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={rememberMe} 
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
                 <label htmlFor="remember">로그인 상태 유지</label>
-              </div>
+              </div> */}
               <div className="forgot-password">
                 <Link to="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
               </div>
