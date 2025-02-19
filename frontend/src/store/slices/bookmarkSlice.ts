@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchBookmarks, createBookmark, updateSingleQuestionBookmarks, addQuestionsToBookmarks, fetchAllBookmarks, fetchBookmarkById, deleteBookmarkById } from '../actions/bookmarkActions';
+import { fetchBookmarks, createBookmark, updateSingleQuestionBookmarks, addQuestionsToBookmarks, fetchAllBookmarks, fetchBookmarkById, deleteBookmarkById , deleteBookmarkQuestion, updateBookmarkById} from '../actions/bookmarkActions';
 
 interface BookmarkState {
   bookmarks: Bookmark[];
@@ -74,10 +74,56 @@ const bookmarkSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || '단일 북마크를 불러오는데 실패했습니다.';
       })
+      .addCase(fetchBookmarkById.fulfilled, (state, action: PayloadAction<Omit<Bookmark, 'questionCount'>>) => {
+        state.loading = false;
+        state.selectedBookmark = {
+          ...action.payload,
+          questionCount: action.payload.questions.length, // ✅ 기본값 설정
+        };
+        state.error = null;
+      })
       .addCase(deleteBookmarkById.fulfilled, (state, action) => {
         state.bookmarks = state.bookmarks.filter(b => b.bookmarkId !== action.meta.arg);
         state.loading = false;
         state.error = null;
+      })
+      .addCase(updateBookmarkById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateBookmarkById.fulfilled, (state, action) => {
+        const updatedBookmark = action.payload;
+        const index = state.bookmarks.findIndex((b) => b.bookmarkId === updatedBookmark.bookmarkId);
+        if (index !== -1) {
+          state.bookmarks[index] = updatedBookmark;
+        }
+        if (state.selectedBookmark && state.selectedBookmark.bookmarkId === updatedBookmark.bookmarkId) {
+          state.selectedBookmark = updatedBookmark;
+        }
+        state.loading = false;
+      })
+      .addCase(updateBookmarkById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '북마크 수정에 실패했습니다.';
+      })
+      .addCase(deleteBookmarkQuestion.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteBookmarkQuestion.fulfilled, (state, action) => {
+        const { bookmarkId, questionId } = action.payload;
+        const bookmark = state.bookmarks.find((b) => b.bookmarkId === bookmarkId);
+        if (bookmark && bookmark.questions) {
+          bookmark.questions = bookmark.questions.filter((q) => q.questionId !== questionId);
+        }
+        if (state.selectedBookmark && state.selectedBookmark.bookmarkId === bookmarkId) {
+          state.selectedBookmark.questions = state.selectedBookmark.questions.filter((q) => q.questionId !== questionId);
+        }
+        state.loading = false;
+      })
+      .addCase(deleteBookmarkQuestion.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || '질문 삭제에 실패했습니다.';
       });
   },
 });

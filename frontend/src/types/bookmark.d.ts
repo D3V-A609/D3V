@@ -1,10 +1,10 @@
 interface Bookmark {
   bookmarkId: number;
   name: string;
-  accessLevel: 'PUBLIC' | 'PRIVATE' | 'PROTECTED';
-  questionCount: number;
   description?: string;
-  questions?: Question[];
+  accessLevel: 'PUBLIC' | 'PRIVATE' | 'PROTECTED';
+  questions: { questionId: number; content: string; skill: string}[];
+  questionCount?: number;
 }
 
 interface BookmarkResponse {

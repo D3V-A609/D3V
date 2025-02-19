@@ -11,6 +11,7 @@ import {
 import { fetchUserInfo } from '../../store/actions/userActions';
 import './BookmarkModal.css';
 import AddBookmarkModal from './AddBookmarkModal';
+import EditBookmarkModal from './EditBookmarkModal'; // EditBookmarkModal 임포트
 import SecureStorage from '../../store/services/token/SecureStorage';
 
 interface BookmarkModalProps {
@@ -23,6 +24,8 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
   const { bookmarks, selectedBookmarks } = useAppSelector((state) => state.bookmarks);
   const [localSelectedBookmarks, setLocalSelectedBookmarks] = useState<number[]>([]);
   const [isAddBookmarkOpen, setIsAddBookmarkOpen] = useState(false);
+  const [isEditBookmarkOpen, setIsEditBookmarkOpen] = useState(false); // EditBookmarkModal 열기 위한 상태
+  const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null); // 편집할 북마크 상태
   const [memberId, setMemberId] = useState<number | null>(null);
 
   const currMemberId = SecureStorage.getMemberId();
@@ -82,11 +85,11 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
           addQuestionsToBookmarks({ bookmarkIds: localSelectedBookmarks, questionIds })
         ).unwrap();
       }
-      alert('북마크에 질문이 추가되었습니다.');
+      alert('북마크에 질문이 추가/제거되었습니다.');
       onClose();
     } catch (error) {
-      console.error('북마크 추가 실패:', error);
-      alert('북마크에 질문을 추가하는데 실패했습니다.');
+      console.error('북마크 추가/제거 실패:', error);
+      alert('북마크에 질문을 추가/제거하는데 실패했습니다.');
       onClose();
     }
   };
@@ -107,6 +110,12 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
       console.error('북마크 생성 실패:', error);
       alert('새 북마크 생성에 실패했습니다.');
     }
+  };
+
+  // 북마크 수정
+  const handleEditBookmark = (bookmark: Bookmark) => {
+    setEditingBookmark(bookmark);
+    setIsEditBookmarkOpen(true); // 편집 모달 열기
   };
 
   return (
@@ -135,6 +144,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
                     <IoLockClosed size={18} style={{ opacity: 0.5 }} />
                   )}
                 </span>
+                <button onClick={() => handleEditBookmark(bookmark)}>수정</button> {/* 수정 버튼 */}
               </div>
             ))}
           </div>
@@ -152,6 +162,12 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
         <AddBookmarkModal
           onClose={() => setIsAddBookmarkOpen(false)}
           onSave={handleAddBookmark}
+        />
+      )}
+      {isEditBookmarkOpen && editingBookmark && (
+        <EditBookmarkModal
+          bookmark={editingBookmark} // 수정할 북마크 정보 전달
+          onClose={() => setIsEditBookmarkOpen(false)} // 모달 닫기
         />
       )}
     </>

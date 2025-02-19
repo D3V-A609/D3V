@@ -40,6 +40,7 @@ const MyPage:React.FC = () => {
     const UserInfoCompMemo = React.memo(UserInfoComp);
     const SectionContainerMemo = React.memo(SectionContainer);
     const ContentPreviewListMemo = React.memo(ContentPreviewList);
+    const BookmarkSliderMemo = React.memo(BookmarkSlider)
 
     // ===== icon ======
     const icons = {
@@ -69,6 +70,11 @@ const MyPage:React.FC = () => {
 
     const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
     const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
+    const [isOpenBookmark, setIsOpenBookmark] = useState(false);
+    // const isOpenBookmark = useRef<boolean>(false)
+    // const setIsOpenBookmark = () =>{
+    //     isOpenBookmark.current = false
+    // }
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
@@ -109,6 +115,12 @@ const MyPage:React.FC = () => {
         contents: [],
         handleDetail: '',
     });
+
+    const handleViewBookmarkDetails = (bookmarkId: number) => {
+        setIsOpenBookmark(true);
+        setSelectedBookmarkId(bookmarkId);
+      };
+    
 
     // 모달 열기
     const openModal = useCallback(
@@ -151,6 +163,13 @@ const MyPage:React.FC = () => {
         dispatch(fetchUserInfo(Number(memberId)));
     }, [followings, followers])
 
+        // 콜백 함수를 사용하여 bookmarks 상태 업데이트
+    const memoizedBookmarks = useCallback(() => {
+        if (memberId !== null) {
+            dispatch(fetchAllBookmarks(memberId));
+        }
+    }, [dispatch, memberId]);
+
     return (
     <div className='my-page-container'>
         <div className='my-detail-info-container'>
@@ -159,12 +178,12 @@ const MyPage:React.FC = () => {
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>
             {bookmarks.length > 0 ? (
-            <BookmarkSlider
-                bookmarks={bookmarks}
-                onViewDetails={(bookmarkId: number) => setSelectedBookmarkId(bookmarkId)}
-            />
-            ) : (
-            <p>북마크가 없습니다.</p>
+                <BookmarkSliderMemo
+                    bookmarks={bookmarks}
+                    onViewDetails={handleViewBookmarkDetails}
+                />
+                ) : (
+                <p>북마크가 없습니다.</p>
             )}
         </SectionContainerMemo>
 
@@ -194,8 +213,14 @@ const MyPage:React.FC = () => {
         {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} onClose={closeModal} handleDetail={modalData.handleDetail} />}  
         {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} memberId={null} />}
         {/* BookmarkDetailModal 렌더링 */}
-        {selectedBookmarkId && (
-            <BookmarkDetailModal bookmarkId={selectedBookmarkId} onClose={closeModal} />
+        {isOpenBookmark && selectedBookmarkId && (
+            <div className="modal-overlay">
+                <BookmarkDetailModal
+                bookmarkId={selectedBookmarkId}
+                onClose={() => setIsOpenBookmark(false)}
+                onBookmarksChanged={memoizedBookmarks}
+                />
+            </div>
         )}
     </div>)
 }

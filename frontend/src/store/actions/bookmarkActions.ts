@@ -58,3 +58,19 @@ export const deleteBookmarkById = createAsyncThunk(
     return response.message;
   }
 );
+
+export const deleteBookmarkQuestion = createAsyncThunk(
+  'bookmarks/deleteBookmarkQuestion',
+  async ({ bookmarkId, questionId }: { bookmarkId: number; questionId: number }) => {
+    await bookmarkApi.deleteBookmarkQuestion(bookmarkId, questionId);
+    return { bookmarkId, questionId };
+  }
+);
+
+export const updateBookmarkById = createAsyncThunk(
+  'bookmarks/updateBookmark',
+  async ({ bookmarkId, data }: { bookmarkId: number; data: { name?: string; description?: string; accessLevel?:string } }) => {
+    const response = await bookmarkApi.updateBookmark(bookmarkId, data);
+    return response;
+  }
+);
