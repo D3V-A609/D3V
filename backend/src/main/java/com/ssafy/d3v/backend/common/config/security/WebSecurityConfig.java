@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                                 "/api/member/login",
                                 "/api/member/signup",
                                 "/api/member/email/**",
+                                "/api/member/token",
                                 "/api/question/daily",
                                 "/api/question/top10",
                                 "/api/job/**",
