@@ -65,14 +65,13 @@ const MyPage:React.FC = () => {
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
-
     useEffect(() => {
         if(memberId !== null && !hasFetched.current){   
             hasFetched.current = true;
             Promise.all([
                 // 답변(푼, 못푼) 로드
-                dispatch(fetchMyLastedQuestions(true)),
-                dispatch(fetchMyLastedQuestions(false)),
+                dispatch(fetchMyLastedQuestions({isSolved: true, memberId: null})),
+                dispatch(fetchMyLastedQuestions({isSolved: false, memberId: null})),
                 
                 // 내가 작성한 게시글/댓글
                 dispatch(fetchMyArticles(memberId)),

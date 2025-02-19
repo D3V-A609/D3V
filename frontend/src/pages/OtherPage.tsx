@@ -44,7 +44,7 @@ const OtherPage: React.FC = () => {
       hasFetched.current = true;
       Promise.all([
         // 사용자가 푼 답변 로드
-        dispatch(fetchMyLastedQuestions(true)), // 바꿔야 함
+        dispatch(fetchMyLastedQuestions({isSolved: true, memberId: Number(memberId)})),
 
         // 사용자 정보 불러오기
         dispatch(fetchUserInfo(Number(memberId))),
