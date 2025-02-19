@@ -8,8 +8,10 @@ import { CiMail } from "react-icons/ci";
 interface UserInfoProps {
   user: User | null;
   openFollowModal: (mode: string) => void;
+  onUnfollow?: (memberId: number) => void;
+  onFollow?: (memberId: number) => void;
 }
-const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
+const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfollow, onFollow }) => {
 
   useEffect(() => {}, [user])
 
@@ -67,7 +69,12 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal }) => {
         </div>
       </div>
       <div className='update-user-info-btn'>
-      <button className="edit-button">프로필 수정</button>
+        {user.isFollow === null ?
+        <button className="edit-button">프로필 수정</button> :(
+      user.isFollow === true ? 
+      <button className='edit-button' onClick={() => onUnfollow?.(user.memberId)}>Unfollow</button> :
+      <button className='edit-button' onClick={() => onFollow?.(user.memberId)}>Follow</button>)
+    }
       </div>
     </div>
   )

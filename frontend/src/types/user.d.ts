@@ -25,6 +25,7 @@ interface User {
   favoriteJob: string;  // 소셜 로그인 시 값 없음
   followerCount: number;
   followingCount: number;
+  isFollow?: boolean | null;
 }
 
 interface FollowUser {
