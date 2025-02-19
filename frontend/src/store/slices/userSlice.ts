@@ -52,9 +52,9 @@ const userSlice = createSlice({
     .addCase(fetchUserInfo.fulfilled, (state, action) => {
       state.loading = false;
       const requestedMemberId = action.meta.arg; // API 요청 시 사용한 memberId
-      // const storedMemberId = SecureStorage.getMemberId(); // 현재 내 ID
+      const storedMemberId = SecureStorage.getMemberId(); // 현재 내 ID
 
-      if (requestedMemberId === null) {
+      if (requestedMemberId === storedMemberId) {
         state.me = action.payload as User; // 내 정보 저장
       } else {
         state.other = action.payload as User; // 다른 유저 정보 저장

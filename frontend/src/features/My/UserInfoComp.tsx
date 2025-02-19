@@ -31,7 +31,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
         {/* <UserProfileImg className="profile-image" /> */}
         {/* <div className="profile-avatar"> */}
         {user.profileImg ? (
-          <img src={user.profileImg} alt="프로필" />
+          <img src={user.profileImg} className='profile-image' alt="프로필" />
         ) : (
           <div className="avatar-fallback">{user.nickname[0].toUpperCase()}</div>
         )}

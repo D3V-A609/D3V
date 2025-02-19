@@ -63,9 +63,9 @@ const MyPage:React.FC = () => {
 
     const { me } = useAppSelector((state) => state.user as UserState)
 
-    const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
+    // const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
 
-    const memberId = isAuthenticated ? SecureStorage.getMemberId() : 0;
+    const memberId = SecureStorage.getMemberId();
 
     const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
     const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
@@ -73,12 +73,12 @@ const MyPage:React.FC = () => {
     // API 중복 호출 방지
     const hasFetched = useRef(false);
     useEffect(() => {
-        if(memberId !== null && !hasFetched.current){   
+        if(memberId !== null && memberId !== 0 && !hasFetched.current){   
             hasFetched.current = true;
             Promise.all([
                 // 답변(푼, 못푼) 로드
-                dispatch(fetchMyLastedQuestions({isSolved: true, memberId: null})),
-                dispatch(fetchMyLastedQuestions({isSolved: false, memberId: null})),
+                dispatch(fetchMyLastedQuestions({isSolved: true, memberId: memberId})),
+                dispatch(fetchMyLastedQuestions({isSolved: false, memberId: memberId})),
                 
                 // 내가 작성한 게시글/댓글
                 dispatch(fetchMyArticles(memberId)),
@@ -89,11 +89,11 @@ const MyPage:React.FC = () => {
                 dispatch(fetchMyFeedback()),
 
                 // 내 정보 불러오기
-                dispatch(fetchUserInfo(null)),
+                dispatch(fetchUserInfo(memberId)),
 
                 // 내 팔로워, 팔로잉 목록 불러오기
-                dispatch(fetchUserFollowers(null)),
-                dispatch(fetchUserFollowings(null)),
+                dispatch(fetchUserFollowers(memberId)),
+                dispatch(fetchUserFollowings(memberId)),
 
                 // 북마크 불러오기
                 dispatch(fetchAllBookmarks(memberId)),
@@ -148,7 +148,7 @@ const MyPage:React.FC = () => {
     }
 
     useEffect(()=>{
-        dispatch(fetchUserInfo(null));
+        dispatch(fetchUserInfo(Number(memberId)));
     }, [followings, followers])
 
     return (
