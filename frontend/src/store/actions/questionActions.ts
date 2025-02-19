@@ -2,7 +2,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import questionApi from "../services/questionApi";
 import getDailyQuestions from "../services/dailyQuestionApi";
-import SecureStorage from '../services/token/SecureStorage';
 
 
 // 질문 목록 조회 비동기 액션
@@ -64,8 +63,7 @@ export const fetchTop10Questions = createAsyncThunk(
 // 답변한 최신 질문 
 export const fetchMyLastedQuestions = createAsyncThunk(
   'questioins/latest',
-  async (payload: {isSolved: boolean, memberId: number | null}, {rejectWithValue}) => {
-    if (payload.memberId === null)payload.memberId = Number(SecureStorage.getMemberId());
+  async (payload: {isSolved: boolean, memberId: number}, {rejectWithValue}) => {
     try{
       const response = await questionApi.getLatestQuestions(payload.isSolved, payload.memberId);
       return response;
