@@ -24,4 +24,10 @@ public class HistoryController {
     public ResponseEntity<List<HistoryResponse>> getHistory(@PathVariable(value = "member_id") Long memberId) {
         return ResponseEntity.ok().body(historyService.getHistory(memberId));
     }
+
+    @Operation(summary = "핫뜨거")
+    @GetMapping("/streak/{member_id}")
+    public ResponseEntity<Boolean> getStreak(@PathVariable(value = "member_id") long memberId) {
+        return ResponseEntity.ok().body(historyService.getStreak(memberId));
+    }
 }

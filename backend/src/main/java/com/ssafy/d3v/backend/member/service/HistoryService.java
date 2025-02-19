@@ -9,4 +9,6 @@ public interface HistoryService {
     void createDailyHistory();
 
     void calculateStreak();
+    
+    boolean getStreak(long memberId);
 }

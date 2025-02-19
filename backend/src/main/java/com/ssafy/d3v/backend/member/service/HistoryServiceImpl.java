@@ -98,4 +98,16 @@ public class HistoryServiceImpl implements HistoryService {
                     .build());
         }
     }
+
+
+    @Override
+    public boolean getStreak(long memberId) {
+        History history = historyRepository.findByMemberIdAndDate(memberId, LocalDate.now())
+                .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
+
+        if (history.getCount() > 0) {
+            return true;
+        }
+        return false;
+    }
 }
