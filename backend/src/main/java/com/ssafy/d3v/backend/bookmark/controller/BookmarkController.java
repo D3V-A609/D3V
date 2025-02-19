@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,7 +93,7 @@ public class BookmarkController {
 
     // 질문에 연결된 북마크 갱신
     @Operation(summary = "질문 1개에 대한 북마크 갱신", description = "추가/삭제 한번에 처리")
-    @PutMapping("/question/{questionId}/bookmark")
+    @PostMapping("/question/{questionId}/bookmark")
     public ResponseEntity<?> updateQuestionBookmarks(@PathVariable("questionId") Long questionId,
                                                      @RequestBody List<Long> bookmarkIds) {
         BookmarkSelectionResponse response = bookmarkService.updateQuestionBookmarks(questionId, bookmarkIds);
@@ -103,7 +102,7 @@ public class BookmarkController {
 
     // 북마크 1개에 질문 추가
     @Operation(summary = "북마크 1개에 질문(들) 추가", description = "1 북마크 여러 질문들")
-    @PutMapping("/bookmark/{bookmarkId}/question")
+    @PostMapping("/bookmark/{bookmarkId}/question")
     public ResponseEntity<?> addQuestion(@PathVariable("bookmarkId") Long bookmarkId,
                                          @RequestBody List<Long> questionIds) {
         bookmarkService.addQuestions(bookmarkId, questionIds);

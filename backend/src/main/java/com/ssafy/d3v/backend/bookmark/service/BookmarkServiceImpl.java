@@ -254,7 +254,8 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
         if (bookmark.getAccessLevel() == AccessLevel.PROTECTED) {
             return followRepository.existsByFollowerAndFollowing(owner, member)
-                    && followRepository.existsByFollowerAndFollowing(member, owner);
+                    && followRepository.existsByFollowerAndFollowing(member, owner)
+                    || bookmark.getMember().getId().equals(member.getId());
         }
 
         return false;
