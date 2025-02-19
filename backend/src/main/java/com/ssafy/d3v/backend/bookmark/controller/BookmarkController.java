@@ -102,7 +102,7 @@ public class BookmarkController {
 
     // 북마크 1개에 질문 추가
     @Operation(summary = "북마크 1개에 질문(들) 추가", description = "1 북마크 여러 질문들")
-    @PostMapping("/bookmark/{bookmarkId}/question")
+    @PostMapping("/{bookmarkId}/question")
     public ResponseEntity<?> addQuestion(@PathVariable("bookmarkId") Long bookmarkId,
                                          @RequestBody List<Long> questionIds) {
         bookmarkService.addQuestions(bookmarkId, questionIds);
@@ -111,7 +111,7 @@ public class BookmarkController {
 
     // 북마크에 질문 삭제
     @Operation(summary = "북마크에서 질문 삭제", description = "하나의 질문을 해당 북마크에서 삭제")
-    @DeleteMapping("/bookmark/{bookmarkId}/question/{questionId}")
+    @DeleteMapping("/{bookmarkId}/question/{questionId}")
     public ResponseEntity<?> deleteQuestion(@PathVariable("bookmarkId") Long bookmarkId,
                                             @PathVariable("questionId") Long questionId) {
         bookmarkService.deleteQuestion(bookmarkId, questionId);

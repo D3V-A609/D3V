@@ -82,7 +82,6 @@ public class BookmarkServiceImpl implements BookmarkService {
         Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(id)
                 .orElseThrow();
-        // memberId -> member.getId() 로 수정 예정
         if (!bookmark.getMember().getId().equals(member.getId())) {
             throw new SecurityException("본인의 북마크만 삭제 가능");
         }
@@ -213,13 +212,13 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional
     public void deleteQuestion(Long bookmarkId, Long questionId) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userName);
         Member member = memberRepository.findMemberByEmail(userName);
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow();
         if (!bookmark.getMember().equals(member)) {
             throw new RuntimeException("본인 북마크가 아니어요");
         }
         bookmarkQuestionRepository.deleteByBookmarkIdAndQuestionId(bookmarkId, questionId);
-
     }
 
     @Override
