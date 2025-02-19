@@ -100,8 +100,12 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public Integer getCountByMemberIdAndDate(long memberId) {
+    public Long getStreak(long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow();
         return historyRepository.findByMemberIdAndDate(memberId, LocalDate.now())
-                .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다.")).getCount();
+                .filter(history -> history.getCount() > 0)
+                .map(history -> member.getOngoingStreak() + 1)
+                .orElse(0L);
     }
 }

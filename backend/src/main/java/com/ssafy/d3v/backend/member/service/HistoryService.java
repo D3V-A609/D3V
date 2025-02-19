@@ -10,5 +10,5 @@ public interface HistoryService {
 
     void calculateStreak();
 
-    Integer getCountByMemberIdAndDate(long memberId);
+    Long getStreak(long memberId);
 }

@@ -27,7 +27,7 @@ public class HistoryController {
 
     @Operation(summary = "특정 멤버의 오늘 스트릭 카운트 조회")
     @GetMapping("/streak/{member_id}")
-    public ResponseEntity<Integer> getStreak(@PathVariable(value = "member_id") Long memberId) {
-        return ResponseEntity.ok().body(historyService.getCountByMemberIdAndDate(memberId));
+    public ResponseEntity<Long> getStreak(@PathVariable(value = "member_id") Long memberId) {
+        return ResponseEntity.ok().body(historyService.getStreak(memberId));
     }
 }
