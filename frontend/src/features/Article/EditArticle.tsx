@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import { useAppDispatch } from "../../store/hooks/useRedux";
 import { updateArticle } from "../../store/actions/articleActions";
-import "./EditArticle.css";
+// import "./EditArticle.css";
 
 const categories = [
   { id: 1, name: "JOB_REVIEW", label: "합격 후기" },
@@ -101,17 +101,17 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
   return (
     <div className="edit-article">
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="category" className="form-label">
-            카테고리<span className="required">*</span>
+<form onSubmit={handleSubmit}>
+        <div className="article-form-group">
+          <label htmlFor="category" className="article-form-label">
+            카테고리<span className="article-required">*</span>
           </label>
           <select
             id="category"
             value={categoryId}
             onChange={(e) => setCategoryId(Number(e.target.value))}
             required
-            className={`form-select ${errors.category ? "error-border" : ""}`}
+            className={`article-form-select ${errors.category ? "article-error-border" : ""}`}
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -119,12 +119,12 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
               </option>
             ))}
           </select>
-          {errors.category && <span className="error-message">{errors.category}</span>}
+          {errors.category && <span className="article-error-message">{errors.category}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="title" className="form-label">
-            제목<span className="required">*</span>
+        <div className="article-form-group">
+          <label htmlFor="title" className="article-form-label">
+            제목<span className="article-required">*</span>
           </label>
           <input
             id="title"
@@ -133,14 +133,14 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className={`form-input ${errors.title ? "error-border" : ""}`}
+            className={`article-form-input ${errors.title ? "article-error-border" : ""}`}
           />
-          {errors.title && <span className="error-message">{errors.title}</span>}
+          {errors.title && <span className="article-error-message">{errors.title}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="content" className="form-label">
-            내용<span className="required">*</span>
+        <div className="article-form-group">
+          <label htmlFor="content" className="article-form-label">
+            내용<span className="article-required">*</span>
           </label>
           <ReactQuill
             theme="snow"
@@ -148,16 +148,16 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
             onChange={setContent}
             placeholder="내용을 입력해주세요"
             modules={quillModules}
-            className="quill-editor"
+            className="article-quill-editor"
           />
-          {errors.content && <span className="error-message">{errors.content}</span>}
+          {errors.content && <span className="article-error-message">{errors.content}</span>}
         </div>
 
-        <div className="form-group image-upload">
-          <label htmlFor="images" className="form-label">
+        <div className="article-form-group article-image-upload">
+          <label htmlFor="images" className="article-form-label">
             이미지 첨부
           </label>
-          <div className="form-group image-input">
+          <div className="article-form-group article-image-input">
             <input
               id="images"
               type="file"
@@ -165,10 +165,10 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
               multiple
               onChange={handleImageChange}
             />
-            <small className="image-description">
+            <small className="article-image-description">
               * 허용된 확장자: jpg, jpeg, png, gif / 파일 최대 크기: {MAX_FILE_SIZE_MB}MB
             </small>
-            {errors.images && <span className="error-message">{errors.images}</span>}
+            {errors.images && <span className="article-error-message">{errors.images}</span>}
           </div>
         </div>
 

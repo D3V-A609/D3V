@@ -13,3 +13,16 @@ export const fetchHistory = createAsyncThunk(
     }
   }
 )
+
+export const fetchTodayStreak = createAsyncThunk(
+  'history/today-streak',
+  async (memberId: number, {rejectWithValue }) => {
+    try{
+      const response = await historyApi.getTodayStreak(memberId);
+      return response.data;
+    }catch(error){
+      console.log('in history action -2: ', error);
+      return rejectWithValue('오늘의 streak 불러오는데 문제가 발생했습니다.')
+    }
+  }
+);

@@ -5,7 +5,6 @@ export const answerApi = {
   getMyAnswer: async (questionId: number) => {
     try{
       const response = await api.get<Answer[]>(`/question/${questionId}/my_answer`);
-      // return response.data.find(answer => answer.memberId === 1);
       return response.data;
     }catch(error){
       console.log('in answer api error-1: ', error)

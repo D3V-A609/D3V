@@ -1,28 +1,15 @@
-// components/Auth/socialLogin
 import React from 'react';
 import './SocialLogin.css'
 import kakaoIcon from '../../assets/images/social/kakao-icon.png'
 import naverIcon from '../../assets/images/social/naver-icon.png'
 import googleIcon from '../../assets/images/social/google-icon.svg'
 
-
 const SocialLogin: React.FC = () => {  
-  const handleGoogleLogin = (e: React.MouseEvent) => {
-    e.preventDefault(); // 폼 제출 방지
-    const REDIRECT_URI = import.meta.env.VITE_GOOGLE_OAUTH_URI;
-    window.location.href = `${REDIRECT_URI}`;
-  };
-  
-  const handleKakaoLogin = (e: React.MouseEvent) => {
-    e.preventDefault(); // 폼 제출 방지
-    const REDIRECT_URI = import.meta.env.VITE_KAKAO_OAUTH_URI;
-    window.location.href = `${REDIRECT_URI}`;
-  };
+  const handleSocialLogin = (provider: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const REDIRECT_URI = import.meta.env[`VITE_${provider}_OAUTH_URI`];
+    window.location.href = REDIRECT_URI;
 
-  const handleNaverLogin = (e: React.MouseEvent) => {
-    e.preventDefault(); // 폼 제출 방지
-    const REDIRECT_URI = import.meta.env.VITE_NAVER_OAUTH_URI;
-    window.location.href = `${REDIRECT_URI}`;
   };
 
   return (
@@ -31,8 +18,8 @@ const SocialLogin: React.FC = () => {
       <div className="social-buttons">
         <div className="social-button-wrapper">
           <button 
-            type="button" // type을 button으로 명시
-            onClick={handleNaverLogin} 
+            type="button"
+            onClick={handleSocialLogin('NAVER')}
             className="social-button naver"
           >
             <img src={naverIcon} alt="naver" />
@@ -41,8 +28,8 @@ const SocialLogin: React.FC = () => {
         </div>
         <div className="social-button-wrapper">
           <button 
-            type="button" // type을 button으로 명시
-            onClick={handleKakaoLogin} 
+            type="button"
+            onClick={handleSocialLogin('KAKAO')}
             className="social-button kakao"
           >
             <img src={kakaoIcon} alt="kakao" />
@@ -51,8 +38,8 @@ const SocialLogin: React.FC = () => {
         </div>
         <div className="social-button-wrapper">
           <button 
-            type="button" // type을 button으로 명시
-            onClick={handleGoogleLogin} 
+            type="button"
+            onClick={handleSocialLogin('GOOGLE')}
             className="social-button google"
           >
             <img src={googleIcon} alt="google" />
@@ -63,6 +50,5 @@ const SocialLogin: React.FC = () => {
     </div>
   );
 };
-
 
 export default SocialLogin;

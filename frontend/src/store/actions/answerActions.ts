@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { answerApi } from "../services/answerApi";
 import { AnswerState, AnswerResponse } from "../slices/answerSlice";
+import SecureStorage from "../services/token/SecureStorage";
 
 export const fetchMyAnswer = createAsyncThunk<Answer[], number, { rejectValue: string }>(
   'answers/fetchMyAnswer',
@@ -45,7 +46,7 @@ export const toggleLike = createAsyncThunk(
       throw new Error('답변을 찾을 수 없습니다.');
     }
 
-    const memberId = 1; // 실제 사용자 ID로 교체
+    const memberId = Number(SecureStorage.getMemberId()); 
 
     try {
       if (answer.isLiked) {

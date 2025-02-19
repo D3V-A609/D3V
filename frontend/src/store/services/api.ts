@@ -6,14 +6,17 @@ const api: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
   timeout: 10000,  // 10초
 });
 
 api.interceptors.request.use(
   (config) => {
     const token = TokenService.getAccessToken();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.withCredentials = true; 
     }
     return config;
   },

@@ -22,21 +22,21 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
       // createdAt을 Date 객체로 변환
       const date = new Date(record.createdAt); // UTC 시간 기준
       // 로컬 시간으로 변환
-      const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); 
+      // const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000); 
 
       // 날짜를 포맷팅하여 'MMM DD, YYYY' 형태로 변환 (예: Jan 23, 2024)
-      const formattedDate = localDate.toLocaleString('en-US', {
+      const formattedDate = date.toLocaleString('ko-KR', {
         month: 'short',
         day: '2-digit',
         year: 'numeric',
       });
 
       // 날짜 비교를 위해 시간 부분을 00:00:00으로 초기화
-      localDate.setHours(0, 0, 0, 0);
+      date.setHours(0, 0, 0, 0);
 
       // 오늘 날짜인 경우 첫 번째 항목에만 "Today" 표시
       let title = "     "; // 기본적으로 빈 문자열
-      if (localDate.getTime() === today.getTime()) {
+      if (date.getTime() === today.getTime()) {
         if (!todayFlag) {
           title = "Today"; // 첫 번째로 만나는 오늘 날짜만 "Today"로 설정
           todayFlag = true; // 플래그를 설정하여 이후 오늘 날짜는 빈 문자열로 표시

@@ -62,9 +62,9 @@ export const questionApi = {
   },
 
   /** 답변한 최신 질문 불러오기 */
-  getLatestQuestions: async(isSolved:  boolean) => {
+  getLatestQuestions: async(isSolved:  boolean, memberId: number) => {
     try{
-      const response = await api.get<myQuestion[]>(`/lastest_question?is_solved=${isSolved}`);
+      const response = await api.get<myQuestion[]>(`/lastest_question?is_solved=${isSolved}&memberId=${memberId}`);
       return response.data;
     }catch(error){
       console.log('in question api error-4: ', error);

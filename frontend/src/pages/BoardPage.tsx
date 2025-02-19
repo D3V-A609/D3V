@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "../store/hooks/useRedux";
-import { fetchArticles } from "../store/actions/articleActions";
+import { useAppSelector, useAppDispatch } from "../store/hooks/useRedux";
 import PageHeader from "../components/PageHeader/PageHeader";
 import ArticleList from "../features/Article/ArticleList";
 import ArticleDetail from "../features/Article/ArticleDetail";
@@ -8,6 +7,7 @@ import WriteArticle from "../features/Article/WriteArticle";
 import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
+import { fetchArticles } from "../store/actions/articleActions";
 import { useLocation } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
@@ -20,10 +20,7 @@ const categoryMap: Record<string, string> = {
 
 const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const { articles, error, pagination } = useAppSelector(
-    (state) => state.articles || { articles: [], error: null, pagination: undefined }
-  );
+  const { users } = useAppSelector(state => state.user);
   const [params, setParams] = useState({
     category: "전체",
     searchQuery: "",
@@ -32,36 +29,55 @@ const BoardPage: React.FC = () => {
     page: 1,
     size: 15
   });
-  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">("list");
-  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(null);
+
+  const location = useLocation();
+  const state = location.state as {selectedArticleId?: number; currentView?: 'detail'};
+
+  const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">(state?.currentView || "list");
+  const [selectedArticleId, setSelectedArticleId] = useState<number | null>(state?.selectedArticleId || null);
 
   const fetchArticlesData = useCallback(() => {
-    if (currentView === "list") {
-      const apiCategory = categoryMap[params.category];
-      dispatch(fetchArticles({ 
-        category: apiCategory, 
-        keyword: params.searchQuery, 
-        sort: params.sortField, 
-        order: params.sortOrder,
-        page: params.page,
-        size: params.size
-      }));
-    }
-  }, [dispatch, currentView, params.category, params.searchQuery, params.sortField, params.sortOrder, params.page, params.size]);
-
+    const apiCategory = categoryMap[params.category];
+    dispatch(fetchArticles({ 
+      category: apiCategory, 
+      keyword: params.searchQuery, 
+      sort: params.sortField, 
+      order: params.sortOrder,
+      page: params.page,
+      size: params.size
+    }));
+  }, [dispatch, params]);
+  
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData]);
 
+  // detail 페이지에서 뒤로가기 시 list로 currentView 수정정
   useEffect(() => {
-    if(location.state?.selectedArticleId && location.state?.currentView){
-      setSelectedArticleId(location.state.selectedArticleId);
-      setCurrentView(location.state.currentView);
-    }
-  }, [location.state])
+    const handlePopState = () => {
+      if (currentView === "detail") {
+        setCurrentView("list"); // ✅ currentView가 detail이면 list로 변경
+        window.history.pushState(null, "", location.pathname); // ✅ 뒤로 가기 무력화 (현재 페이지 유지)
+      } else {
+        window.history.back(); // ✅ currentView가 list이면 정상적인 뒤로 가기 수행
+      }
+    };
+  
+    // ✅ "뒤로 가기"를 막기 위해 현재 상태를 저장
+    window.history.pushState(null, "", location.pathname);
+    window.addEventListener("popstate", handlePopState);
+  
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [currentView, location.pathname]); // ✅ location.pathname 추가
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
-    setParams(prev => ({ ...prev, ...newParams, page: 1 }));
+    setParams(prev => {
+      const updatedParams = { ...prev, ...newParams, page: 1 };
+      fetchArticlesData();
+      return updatedParams;
+    });
   };
 
   const handleWriteClick = () => setCurrentView("create");
@@ -77,8 +93,6 @@ const BoardPage: React.FC = () => {
       fetchArticlesData();
     }
   }, [fetchArticlesData]);
-
-  if (error) return <div>Error occurred: {error}</div>;
 
   return (
     <div className="board-page">
@@ -114,12 +128,9 @@ const BoardPage: React.FC = () => {
           />
 
           <ArticleList
-            articles={articles}
-            pagination={pagination}
-            onPageChange={(pageNumber) => handleParamChange({ page: pageNumber - 1 })}
-            onSort={(field, order) => handleParamChange({ sortField: field, sortOrder: order })}
+            params={params}
+            onParamChange={handleParamChange}
             onArticleClick={handleArticleClick}
-            currentSort={{ field: params.sortField, order: params.sortOrder }}
           />
         </>
       )}
@@ -128,6 +139,7 @@ const BoardPage: React.FC = () => {
         <ArticleDetail
           articleId={selectedArticleId}
           onBackClick={handleBackToList}
+          userInfo={users}
         />
       )}
 

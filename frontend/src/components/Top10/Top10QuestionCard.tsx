@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TechIcon from "../TechIcon/TechIcon";
-import { RiBookmarkLine } from "react-icons/ri";
+// import { RiBookmarkLine } from "react-icons/ri";
 import { HiArrowRight } from "react-icons/hi";
 import "./Top10QuestionCard.css";
 
@@ -47,9 +47,9 @@ const Top10QuestionCard: React.FC<Top10QuestionCardProps> = ({
 
   return (
     <div className="top10-question-card" onClick={onClick}>
-      <div className="bookmark-icon">
+      {/* <div className="bookmark-icon">
         <RiBookmarkLine size={20} />
-      </div>
+      </div> */}
       <h3 className="card-title">{title}</h3>
       <div className="card-footer">
         {/* 기술 카테고리 표시 */}

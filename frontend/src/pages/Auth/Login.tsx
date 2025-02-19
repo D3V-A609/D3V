@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from 'react-toastify';
-import SocialLogin from '../../components/Auth/SocialLogin';
+// import SocialLogin from '../../components/Auth/SocialLogin';
 import authApi from '../../store/services/authApi';
 import tokenService from '../../store/services/token/tokenService';
 import { loginSuccess, setError } from '../../store/slices/authSlice';
@@ -13,6 +13,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,15 +29,22 @@ const Login: React.FC = () => {
     e.preventDefault();
   };
 
+  // 로그인 성공 시 처리
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       dispatch(setError(null)); // 에러 상태 초기화
 
+      // 로그인 API 호출
       const response = await authApi.login({ email, password });
-      
+
+      // // 로그인 유지 체크박스가 체크된 경우 useAuth()를 하도록 함
+      // if (rememberMe) {}
+
+      // AccessToken을 저장
       tokenService.setAccessToken(response.result.AccessToken);
-      
+
+      // 로그인 성공 후 처리
       dispatch(loginSuccess({ 
         isAuthenticated: true,
         user: {
@@ -73,6 +81,45 @@ const Login: React.FC = () => {
       });
     }
   };
+
+  // 임시 비밀번호 요청 핸들러 추가
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error('이메일을 입력해주세요.', {
+        position: "bottom-left",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+      return;
+    }
+
+    try {
+      await authApi.requestTemporaryPassword(email);
+      toast.success('임시 비밀번호가 이메일로 전송되었습니다.', {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    } catch (error) {
+      toast.error('임시 비밀번호 발급에 실패했습니다.', {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    }
+  };
+
 
   return (
     <div className="login-container">
@@ -118,18 +165,27 @@ const Login: React.FC = () => {
               </div>
             </div>
             <div className="login-options">
-              <div className="remember-me">
-                <input type="checkbox" id="remember" />
+              {/* <div className="remember-me">
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={rememberMe} 
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
                 <label htmlFor="remember">로그인 상태 유지</label>
-              </div>
-              <div className="forgot-password">
-                <Link to="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
+              </div> */}
+              <div className="login-options">
+                <div className="forgot-password">
+                  <a href="#" onClick={handleForgotPassword}>
+                    비밀번호를 잊으셨나요?
+                  </a>
+                </div>
               </div>
             </div>
             <button type="submit" className="register-button">
               로그인하기
             </button>
-            <SocialLogin />
+            {/* <SocialLogin /> */}
             <div className="signup-prompt">
               계정이 없으신가요? <Link to="/auth/signup">회원가입</Link>
             </div>

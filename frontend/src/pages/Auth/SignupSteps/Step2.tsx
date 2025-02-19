@@ -2,50 +2,131 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { setCurrentStep, updateSignupForm } from "../../../store/slices/authSlice";
+import authApi from '../../../store/services/authApi';
 import "./Step2.css";
+
+// Constants
+const CONSTANTS = {
+  MAX_FILE_SIZE_MB: 5,
+  ALLOWED_EXTENSIONS: ["jpg", "jpeg", "png", "gif"],
+  GITHUB_URL_PATTERN: /^(https?:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9-]+\/?$/,
+} as const;
+
+type AllowedExtension = typeof CONSTANTS.ALLOWED_EXTENSIONS[number];
+
+// Types
+interface ProfileState {
+  profileImage?: File;
+  nickname: string;
+  githubUrl: string;
+}
+
+interface ValidationMessages {
+  error: string;
+  success: string;
+  githubError: string;
+}
 
 const Step2: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [profileImage, setProfileImage] = useState<File | undefined>(undefined);
-  const [nickname, setNickname] = useState('');
-  const [githubUrl, setgithubUrl] = useState('');
 
-  const MAX_FILE_SIZE_MB = 5;
-  const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif"];
+  // State
+  const [profileData, setProfileData] = useState<ProfileState>({
+    profileImage: undefined,
+    nickname: '',
+    githubUrl: '',
+  });
 
+  const [messages, setMessages] = useState<ValidationMessages>({
+    error: '',
+    success: '',
+    githubError: '',
+  });
+
+  // Validation functions
+  const validateImage = (file: File): boolean => {
+    if (file.size > CONSTANTS.MAX_FILE_SIZE_MB * 1024 * 1024) {
+      alert(`파일 크기는 ${CONSTANTS.MAX_FILE_SIZE_MB}MB 이하여야 합니다.`);
+      return false;
+    }
+
+    const extension = file.name.split('.').pop()?.toLowerCase() as string;
+    const isValidExtension = CONSTANTS.ALLOWED_EXTENSIONS.includes(extension as AllowedExtension);
+    
+    if (!extension || !isValidExtension) {
+      alert('허용되지 않는 파일 형식입니다. jpg, jpeg, png, gif 파일만 업로드 가능합니다.');
+      return false;
+    }
+
+    return true;
+  };
+
+
+  const validateGithubUrl = (url: string): boolean => {
+    if (!url) return true;
+    return CONSTANTS.GITHUB_URL_PATTERN.test(url);
+  };
+
+  // Event handlers
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      
-      // 파일 크기 검증
-      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        alert(`파일 크기는 ${MAX_FILE_SIZE_MB}MB 이하여야 합니다.`);
-        return;
-      }
-
-      // 확장자 검증
-      const extension = file.name.split('.').pop()?.toLowerCase();
-      if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
-        alert('허용되지 않는 파일 형식입니다. jpg, jpeg, png, gif 파일만 업로드 가능합니다.');
-        return;
-      }
-
-      setProfileImage(file);
+    const file = e.target.files?.[0];
+    if (file && validateImage(file)) {
+      setProfileData(prev => ({ ...prev, profileImage: file }));
     }
   };
 
-  const handleNext = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (nickname.trim()) {
-      // Redux store에는 기본 정보만 저장
-      dispatch(updateSignupForm({
-        nickname,
-        githubUrl,
-        profileImage, // 이미지 파일도 함께 저장
+  const handleNicknameBlur = async () => {
+    if (!profileData.nickname.trim()) return;
+
+    try {
+      const response = await authApi.checkNicknameDuplication(profileData.nickname);
+      setMessages(prev => ({
+        ...prev,
+        error: response.result ? response.message : '',
+        success: response.result ? '' : '사용 가능한 닉네임입니다.',
       }));
-      dispatch(setCurrentStep(3));      
-      navigate('/auth/signup/complete');
+    } catch {
+      setMessages(prev => ({
+        ...prev,
+        error: '닉네임 중복 확인에 실패했습니다.',
+        success: '',
+      }));
+    }
+  };
+
+  const handleGithubUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setProfileData(prev => ({ ...prev, githubUrl: url }));
+    setMessages(prev => ({
+      ...prev,
+      githubError: url && !validateGithubUrl(url) ? '올바른 GitHub 프로필 URL을 입력해주세요' : '',
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!profileData.nickname.trim()) {
+      setMessages(prev => ({ ...prev, error: '닉네임을 입력해주세요.' }));
+      return;
+    }
+
+    if (profileData.githubUrl && !validateGithubUrl(profileData.githubUrl)) {
+      return;
+    }
+
+    try {
+      const response = await authApi.checkNicknameDuplication(profileData.nickname);
+      if (!response.result) {
+        dispatch(updateSignupForm(profileData));
+        dispatch(setCurrentStep(3));
+        navigate('/auth/signup/complete');
+      } else {
+        setMessages(prev => ({ ...prev, error: response.message }));
+      }
+    } catch {
+      setMessages(prev => ({ ...prev, error: '닉네임 중복 확인에 실패했습니다.' }));
     }
   };
 
@@ -55,11 +136,11 @@ const Step2: React.FC = () => {
       <p className="signup-description">
         닉네임은 필수입니다. 프로필 사진과 Github 아이디는 선택사항입니다.
       </p>
-      <form onSubmit={handleNext}>
+      <form onSubmit={handleSubmit}>
         <div className="profile-upload">
           <div className="profile-image-container">
-            {profileImage ? (
-              <img src={URL.createObjectURL(profileImage)} alt="Profile Preview" />
+            {profileData.profileImage ? (
+              <img src={URL.createObjectURL(profileData.profileImage)} alt="Profile Preview" />
             ) : (
               <div className="profile-placeholder">
                 <span>+</span>
@@ -77,24 +158,28 @@ const Step2: React.FC = () => {
             className="hidden"
           />
         </div>
-        <div className="form-group">
+        <div className="signup-form-group">
           <label>닉네임 *</label>
           <input
             type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            value={profileData.nickname}
+            onChange={(e) => setProfileData(prev => ({ ...prev, nickname: e.target.value }))}
+            onBlur={handleNicknameBlur}
             placeholder="닉네임을 입력해주세요"
             required
           />
+          {messages.error && <span className="signup-error-message">{messages.error}</span>}
+          {messages.success && <span className="signup-success-message">{messages.success}</span>}
         </div>
-        <div className="form-group">
-          <label>Github 아이디 (선택사항)</label>
+        <div className="signup-form-group">
+          <label>Github 주소 (선택사항)</label>
           <input
-            type="text"
-            value={githubUrl}
-            onChange={(e) => setgithubUrl(e.target.value)}
-            placeholder="Github 아이디를 입력해주세요"
+            type="url"
+            value={profileData.githubUrl}
+            onChange={handleGithubUrlChange}
+            placeholder="https://github.com/username"
           />
+          {messages.githubError && <span className="signup-error-message">{messages.githubError}</span>}
         </div>
         <button type="submit" className="next-button">
           다음

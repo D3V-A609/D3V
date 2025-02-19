@@ -99,6 +99,30 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
     }
   }
 
+  // 뒤로 가기를 실행할 때에도 detail 질문 창으로 이동하도록 설정
+  useEffect(() => {
+    const handlePopState = () => {
+      const isConfirmed = confirm("녹음된 내용이 모두 저장되지 않습니다. 그래도 돌아가시겠습니까?");
+      
+      if (isConfirmed) {
+        handleReset();
+        exitRecordingMode();
+        window.history.back(); // ✅ 사용자가 확인하면 실제 뒤로 가기 실행
+      } else {
+        // ✅ 뒤로 가기 무력화 (현재 페이지 상태 다시 푸시)
+        window.history.pushState(null, "", location.href);
+      }
+    };
+  
+    window.history.pushState(null, "", location.href); // ✅ 현재 상태를 저장하여 "뒤로 가기" 무력화
+    window.addEventListener("popstate", handlePopState);
+  
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+  
+
   // 서버로 녹음 파일 데이터 전송 버튼
   const uploadRecording = (mediaBlob: Blob) => {
     if(mediaBlob){
@@ -109,6 +133,7 @@ const RecordView: React.FC<RecordProp> = ({ content }) => {
   const handleSubmitRecording = (mediaBlob: Blob | undefined) => {
     if(!mediaBlob) return;
     uploadRecording(mediaBlob);
+    handleReset();
     exitRecordingMode();
   }
 

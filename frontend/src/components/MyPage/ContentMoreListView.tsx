@@ -1,15 +1,20 @@
 import React, { useCallback, useEffect } from "react";
 import styles from  "./ContentMoreListView.module.css";
+import { moveToArticleDetail, moveToQuestionDetail } from "../../utils/navigation";
+import { useAppDispatch } from "../../store/hooks/useRedux";
+import { useNavigate } from "react-router-dom";
 
 interface ContentMoreProps {
   title: string;
   titleIcon?: JSX.Element;
-  contents: string[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
-  handleDetailContent?: (id: number) => void
+  contents: string[] | myQuestion[] | ArticleComment[] | ArticleItem[] | Answer[] | Feedback[];
   onClose: () => void;
+  handleDetail: string
 }
 
-const ContentMoreListView: React.FC<ContentMoreProps> = ({ contents, onClose, title, titleIcon, handleDetailContent }) => {
+const ContentMoreListView: React.FC<ContentMoreProps> = ({ contents, onClose, title, titleIcon, handleDetail }) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   // ✅ ESC 키를 눌러도 모달이 닫히도록 설정
   const handleKeyDown = useCallback(
@@ -62,7 +67,10 @@ const ContentMoreListView: React.FC<ContentMoreProps> = ({ contents, onClose, ti
             }`}
             onClick={() => {
               if(content !== null && typeof content === 'object'){
-                if("questionId" in content) return handleDetailContent?.(content.questionId);
+                if("questionId" in content && handleDetail==='answer-commu'){moveToQuestionDetail(navigate, dispatch, content.questionId, true)}
+                else if("questionId" in content && handleDetail==='answer'){moveToQuestionDetail(navigate, dispatch, content.questionId, false)}
+                else if("articleId" in content && handleDetail === 'article') { moveToArticleDetail(navigate, content.articleId)}
+                else if(handleDetail === 'article' && "id" in content) { moveToArticleDetail(navigate, content.id)}
               }
             }}
             >

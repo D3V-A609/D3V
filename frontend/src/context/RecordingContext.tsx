@@ -34,6 +34,8 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [elapsedTime, setElapsedTime] = useState(0); // 녹음 경과 시간 관리
   const [startTime, setStartTime] = useState(0);
 
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+
 
   // audio visualizer을 위한 설정
   const [audioLevel, setAudioLevel] = useState(0);
@@ -55,6 +57,7 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const startRecording = () => {
     if(isStartRecordFirst) return; // 녹음이 이미 시작된 ㅕㅇ우 방지지
     navigator.mediaDevices.getUserMedia({ audio: true}).then((stream) => {
+      mediaStreamRef.current = stream;
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       recorderChunksRef.current = []; // 이전 녹음 데이터 초기화
@@ -69,10 +72,15 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if(recorderChunksRef.current.length > 0){
           const blob = new Blob(recorderChunksRef.current, { type: 'audio/webm'});
           setMediaBlob(blob);
-        }        
+        }   
+
+        stream.getAudioTracks().forEach((track) =>{
+          track.stop();
+        } ) 
+          
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(100); // timeslice - 100ms 단위로 데이터 받기
       setIsRecording(true);
       setIsPaused(false);
       setIsRecordingStopped(false);  // 녹음 종료 상태 초기화
@@ -93,6 +101,12 @@ export const RecordingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     stopAudioAnalysis();
 
     mediaRecorderRef.current?.stop();
+
+    // 마이크 스트림 해제(녹음 중지 시 자동으로 마이크 스트림 해제)
+    if(mediaStreamRef.current){
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
 
     setElapsedTime(0);
     setStartTime(0);

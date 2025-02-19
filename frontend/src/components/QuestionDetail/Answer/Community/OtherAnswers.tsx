@@ -20,7 +20,7 @@ const OtherAnswers: React.FC<OtherAnswersProps> = ({ answers }) => {
   useEffect(() => {
     const uniqueUserIds = [...new Set(answers.map(answer => answer.memberId))];
     dispatch(fetchMultipleUserInfo(uniqueUserIds));
-  }, [dispatch, answers]);
+  }, [dispatch, JSON.stringify(answers.map(answer => answer.memberId))]); // answers가 완전히 동일한 경우 리렌더링 방지 
 
   const getSortedAnswers = () => {
     return [...answers].sort((a, b) => {
