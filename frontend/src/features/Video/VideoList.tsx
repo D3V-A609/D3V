@@ -1,5 +1,5 @@
 import React from 'react';
-import './VideoList.css';
+import { Link } from 'react-router-dom';
 
 interface Video {
   id: { videoId: string };
@@ -12,19 +12,20 @@ interface Video {
 
 interface VideoListProps {
   videos: Video[];
-  onVideoSelect: (videoId: string) => void;
 }
 
-const VideoList: React.FC<VideoListProps> = ({ videos, onVideoSelect }) => (
-  <div className="video-list">
-    {videos.map((video) => (
-      <div key={video.id.videoId} className="video-item" onClick={() => onVideoSelect(video.id.videoId)}>
-        <img src={video.snippet.thumbnails.medium.url} alt={video.snippet.title} />
-        <h3>{video.snippet.title}</h3>
-        <p>{video.snippet.channelTitle}</p>
-      </div>
-    ))}
-  </div>
-);
+const VideoList: React.FC<VideoListProps> = ({ videos }) => {
+  return (
+    <div className="video-list">
+      {videos.map((video) => (
+        <Link to={`/video/${video.id.videoId}`} key={video.id.videoId} className="video-item">
+          <img src={video.snippet.thumbnails.medium.url} alt={video.snippet.title} />
+          <h3>{video.snippet.title}</h3>
+          <p>{video.snippet.channelTitle}</p>
+        </Link>
+      ))}
+    </div>
+  );
+};
 
 export default VideoList;

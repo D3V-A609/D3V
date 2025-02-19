@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useYoutubeApi } from '../store/services/youtubeApi';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../store/hooks/useRedux';
+import { fetchVideos } from '../store/actions/youtubeActions';
+import { fetchJobs } from '../store/actions/jobActions';
+import Top10Filter from '../components/Top10/Top10Filter';
 import VideoList from '../features/Video/VideoList';
-import VideoDetail from '../features/Video/VideoDetail';
+import { RootState } from '../store/reducers';
 import PageHeader from "../components/PageHeader/PageHeader"
 import { FaYoutube } from "react-icons/fa6";
-import './VideoPage.css';
+import './VideoPage.css'
+
 
 const VideoPage: React.FC = () => {
-  const { videos, error, fetchVideos, nextPageToken } = useYoutubeApi();
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
-  const [searchQuery] = useState('');
+  const dispatch = useAppDispatch();
+  const { videos, loading, error } = useSelector((state: RootState) => state.youtube);
+  const userFavoriteJob = useSelector((state: RootState) => state.user.me?.favoriteJob);
+  const [selectedJob, setSelectedJob] = useState(userFavoriteJob || 'FRONTEND');
+  const [jobCategories, setJobCategories] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    fetchVideos('software developer interview');
-  }, [fetchVideos]);
+    dispatch(fetchJobs()).unwrap().then((jobs: string[]) => {
+      setJobCategories(
+        jobs.reduce((acc, job) => {
+          acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+          return acc;
+        }, {} as { [key: string]: string })
+      );
+    }).catch((error) => console.error('Failed to fetch jobs:', error));
+  }, [dispatch]);
 
-  const handleLoadMore = () => {
-    if (nextPageToken) {
-      fetchVideos(searchQuery, nextPageToken);
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchVideos(`${jobCategories[selectedJob] || selectedJob}`));
+  }, [dispatch, selectedJob, jobCategories]);
 
   return (
     <div className="video-page">
@@ -28,21 +40,16 @@ const VideoPage: React.FC = () => {
       description="YouTube에서 엄선한 면접 준비 영상을 확인하세요!"
       icon={<FaYoutube />}
       iconStyle="youtube-icon"
-    />
-    {error && <p className="error-message">Error: {error}</p>}
-    {selectedVideoId ? (
-      <VideoDetail videoId={selectedVideoId} onBack={() => setSelectedVideoId(null)} />
-    ) : (
-      <>
-        <VideoList videos={videos} onVideoSelect={setSelectedVideoId} />
-        {nextPageToken && (
-          <button onClick={handleLoadMore} className="load-more-button">
-            더 보기
-          </button>
-        )}
-      </>
-    )}
-  </div>
+      />
+
+      <Top10Filter
+        selectedJob={selectedJob}
+        onJobChange={setSelectedJob}
+        jobCategories={jobCategories}
+      />
+      {error && <p>Error: {error}</p>}
+      {!loading && !error && <VideoList videos={videos} />}
+    </div>
   );
 };
 

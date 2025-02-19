@@ -22,6 +22,7 @@ import AllQuestionPage from './pages/AllQuestionPage.tsx';
 import BoardPage from './pages/BoardPage.tsx';
 // import AIPage from './pages/AIPage.tsx';
 import VideoPage from './pages/VideoPage.tsx';
+import VideoDetail from './features/Video/VideoDetail.tsx';
 import MyPage from './pages/MyPage.tsx';
 import QuestionDetailPage from './pages/QuestionDetailPage.tsx';
 
@@ -127,7 +128,8 @@ function App() {
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/all-questions', element: <ProtectedRoute><AllQuestionPage /></ProtectedRoute> },
-        { path: '/video', element: <VideoPage /> },
+        { path: '/video', element: <ProtectedRoute><VideoPage /></ProtectedRoute> },
+        { path: '/video/:videoId', element: <ProtectedRoute><VideoDetail /></ProtectedRoute>},
         { 
           path: '/my', 
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
@@ -137,7 +139,7 @@ function App() {
           path: '/profile/:id', 
           element: <ProtectedRoute><OtherPage /></ProtectedRoute> 
         },
-        { path: '/board', element: <BoardPage /> },
+        { path: '/board', element: <ProtectedRoute><BoardPage /></ProtectedRoute> },
         { 
           path: '/question', 
           element: (
