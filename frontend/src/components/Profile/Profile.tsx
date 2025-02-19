@@ -20,6 +20,9 @@ const Profile: React.FC<ProfileProps> = ({ profileImg, favoriteJob, nickname, us
     else {moveToOtherProfile(navigate, userId)}
   } 
 
+  const nicknameInitial = nickname?.[0]?.toUpperCase() ?? "D3V";
+
+
   return (
     <div className="profile-container" onClick={() =>moveToProfile(userId)}>
       {/* 프로필 이미지 */}
@@ -27,7 +30,7 @@ const Profile: React.FC<ProfileProps> = ({ profileImg, favoriteJob, nickname, us
         {profileImg ? (
           <img src={profileImg} alt="프로필" />
         ) : (
-          <div className="avatar-fallback">{nickname[0].toUpperCase()}</div>
+          <div className="avatar-fallback">{nicknameInitial}</div>
         )}
       </div>
 

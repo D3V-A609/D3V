@@ -23,6 +23,9 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
     if(count > 0) return openFollowModal(mode);
   }
 
+  const nicknameInitial = user?.nickname?.[0]?.toUpperCase() ?? "D3V";
+
+
   return (
     <div className='user-detail-info-container'>
       {/* 왼쪽 프로필 이미지 */}
@@ -33,7 +36,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
         {user.profileImg ? (
           <img src={user.profileImg} className='profile-image' alt="프로필" />
         ) : (
-          <div className="avatar-fallback">{user.nickname[0].toUpperCase()}</div>
+          <div className="avatar-fallback">{nicknameInitial}</div>
         )}
       {/* </div> */}
       </div>
