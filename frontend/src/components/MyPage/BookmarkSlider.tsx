@@ -6,6 +6,7 @@ import BookmarkDetailModal from '../Bookmark/BookmarkDetailModal';
 
 interface BookmarkSliderProps {
   bookmarks: Bookmark[];
+  onViewDetails: (bookmarkId: number) => void;
 }
 
 const BookmarkSlider: React.FC<BookmarkSliderProps> = ({ bookmarks }) => {

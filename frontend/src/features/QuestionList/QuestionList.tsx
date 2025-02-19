@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch} from "../../store/hooks/useRedux";
-import { setSelectedQuestionId } from "../../store/slices/questionSlice";
 import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
@@ -66,10 +65,10 @@ const QuestionList: React.FC<QuestionListProps> = ({
   };
 
   // 질문 클릭 핸들러: 상세 페이지로 이동
-  const handleQuestionClick = (id: number) => {
-    dispatch(setSelectedQuestionId(id));
-    navigate(`/question`);
-  };
+  // const handleQuestionClick = (id: number) => {
+  //   dispatch(setSelectedQuestionId(id));
+  //   navigate(`/question`);
+  // };
 
   return (
     <div className="question-list">

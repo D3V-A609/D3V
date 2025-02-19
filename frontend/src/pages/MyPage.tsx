@@ -31,6 +31,7 @@ import FollowModalView from '../components/MyPage/FollowModalView';
 import { moveToAllQuesitons } from '../utils/navigation';
 import { fetchAllBookmarks } from '../store/actions/bookmarkActions';
 import BookmarkSlider from '../components/MyPage/BookmarkSlider';
+import BookmarkDetailModal from '../components/Bookmark/BookmarkDetailModal';
 
 const MyPage:React.FC = () => {
     const dispatch = useAppDispatch();
@@ -67,6 +68,7 @@ const MyPage:React.FC = () => {
     const memberId = isAuthenticated ? SecureStorage.getMemberId() : 0;
 
     const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
+    const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
@@ -157,7 +159,10 @@ const MyPage:React.FC = () => {
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>
             {bookmarks.length > 0 ? (
-            <BookmarkSlider bookmarks={bookmarks} />
+            <BookmarkSlider
+                bookmarks={bookmarks}
+                onViewDetails={(bookmarkId: number) => setSelectedBookmarkId(bookmarkId)}
+            />
             ) : (
             <p>북마크가 없습니다.</p>
             )}
@@ -188,6 +193,10 @@ const MyPage:React.FC = () => {
         {/* 모달 렌더링 */}
         {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} onClose={closeModal} handleDetail={modalData.handleDetail} />}  
         {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} memberId={null} />}
+        {/* BookmarkDetailModal 렌더링 */}
+        {selectedBookmarkId && (
+            <BookmarkDetailModal bookmarkId={selectedBookmarkId} onClose={closeModal} />
+        )}
     </div>)
 }
 
