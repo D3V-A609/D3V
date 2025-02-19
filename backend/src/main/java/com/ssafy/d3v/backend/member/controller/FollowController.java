@@ -49,4 +49,5 @@ public class FollowController {
         FollowsResponse response = followService.getFollowers(memberId);
         return ResponseEntity.ok(response);
     }
+
 }

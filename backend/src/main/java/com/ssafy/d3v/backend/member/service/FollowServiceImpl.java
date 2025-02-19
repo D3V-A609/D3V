@@ -90,4 +90,13 @@ public class FollowServiceImpl implements FollowService {
                 .follows(follows)
                 .build();
     }
+
+    @Override
+    public Boolean isFollowing(Long memberId) {
+        Member other = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        String memberName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findMemberByEmail(memberName);
+        return followRepository.existsByFollowerAndFollowing(member, other);
+    }
 }

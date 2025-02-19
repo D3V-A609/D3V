@@ -61,10 +61,14 @@ public class MemberServiceImpl implements MemberService {
     private final HistoryRepository historyRepository;
     @Lazy
     private final BookmarkService bookmarkService;
+    private final FollowService followService;
 
     @Override
     public MemberResponse get(long memberId) {
         Member member = memberRepository.findMemberById(memberId).orElseThrow();
+        log.info(member.getEmail());
+        Member viewer = getMember();
+        Boolean isFollow = member.getId().equals(viewer.getId()) ? null : followService.isFollowing(member.getId());
         return MemberResponse.builder()
                 .memberId(member.getId())
                 .nickname(member.getNickname())
@@ -78,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
                 .favoriteJob(member.getFavoriteJob())
                 .followerCount(followRepository.countByFollowing(member))
                 .followingCount(followRepository.countByFollower(member))
+                .isFollow(isFollow)
                 .build();
     }
 

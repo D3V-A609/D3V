@@ -18,6 +18,8 @@ public record MemberResponse(
         LocalDateTime createdAt,
         JobRole favoriteJob,
         int followerCount,
-        int followingCount
+        int followingCount,
+        Boolean isFollow
 ) {
 }
+

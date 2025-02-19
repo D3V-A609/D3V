@@ -10,4 +10,6 @@ public interface FollowService {
     FollowsResponse getFollowers(Long memberId);
 
     FollowsResponse getFollowings(Long memberId);
+
+    Boolean isFollowing(Long memberId);
 }
