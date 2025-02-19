@@ -1,5 +1,6 @@
 package com.ssafy.d3v.backend.question.controller;
 
+import com.ssafy.d3v.backend.bookmark.service.BookmarkService;
 import com.ssafy.d3v.backend.member.service.MemberService;
 import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
@@ -33,6 +34,7 @@ public class QuestionController {
     private final QuestionService questionService;
     private final ServedQuestionService servedQuestionService;
     private final MemberService memberService;
+    private final BookmarkService bookmarkService;
 
     @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
     @GetMapping
@@ -83,10 +85,11 @@ public class QuestionController {
     }
 
     private QuestionResponse getQuestionResponse(Long memberId, QuestionDto question) {
+        Boolean bookmarked = bookmarkService.isBookmarkedQuestion(question.id());
         String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
         List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
         List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
-        return QuestionResponse.of(question, solved, skills, jobs);
+        return QuestionResponse.of(question, solved, skills, jobs, bookmarked);
     }
 
     private Top10QuestionResponse getTop10QuestionResponse(QuestionDto question) {

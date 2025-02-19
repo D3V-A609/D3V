@@ -15,9 +15,11 @@ public record QuestionResponse(
         Double answerAverage,
         String status,
         List<SkillType> skillList,
-        List<JobRole> jobList
+        List<JobRole> jobList,
+        Boolean isBookmarked
 ) {
-    public static QuestionResponse of(QuestionDto q, String solved, List<SkillDto> skills, List<JobDto> jobs) {
+    public static QuestionResponse of(QuestionDto q, String solved, List<SkillDto> skills, List<JobDto> jobs,
+                                      Boolean bookmarked) {
         return QuestionResponse.builder()
                 .id(q.id())
                 .content(q.content())
@@ -28,6 +30,7 @@ public record QuestionResponse(
                 .status(solved)
                 .skillList(skills.stream().map(SkillDto::name).toList())
                 .jobList(jobs.stream().map(JobDto::jobRole).toList())
+                .isBookmarked(bookmarked)
                 .build();
     }
 
