@@ -19,7 +19,7 @@ public interface AnswerService {
 
     void updateAccessLevel(long answerId, String accessLevel);
 
-    List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved);
+    List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved, long memberId);
 
     TextAnswerResponse convertSpeechToText(byte[] speech);
 

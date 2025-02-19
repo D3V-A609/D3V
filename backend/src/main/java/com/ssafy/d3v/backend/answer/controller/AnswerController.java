@@ -9,7 +9,6 @@ import com.ssafy.d3v.backend.answer.service.AnswerService;
 import com.ssafy.d3v.backend.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -71,8 +70,8 @@ public class AnswerController {
     @Operation(summary = "최신 답변에 대한 질문 조회")
     @GetMapping("/lastest_question")
     public ResponseEntity<List<AnswerQuestionResponse>> getLastestQuestion(
-            @RequestParam(value = "is_solved", defaultValue = "true") boolean isSolved) {
-        return ResponseEntity.ok().body(answerService.getLastestQuestion(isSolved));
+            @RequestParam(value = "is_solved", defaultValue = "true") boolean isSolved, long memberId) {
+        return ResponseEntity.ok().body(answerService.getLastestQuestion(isSolved, memberId));
     }
 
     @Operation(summary = "음성 답변 텍스트로 변환")
@@ -90,4 +89,5 @@ public class AnswerController {
     public ResponseEntity<List<AnswerResponse>> getAnswerByLike() {
         return ResponseEntity.ok().body(answerService.getAnswerByLike());
     }
+
 }
