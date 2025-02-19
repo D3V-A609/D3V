@@ -25,6 +25,14 @@ export const createBookmark = createAsyncThunk(
   }
 );
 
+export const updateSingleQuestionBookmarks = createAsyncThunk(
+  'bookmarks/updateSingleQuestionBookmarks',
+  async ({ questionId, bookmarkIds }: { questionId: number; bookmarkIds: number[] }) => {
+    const response = await bookmarkApi.updateSingleQuestionBookmarks(questionId, bookmarkIds);
+    return response;
+  }
+);
+
 export const addQuestionsToBookmarks = createAsyncThunk(
   'bookmarks/addQuestionsToBookmarks',
   async ({ bookmarkIds, questionIds }: { bookmarkIds: number[]; questionIds: number[] }) => {
@@ -32,5 +40,21 @@ export const addQuestionsToBookmarks = createAsyncThunk(
       bookmarkApi.addQuestionsToBookmark(bookmarkId, questionIds)
     );
     await Promise.all(promises);
+  }
+);
+
+export const fetchBookmarkById = createAsyncThunk(
+  'bookmarks/fetchById',
+  async (bookmarkId: number) => {
+    const response = await bookmarkApi.fetchBookmarkById(bookmarkId);
+    return response;
+  }
+);
+
+export const deleteBookmarkById = createAsyncThunk(
+  'bookmarks/deleteById',
+  async (bookmarkId: number) => {
+    const response = await bookmarkApi.deleteBookmarkById(bookmarkId);
+    return response.message;
   }
 );

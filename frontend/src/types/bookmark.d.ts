@@ -4,6 +4,7 @@ interface Bookmark {
   accessLevel: 'PUBLIC' | 'PRIVATE' | 'PROTECTED';
   questionCount: number;
   description?: string;
+  questions?: Question[];
 }
 
 interface BookmarkResponse {

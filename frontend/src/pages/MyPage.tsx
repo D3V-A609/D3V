@@ -181,7 +181,11 @@ const MyPage:React.FC = () => {
         </div>
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>
+            {bookmarks.length > 0 ? (
             <BookmarkSlider bookmarks={bookmarks} />
+            ) : (
+            <p>북마크가 없습니다.</p>
+            )}
         </SectionContainerMemo>
 
         <div className='my-answer-info-container'>

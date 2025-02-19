@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import { HiArrowRight } from "react-icons/hi";
 import './BookmarkSlider.css';
+import BookmarkDetailModal from '../Bookmark/BookmarkDetailModal';
 
 interface BookmarkSliderProps {
   bookmarks: Bookmark[];
@@ -11,6 +12,7 @@ const BookmarkSlider: React.FC<BookmarkSliderProps> = ({ bookmarks }) => {
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
 
   const handleViewDetails = (bookmark: Bookmark) => {
+    console.log("Selected bookmark:", bookmark);
     setSelectedBookmark(bookmark);
   };
 
@@ -37,12 +39,10 @@ const BookmarkSlider: React.FC<BookmarkSliderProps> = ({ bookmarks }) => {
         </div>
       ))}
       {selectedBookmark && (
-        <div className="mypage-bookmark-modal">
-          <h2>{selectedBookmark.name}</h2>
-          <p>{selectedBookmark.description || '설명 없음'}</p>
-          <p>질문 수: {selectedBookmark.questionCount}</p>
-          <button onClick={closeModal}>닫기</button>
-        </div>
+        <BookmarkDetailModal
+          bookmarkId={selectedBookmark.bookmarkId}
+          onClose={closeModal}
+        />
       )}
     </div>
   );

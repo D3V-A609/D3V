@@ -26,15 +26,52 @@ export const bookmarkApi = {
     return response.data;
   },
 
+  updateSingleQuestionBookmarks: async (questionId: number, bookmarkIds: number[]) => {
+    try {
+      const response = await api.post<BookmarkResponse>(`/bookmark/question/${questionId}/bookmark`, bookmarkIds);
+      return response.data;
+    } catch (error) {
+      console.error('질문의 북마크 수정에 실패했습니다:', error);
+      throw error;
+    }
+  },
+
   addQuestionsToBookmark: async (bookmarkId: number, questionIds: number[]) => {
     try {
-      const response = await api.put<{ msg: string }>(`/bookmark/${bookmarkId}/question`, { questions: questionIds });
+      const response = await api.post<{ msg: string }>(`/bookmark/bookmark/${bookmarkId}/question`, questionIds);
       return response.data;
     } catch (error) {
       console.error('북마크에 질문 추가를 실패했습니다:', error);
       throw error;
     }
   },
+
+  fetchBookmarkById: async (bookmarkId: number) => {
+    try {
+      const response = await api.get<{
+        bookmarkId: number;
+        name: string;
+        description?: string;
+        accessLevel: 'PUBLIC' | 'PRIVATE' | 'PROTECTED';
+        questions: { questionId: number; content: string }[];
+      }>(`/bookmark/${bookmarkId}`);
+      return response.data;
+    } catch (error) {
+      console.error('단일 북마크를 불러오는데 실패했습니다:', error);
+      throw error;
+    }
+  },
+
+  deleteBookmarkById: async (bookmarkId: number) => {
+    try {
+      const response = await api.delete<{ message: string }>(`/bookmark/${bookmarkId}`);
+      return response.data;
+    } catch (error) {
+      console.error('북마크 삭제에 실패했습니다:', error);
+      throw error;
+    }
+  },
+  
 };
 
 export default bookmarkApi;
