@@ -5,10 +5,13 @@ import { fetchBookmarkById, deleteBookmarkById } from '../../store/actions/bookm
 import './BookmarkDetailModal.css';
 import { HiOutlineTrash, HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoAddCircleOutline } from 'react-icons/io5';
+import { moveToQuestionDetail } from "../../utils/navigation";
+import QuestionSkillTag from '../QuestionDetail/Question/QuestionSkillTag';
+import EditBookmarkModal from './EditBookmarkModal'; // 추가
 
 interface BookmarkDetailModalProps {
-  bookmarkId: number;
-  onClose: () => void; // 모달 닫기 함수
+  bookmarkId: number | null;
+  onClose: () => void;
 }
 
 const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, onClose }) => {
@@ -17,22 +20,19 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
 
   const { selectedBookmark, loading } = useAppSelector((state) => state.bookmarks);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 추가
 
   // 북마크 데이터 가져오기
   useEffect(() => {
-    dispatch(fetchBookmarkById(bookmarkId));
+    if (bookmarkId !== null) {
+      dispatch(fetchBookmarkById(bookmarkId));
+    }
   }, [dispatch, bookmarkId]);
-
-  // 질문 상세 페이지로 이동
-  const handleQuestionClick = (questionId: number) => {
-    navigate(`/question/${questionId}`);
-    onClose();
-  };
 
   // 북마크 삭제 핸들러
   const handleDelete = async () => {
     if (!window.confirm('북마크를 정말 삭제하시겠습니까?')) return;
-
+    if (bookmarkId === null) return;
     setIsDeleting(true);
     try {
       await dispatch(deleteBookmarkById(bookmarkId)).unwrap();
@@ -46,49 +46,72 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
     }
   };
 
-  if (loading || !selectedBookmark) return <div className="bookmark-detail-loading">로딩 중...</div>;
+  if (loading || !selectedBookmark) return <div className="bookmark-detail-loading">모달이 오고 있어용</div>;
 
   return (
-    <div className="bookmark-detail-modal">
-      <div className="bookmark-detail-modal-header">
-        <h2>{selectedBookmark.name}</h2>
-        <button className="bookmark-detail-close-btn" onClick={onClose}>
-          ✕
-        </button>
-      </div>
-      <p className="bookmark-detail-modal-description">
-        {selectedBookmark.description || '북마크 설명이 없습니다.'}
-      </p>
-      <div className="bookmark-detail-questions-list">
-        {selectedBookmark.questions?.map((question) => (
-          <div
-            key={question.id}
-            className="bookmark-detail-question-item"
-            onClick={() => handleQuestionClick(question.id)}
+    <>
+      <div className="bookmark-detail-modal">
+        <div className="bookmark-detail-modal-header">
+          <h2>{selectedBookmark.name}</h2>
+          <button className="bookmark-detail-close-btn" onClick={onClose}>
+            ✕
+          </button>
+        </div>
+
+        {/* 북마크 설명이 있을 때만 표시 */}
+        {selectedBookmark.description && (
+          <>
+            <p className="bookmark-detail-modal-description">{selectedBookmark.description}</p>
+            <div className="bookmark-detail-divider"></div>
+          </>
+        )}
+
+        <div className="bookmark-detail-questions-list">
+          {selectedBookmark.questions?.map((question) => (
+            <div
+              key={question.questionId}
+              className="bookmark-detail-question-item"
+              onClick={() => moveToQuestionDetail(navigate, dispatch, question.questionId)}
+            >
+              {question.skill && (
+                <div className="bookmark-detail-question-skill">
+                  <QuestionSkillTag skill={question.skill} className="bookmark-preview-skill-tag" />
+                </div>
+              )}
+              <span className="bookmark-detial=question-content">{question.content}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="bookmark-detail-modal-actions">
+          <button className="bookmark-detail-delete-btn" onClick={handleDelete} disabled={isDeleting}>
+            <HiOutlineTrash /> 북마크 삭제
+          </button>
+          <button
+            className="bookmark-detail-edit-btn"
+            onClick={() => setIsEditModalOpen(true)}
           >
-            {question.content}
-          </div>
-        ))}
+            <HiOutlinePencilAlt /> 북마크 수정
+          </button>
+          <button className="bookmark-detail-add-questions-btn" onClick={() => navigate('/all-questions')}>
+            <IoAddCircleOutline /> 질문 추가하기
+          </button>
+        </div>
       </div>
-      <div className="bookmark-detail-modal-actions">
-        <button
-          className="bookmark-detail-delete-btn"
-          onClick={handleDelete}
-          disabled={isDeleting}
-        >
-          <HiOutlineTrash /> 북마크 삭제
-        </button>
-        <button className="bookmark-detail-edit-btn">
-          <HiOutlinePencilAlt /> 북마크 수정
-        </button>
-        <button
-          className="bookmark-detail-add-questions-btn"
-          onClick={() => navigate('/allquestion')}
-        >
-          <IoAddCircleOutline /> 질문 추가하기
-        </button>
-      </div>
-    </div>
+
+      {/* EditBookmarkModal 열기 */}
+      {isEditModalOpen && (
+        <EditBookmarkModal
+          bookmark={selectedBookmark}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            if (bookmarkId !== null) {
+              dispatch(fetchBookmarkById(bookmarkId));
+            }
+          }}
+        />
+      )}
+    </>
   );
 };
 
