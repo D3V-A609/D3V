@@ -59,18 +59,17 @@ export const deleteBookmarkById = createAsyncThunk(
   }
 );
 
-// 북마크에서 질문 삭제
 export const deleteBookmarkQuestion = createAsyncThunk(
   'bookmarks/deleteBookmarkQuestion',
   async ({ bookmarkId, questionId }: { bookmarkId: number; questionId: number }) => {
-    await bookmarkApi.deleteBookmarkQuestion(bookmarkId, questionId); // response를 사용하지 않음
-    return { bookmarkId, questionId }; // 응답을 그대로 반환
+    await bookmarkApi.deleteBookmarkQuestion(bookmarkId, questionId);
+    return { bookmarkId, questionId };
   }
 );
 
 export const updateBookmarkById = createAsyncThunk(
   'bookmarks/updateBookmark',
-  async ({ bookmarkId, data }: { bookmarkId: number; data: { name?: string; description?: string } }) => {
+  async ({ bookmarkId, data }: { bookmarkId: number; data: { name?: string; description?: string; accessLevel?:string } }) => {
     const response = await bookmarkApi.updateBookmark(bookmarkId, data);
     return response;
   }

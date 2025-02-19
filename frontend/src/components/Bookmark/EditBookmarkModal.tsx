@@ -1,3 +1,4 @@
+// EditBookmarkModal.tsx
 import React, { useState } from 'react';
 import { useAppDispatch } from '../../store/hooks/useRedux';
 import { updateBookmarkById, deleteBookmarkQuestion, fetchBookmarkById } from '../../store/actions/bookmarkActions';
@@ -14,13 +15,14 @@ const EditBookmarkModal: React.FC<EditBookmarkModalProps> = ({ bookmark, onClose
   const dispatch = useAppDispatch();
   const [name, setName] = useState(bookmark.name);
   const [description, setDescription] = useState(bookmark.description || '');
+  const [accessLevel, setAccessLevel] = useState(bookmark.accessLevel);
   const [questions, setQuestions] = useState(bookmark.questions);
 
   const handleSaveChanges = async () => {
     try {
       await dispatch(updateBookmarkById({ 
         bookmarkId: bookmark.bookmarkId, 
-        data: { name, description } 
+        data: { name, description, accessLevel } 
       })).unwrap();
       alert('북마크가 수정되었습니다.');
       dispatch(fetchBookmarkById(bookmark.bookmarkId));
@@ -35,7 +37,7 @@ const EditBookmarkModal: React.FC<EditBookmarkModalProps> = ({ bookmark, onClose
     if (!window.confirm('이 질문을 북마크에서 삭제하시겠습니까?')) return;
     try {
       await dispatch(deleteBookmarkQuestion({ bookmarkId: bookmark.bookmarkId, questionId })).unwrap();
-      setQuestions(questions.filter(q => q.questionId !== questionId));
+      setQuestions(prevQuestions => prevQuestions.filter(q => q.questionId !== questionId));
     } catch (error) {
       console.error('질문 삭제 중 오류 발생:', error);
       alert('질문 삭제에 실패했습니다.');
@@ -63,6 +65,39 @@ const EditBookmarkModal: React.FC<EditBookmarkModalProps> = ({ bookmark, onClose
         onChange={(e) => setDescription(e.target.value)}
         className="edit-bookmark-textarea"
       />
+      <label className="edit-bookmark-label">공개 범위</label>
+      <div className="edit-bookmark-radio-group">
+        <label>
+          <input
+            type="radio"
+            name="accessLevel"
+            value="PROTECTED"
+            checked={accessLevel === 'PROTECTED'}
+            onChange={(e) => setAccessLevel(e.target.value as 'PUBLIC' | 'PRIVATE' | 'PROTECTED')}
+          />
+          친구 공개
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="accessLevel"
+            value="PRIVATE"
+            checked={accessLevel === 'PRIVATE'}
+            onChange={(e) => setAccessLevel(e.target.value as 'PUBLIC' | 'PRIVATE' | 'PROTECTED')}
+          />
+          비공개
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="accessLevel"
+            value="PUBLIC"
+            checked={accessLevel === 'PUBLIC'}
+            onChange={(e) => setAccessLevel(e.target.value as 'PUBLIC' | 'PRIVATE' | 'PROTECTED')}
+          />
+          공개
+        </label>
+      </div>
       <div className="edit-bookmark-questions-list">
         {questions.map((question) => (
           <div key={question.questionId} className="edit-bookmark-question-item">
@@ -75,8 +110,8 @@ const EditBookmarkModal: React.FC<EditBookmarkModalProps> = ({ bookmark, onClose
         ))}
       </div>
       <div className="edit-bookmark-modal-actions">
-        <button onClick={handleSaveChanges} className="edit-bookmark-save-btn">저장</button>
         <button onClick={onClose} className="edit-bookmark-cancel-btn">취소</button>
+        <button onClick={handleSaveChanges} className="edit-bookmark-save-btn">저장</button>      
       </div>
     </div>
   );

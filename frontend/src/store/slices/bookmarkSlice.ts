@@ -113,7 +113,7 @@ const bookmarkSlice = createSlice({
       .addCase(deleteBookmarkQuestion.fulfilled, (state, action) => {
         const { bookmarkId, questionId } = action.payload;
         const bookmark = state.bookmarks.find((b) => b.bookmarkId === bookmarkId);
-        if (bookmark) {
+        if (bookmark && bookmark.questions) {
           bookmark.questions = bookmark.questions.filter((q) => q.questionId !== questionId);
         }
         if (state.selectedBookmark && state.selectedBookmark.bookmarkId === bookmarkId) {

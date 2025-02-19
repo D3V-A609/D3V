@@ -118,9 +118,9 @@ const MyPage:React.FC = () => {
 
     const handleViewBookmarkDetails = (bookmarkId: number) => {
         setIsOpenBookmark(true);
-        console.log("열렸나?", isOpenBookmark)
         setSelectedBookmarkId(bookmarkId);
       };
+    
 
     // 모달 열기
     const openModal = useCallback(
@@ -162,6 +162,13 @@ const MyPage:React.FC = () => {
     useEffect(()=>{
         dispatch(fetchUserInfo(Number(memberId)));
     }, [followings, followers])
+
+        // 콜백 함수를 사용하여 bookmarks 상태 업데이트
+    const memoizedBookmarks = useCallback(() => {
+        if (memberId !== null) {
+            dispatch(fetchAllBookmarks(memberId));
+        }
+    }, [dispatch, memberId]);
 
     return (
     <div className='my-page-container'>
@@ -211,6 +218,7 @@ const MyPage:React.FC = () => {
                 <BookmarkDetailModal
                 bookmarkId={selectedBookmarkId}
                 onClose={() => setIsOpenBookmark(false)}
+                onBookmarksChanged={memoizedBookmarks}
                 />
             </div>
         )}

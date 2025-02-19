@@ -1,3 +1,4 @@
+// BookmarkDetailModal.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/useRedux';
@@ -7,20 +8,21 @@ import { HiOutlineTrash, HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { moveToQuestionDetail } from "../../utils/navigation";
 import QuestionSkillTag from '../QuestionDetail/Question/QuestionSkillTag';
-import EditBookmarkModal from './EditBookmarkModal'; // 추가
+import EditBookmarkModal from './EditBookmarkModal';
 
 interface BookmarkDetailModalProps {
   bookmarkId: number | null;
   onClose: () => void;
+  onBookmarksChanged: () => void; // 콜백 함수 추가
 }
 
-const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, onClose }) => {
+const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, onClose, onBookmarksChanged }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { selectedBookmark, loading } = useAppSelector((state) => state.bookmarks);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 추가
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // 북마크 데이터 가져오기
   useEffect(() => {
@@ -38,6 +40,7 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
       await dispatch(deleteBookmarkById(bookmarkId)).unwrap();
       alert('북마크가 삭제되었습니다.');
       onClose();
+      onBookmarksChanged(); // 북마크 삭제 후 콜백 호출
     } catch (error) {
       console.error('북마크 삭제 중 오류 발생:', error);
       alert('북마크 삭제에 실패했습니다.');
@@ -62,9 +65,9 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
         {selectedBookmark.description && (
           <>
             <p className="bookmark-detail-modal-description">{selectedBookmark.description}</p>
-            <div className="bookmark-detail-divider"></div>
           </>
         )}
+        <div className="bookmark-detail-divider"></div>
 
         <div className="bookmark-detail-questions-list">
           {selectedBookmark.questions?.map((question) => (
@@ -107,6 +110,7 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
             setIsEditModalOpen(false);
             if (bookmarkId !== null) {
               dispatch(fetchBookmarkById(bookmarkId));
+              onBookmarksChanged(); // 북마크 수정 후 콜백 호출
             }
           }}
         />

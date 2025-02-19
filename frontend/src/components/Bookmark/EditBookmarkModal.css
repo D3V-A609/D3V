@@ -45,6 +45,7 @@
   font-size: 14px;
   font-weight: bold;
   color: #333;
+  margin-left: 2px;
 }
 
 .edit-bookmark-input,
@@ -65,6 +66,20 @@
 
 .edit-bookmark-select {
   width: 100%;
+}
+
+.edit-bookmark-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.edit-bookmark-radio-group label {
+  margin-bottom: 5px;
+}
+
+.edit-bookmark-radio-group input[type='radio'] {
+  margin-right: 8px;
 }
 
 .edit-bookmark-questions-list {
@@ -112,25 +127,34 @@
   justify-content: flex-end;
   margin-top: 20px;
   gap: 8px;
+  margin-left: 5px;;
 }
 
 .edit-bookmark-save-btn,
 .edit-bookmark-cancel-btn {
-  padding: 5px 8px;
-  border: 1px solid #7D7D7E;
-  background: white;
-  border-radius: 4px;
+  width: 70px;
+  height: 40px;
   font-size: 14px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 .edit-bookmark-save-btn {
-  background-color: #4caf50;
+  background-color: #7D7D7E;
   color: white;
   border: none;
 }
 
+.edit-bookmark-save-btn:hover {
+  background-color: #6a6a6b;
+}
+
 .edit-bookmark-cancel-btn {
   background-color: white;
-  color: #333;
+  color: #7D7D7E;
+  border: 1px solid #7D7D7E;
+}
+
+.edit-bookmark-cancel-btn:hover {
+  background-color: #f5f5f5;
 }
