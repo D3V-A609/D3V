@@ -13,8 +13,10 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = TokenService.getAccessToken();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.withCredentials = true; 
     }
     return config;
   },

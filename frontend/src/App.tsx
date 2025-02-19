@@ -128,6 +128,7 @@ function App() {
           path: '/my', 
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
         },
+        { path: '/my/edit', element: <ProtectedRoute><EditProfile /></ProtectedRoute> },
         { path: '/board', element: <BoardPage /> },
         { 
           path: '/question', 
@@ -141,10 +142,6 @@ function App() {
             </ProtectedRoute>
           )
         },
-        { 
-          path: '/EditProfile', 
-          element: <ProtectedRoute><EditProfile /></ProtectedRoute>
-        }
       ],
     },
   ]);

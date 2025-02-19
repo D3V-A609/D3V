@@ -47,6 +47,11 @@ interface UpdateProfileResponse {
   message: string;
 }
 
+interface EmailVerificationResponse {
+  message: string;
+  result?: boolean;
+}
+
 // API 함수 정의
 export const authApi = {
   // 로컬 로그인
@@ -77,6 +82,26 @@ export const authApi = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+    });
+    return response.data;
+  },
+
+  // 이메일 인증 코드 요청
+  sendEmailVerification: async (email: string): Promise<EmailVerificationResponse> => {
+    try {
+      const response = await api.post('/member/email/code', { email });
+      return response.data;
+    } catch (error: any) {
+      console.error('이메일 인증 코드 전송 실패:', error.response?.data);
+      throw error;
+    }
+  },
+
+  // 이메일 인증 코드 확인
+  verifyEmailCode: async (email: string, code: string): Promise<EmailVerificationResponse> => {
+    const response = await api.post('/member/email/authentication', { 
+      email, 
+      code 
     });
     return response.data;
   },
