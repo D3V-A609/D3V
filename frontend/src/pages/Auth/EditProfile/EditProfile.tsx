@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './EditProfile.css';
 import { IoIosEyeOff, IoMdEye, IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux'
-import { fetchUserInfo } from '../../../store/actions/userActions';
+// import { fetchUserInfo } from '../../../store/actions/userActions';
 import authApi from '../../../store/services/authApi';
 import { fetchJobs } from '../../../store/actions/jobActions';
 import { RootState } from '../../../store';
@@ -49,7 +49,7 @@ const EditProfile: React.FC = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchUserInfo(null));
+    // dispatch(fetchUserInfo(null));
     dispatch(fetchJobs());
   }, [dispatch]);
 
