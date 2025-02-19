@@ -10,6 +10,7 @@ import feedbackReducer from './slices/feedbackSlice';
 import historyReducer from './slices/historySlice'
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
+import youtubeReducer from './slices/youtubeSlice'
 import bookmarkReducer from './slices/bookmarkSlice';
 
 const rootReducer = combineReducers({
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   historys: historyReducer,
   auth: authReducer,
   user: userReducer,
+  youtube: youtubeReducer,
   bookmarks: bookmarkReducer,
 }) as Reducer<{
   questions: ReturnType<typeof questionReducer>;
@@ -35,6 +37,7 @@ const rootReducer = combineReducers({
   historys: ReturnType<typeof historyReducer>;
   auth: ReturnType<typeof authReducer>;
   user: ReturnType<typeof userReducer>;
+  youtube: ReturnType<typeof youtubeReducer>;
   bookmarks: ReturnType<typeof bookmarkReducer>;
 }>;
 
