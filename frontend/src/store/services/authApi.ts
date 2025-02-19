@@ -47,6 +47,11 @@ interface UpdateProfileResponse {
   message: string;
 }
 
+
+interface TemporaryPasswordResponse {
+  message: string;
+}
+
 interface EmailVerificationResponse {
   message: string;
   result?: boolean;
@@ -90,6 +95,19 @@ export const authApi = {
       },
     });
     return response.data;
+  },
+
+  // 임시 비밀번호 요청 코드 요청
+  requestTemporaryPassword: async (email: string): Promise<TemporaryPasswordResponse> => {
+    try {
+      const response = await api.post<string>('/member/email/password', { email });
+      return {
+        message: response.data // 서버에서 string으로 오는 응답을 message로 변환
+      };
+    } catch (error: any) {
+      console.error('임시 비밀번호 요청 실패:', error.response?.data);
+      throw error;
+    }
   },
 
   // 이메일 인증 코드 요청

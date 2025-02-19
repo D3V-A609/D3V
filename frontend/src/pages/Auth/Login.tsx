@@ -82,6 +82,45 @@ const Login: React.FC = () => {
     }
   };
 
+  // 임시 비밀번호 요청 핸들러 추가
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error('이메일을 입력해주세요.', {
+        position: "bottom-left",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+      return;
+    }
+
+    try {
+      await authApi.requestTemporaryPassword(email);
+      toast.success('임시 비밀번호가 이메일로 전송되었습니다.', {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    } catch (error) {
+      toast.error('임시 비밀번호 발급에 실패했습니다.', {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+      });
+    }
+  };
+
+
   return (
     <div className="login-container">
       <div className="back-link">
@@ -135,8 +174,12 @@ const Login: React.FC = () => {
                 />
                 <label htmlFor="remember">로그인 상태 유지</label>
               </div> */}
-              <div className="forgot-password">
-                <Link to="/auth/forgot-password">비밀번호를 잊으셨나요?</Link>
+              <div className="login-options">
+                <div className="forgot-password">
+                  <a href="#" onClick={handleForgotPassword}>
+                    비밀번호를 잊으셨나요?
+                  </a>
+                </div>
               </div>
             </div>
             <button type="submit" className="register-button">
