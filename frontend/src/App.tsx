@@ -147,7 +147,8 @@ function App() {
         }
       ],
     },
-  ]);
+  ],
+{basename: "/"});
 
   return (
     <Provider store={store}>
