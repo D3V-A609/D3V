@@ -98,4 +98,10 @@ public class HistoryServiceImpl implements HistoryService {
                     .build());
         }
     }
+
+    @Override
+    public Integer getCountByMemberIdAndDate(long memberId) {
+        return historyRepository.findByMemberIdAndDate(memberId, LocalDate.now())
+                .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다.")).getCount();
+    }
 }
