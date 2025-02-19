@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchHistory } from '../actions/historyActions';
+import { fetchHistory, fetchTodayStreak } from '../actions/historyActions';
 
 const MAX_HISTORY_USERS = 30; // ✅ 최대 30명의 사용자의 데이터만 저장 (LRU 캐시 방식 적용)
 const CACHE_EXPIRY_TIME = 1000 * 60 * 60 * 2; // ✅ 최대 2시간 동안만 사용자 데이터 저장 (TTL 적용)
@@ -8,6 +8,7 @@ export interface HistoryState {
   uploading: boolean;
   uploadSuccess: boolean;
   error: string | null;
+  todayStreak: number;
   history: { [memberId: number]: { data: AnswerHistory[]; lastUpdated: number } }; // ✅ 각 사용자별 `history` 데이터 + 마지막 업데이트 시간 저장
   streak: { [memberId: number]: number }; // ✅ 사용자별 streak (연속 풀이 일수)
 }
@@ -18,6 +19,7 @@ export const initialState: HistoryState = {
   error: null,
   history: {},
   streak: {},
+  todayStreak: 0
 };
 
 // ✅ streak 계산 함수 (연속 문제 풀이 일수 계산)
@@ -97,7 +99,25 @@ const historySlice = createSlice({
         state.uploading = false;
         state.uploadSuccess = false;
         state.error = action.payload as string; // ✅ 요청 실패 시 에러 저장
-      });
+      })
+
+      .addCase(fetchTodayStreak.pending, (state) => {
+        state.uploading=true;
+        state.uploadSuccess = false;
+        state.error = null;
+      })
+      .addCase(fetchTodayStreak.fulfilled, (state, action) => {
+        state.uploading=false;
+        state.uploadSuccess = true;
+        state.todayStreak = action.payload as number;
+        state.error = null;
+      })
+      .addCase(fetchTodayStreak.rejected, (state, action) => {
+        state.uploading=false;
+        state.uploadSuccess = false;
+        state.error = action.payload as string;
+      })
+
   },
 });
 

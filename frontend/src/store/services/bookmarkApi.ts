@@ -38,7 +38,7 @@ export const bookmarkApi = {
 
   addQuestionsToBookmark: async (bookmarkId: number, questionIds: number[]) => {
     try {
-      const response = await api.post<{ msg: string }>(`/bookmark/bookmark/${bookmarkId}/question`, questionIds);
+      const response = await api.post<{ msg: string }>(`/bookmark/${bookmarkId}/question`, questionIds);
       return response.data;
     } catch (error) {
       console.error('북마크에 질문 추가를 실패했습니다:', error);

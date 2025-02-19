@@ -5,7 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { RootState } from "../../store";
 import { authApi } from "../../store/services/authApi";
-import { logout } from "../../store/slices/authSlice";
+import { logoutSuccess } from "../../store/slices/authSlice";
 
 import "./Header.css";
 import Logo from "../../assets/images/logo.gif";
@@ -61,7 +61,7 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await authApi.logout(); // API 호출
-      dispatch(logout()); // Redux 상태 업데이트
+      dispatch(logoutSuccess()); // Redux 상태 업데이트
       setIsUserInfoOpen(false);
       navigate("/");
       
@@ -75,6 +75,7 @@ const Header: React.FC = () => {
       });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.log(error)
       toast.error('로그아웃 중 오류가 발생했습니다.', {
         position: "bottom-left",
         autoClose: 2000,

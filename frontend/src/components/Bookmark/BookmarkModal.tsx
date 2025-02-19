@@ -12,6 +12,7 @@ import { fetchUserInfo } from '../../store/actions/userActions';
 import './BookmarkModal.css';
 import AddBookmarkModal from './AddBookmarkModal';
 import EditBookmarkModal from './EditBookmarkModal'; // EditBookmarkModal 임포트
+import SecureStorage from '../../store/services/token/SecureStorage';
 
 interface BookmarkModalProps {
   questionIds: number[];
@@ -27,17 +28,21 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null); // 편집할 북마크 상태
   const [memberId, setMemberId] = useState<number | null>(null);
 
+  const currMemberId = SecureStorage.getMemberId();
+
   // 사용자 정보 및 북마크 데이터 가져오기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userInfo = await dispatch(fetchUserInfo(null)).unwrap();
-        if ('memberId' in userInfo) {
-          setMemberId(userInfo.memberId);
-          if (questionIds.length === 1) {
-            await dispatch(fetchBookmarks(questionIds[0]));
-          } else {
-            await dispatch(fetchAllBookmarks(userInfo.memberId));
+        if(currMemberId !== null && currMemberId !== 0){
+          const userInfo = await dispatch(fetchUserInfo(currMemberId)).unwrap();
+          if ('memberId' in userInfo) {
+            setMemberId(userInfo.memberId);
+            if (questionIds.length === 1) {
+              await dispatch(fetchBookmarks(questionIds[0]));
+            } else {
+              await dispatch(fetchAllBookmarks(userInfo.memberId));
+            }
           }
         }
       } catch (error) {

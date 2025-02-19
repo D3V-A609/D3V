@@ -1,5 +1,6 @@
 // React & Hooks
 import { useEffect } from 'react';
+// import useAuth from './store/hooks/useAuth';
 
 // React & Redux
 import { Provider } from 'react-redux';
@@ -33,6 +34,7 @@ import Step1 from './pages/Auth/SignupSteps/Step1.tsx';
 import Step2 from './pages/Auth/SignupSteps/Step2.tsx';
 import Step3 from './pages/Auth/SignupSteps/Step3.tsx';
 import ProtectedSignupRoute from './components/Auth/ProtectedSignupRoute.tsx';
+import EditProfile from './pages/Auth/EditProfile/EditProfile';
 
 // Context Providers
 import { RecordingProvider } from './context/RecordingContext.tsx';
@@ -73,6 +75,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
 
 
 function App() {
+  // const authStatus = useAuth()
+  // console.log(authStatus)
   const router = createBrowserRouter([
     {
       path: '/oauth/redirect',
@@ -128,6 +132,7 @@ function App() {
           path: '/my', 
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
         },
+        { path: '/my/edit', element: <ProtectedRoute><EditProfile /></ProtectedRoute> },
         { 
           path: '/profile/:id', 
           element: <ProtectedRoute><OtherPage /></ProtectedRoute> 
@@ -144,7 +149,7 @@ function App() {
               </RecordingProvider>
             </ProtectedRoute>
           )
-        }
+        },
       ],
     },
   ],

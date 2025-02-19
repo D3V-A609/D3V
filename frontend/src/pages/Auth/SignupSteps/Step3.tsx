@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RootState } from '../../../store';
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux';
 import { resetSignupForm, setError } from "../../../store/slices/authSlice";
+import { fetchJobs } from "../../../store/actions/jobActions";
 import authApi from '../../../store/services/authApi';
 import { toast } from 'react-toastify';
 import "./Step3.css";
 
+
+const formatJobName = (jobName: string) => {
+  return jobName.replace('_', ' ').toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+};
+
 const Step3: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [selectedJob, setSelectedJob] = useState('');
 
-  const jobOptions = [
-    { value: "FRONTEND", label: "프론트엔드" },
-    { value: "BACKEND", label: "백엔드" }
-  ];
+  // Redux store에서 jobs 상태 가져오기
+  const { jobs } = useAppSelector((state: RootState) => state.jobs);
+  const signupForm = useAppSelector((state: RootState) => state.auth.signupForm);
 
-  const signupForm = useSelector((state: RootState) => state.auth.signupForm);
+  // 컴포넌트 마운트 시 직무 목록 가져오기
+  useEffect(() => {
+    dispatch(fetchJobs());
+  }, [dispatch]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,16 +89,16 @@ const Step3: React.FC = () => {
       </p>
       <form onSubmit={handleSubmit}>
         <div className="signup-form-group">
-          <label>관심 직무</label>
+          <label>관심 직무 (선택사항)</label>
           <select
             value={selectedJob}
             onChange={(e) => setSelectedJob(e.target.value)}
             required
           >
-            <option value="">관심 직무를 선택해주세요</option>
-            {jobOptions.map((job) => (
-              <option key={job.value} value={job.value}>
-                {job.label}
+            <option value="">관심 직무를 선택해주세요 (선택사항)</option>
+            {jobs.map((job) => (
+              <option key={job} value={job}>
+                {formatJobName(job)}
               </option>
             ))}
           </select>
