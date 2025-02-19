@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store/hooks/useRedux";
-import { setSelectedQuestionId } from "../../store/slices/questionSlice";
 import TechIcon from "../../components/TechIcon/TechIcon";
 import { PiBookmarkSimpleFill } from "react-icons/pi";
 import "./QuestionList.css";
+import { moveToQuestionDetail } from "../../utils/navigation";
 
 // QuestionList 컴포넌트의 props 타입 정의
 interface QuestionListProps {
@@ -56,12 +56,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
   // 북마크 추가 핸들러
   const handleAddToBookmarks = () => {
     console.log("Selected questions to bookmark:", selectedQuestions);
-  };
-
-  // 질문 클릭 핸들러: 상세 페이지로 이동
-  const handleQuestionClick = (id: number) => {
-    dispatch(setSelectedQuestionId(id));
-    navigate(`/question`);
   };
 
   return (
@@ -121,7 +115,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
                 </td>
                 <td 
                   className="question-content"
-                  onClick={() => handleQuestionClick(question.id)}
+                  onClick={() => moveToQuestionDetail(navigate, dispatch, question.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   {/* 기술 스택 아이콘 */}

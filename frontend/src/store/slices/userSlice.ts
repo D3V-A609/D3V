@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchUserFollowers, fetchUserFollowings, fetchMultipleUserInfo, fetchUserInfo, unFollow } from "../actions/userActions";
+import { fetchUserFollowers, fetchUserFollowings, fetchMultipleUserInfo, fetchUserInfo, unFollow, follow } from "../actions/userActions";
 import SecureStorage from "../services/token/SecureStorage";
 
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -80,7 +80,6 @@ const userSlice = createSlice({
     })
     .addCase(fetchUserFollowers.fulfilled, (state, action) => {
       state.loading = false;
-      console.log("답변좀보자 follower:",action.payload)
       if("follows" in action.payload){
         state.followers = action.payload.follows;
       }
@@ -96,7 +95,6 @@ const userSlice = createSlice({
     })
     .addCase(fetchUserFollowings.fulfilled, (state, action) => {
       state.loading = false;
-      console.log("답변좀보자 following :",action.payload)
       if("follows" in action.payload){
         state.followings = action.payload.follows;
       }
@@ -110,7 +108,6 @@ const userSlice = createSlice({
       state.loading = true;
       state.error = null;
     })
-
     .addCase(unFollow.fulfilled, (state, action) => {
       const removeId = action.meta.arg;
 
@@ -118,9 +115,31 @@ const userSlice = createSlice({
       state.followings = state.followings.filter(user => user.memberId !== removeId);
       state.error = null;
     })
-
-    // 언팔로우 실패 시: 롤백 처리
     .addCase(unFollow.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    })
+
+    .addCase(follow.pending, (state,) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(follow.fulfilled, (state, action: PayloadAction<Error | responseFollow>) => {
+      state.loading = false;
+    
+      // `follows` 배열이 존재하고 길이가 1 이상일 때만 실행
+      if ("follows" in action.payload && Array.isArray(action.payload.follows) && action.payload.follows.length > 0) {
+        const followUsers = action.payload.follows;
+        const lastFollow = followUsers[followUsers.length-1]
+        
+        if (lastFollow) {
+          state.followings.push(lastFollow); // `followings` 배열에 추가
+        }
+      }
+      state.error = null;
+    })
+    
+    .addCase(follow.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
     })

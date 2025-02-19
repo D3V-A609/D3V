@@ -45,6 +45,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // Styles
 import './App.css';
 import './styles/TextStyle.css';
+import OtherPage from './pages/OtherPage.tsx';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -126,6 +127,10 @@ function App() {
         { 
           path: '/my', 
           element: <ProtectedRoute><MyPage /></ProtectedRoute> 
+        },
+        { 
+          path: '/profile/:id', 
+          element: <ProtectedRoute><OtherPage /></ProtectedRoute> 
         },
         { path: '/board', element: <BoardPage /> },
         { 

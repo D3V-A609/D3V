@@ -1,0 +1,36 @@
+.other-page-container{
+  padding: 40px 40px;
+  margin: 0 auto;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+.my-learning-info-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.my-detail-info-container{
+  justify-items: anchor-center;
+}
+
+.my-answer-info-container{
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.my-answer-commu-activity{
+  width: 100%;
+}
+
+.my-commu-info-container{
+  gap: 50px
+}
+
+.my-streak{
+  padding-bottom: 1rem;
+}
