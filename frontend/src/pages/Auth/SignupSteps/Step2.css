@@ -5,22 +5,22 @@
   max-width: 480px;
 }
 
-.signup-description {
+.signup-step .signup-description {
   color: #666;
   margin-bottom: 2rem;
 }
 
-.signup-form-group {
+.signup-step .signup-form-group {
   margin: 1rem 0;
 }
 
-.signup-form-group label {
+.signup-step .signup-form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.signup-form-group input {
+.signup-step .signup-form-group input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -28,17 +28,17 @@
   font-size: 1rem;
 }
 
-.signup-form-group input:focus {
+.signup-step .signup-form-group input:focus {
   outline: none;
   border-color: var(--color-blue);
 }
 
-.profile-upload {
+.signup-step .profile-upload {
   margin: 1rem 0;
   text-align: center;
 }
 
-.profile-image-container {
+.signup-step .profile-image-container {
   width: 120px;
   height: 120px;
   margin: 0 auto 1rem;
@@ -49,17 +49,17 @@
   transition: border-color 0.3s ease;
 }
 
-.profile-image-container:hover {
+.signup-step .profile-image-container:hover {
   border-color: var(--color-blue);
 }
 
-.profile-image-container img {
+.signup-step .profile-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.profile-placeholder {
+.signup-step .profile-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -68,12 +68,12 @@
   background-color: #f5f5f5;
 }
 
-.profile-placeholder span {
+.signup-step .profile-placeholder span {
   font-size: 2rem;
   color: #999;
 }
 
-.upload-button {
+.signup-step .upload-button {
   display: inline-block;
   padding: 0.8rem 1.5rem;
   background-color: #f5f5f5;
@@ -84,15 +84,15 @@
   transition: background-color 0.3s ease;
 }
 
-.upload-button:hover {
+.signup-step .upload-button:hover {
   background-color: #eee;
 }
 
-input[type="file"].hidden {
+.signup-step input[type="file"].hidden {
   display: none;
 }
 
-.next-button {
+.signup-step .next-button {
   width: 100%;
   padding: 1rem;
   background-color: var(--color-blue);
@@ -106,18 +106,18 @@ input[type="file"].hidden {
   transition: background-color 0.3s ease;
 }
 
-.next-button:hover {
+.signup-step .next-button:hover {
   background-color: var(--color-dark-blue);
 }
 
-.signup-success-message {
+.signup-step .signup-success-message {
   color: #28a745;
   font-size: 0.8rem;
   margin-top: 0.5rem;
   display: block;
 }
 
-.signup-error-message {
+.signup-step .signup-error-message {
   color: #ff4444;
   font-size: 0.8rem;
   margin-top: 0.5rem;

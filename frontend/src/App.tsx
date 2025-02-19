@@ -1,5 +1,6 @@
 // React & Hooks
 import { useEffect } from 'react';
+// import useAuth from './store/hooks/useAuth';
 
 // React & Redux
 import { Provider } from 'react-redux';
@@ -73,6 +74,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
 
 
 function App() {
+  // const authStatus = useAuth()
+  // console.log(authStatus)
   const router = createBrowserRouter([
     {
       path: '/oauth/redirect',

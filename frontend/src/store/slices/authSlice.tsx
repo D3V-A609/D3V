@@ -88,10 +88,11 @@ const authSlice = createSlice({
       SecureStorage.updateAuthStatus(true)
       // SecureStorage.setMemberId(null);
     },
-    logout: (state) => {
+    logoutSuccess: (state) => {
       state.isAuthenticated = false;
 
       // 세션 스토리지에서도 삭제
+      sessionStorage.removeItem('accessToken');
       sessionStorage.removeItem('isAuthenticated');
       SecureStorage.removeId();
     },
@@ -108,7 +109,7 @@ export const {
   setCurrentStep, 
   updateFormData, 
   loginSuccess, 
-  logout, 
+  logoutSuccess, 
   updateSignupForm, 
   resetSignupForm,
   setError,

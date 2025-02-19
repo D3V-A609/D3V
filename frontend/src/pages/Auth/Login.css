@@ -10,13 +10,13 @@
 
 
 /* Back Link */
-.back-link {
+.login-container .back-link {
   position: relative;
   margin-top: -1rem;
   margin-bottom: 1rem;
 }
 
-.back-link a {
+.login-container .back-link a {
   color: #666;
   text-decoration: none;
   font-size: 0.9rem;
@@ -25,62 +25,69 @@
 }
 
 /* Form Layout */
-.login-content {
+.login-container .login-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 80vh;
 }
 
-.login-form-wrapper {
+.login-container .login-form-wrapper {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
 }
 
 /* Typography */
-h1 {
+.login-container h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
-
-.login-description {
+ 
+.login-container .login-description {
   color: #666;
   margin-bottom: 2rem;
 }
 
 /* Form Elements */
-.form-group {
+.login-container .form-group {
   margin: 0;
 }
 
-.form-group label {
+.login-container .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.form-group input {
+.login-container .form-group input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
 /* Password Input */
-.password-input-wrapper {
+/* Password Input */
+.login-container .password-input-wrapper {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: center; /* 수직 중앙 정렬 */
+  width: 100%;
+  margin-bottom: 1rem; /* input의 margin-bottom을 wrapper로 이동 */
 }
 
-.password-input-wrapper input {
+.login-container .password-input-wrapper input {
   padding-right: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0; /* input의 margin-bottom 제거 */
 }
 
-.password-toggle {
+.login-container .password-toggle {
   position: absolute;
-  right: 10px;
+  right: 15px;
   background: none;
   border: none;
   cursor: pointer;
@@ -90,42 +97,43 @@ h1 {
   justify-content: center;
   color: #666;
   font-size: 1.2rem;
+  height: 100%; /* 부모 높이만큼 설정 */
 }
 
-.password-toggle:hover {
+
+.login-container .password-toggle:hover {
   color: var(--color-blue);
 }
 
-.password-toggle:focus {
+.login-container .password-toggle:focus {
   outline: none;
 }
 
 /* Login Options */
-.login-options {
+.login-container .login-options {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end; /* 오른쪽 정렬로 변경 */
   margin: 1rem 0;
 }
 
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.login-container .forgot-password {
+  margin-left: auto; /* 오른쪽 정렬을 위해 추가 */
 }
 
-.forgot-password a {
+.login-container .forgot-password a {
   color: #666;
   font-size: 0.9rem;
   text-decoration: none;
 }
 
-.forgot-password a:hover {
-  color: #2D7AF1;
-}
+/* .login-container .remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+} */
 
 /* Buttons */
-.register-button {
+.login-container .register-button {
   width: 100%;
   padding: 1rem;
   background-color: #2D7AF1;
@@ -138,13 +146,13 @@ h1 {
 }
 
 /* Sign Up Prompt */
-.signup-prompt {
+.login-container .signup-prompt {
   margin-top: 1.5rem;
   text-align: center;
   color: #666;
 }
 
-.signup-prompt a {
+.login-container .signup-prompt a {
   color: #2D7AF1;
   text-decoration: none;
   font-weight: 500;

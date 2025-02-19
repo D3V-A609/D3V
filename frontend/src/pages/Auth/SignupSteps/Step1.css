@@ -5,39 +5,39 @@
   max-width: 480px;
 }
 
-.signup-description {
+.signup-step .signup-description {
   color: #666;
   margin-bottom: 2rem;
 }
 
-h2 {
+.signup-step h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
   color: #333;
 }
 
-.signup-form {
+.signup-step .signup-form {
   display: flex;
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
 }
 
-.signup-form-group {
+.signup-step .signup-form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
   margin: 1rem 0;
 }
 
-.signup-form-group label {
+.signup-step .signup-form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
   width: 100%;
 }
 
-.signup-form-group input {
+.signup-step .signup-form-group input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -46,25 +46,25 @@ h2 {
   box-sizing: border-box;
 }
 
-.signup-form-group input:focus {
+.signup-step .signup-form-group input:focus {
   outline: none;
   border-color: var(--color-blue);
 }
 
-.password-input-wrapper {
+.signup-step .password-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
 }
 
-.password-input-wrapper input {
+.signup-step .password-input-wrapper input {
   width: 100%;
   padding-right: 40px;
   box-sizing: border-box;
 }
 
-.password-toggle {
+.signup-step .password-toggle {
   position: absolute;
   right: 15px;
   background: none;
@@ -78,43 +78,43 @@ h2 {
   font-size: 1.2rem;
 }
 
-.password-toggle:hover {
+.signup-step .password-toggle:hover {
   color: var(--color-blue);
 }
 
-.password-toggle:focus {
+.signup-step .password-toggle:focus {
   outline: none;
 }
 
-.terms-group {
+.signup-step .terms-group {
   margin: 2rem 0;
 }
 
-.terms-label {
+.signup-step .terms-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
 }
 
-.terms-label input[type="checkbox"] {
+.signup-step .terms-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
 }
 
-.terms-label span {
+.signup-step .terms-label span {
   color: #333;
   font-size: 0.9rem;
 }
 
-.signup-error-message {
+.signup-step .signup-error-message {
   color: #ff4444;
   font-size: 0.8rem;
   margin-top: 0.5rem;
   display: block;
 }
 
-.next-button {
+.signup-step .next-button {
   width: 100%;
   padding: 1rem;
   background-color: var(--color-blue);
@@ -128,13 +128,21 @@ h2 {
   transition: background-color 0.3s ease;
 }
 
-.next-button:hover {
+.signup-step .next-button:hover {
   background-color: var(--color-dark-blue);
 }
 
-.signup-success-message {
+.signup-step .signup-success-message {
   color: #28a745;
   font-size: 0.8rem;
   margin-top: 0.5rem;
   display: block;
+}
+
+.signup-step .error-message {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: block;
+  text-align: left;
 }
