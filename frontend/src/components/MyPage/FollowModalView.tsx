@@ -16,9 +16,10 @@ interface FollowProp {
   mode: string;
   onUnfollow: (id: number) => void;
   onFollow: (id: number) => void;
+  memberId: number | null;
 }
 
-const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFollow}) => {
+const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFollow, memberId}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -37,8 +38,8 @@ const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFoll
     if(!hasFetched.current){
       hasFetched.current = true;
       Promise.all([
-        dispatch(fetchUserFollowers(null)),
-        dispatch(fetchUserFollowings(null)),
+        dispatch(fetchUserFollowers(memberId)),
+        dispatch(fetchUserFollowings(memberId)),
       ])
     }
   }, [dispatch])
@@ -82,8 +83,7 @@ const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFoll
                 </div>
               </div>
               <div className={styles["follow-item-right"]}>
-                {mode === "following" ? 
-                <button className={styles["unfollow-btn"]} onClick={() => handleUnfollow(user.memberId)}>Unfollow</button> :
+                {followings.some(f => f.memberId === user.memberId) ?  <button className={styles["unfollow-btn"]} onClick={() => handleUnfollow(user.memberId)}>Unfollow</button> :
                 <button className={styles["unfollow-btn"]} onClick={() => onFollow(user.memberId)}>Follow</button>
                 }
               </div>

@@ -6,7 +6,7 @@ import ContentMoreListView from '../components/MyPage/ContentMoreListView';
 import FollowModalView from '../components/MyPage/FollowModalView';
 import StreakHeatMap from '../features/My/StreakHeatMap/StreakHeatMap';
 import { shallowEqual } from 'react-redux';
-import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, unFollow } from '../store/actions/userActions';
+import { fetchUserFollowers, fetchUserFollowings, fetchUserInfo, follow, unFollow } from '../store/actions/userActions';
 import { FaBookmark, FaBook } from 'react-icons/fa';
 import { FcVoicePresentation } from 'react-icons/fc';
 import { IoCheckboxOutline } from 'react-icons/io5';
@@ -54,7 +54,7 @@ const OtherPage: React.FC = () => {
         dispatch(fetchUserFollowings(Number(memberId))),
       ]);
     }
-  }, [])
+  }, [dispatch, memberId])
 
 
 
@@ -85,23 +85,25 @@ const OtherPage: React.FC = () => {
   const [isFollowModalOpen, setIsFollowModalOpen ] = useState(false); // 팔로워/팔로잉 모달 열기 
   const [FollowMode, setFollowMode] = useState("follower")
 
-  const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
-
   const openFollowModal = (mode: string) => { 
     setFollowMode(mode);
     setIsFollowModalOpen(true)
   };
 
-  const onUnfollow = (memberId: number) => {
-    dispatch(unFollow(memberId));
-  }  
-  const onFollow = (memberId: number) => {
-    dispatch(unFollow(memberId));
-  }  
+  const [refreshKey, setRefreshKey] = useState(0); // 🔄 리렌더링 트리거용 상태 추가
 
-  useEffect(()=>{
-    dispatch(fetchUserInfo(Number(memberId)));
-  }, [followings, followers])
+
+  const onUnfollow = async (memberId: number) => {
+    await dispatch(unFollow(memberId)); // 언팔로우 실행
+    await dispatch(fetchUserInfo(Number(memberId))); // 최신 회원 정보 다시 불러오기
+    setRefreshKey(prev => prev + 1); // 화면 강제 리렌더링
+  };
+  
+  const onFollow = async (memberId: number) => {
+    await dispatch(follow(memberId)); // 팔로우 실행 (올바른 액션으로 변경 필요)
+    await dispatch(fetchUserInfo(Number(memberId))); // 최신 회원 정보 다시 불러오기
+    setRefreshKey(prev => prev + 1); // 화면 강제 리렌더링
+  };
 
   // ===== icon ======
   const icons = {
@@ -116,15 +118,15 @@ const OtherPage: React.FC = () => {
   const ContentPreviewListMemo = React.memo(ContentPreviewList);
   
   return (
-    <div className='other-page-container'>
+    <div className='other-page-container' key={refreshKey}>
       <div className='my-detail-info-container'>
-            <UserInfoCompMemo user={other} openFollowModal={openFollowModal} />
+            <UserInfoCompMemo user={other} openFollowModal={openFollowModal} onUnfollow={onUnfollow} onFollow={onFollow} />
         </div>
 
         <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
 
         <div className='my-answer-info-container'>
-            <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetail='answer-detail' handleMoreBtn={() => openModal('내 답변', icons.checkbox, MySolvedQuestions, 'answer')}/>
+            <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetail='answer-commu' handleMoreBtn={() => openModal('내 답변', icons.checkbox, MySolvedQuestions, 'answer')}/>
         </div>
         
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
@@ -135,7 +137,7 @@ const OtherPage: React.FC = () => {
 
         {/* 모달 렌더링 */}
         {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} onClose={closeModal} handleDetail={modalData.handleDetail} />}  
-        {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} />}
+        {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} memberId={Number(memberId)} />}
     </div>
   )
 }
