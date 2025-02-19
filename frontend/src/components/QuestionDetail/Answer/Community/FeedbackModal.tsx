@@ -195,6 +195,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                 profileImg={getUserInfo(answer.memberId)?.profileImg || ''}
                 favoriteJob={getUserInfo(answer.memberId)?.favoriteJob || ''}
                 nickname={getUserInfo(answer.memberId)?.nickname || ''}
+                userId={answer.memberId}
               />
             )}
           </div>
@@ -240,6 +241,7 @@ const FeedbackModal: React.FC<FeedbackModalProps> = ({ answer, isOpen, onClose, 
                         profileImg={user.profileImg || ''}
                         favoriteJob={user.favoriteJob || ''}
                         nickname={user.nickname || ''}
+                        userId={user.memberId}
                       />
                     )}
                   </div>

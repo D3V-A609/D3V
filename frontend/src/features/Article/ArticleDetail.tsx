@@ -113,6 +113,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
                     profileImg={author.profileImg}
                     favoriteJob={author.favoriteJob}
                     nickname={author.nickname}
+                    userId={author.memberId}
                   />
                 ) : (
                   <span>작성자 정보를 불러올 수 없습니다.</span>
