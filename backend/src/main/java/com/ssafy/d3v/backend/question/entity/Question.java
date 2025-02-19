@@ -32,10 +32,11 @@ public class Question {
     private Long id;
 
     @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @NotBlank
-    @Column(name = "standard_answer")
+    @Column(name = "standard_answer", columnDefinition = "TEXT")
     private String standardAnswer;
 
     @ColumnDefault("0")// 기본값 = 0

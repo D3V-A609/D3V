@@ -43,6 +43,7 @@ public class Answer {
     private Question question;
 
     @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @NotNull
