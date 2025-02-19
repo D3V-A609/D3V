@@ -73,6 +73,7 @@ const Header: React.FC = () => {
         pauseOnHover: false,
         toastId: 'logout-success'
       });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('로그아웃 중 오류가 발생했습니다.', {
         position: "bottom-left",
