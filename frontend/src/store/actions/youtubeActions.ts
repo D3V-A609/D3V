@@ -6,9 +6,9 @@ export const fetchVideos = createAsyncThunk(
   async (query: string, { rejectWithValue }) => {
     try {
       const response = await youtubeApi.searchVideos(query);
-      return response.items;
+      return response.items; // video items 반환
     } catch (error) {
-      console.log(error)
+      console.error(error);
       return rejectWithValue('Failed to fetch videos');
     }
   }

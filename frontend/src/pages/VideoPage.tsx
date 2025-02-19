@@ -8,6 +8,7 @@ import VideoList from '../features/Video/VideoList';
 import { RootState } from '../store/reducers';
 import PageHeader from "../components/PageHeader/PageHeader"
 import { FaYoutube } from "react-icons/fa6";
+import './VideoPage.css'
 
 
 const VideoPage: React.FC = () => {
