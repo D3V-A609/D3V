@@ -1,4 +1,3 @@
-// store/actions/bookmarkActions.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import bookmarkApi from '../services/bookmarkApi';
 
@@ -10,27 +9,52 @@ export const fetchBookmarks = createAsyncThunk(
   }
 );
 
-// 북마크 추가 액션
+export const fetchAllBookmarks = createAsyncThunk(
+  'bookmarks/fetchAllBookmarks',
+  async (memberId: number) => {
+    const response = await bookmarkApi.getAllBookmarks(memberId);
+    return response;
+  }
+);
+
 export const createBookmark = createAsyncThunk(
   'bookmarks/create',
-  async (data: { name: string; description?: string; accessLevel: string }) => {
+  async (data: CreateBookmarkRequest) => {
     const response = await bookmarkApi.createBookmark(data);
     return response;
   }
 );
 
-export const updateBookmark = createAsyncThunk(
-  'bookmarks/update',
-  async (data: UpdateBookmarkRequest) => {
-    const response = await bookmarkApi.updateBookmark(data);
+export const updateSingleQuestionBookmarks = createAsyncThunk(
+  'bookmarks/updateSingleQuestionBookmarks',
+  async ({ questionId, bookmarkIds }: { questionId: number; bookmarkIds: number[] }) => {
+    const response = await bookmarkApi.updateSingleQuestionBookmarks(questionId, bookmarkIds);
     return response;
   }
 );
 
-export const toggleBookmark = createAsyncThunk(
-  'bookmarks/toggle',
-  async ({ bookmarkId, questionId }: { bookmarkId: number; questionId: number }) => {
-    const response = await bookmarkApi.toggleBookmark(bookmarkId, questionId);
-    return { ...response, bookmarkId };
+export const addQuestionsToBookmarks = createAsyncThunk(
+  'bookmarks/addQuestionsToBookmarks',
+  async ({ bookmarkIds, questionIds }: { bookmarkIds: number[]; questionIds: number[] }) => {
+    const promises = bookmarkIds.map(bookmarkId => 
+      bookmarkApi.addQuestionsToBookmark(bookmarkId, questionIds)
+    );
+    await Promise.all(promises);
+  }
+);
+
+export const fetchBookmarkById = createAsyncThunk(
+  'bookmarks/fetchById',
+  async (bookmarkId: number) => {
+    const response = await bookmarkApi.fetchBookmarkById(bookmarkId);
+    return response;
+  }
+);
+
+export const deleteBookmarkById = createAsyncThunk(
+  'bookmarks/deleteById',
+  async (bookmarkId: number) => {
+    const response = await bookmarkApi.deleteBookmarkById(bookmarkId);
+    return response.message;
   }
 );

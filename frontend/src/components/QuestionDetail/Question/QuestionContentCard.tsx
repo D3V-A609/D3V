@@ -53,8 +53,8 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
     </div>
     {/* 북마크 모달 */}
     {isBookmarkModalOpen && (
-        <BookmarkModal questionId={question.id} onClose={handleCloseModal} />
-    )}
+        <BookmarkModal questionIds={[question.id]} onClose={handleCloseModal} />
+      )}
   </div>);
 }
 
