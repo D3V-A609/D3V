@@ -202,9 +202,8 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved) {
-        Member member = getMember();
-        List<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(member.getId(),
+    public List<AnswerQuestionResponse> getLastestQuestion(boolean isSolved, long memberId) {
+        List<ServedQuestion> servedQuestions = servedQuestionCustomRepository.findServedQuestions(memberId,
                 isSolved);
 
         return servedQuestions.stream()
