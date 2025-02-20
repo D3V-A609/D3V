@@ -219,7 +219,6 @@ const HomePage: React.FC = () => {
             } else {
               navigate('/all-questions', { 
                 state: { initialJobFilter: [selectedJob] },
-                replace: true 
               });
             }
           }}
