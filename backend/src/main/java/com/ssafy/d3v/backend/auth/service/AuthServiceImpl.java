@@ -6,7 +6,6 @@ import static com.ssafy.d3v.backend.oauth.repository.OAuth2AuthorizationRequestB
 import com.ssafy.d3v.backend.auth.dto.EmailRequest;
 import com.ssafy.d3v.backend.auth.dto.EmailVerificationRequest;
 import com.ssafy.d3v.backend.auth.entity.VerificationCodeCache;
-import com.ssafy.d3v.backend.auth.exception.DuplicateResourceException;
 import com.ssafy.d3v.backend.auth.repository.VerificationCodeCacheRepository;
 import com.ssafy.d3v.backend.common.constant.EmailTemplate;
 import com.ssafy.d3v.backend.common.jwt.JwtTokenProvider;
@@ -48,14 +47,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void checkNicknameDuplication(String nickname) {
         memberRepository.findByNickname(nickname).ifPresent(member -> {
-            throw new DuplicateResourceException("이미 사용 중인 닉네임입니다. 닉네임: " + nickname);
+            throw new IllegalStateException("이미 사용 중인 닉네임입니다. 닉네임: " + nickname);
         });
     }
 
     @Override
     public void checkEmailDuplication(String email) {
         memberRepository.findByEmail(email).ifPresent(member -> {
-            throw new DuplicateResourceException("이미 사용 중인 이메일입니다. 이메일:" + email);
+            throw new IllegalStateException("이미 사용 중인 이메일입니다. 이메일: " + email);
         });
     }
 
