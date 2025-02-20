@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import "../../../pages/QuestionDetailPage.css";
 
 import { MdCalendarToday } from "react-icons/md";
-import { RiBookmarkLine } from "react-icons/ri";
+import { RiBookmarkLine, RiBookmarkFill } from "react-icons/ri";
 import QuestionSkillTag from './QuestionSkillTag';
 import BookmarkModal from '../../Bookmark/BookmarkModal';
+import { fetchQuestionById } from '../../../store/actions/questionActions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../store';
 
 interface QuestionContentCardProps {
   question: Question;
@@ -17,7 +20,7 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
     day: 'numeric',  // "1" 형식으로 일 출력
   }).format(new Date());
 
-
+  const dispatch = useDispatch<AppDispatch>();
   const [isBookmarkModalOpen, setBookmarkModalOpen] = useState(false); // 모달 상태
 
   const handleBookmarkClick = () => {
@@ -26,6 +29,7 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
 
   const handleCloseModal = () => {
     setBookmarkModalOpen(false); // 모달 닫기
+    dispatch(fetchQuestionById(question.id)); 
   };
 
   return (
@@ -40,7 +44,11 @@ const QuestionContentCard:React.FC<QuestionContentCardProps> = ({question, isTod
     <div className="question-content_question-card-body">
       <div className="question-content_question-card-body_top">
         <span className="question-label">Q.</span>
-        <RiBookmarkLine size={20} onClick={handleBookmarkClick} style={{ cursor: 'pointer' }} />
+        {question.isBookmarked ? (
+          <RiBookmarkFill size={20} onClick={handleBookmarkClick} style={{ cursor:'pointer', color: '#0072EF'}} />
+        ) : (
+          <RiBookmarkLine size={20} onClick={handleBookmarkClick} style={{ cursor: 'pointer', color: '#0072EF' }} />
+        )}
       </div>
       <div className="question-text">
         {question.content}
