@@ -1,6 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import { AppDispatch } from "../store"; // Redux Dispatch 타입
 import { setSelectedQuestionId } from '../store/slices/questionSlice';
+import SecureStorage from "../store/services/token/SecureStorage";
 
 /**
  * 특정 페이지로 이동하는 공통 함수
@@ -67,6 +68,10 @@ export const moveToOtherProfile = (
   navigate: NavigateFunction,
   memberId: number
 ) => {
-  const encodedId = btoa(memberId.toString());
-  navigateTo(navigate, `/profile/${encodedId}`)
+  if(memberId === Number(SecureStorage.getMemberId())){
+    navigateTo(navigate, `/my`);
+  }else{
+    const encodedId = btoa(memberId.toString());
+    navigateTo(navigate, `/profile/${encodedId}`)
+  }
 }
