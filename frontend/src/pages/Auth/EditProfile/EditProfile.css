@@ -98,6 +98,21 @@
   transition: all 0.3s ease;
 }
 
+.edit-profile-container .form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 1em;
+}
+
 .edit-profile-container .form-group input:focus,
 .form-group select:focus {
   outline: none;
@@ -106,6 +121,14 @@
 
 .edit-profile-container .password-input-wrapper {
   position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.edit-profile-container .password-input-wrapper input {
+  width: 100%;
+  padding-right: 45px; /* 토글 버튼을 위한 여백 */
 }
 
 .edit-profile-container .password-toggle {
@@ -118,7 +141,12 @@
   color: #666;
   cursor: pointer;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
+
 
 .edit-profile-container .save-button {
   width: 100%;
@@ -155,4 +183,39 @@
   font-size: 14px;
   margin-top: 5px;
   text-align: left;
+}
+
+.edit-profile-container .error-message.success {
+  color: #28a745;
+}
+
+.edit-profile-container .error-message.error {
+  color: #dc3545;
+}
+
+.edit-profile-container .delete-account-section {
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.edit-profile-container .delete-account-button {
+  width: 100%;
+  padding: 10px;
+  color: var(--color-dark-gray);
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+
+/* profile-sidebar에 추가 */
+.edit-profile-container .profile-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px; /* 적절한 높이 설정 */
 }

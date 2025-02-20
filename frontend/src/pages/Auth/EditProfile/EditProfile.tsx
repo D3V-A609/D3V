@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux'
 import authApi from '../../../store/services/authApi';
 import { fetchJobs } from '../../../store/actions/jobActions';
 import { RootState } from '../../../store';
+import { logoutSuccess } from '../../../store/slices/authSlice';
 // import TokenService from '../../../store/services/token/tokenService';
 // import { updateEmailVerification } from '../../../store/slices/userSlice';
 
@@ -96,7 +97,6 @@ const EditProfile: React.FC = () => {
     }
   }
 
-
   const isValidGithubUrl = (url: string): boolean => {
     if (!url) return true; // 빈 값은 허용
     const githubUrlPattern = /^https?:\/\/github\.com\/[a-zA-Z0-9_-]{1,39}$/i;
@@ -104,30 +104,51 @@ const EditProfile: React.FC = () => {
   };
 
   const validatePassword = () => {
-    // password와 confirmPassword가 모두 입력되지 않은 경우
+    const passwordInput = document.querySelector('input[type="password"]');
+    const confirmInput = document.querySelector('input[placeholder="새 비밀번호 확인"]');
+    const errorDiv = document.querySelector('.error-message');
+    
+    // 둘 다 비어있는 경우
     if (!password && !confirmPassword) {
       setPasswordError('');
+      passwordInput?.classList.remove('valid', 'invalid');
+      confirmInput?.classList.remove('valid', 'invalid');
       return true;
     }
 
-    // password만 입력되고 confirmPassword가 입력되지 않은 경우
-    if (password && !confirmPassword) {
-      setPasswordError('');
+    // 하나만 입력된 경우
+    if ((!password && confirmPassword) || (password && !confirmPassword)) {
+      setPasswordError('비밀번호를 모두 입력해주세요.');
+      passwordInput?.classList.add('invalid');
+      confirmInput?.classList.add('invalid');
+      errorDiv?.classList.add('error');
+      return false;
+    }
+
+    // 비밀번호 유효성 검사 (영문, 숫자, 특수문자 포함)
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setPasswordError('비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다.');
+      passwordInput?.classList.add('invalid');
+      confirmInput?.classList.add('invalid');
+      errorDiv?.classList.add('error');
+      return false;
+    }
+
+    // 비밀번호 일치 여부 확인
+    if (password === confirmPassword) {
+      setPasswordError('비밀번호가 일치합니다.');
+      passwordInput?.classList.add('valid');
+      confirmInput?.classList.add('valid');
+      errorDiv?.classList.add('success');
       return true;
+    } else {
+      setPasswordError('비밀번호가 일치하지 않습니다.');
+      passwordInput?.classList.add('invalid');
+      confirmInput?.classList.add('invalid');
+      errorDiv?.classList.add('error');
+      return false;
     }
-
-    // 둘 다 입력된 경우에만 검증
-    if (password && confirmPassword) {
-      if (password === confirmPassword) {
-        setPasswordError('비밀번호가 일치합니다.');
-        return true;
-      } else {
-        setPasswordError('비밀번호가 일치하지 않습니다.');
-        return false;
-      }
-    }
-
-    return true;
   };
 
   const checkNicknameAvailability = async (nickname: string) => {
@@ -234,6 +255,25 @@ const EditProfile: React.FC = () => {
               프로필 이미지 변경
             </label>
           </div>
+          <div className="delete-account-section">
+            <button 
+              type="button" 
+              onClick={() => {
+                if (window.confirm('정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                  authApi.deleteMember().then(() => {
+                    dispatch(logoutSuccess());  
+                    window.location.href = '/';
+                  }).catch((error) => {
+                    console.error('회원 탈퇴 처리 실패:', error);
+                    alert('회원 탈퇴 처리 중 오류가 발생했습니다.');
+                  });
+                }
+              }}
+              className="delete-account-button"
+            >
+              회원 탈퇴
+            </button>
+          </div>
         </aside>
 
         <main className="profile-main">
@@ -309,8 +349,9 @@ const EditProfile: React.FC = () => {
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
-                    validatePassword();
+                    // 첫 번째 입력필드에서는 validatePassword를 즉시 호출하지 않음
                   }}
+                  onBlur={validatePassword} // 포커스를 잃을 때 검증
                 />
                 <button 
                   type="button" 
@@ -331,8 +372,8 @@ const EditProfile: React.FC = () => {
                   value={confirmPassword}
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
-                    validatePassword();
                   }}
+                  onBlur={validatePassword} // 포커스를 잃을 때 검증
                 />
                 <button 
                   type="button" 
