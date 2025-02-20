@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactQuill from "react-quill-new";
 import { useAppDispatch } from "../../store/hooks/useRedux";
 import { updateArticle } from "../../store/actions/articleActions";
-// import "./EditArticle.css";
+import "./EditArticle.css";
 
 const categories = [
   { id: 1, name: "JOB_REVIEW", label: "합격 후기" },
@@ -21,44 +21,55 @@ interface EditArticleProps {
 
 const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
   const dispatch = useAppDispatch();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [categoryId, setCategoryId] = useState<number>(article.categoryId);
   const [title, setTitle] = useState<string>(article.title);
   const [content, setContent] = useState<string>(article.content);
-  const [images, setImages] = useState<File[]>([]);
+  const [image, setImage] = useState<File | null>(null);
+  const [existingImageName, setExistingImageName] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ category?: string; title?: string; content?: string; images?: string }>({});
 
   useEffect(() => {
     setCategoryId(article.categoryId);
     setTitle(article.title);
     setContent(article.content);
+    if (article.images && article.images.length > 0) {
+      setExistingImageName(article.images[0].originImageName);
+    }
   }, [article]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-      const newErrors: string[] = [];
-
-      const validFiles = selectedFiles.filter((file) => {
-        const extension = file.name.split(".").pop()?.toLowerCase();
-        if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
-          newErrors.push(`허용되지 않는 확장자입니다: ${file.name}`);
-          return false;
-        }
-        if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-          newErrors.push(`파일 크기가 너무 큽니다 (최대 ${MAX_FILE_SIZE_MB}MB): ${file.name}`);
-          return false;
-        }
-        return true;
-      });
-
-      setImages(validFiles);
-      if (newErrors.length > 0) {
-        setErrors((prev) => ({ ...prev, images: newErrors.join("\n") }));
-      } else {
-        setErrors((prev) => ({ ...prev, images: undefined }));
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const extension = file.name.split(".").pop()?.toLowerCase();
+      
+      if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
+        setErrors(prev => ({ ...prev, images: "허용되지 않는 확장자입니다." }));
+        return;
       }
+      
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, images: `파일 크기가 너무 큽니다 (최대 ${MAX_FILE_SIZE_MB}MB)` }));
+        return;
+      }
+
+      setImage(file);
+      setExistingImageName(null);
+      setErrors(prev => ({ ...prev, images: undefined }));
     }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setExistingImageName(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click();
   };
 
   const validateForm = () => {
@@ -79,7 +90,11 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
     formData.append("category_id", String(categoryId));
     formData.append("title", title);
     formData.append("content", content);
-    images.forEach((image) => formData.append("images", image));
+    if (image) {
+      formData.append("images", image);
+    } else if (!existingImageName) {
+      formData.append("remove_image", "true");
+    }
 
     dispatch(updateArticle({ id: article.id, data: formData }));
     alert("게시글이 성공적으로 수정되었습니다!");
@@ -100,7 +115,6 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
 
   return (
     <div className="edit-article">
-
       <form onSubmit={handleSubmit}>
         <div className="article-form-group">
           <label htmlFor="category" className="article-form-label">
@@ -159,14 +173,25 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
             이미지 첨부
           </label>
           <div className="article-form-group article-image-input">
-            <input
-              id="images"
-              type="file"
-              accept=".jpg,.jpeg,.png,.gif"
-              multiple
-              onChange={handleImageChange}
-              style={{ cursor: "pointer" }}
-            />
+            <div className="article-file-input-container">
+              <input
+                ref={fileInputRef}
+                id="images"
+                type="file"
+                accept=".jpg,.jpeg,.png,.gif"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
+              <button type="button" onClick={handleFileButtonClick} className="article-file-select-button">
+                파일 선택
+              </button>
+              {(image || existingImageName) && (
+                <div className="article-selected-image">
+                  <span className="file-name">{image ? image.name : existingImageName}</span>
+                  <button type="button" onClick={handleRemoveImage} className="article-remove-image-btn">x</button>
+                </div>
+              )}
+            </div>
             <small className="article-image-description">
               * 허용된 확장자: jpg, jpeg, png, gif / 파일 최대 크기: {MAX_FILE_SIZE_MB}MB
             </small>
