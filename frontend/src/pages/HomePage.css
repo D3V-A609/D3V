@@ -95,31 +95,31 @@
 
 /* 비로그인 상태 스타일 */
 .question-cards.--unLogined {
-  filter: blur(0.5rem);
-  display: grid; 
-  grid-template-columns: repeat(3, 1fr); 
-  justify-content: center;
-  align-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   position: relative;
   min-height: 200px;
 }
 
-.unlogin-text {
-  display: none;
+/* 블러 효과를 위한 오버레이 */
+.question-cards.--unLogined > * {
+  filter: blur(0.5rem);
 }
 
-.unlogin-text.--unLogined {
-  display: block;
+.question-cards.--unLogined::before {
+  content: "로그인 후 사용해주세요";
   position: absolute;
-  z-index: 20;
-  top: 35%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 20;
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: bold;
   text-align: center;
+  color: black;
 }
 
 /* 서비스 소개 섹션 스타일 */
@@ -171,25 +171,33 @@
   background-color: white;
 }
 
+/* Desktop-first breakpoints */
 @media (max-width: 1280px) {
   .home-page {
     width: 100%;
     padding: 40px 20px;
   }
+  
   .cards-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
-/* 반응형 디자인 */
+
 @media (max-width: 768px) {
+  /* Container layouts */
   .home-page {
     width: 100%;
     padding: 20px;
-    max-width: 390px; /* iPhone 12 Pro 기준 */
+    max-width: 390px;
   }
 
-  /* 모바일 카드 레이아웃 */
-  .question-cards {
+  .cards-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  /* Question card layouts */
+  .question-cards,
+  .question-cards.--unLogined {
     grid-template-columns: 1fr;
     max-width: 390px;
     margin: 0 auto;
@@ -199,12 +207,8 @@
     width: 100%;
     min-width: 340px;
   }
-  
-  .question-cards.--unLogined {
-    grid-template-columns: 1fr;
-    min-height: 200px; /* 모바일에서 높이 조정 */
-  }
 
+  /* Unlogined state styles */
   .unlogin-text.--unLogined {
     display: block;
     position: absolute;
@@ -219,7 +223,7 @@
     text-align: center;
   }
 
-  /* 모바일 서비스 정보 레이아웃 */
+  /* Service info section */
   .unlogin-info-section-2 .service-info {
     flex-direction: column;
     padding: 2rem 1em;
@@ -233,10 +237,8 @@
   .service-info-text-div {
     width: 100%;
   }
-  .cards-wrapper {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
 }
+
 @media (max-width: 480px) {
   .cards-wrapper {
     grid-template-columns: 1fr;
