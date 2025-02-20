@@ -108,6 +108,7 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
             onChange={(e) => setCategoryId(Number(e.target.value))}
             required
             className={`article-form-select ${errors.category ? "article-error-border" : ""}`}
+            style={{ cursor: "pointer" }}
           >
             <option value="" disabled>
               카테고리를 선택해주세요
@@ -163,6 +164,7 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
                 accept=".jpg,.jpeg,.png,.gif"
                 multiple
                 onChange={handleImageChange}
+                style={{ cursor: "pointer" }}
             />
             <small className="article-image-description">
                 * 허용된 확장자: jpg, jpeg, png, gif / 파일 최대 크기: {MAX_FILE_SIZE_MB}MB
@@ -172,10 +174,10 @@ const WriteArticle: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
         </div>
 
         <div className="article-form-buttons">
-          <button type="button" className="article-cancel-button" onClick={onCancel}>
+          <button type="button" className="article-cancel-button" onClick={onCancel} style={{ cursor: "pointer" }}>
             취소
           </button>
-          <button type="submit" className="article-submit-button">
+          <button type="submit" className="article-submit-button" style={{ cursor: "pointer" }}>
             등록
           </button>
         </div>

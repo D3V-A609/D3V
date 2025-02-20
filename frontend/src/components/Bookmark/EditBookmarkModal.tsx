@@ -47,7 +47,7 @@ const EditBookmarkModal: React.FC<EditBookmarkModalProps> = ({ bookmark, onClose
   return (
     <div className="edit-bookmark-modal">
       <div className="edit-bookmark-modal-header">
-        <h2>북마크 수정</h2>
+        <span className="bookmark-bookmark">북마크 수정</span>
         <button className="edit-bookmark-close-btn" onClick={onClose}>
           <HiX />
         </button>

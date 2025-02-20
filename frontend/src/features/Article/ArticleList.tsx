@@ -97,17 +97,25 @@ const ArticleList: React.FC<ArticleListProps> = ({
               <td>{article.commentCount}</td>
               <td>{article.view}</td>
               <td className="author-cell">
-                {users[article.memberId] && (
+                {users[article.memberId] ? (
                   <>
-                    <img 
-                      src={users[article.memberId].profileImg || '/default-profile.png'} 
-                      alt={users[article.memberId].nickname} 
-                      className="author-profile-image"
-                    />
+                    {users[article.memberId].profileImg ? (
+                      <img 
+                        src={users[article.memberId].profileImg} 
+                        alt={users[article.memberId].nickname} 
+                        className="author-profile-image"
+                      />
+                    ) : (
+                      <div className="article-avatar-fallback">
+                        {users[article.memberId].nickname?.[0]?.toUpperCase() ?? "D"}
+                      </div>
+                    )}
                     <span title={users[article.memberId].nickname}>
                       {users[article.memberId].nickname || '알 수 없음'}
                     </span>
                   </>
+                ) : (
+                  <span>알 수 없음</span>
                 )}
               </td>
             </tr>

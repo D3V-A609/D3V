@@ -32,8 +32,10 @@
     border-bottom: 1px solid #7D7D7E;
   }
   
-  .bookmark-header h2 {
+  .bookmark-bookmark {
     margin: 0;
+    font-size: 28px;
+    font-weight: bold;
   }
   
   .bookmark-close-btn {

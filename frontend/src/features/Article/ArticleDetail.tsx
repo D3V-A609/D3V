@@ -119,15 +119,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
                   <span>작성자 정보를 불러올 수 없습니다.</span>
                 )}
                 <span className="date">
-                  {new Date(currentArticle.createdAt).toLocaleString('ko-KR', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                  })}
+                {new Date(currentArticle.createdAt).toLocaleString()}
                 </span>
               </div>
               <div className="right-section">

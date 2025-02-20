@@ -34,7 +34,7 @@ const VideoDetail: React.FC = () => {
           allowFullScreen
         ></iframe>
       </div>
-      <h2>{currentVideo.snippet.title}</h2>
+      <span className="video-title">{currentVideo.snippet.title}</span>
       <p>{currentVideo.snippet.description}</p>
       <p>Channel: {currentVideo.snippet.channelTitle}</p>
       <p>Published: {new Date(currentVideo.snippet.publishedAt).toLocaleDateString()}</p>

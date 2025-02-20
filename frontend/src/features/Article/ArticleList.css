@@ -31,6 +31,7 @@
   text-align: center;
   vertical-align: middle;
   border-bottom: 1px solid #d9e9ff;
+  cursor: pointer;
 }
 
 .author-cell {
@@ -47,6 +48,22 @@
   object-fit: cover; 
   border: 0.3px solid #00518d;
 }
+
+.article-avatar-fallback {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  border: 0.3px solid #00518d;
+}
+
 
 .author-cell span {
   max-width: 70px; /* 닉네임 최대 너비 설정 */

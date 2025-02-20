@@ -56,7 +56,7 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
     <>
       <div className="bookmark-detail-modal">
         <div className="bookmark-detail-modal-header">
-          <h2>{selectedBookmark.name}</h2>
+          <span className="bookmark-detail-name">{selectedBookmark.name}</span>
           <button className="bookmark-detail-close-btn" onClick={onClose}>
             ✕
           </button>
