@@ -29,12 +29,12 @@ const TimerSetting: React.FC<TimerSettingProps> = ({
     <div className="timer-setting-container">
       {!showTimerDropdown? (
         <div className="timer-initial" key={remainingTime} onClick={handleDropdownToggle}>
-          <span>{remainingTime !== null ? `${remainingTime}초` : "타이머 설정"}</span>
+          <span>{remainingTime !== null ? `${remainingTime}초` : "타이머"}</span>
           <MdOutlineTimer className="timer-icon" />
         </div>
       ) : (
         <div className="timer-dropdown">
-            <span>{remainingTime !== null ? `${remainingTime}초` : "타이머 설정"}</span>
+            <span>{remainingTime !== null ? `${remainingTime}초` : "타이머"}</span>
             <MdOutlineTimer className="timer-icon" />
           <div className="dropdown-menu">
             <div

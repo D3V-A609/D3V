@@ -174,8 +174,7 @@
 /* Desktop-first breakpoints */
 @media (max-width: 1280px) {
   .home-page {
-    width: 100%;
-    padding: 40px 20px;
+    padding: 20px;
   }
   
   .cards-wrapper {
