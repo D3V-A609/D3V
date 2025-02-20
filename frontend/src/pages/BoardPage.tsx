@@ -21,6 +21,8 @@ const categoryMap: Record<string, string> = {
 const BoardPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector(state => state.user);
+  const { articles, pagination, error } = useAppSelector(state => state.articles || { articles: [], pagination: undefined, error: null });
+
   const [params, setParams] = useState({
     category: "전체",
     searchQuery: "",
@@ -38,6 +40,7 @@ const BoardPage: React.FC = () => {
 
   const fetchArticlesData = useCallback(() => {
     const apiCategory = categoryMap[params.category];
+    console.log("선택 : ", params.category, "API : ", apiCategory);
     dispatch(fetchArticles({ 
       category: apiCategory, 
       keyword: params.searchQuery, 
@@ -50,7 +53,7 @@ const BoardPage: React.FC = () => {
   
   useEffect(() => {
     fetchArticlesData();
-  }, [fetchArticlesData]);
+  }, [fetchArticlesData, params]);
 
   // detail 페이지에서 뒤로가기 시 list로 currentView 수정정
   useEffect(() => {
@@ -75,7 +78,7 @@ const BoardPage: React.FC = () => {
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => {
       const updatedParams = { ...prev, ...newParams, page: 1 };
-      fetchArticlesData();
+      // fetchArticlesData();
       return updatedParams;
     });
   };
@@ -128,7 +131,11 @@ const BoardPage: React.FC = () => {
           />
 
           <ArticleList
+            articles={articles}
+            users={users}
+            pagination={pagination}
             params={params}
+            error={error}
             onParamChange={handleParamChange}
             onArticleClick={handleArticleClick}
           />
