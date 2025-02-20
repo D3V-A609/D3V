@@ -24,7 +24,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public List<FeedbackResponse> get(long answerId) {
-        List<Feedback> feedbacks = feedbackRepository.findByAnswerAndDeletedAtIsNullOrderByCreatedAtDesc(
+        List<Feedback> feedbacks = feedbackRepository.findByAnswerAndDeletedAtIsNullOrderByCreatedAtAsc(
                 getAnswer(answerId));
 
         return feedbacks.stream()
