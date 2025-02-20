@@ -49,6 +49,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import './styles/TextStyle.css';
 import OtherPage from './pages/OtherPage.tsx';
+import { AiModalProvider } from './context/AiModalContext.tsx';
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -146,7 +147,9 @@ function App() {
             <ProtectedRoute>
               <RecordingProvider>
                 <TimerProvider>
-                  <QuestionDetailPage />
+                  <AiModalProvider>
+                    <QuestionDetailPage />
+                  </AiModalProvider>
                 </TimerProvider>
               </RecordingProvider>
             </ProtectedRoute>

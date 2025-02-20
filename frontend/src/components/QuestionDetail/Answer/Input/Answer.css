@@ -2,69 +2,6 @@
 display: none;
 }
 
-/*//////////////////*/
-.my-answer-records-container{
-  justify-items: start;
-}
-
-.my-answer-records-container .records-timeline{
-  width: 100%;
-  }
-
-/* 내 답변 기록 타임라인의 툴바를 없앰 */
-.my-answer-records-container .records-timeline .fwRzpx{
-  display: none;
-}
-
-.my-answer-records-container .records-timeline .gJvBnh{
-  min-height: unset;
-  max-height: unset;
-  padding-left: 1.5em;
-  padding-bottom: 0;
-}
-
-.my-answer-records-container .records-timeline .iiIORr, /*나머지 카드*/
-.my-answer-records-container .records-timeline .bevYHo, /*최상단의 카드*/
-.my-answer-records-container .records-timeline .jLmrBu {/*길이가 너무 긴 경우 readmore 열었을 때의 카드*/
-  margin: 0;
-  padding-left: 0.5rem;
-  padding-bottom: 1rem;
-  padding-top: 0;
-}
-
-/* 타임라인 카드 스타일링 */
-.my-answer-records-container .chrono-card .iTRyMy,
-.TimelineItemContentWrapper-sc-d7qjm1-0.iTRyMy.timeline-card-content.active.rc-card {
-  min-height: unset !important; /* 기본 min-height 제거 */
-  padding: 20px;
-  box-shadow: none;
-  border: none;
-  filter: drop-shadow(rgba(0, 0, 0, 0.3) 0px 0px 1px);
-  text-align: start;
-}
-
-.TimelineContentDetailsWrapper-sc-d7qjm1-7.MdIhI.show-less.card-description.rc-card-text{
-  margin: 0;
-}
-.ToolbarWrapper-sc-exupb5-0.gjuTGZ{
-  display: none;
-}
-
-.my-answer-records-container .chrono-card-title,
-.chrono-card-detailed-text {
-  padding-left: 20px;
-}
-
-.TitleWrapper-sc-13izrht-0.jcPcan.timeline-item-title.active.rc-title{
-  background-color: white;;
-  color: #ff9374;
-}
-
-.TitleWrapper-sc-13izrht-0.hnoVec.timeline-item-title.active.rc-title{
-  background-color: white;;
-  color: #ff9374;
-}
-
 /* 베스트 답변 컨테이너 */
 .best-answer-container{
   padding: 1rem 0 3rem 0;
@@ -74,8 +11,8 @@ display: none;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: bold;
   margin-bottom: 16px;
 }
 
