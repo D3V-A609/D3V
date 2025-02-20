@@ -10,6 +10,7 @@ import { FaEye, FaComment } from "react-icons/fa6";
 import "./ArticleDetail.css";
 import SecureStorage from "../../store/services/token/SecureStorage";
 
+import ReactQuill from 'react-quill-new';
 const categoryNameMap: Record<string, string> = {
   JOB_REVIEW: "합격 후기",
   QUESTION_REVIEW: "답변 첨삭",
@@ -141,10 +142,16 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
                 <img key={image.id} src={image.imageUrl} alt={image.originImageName} />
               ))
             ) : null}
-            <div
+            {/* <div
               dangerouslySetInnerHTML={{ __html: currentArticle.content }}
               className="article-content"
-            ></div>
+            ></div> */}
+            <ReactQuill
+              value={currentArticle.content}
+              readOnly={true}
+              theme="bubble"
+              modules={{ toolbar: false }}
+            />
           </div>
 
           <div className="comment-header">
