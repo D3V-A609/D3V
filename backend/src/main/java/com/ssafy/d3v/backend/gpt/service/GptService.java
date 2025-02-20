@@ -53,7 +53,8 @@ public class GptService {
         requestBody.put("model", "gpt-4o");
         requestBody.put("messages", new Object[]{
                 Map.of("role", "system", "content", "당신은 유능한 기술 면접관입니다. 친절하지만 냉철하게 질문과 답변을 평가하고 피드백을 제공합니다."
-                        + " 그리고 항상 친절하고 존댓말을 사용해서 답변해줍니다."),
+                        + " 그리고 항상 친절하고 존댓말을 사용해서 답변해줍니다."
+                        + "내가 가진 api 토큰 수를 넘지 않게 조절해서 답변해주세요."),
                 Map.of("role", "user", "content", userPrompt)
         });
         requestBody.put("max_tokens", 500);
