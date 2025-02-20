@@ -1,0 +1,188 @@
+.ai-feedback-modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.ai-feedback-content{
+  /* background: #fffefd; */
+  background-color: white;
+  /* padding: 2rem 3em; */
+  padding: 30px;
+  width: 70%;
+  border-radius: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  position: relative;
+  font-family: 'Noto Sans KR', sans-serif;
+  padding-bottom: 2rem;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+  white-space: pre-wrap;
+}
+
+.ai-feedback-quesiton{
+  font-weight: bold;
+  font-size: 22px;
+  /* color: #ff6b81; */
+  /* color: #fffefd; */
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  text-align: start;
+  border-bottom: 2px solid #0072EF;
+}
+
+.ai-feedback-myanswer{
+  text-align: start;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding: 20px 10px;
+  background: #fffefd;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ai-feedback-myanswer .me{
+  font-weight: bold;
+  padding: 0 0.5em;
+  font-size:24px;
+  color: #0072EF;
+}
+
+.ai-feedback-myanswer .answer {
+  color: #333;
+  line-height: 1.5;
+}
+
+.ai-feedback-content .ai-feedback-text{
+  /* text-align: start;
+  font-size: 20px; */
+  font-size: 18px;
+  padding: 15px;
+  background: #f9fcff; 
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ai-feedback-content .ai-feedback-text h3, h2, h1{
+  display: none;
+}
+
+.ai-feedback-text h4 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0072EF; 
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.ai-feedback-content .ai-feedback-text ul{
+  display: table;
+  padding-left: 2em;
+  border: 1px ;
+  list-style: none;
+  font-size: 20px;
+}
+
+.ai-feedback-text ul li {
+  padding: 8px 0;
+  position: relative;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* 리스트 앞에 아이콘 추가 */
+.ai-feedback-text ul li:before {
+  content: "⭐"; /* 별 아이콘 */
+  color: #ffcc00;
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+/* 부족한 점 리스트는 ⚠️ 아이콘 */
+.ai-feedback-text h4[data-section="bad"] + ul li:before {
+  content: "⚠️";
+  color: #ff6b6b;
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+.ai-loading-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-loading-div .gif{
+  justify-self: center;
+  justify-content: center;
+  justify-items: center;
+}
+
+.ai-loading-div img{
+  height: 30%;
+  width: 30%
+}
+
+.ai-loading-div .text{
+  text-align: center;
+}
+
+.ai-feedback-content .close-btn{
+  display: flex;
+  justify-content: end;
+  align-items: start;
+}
+
+.ai-feedback-content .close-btn .close{
+  cursor: pointer;
+}
+
+
+/* 피드백을 반영한 추천 답변 */
+.ai-feedback-text p {
+  background: white;
+  /* border-left: 4px solid #007bff; */
+  padding: 30px;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+/* ✨ 스크롤바 스타일 (심플 큐트 컨셉) ✨ */
+.ai-feedback-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ai-feedback-content::-webkit-scrollbar-thumb {
+  background: #0072EF;
+  border-radius: 10px;
+}
+
+.ai-feedback-content::-webkit-scrollbar-track {
+  /* background: #ffe6ea; */
+  background: none;
+  border-radius: 10px;
+}
+
+.ai-feedback-content .ai-feedback-text *{
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}

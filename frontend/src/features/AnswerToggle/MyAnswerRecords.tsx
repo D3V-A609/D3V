@@ -2,12 +2,16 @@ import React, { useMemo } from 'react';
 import { Chrono } from 'react-chrono';
 import PageHeader from '../../components/PageHeader/PageHeader';
 
+import "./MyAnswerRecords.css"
+
 import { GrHistory } from "react-icons/gr";
+import { useAiModal } from '../../context/AiModalContext';
 
 interface MyAnswerRecordsProps{
   myAnswers: Answer[];
 }
 const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
+  const { openAiModal, setSelectAnswer } = useAiModal();
   // 오늘 날짜를 가져와 시간을 00:00:00으로 초기화 (날짜 비교를 위해 필요)
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분 초기화
@@ -35,7 +39,7 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
       date.setHours(0, 0, 0, 0);
 
       // 오늘 날짜인 경우 첫 번째 항목에만 "Today" 표시
-      let title = "     "; // 기본적으로 빈 문자열
+      let title = ""; // 기본적으로 빈 문자열
       if (date.getTime() === today.getTime()) {
         if (!todayFlag) {
           title = "Today"; // 첫 번째로 만나는 오늘 날짜만 "Today"로 설정
@@ -55,13 +59,21 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
 
       // Chrono에서 사용할 데이터 구조로 변환
       return {
+        ...record,
+        hasUnknownText: hasUnknownText,
         title: title, // "Today" 또는 빈 문자열
-        cardTitle: formattedDate, // 포맷된 날짜
+        date: formattedDate, // 포맷된 날짜
         cardDetailedText: cleanContent, // 답변 내용을 카드의 상세 내용으로 설정
-        cardSubtitle: subtitle, // 모르겠어요 추가가
+        cardSubtitle: subtitle, // 모르겠어요 추가
       };
     });
   }, [myAnswers]);
+
+  const handleAIFeedback = (answer: Answer) => {
+    // alert(JSON.stringify(answer, null, 2))
+    setSelectAnswer(answer);
+    openAiModal();
+  }
 
   return (
     <div>
@@ -75,13 +87,28 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
         <div className="records-timeline">
           <Chrono
             key={JSON.stringify(timelineItems)} // 배열 변경 시마다 강제 리렌더링
-            items={timelineItems} // 정렬 및 변환된 타임라인 아이템 전달
+            // items={timelineItems} // 정렬 및 변환된 타임라인 아이템 전달
             mode="VERTICAL" // 세로 방향으로 타임라인 표시
-            theme={{
-              secondary: "#ff9374", // 주요 강조 색상 설정
-              cardSubtitleColor: "#CEC7C7", // 🔹 subtitle 색상을 회색으로 설정
-            }}
-          />
+            theme={{secondary: "#ff9374", cardBgColor: 'white'}}
+            // scrollable={{ scrollbar: false }}
+          >
+            {timelineItems?.map((item) => (
+              <div className='timeline-custom-card-div' key={item.answerId}>
+                <div className='timeline-custom-text-div'>
+                  <h3 className='card-title'>{item.date} {item.title!=="" && <span className='today-text'>{item.title}</span>}</h3>
+                  <p className='subtitle-text'>{item.cardSubtitle}</p>
+                  <div className='timeline-custom-detail-text'>
+                    {item.cardDetailedText}
+                  </div>
+                </div>
+                {!item.hasUnknownText && <div className='timeline-custom-btn-div' onClick={() =>handleAIFeedback(item)}>
+                  <span>AI</span>
+                  <span>피드백</span>
+                </div>}
+              </div>
+            ))}
+            
+          </Chrono>
         </div>
       </div>
     </div>

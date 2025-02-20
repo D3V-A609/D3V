@@ -16,6 +16,8 @@ import { fetchAllMyAnswersByQID } from '../store/actions/answerActions';
 import { fetchQuestionById } from '../store/actions/questionActions';
 import { useRecordingContext } from '../context/RecordingContext';
 import RecordView from '../features/VoiceRecording/RecordView';
+import { useAiModal } from '../context/AiModalContext';
+import AIFeedbackModal from '../features/Answer/AIFeedbackModal';
 
 const QuestionDetailPage: React.FC = () => {
   const { isRecordingMode } = useRecordingContext();
@@ -23,17 +25,16 @@ const QuestionDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentQuestionDetailView, setQuestionDetailView] = useState<
-    "input" | "community"
-  >("input");
+
+  const {isAiModalOpen} = useAiModal();
+
+  const [currentQuestionDetailView, setQuestionDetailView] = useState<"input" | "community">("input");
 
   // Redux store에서 선택된 질문 ID와 모든 질문 목록 가져오기
   const { selectedQuestionId, question, dailyQuestions, error } = useAppSelector(
     state => state.questions as QuestionState // 타입 단언문 사용
   );
-  const { myAnswerArr } = useAppSelector(
-    state => state.answers as AnswerState
-  );
+  const { myAnswerArr } = useAppSelector(state => state.answers as AnswerState);
 
   const hasFetched = useRef(false);
 
@@ -107,7 +108,10 @@ const QuestionDetailPage: React.FC = () => {
       {currentQuestionDetailView === "community" && selectedQuestionId !== null && (
         <AnswerCommunityComp questionId={selectedQuestionId} />
       )}
+
       </>}
+
+      {isAiModalOpen && <AIFeedbackModal question={question? question.content : ""}/>}
       
     </div>
     }</>

@@ -1,4 +1,4 @@
-declare type Answer = {
+interface Answer {
   questionId: number;
   memberId: number;
   answerId: number;
@@ -10,3 +10,4 @@ declare type Answer = {
   count: number;
   isLiked?: boolean; // 내가 추천했는지 여부
 };
+
