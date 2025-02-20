@@ -113,77 +113,88 @@ public class QuestionService {
         // 푼 날짜, 풀었는지 여부 가중치만 설정되어있음
         // 답변 수, 도전 수 가중치 추가
         // 직무 추가
+        // 가중치 기본값인 100 이하는 안 뽑는다
 
         //현재 날짜
         LocalDate currentDate = LocalDate.now();
-
-        // 1. Member가 최근 7일 내에 제공받은 질문 조회
-        List<ServedQuestion> recentServedQuestions = servedQuestionRepository.findByMemberAndServedAtAfter(
-                member, currentDate.minusDays(7)
-        );
-
-        // 2. 가중치 계산을 위한 Map 생성 (questionId -> 가중치)
+        // 가중치 계산을 위한 HashMap 생성
         Map<Long, Long> questionWeights = new HashMap<>();
 
-        for (ServedQuestion servedQuestion : recentServedQuestions) {
+        // 전체 제공된 질문 조회
+        List<ServedQuestion> ServedQuestions = servedQuestionRepository.findByMember_Id(member.getId());
+
+        // 푼 문제, 못 푼 문제 초기값 설정
+        for (ServedQuestion servedQuestion : ServedQuestions) {
             long daysSinceServed = ChronoUnit.DAYS.between(servedQuestion.getServedAt(), currentDate);
-            long weight;
-            long notSolvedQWeight = 2; // 못 푼 문제 가중치 상수
-            long solvedQWeight = 1; // 푼 문제 가중치 상수
+            long weight = 0;
+            long unSolvedQWeight = 20; // 못 푼 문제 가중치 상수
+            long solvedQWeight = 4; // 푼 문제 가중치 상수, 25일(한달) 지나면 100(기본값)
+            long Qid = servedQuestion.getQuestion().getId();
 
             if (servedQuestion.getIsSolved()) {
-                // 푼 문제: 가중치 = (현재 날짜 - 푼 날짜)
-                weight = daysSinceServed * solvedQWeight;
+                // 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * solvedQWeight
+                if (daysSinceServed > 7) { // 7일이 지난 질문만 가중치 부여
+                    weight = questionWeights.get(Qid) + daysSinceServed * solvedQWeight;
+                }
             } else {
                 // 못 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * notSolvedQWeight + 100
-                weight = daysSinceServed * notSolvedQWeight + 100;
+                weight = questionWeights.get(Qid) + daysSinceServed * unSolvedQWeight + 100;
             }
-
-            questionWeights.put(servedQuestion.getQuestion().getId(), weight);
+            // 7일 이내에 푼 문제는 가중치 0 (나올 확률 없음)
+            questionWeights.put(Qid, weight);
         }
 
-        // 3. 모든 Question 가져오기
+        // 모든 Question 가져오기
         List<Question> allQuestions = questionRepository.findAll();
 
-        // 4. 제공되지 않은 문제의 가중치를 100으로 설정
-        for (Question question : allQuestions) {
-            if (!questionWeights.containsKey(question.getId())) {
-                questionWeights.put(question.getId(), 100L);
-            }
-        }
+        // 기본 초기값 적용: 답변 수, 도전 수, 희망 직무
+        // long answerWeight = 1; // 답변 수당 가중치
+        // 답변 수 가중치 추가
+        //currentWeight += question.getAnswerCount() * answerWeight;
 
-        // [추가] 5. 추가 가중치 적용: 답변 수, 도전 수, 희망 직무
-        long answerWeight = 1; // 답변 수당 가중치
         long challengeWeight = 1; // 도전 수당 가중치
-        long jobMatchWeight = 100; // 희망 직무 일치 시 추가 가중치
+        long jobMatchWeight = 100; // 희망 직무 일치 시 가중치
+        long notSolvedQWeight = 100;
 
-        String favoriteJob = member.getFavoriteJob().name(); // Member에서 희망 직무 가져오기
+        JobRole favoriteJob = member.getFavoriteJob(); // Member에서 희망 직무 가져오기
 
         for (Question question : allQuestions) {
-            long currentWeight = questionWeights.get(question.getId());
-
-            // 답변 수 가중치 추가
-            currentWeight += question.getAnswerCount() * answerWeight;
-
-            // 도전 수 가중치 추가
-            currentWeight += question.getChallengeCount() * challengeWeight;
-
-            // 희망 직무 일치 여부 확인
-            if (favoriteJob != null) {
-                List<String> questionJobs = question.getQuestionJobs().stream()
-                        .map(QuestionJob::getJob)
-                        .map(Job::getJobRole)
-                        .map(JobRole::name)
-                        .toList();
-                if (questionJobs.contains(favoriteJob)) {
-                    currentWeight += jobMatchWeight;
+            long currentWeight = 0L;
+            // 안 푼 문제
+            if (!questionWeights.containsKey(question.getId())) {
+                if (favoriteJob != null) {
+                    List<JobDto> jobDtos = this.getJobsByQuestionId(question.getId());
+                    // 직무 일치
+                    if (jobDtos.stream()
+                            .anyMatch(j -> j.jobRole().equals(member.getFavoriteJob()))
+                    ) {
+                        currentWeight += jobMatchWeight + notSolvedQWeight;
+                    }
+                }
+                // 도전 수 가중치 추가
+                currentWeight += question.getChallengeCount() * challengeWeight;
+            } else { // 도전 한 문제
+                currentWeight = questionWeights.get(question.getId());
+                // "가중치 0인 경우 = 7일 이내 푼 문제" 걸러주기 위해
+                if (currentWeight != 0) {
+                    if (favoriteJob != null) {
+                        List<JobDto> jobDtos = this.getJobsByQuestionId(question.getId());
+                        // 직무 일치
+                        if (jobDtos.stream()
+                                .anyMatch(j -> j.jobRole().equals(member.getFavoriteJob()))
+                        ) {
+                            currentWeight += jobMatchWeight;
+                        }
+                    }
+                    // 도전 수 가중치 추가
+                    currentWeight += question.getChallengeCount() * challengeWeight;
                 }
             }
 
             questionWeights.put(question.getId(), currentWeight);
         }
 
-        // 6. 가중치 기반 랜덤 선택
+        // 가중치 기반 랜덤 선택
         List<Question> selectedQuestions = new ArrayList<>();
         Random random = new Random();
 
@@ -206,7 +217,7 @@ public class QuestionService {
                 }
             }
         }
-        // 7. 선택된 질문 저장 및 업데이트
+        // 선택된 질문 저장 및 업데이트
         LocalDate today = LocalDate.now();
 
         for (Question question : selectedQuestions) {

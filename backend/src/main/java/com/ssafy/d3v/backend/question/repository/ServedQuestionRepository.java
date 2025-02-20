@@ -15,8 +15,6 @@ public interface ServedQuestionRepository extends JpaRepository<ServedQuestion, 
 
     List<ServedQuestion> findByMember(Member member);
 
-    List<ServedQuestion> findByMemberAndServedAtAfter(Member member, LocalDate servedAt);
-
     List<ServedQuestion> findByMemberAndIsDailyAndServedAt(Member member, Boolean isDaily, LocalDate servedAt);
 
     Optional<ServedQuestion> findByMember_IdAndQuestion_Id(Long memberId, Long questionId);
@@ -26,5 +24,7 @@ public interface ServedQuestionRepository extends JpaRepository<ServedQuestion, 
             "JOIN sq.question q " +
             "WHERE q.id IN :questionIds")
     List<String> findSolvedByQuestionIds(@Param("questionIds") List<Long> questionIds);
+    
+    List<ServedQuestion> findByMember_Id(Long id);
 }
 
