@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public PagedResponse<CommentResponse> get(Long articleId, int page, int size) {
         Article article = getArticleById(articleId);
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "createdAt"));
 
         Page<Comment> commentsPage = commentRepository.findByArticle(article, pageable);
 

@@ -115,3 +115,7 @@ jwt:
 app:
   oauth2:
     authorizedRedirectUris: https://d3v.asia/oauth/redirect
+
+openai:
+  api:
+    key: ${GPT_API_KEY}
