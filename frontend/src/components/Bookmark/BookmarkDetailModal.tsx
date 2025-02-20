@@ -13,10 +13,11 @@ import EditBookmarkModal from './EditBookmarkModal';
 interface BookmarkDetailModalProps {
   bookmarkId: number | null;
   onClose: () => void;
-  onBookmarksChanged: () => void; // 콜백 함수 추가
+  onBookmarksChanged: () => void;
+  isOwner: boolean; // ✅ 내 북마크인지 여부 추가
 }
 
-const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, onClose, onBookmarksChanged }) => {
+const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, onClose, onBookmarksChanged, isOwner }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
       await dispatch(deleteBookmarkById(bookmarkId)).unwrap();
       alert('북마크가 삭제되었습니다.');
       onClose();
-      onBookmarksChanged(); // 북마크 삭제 후 콜백 호출
+      onBookmarksChanged();
     } catch (error) {
       console.error('북마크 삭제 중 오류 발생:', error);
       alert('북마크 삭제에 실패했습니다.');
@@ -63,9 +64,7 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
 
         {/* 북마크 설명이 있을 때만 표시 */}
         {selectedBookmark.description && (
-          <>
-            <p className="bookmark-detail-modal-description">{selectedBookmark.description}</p>
-          </>
+          <p className="bookmark-detail-modal-description">{selectedBookmark.description}</p>
         )}
         <div className="bookmark-detail-divider"></div>
 
@@ -81,37 +80,34 @@ const BookmarkDetailModal: React.FC<BookmarkDetailModalProps> = ({ bookmarkId, o
                   <QuestionSkillTag skill={question.skill} className="bookmark-preview-skill-tag" />
                 </div>
               )}
-              <span className="bookmark-detial=question-content">{question.content}</span>
+              <span className="bookmark-detail-question-content">{question.content}</span>
             </div>
           ))}
         </div>
 
-        <div className="bookmark-detail-modal-actions">
-          <button className="bookmark-detail-delete-btn" onClick={handleDelete} disabled={isDeleting}>
-            <HiOutlineTrash /> 북마크 삭제
-          </button>
-          <button
-            className="bookmark-detail-edit-btn"
-            onClick={() => setIsEditModalOpen(true)}
-          >
-            <HiOutlinePencilAlt /> 북마크 수정
-          </button>
-          <button className="bookmark-detail-add-questions-btn" onClick={() => navigate('/all-questions')}>
-            <IoAddCircleOutline /> 질문 추가하기
-          </button>
-        </div>
+        {/* ✅ isOwner가 true일 때만 수정/삭제/추가 버튼 보이기 */}
+        {isOwner && (
+          <div className="bookmark-detail-modal-actions">
+            <button className="bookmark-detail-delete-btn" onClick={handleDelete} disabled={isDeleting}>
+              <HiOutlineTrash /> 북마크 삭제
+            </button>
+            <button className="bookmark-detail-edit-btn" onClick={() => setIsEditModalOpen(true)}>
+              <HiOutlinePencilAlt /> 북마크 수정
+            </button>
+            <button className="bookmark-detail-add-questions-btn" onClick={() => navigate('/all-questions')}>
+              <IoAddCircleOutline /> 질문 추가하기
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* EditBookmarkModal 열기 */}
+      {/* 북마크 수정 모달 */}
       {isEditModalOpen && (
         <EditBookmarkModal
           bookmark={selectedBookmark}
           onClose={() => {
             setIsEditModalOpen(false);
-            if (bookmarkId !== null) {
-              dispatch(fetchBookmarkById(bookmarkId));
-              onBookmarksChanged(); // 북마크 수정 후 콜백 호출
-            }
+            onBookmarksChanged();
           }}
         />
       )}

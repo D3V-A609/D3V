@@ -17,10 +17,16 @@ import { QuestionState } from '../store/slices/questionSlice';
 import { fetchMyLastedQuestions } from '../store/actions/questionActions';
 import { UserState } from '../store/slices/userSlice';
 
+import { fetchAllBookmarks } from '../store/actions/bookmarkActions';
+import BookmarkSlider from '../components/MyPage/BookmarkSlider';
+import BookmarkDetailModal from '../components/Bookmark/BookmarkDetailModal';
+
 
 const OtherPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const BookmarkSliderMemo = React.memo(BookmarkSlider)
 
   const { id } = useParams();
 
@@ -35,6 +41,11 @@ const OtherPage: React.FC = () => {
 
   const { other } = useAppSelector((state) => state.user as UserState, shallowEqual)
   const { MySolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
+
+  const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
+  const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
+  const [isOpenBookmark, setIsOpenBookmark] = useState(false);
+
 
   // API 중복 호출 방지
   const hasFetched = useRef(false);
@@ -52,6 +63,10 @@ const OtherPage: React.FC = () => {
         // 사용자의 팔로워, 팔로잉 목록 불러오기
         dispatch(fetchUserFollowers(Number(memberId))),
         dispatch(fetchUserFollowings(Number(memberId))),
+
+        // 북마크 불러오기
+        dispatch(fetchAllBookmarks(Number(memberId))),
+
       ]);
     }
   }, [dispatch, memberId])
@@ -105,6 +120,18 @@ const OtherPage: React.FC = () => {
     setRefreshKey(prev => prev + 1); // 화면 강제 리렌더링
   };
 
+  const handleViewBookmarkDetails = (bookmarkId: number) => {
+    setIsOpenBookmark(true);
+    setSelectedBookmarkId(bookmarkId);
+  };
+
+  const memoizedBookmarks = useCallback(() => {
+    if (memberId !== null) {
+        dispatch(fetchAllBookmarks(Number(memberId)));
+    }
+  }, [dispatch, memberId]);
+
+
   // ===== icon ======
   const icons = {
       bookMarkIcon: <FaBookmark size={24} color="#0072EF" />,
@@ -123,7 +150,16 @@ const OtherPage: React.FC = () => {
             <UserInfoCompMemo user={other} openFollowModal={openFollowModal} onUnfollow={onUnfollow} onFollow={onFollow} />
         </div>
 
-        <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>하윙</SectionContainerMemo>
+        <SectionContainerMemo className='my-bookmark-info-container' title='북마크' icon={icons.bookMarkIcon}>
+          {bookmarks.length > 0 ? (
+              <BookmarkSliderMemo
+                  bookmarks={bookmarks}
+                  onViewDetails={handleViewBookmarkDetails}
+              />
+          ) : (
+              <p>북마크가 없습니다.</p>
+          )}
+      </SectionContainerMemo>
 
         <div className='my-answer-info-container'>
             <ContentPreviewListMemo contents={MySolvedQuestions} title='내가 답변한 질문' titleIcon={icons.checkbox} className='my-question-info' handleDetail='answer-commu' handleMoreBtn={() => openModal('내 답변', icons.checkbox, MySolvedQuestions, 'answer')}/>
@@ -138,6 +174,17 @@ const OtherPage: React.FC = () => {
         {/* 모달 렌더링 */}
         {isOpenMoreModal && <ContentMoreListView title={modalData.title} titleIcon={modalData.titleIcon} contents={modalData.contents} onClose={closeModal} handleDetail={modalData.handleDetail} />}  
         {isFollowModalOpen && <FollowModalView mode={FollowMode} onClose={() => setIsFollowModalOpen(false)} onUnfollow={onUnfollow} onFollow={onFollow} memberId={Number(memberId)} />}
+        {/* BookmarkDetailModal 렌더링 */}
+        {isOpenBookmark && selectedBookmarkId && (
+            <div className="modal-overlay">
+                <BookmarkDetailModal
+                  bookmarkId={selectedBookmarkId}
+                  onClose={() => setIsOpenBookmark(false)}
+                  onBookmarksChanged={memoizedBookmarks}
+                  isOwner={false}
+                />
+            </div>
+        )}
     </div>
   )
 }
