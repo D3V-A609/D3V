@@ -64,7 +64,7 @@ public class HistoryServiceImpl implements HistoryService {
             History history = historyRepository.findByMemberIdAndDate(member.getId(), LocalDate.now())
                     .orElseThrow(() -> new IllegalArgumentException("히스토리가 존재하지 않습니다."));
 
-            List<History> historys = historyRepository.findByMemberOrderByDateAsc(member)
+            List<History> historys = historyRepository.findByMemberOrderByDateDesc(member)
                     .stream()
                     .filter(ele -> ele.getCount() >= 1)
                     .toList();
@@ -73,9 +73,13 @@ public class HistoryServiceImpl implements HistoryService {
             long ongoingStreak = 0;
             long currentStreak = 0;
             LocalDate prevDate = null;
-
+            LocalDate nowDate = LocalDate.now();
             for (History ele : historys) {
-                if (prevDate == null || ele.getDate().equals(prevDate.plusDays(1))) {
+                if (ele.getDate().equals(nowDate)) {
+                    ongoingStreak++;
+                    nowDate = nowDate.minusDays(1);
+                }
+                if (prevDate == null || ele.getDate().equals(prevDate.minusDays(1))) {
                     currentStreak++;
                 } else {
                     maxStreak = Math.max(maxStreak, currentStreak);
@@ -85,12 +89,6 @@ public class HistoryServiceImpl implements HistoryService {
             }
 
             maxStreak = Math.max(maxStreak, currentStreak);
-
-            if (history.getCount() == 0) {
-                ongoingStreak = 0;
-            } else {
-                ongoingStreak += 1;
-            }
 
             memberRepository.saveAndFlush(member.toBuilder()
                     .maxStreak(maxStreak)

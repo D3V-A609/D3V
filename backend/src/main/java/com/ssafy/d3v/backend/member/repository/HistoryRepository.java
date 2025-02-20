@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HistoryRepository extends JpaRepository<History, Long> {
     List<History> findByMemberIdAndDateBetween(long memberId, LocalDate start, LocalDate end);
 
-    List<History> findByMemberOrderByDateAsc(Member member);
+    List<History> findByMemberOrderByDateDesc(Member member);
 
     Optional<History> findByMemberIdAndDate(long memberId, LocalDate date);
 }
