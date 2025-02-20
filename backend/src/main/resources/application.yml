@@ -38,10 +38,6 @@ logging:
 server:
   forward-headers-strategy: framework
 
-youtube:
-  api:
-    key: ${YOUTUBE_API_KEY}
-
 ---
 
 spring:
@@ -49,7 +45,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://${DEV_DATABASE_HOST}:5432/d3vdb #jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://${DEV_DATABASE_HOST}:5432/d3vdb #jdbc:postgresql://${DEV_DATABASE_HOST}:5432/testdb
     driver-class-name: org.postgresql.Driver
     username: ${DEV_DATABASE_USER}
     password: ${DEV_DATABASE_PASSWORD}
@@ -115,6 +111,10 @@ jwt:
 app:
   oauth2:
     authorizedRedirectUris: https://d3v.asia/oauth/redirect
+
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY}
 
 openai:
   api:

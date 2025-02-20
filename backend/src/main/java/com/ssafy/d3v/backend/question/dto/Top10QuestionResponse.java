@@ -1,6 +1,5 @@
 package com.ssafy.d3v.backend.question.dto;
 
-import com.ssafy.d3v.backend.question.entity.JobRole;
 import com.ssafy.d3v.backend.question.entity.SkillType;
 import java.util.List;
 import lombok.Builder;
@@ -13,10 +12,14 @@ public record Top10QuestionResponse(
         Long answerCount,
         Long challengeCount,
         Double answerAverage,
-        List<SkillType> skillList,
-        List<JobRole> jobList
+        //List<JobRole> jobList,
+        List<SkillType> skillList
+
 ) {
-    public static Top10QuestionResponse of(QuestionDto q, List<SkillDto> skills, List<JobDto> jobs) {
+    public static Top10QuestionResponse of(QuestionDto q,
+                                           //List<JobDto> jobs,
+                                           List<SkillDto> skills
+    ) {
         return Top10QuestionResponse.builder()
                 .id(q.id())
                 .content(q.content())
@@ -25,7 +28,7 @@ public record Top10QuestionResponse(
                 .challengeCount(q.challengeCount())
                 .answerAverage(q.answerAverage())
                 .skillList(skills.stream().map(SkillDto::name).toList())
-                .jobList(jobs.stream().map(JobDto::jobRole).toList())
+                //.jobList(jobs.stream().map(JobDto::jobRole).toList())
                 .build();
     }
 

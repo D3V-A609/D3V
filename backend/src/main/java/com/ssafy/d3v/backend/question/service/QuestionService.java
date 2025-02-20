@@ -117,9 +117,9 @@ public class QuestionService {
         //현재 날짜
         LocalDate currentDate = LocalDate.now();
 
-        // 1. Member가 최근 5일 내에 제공받은 질문 조회
+        // 1. Member가 최근 7일 내에 제공받은 질문 조회
         List<ServedQuestion> recentServedQuestions = servedQuestionRepository.findByMemberAndServedAtAfter(
-                member, currentDate.minusDays(5)
+                member, currentDate.minusDays(7)
         );
 
         // 2. 가중치 계산을 위한 Map 생성 (questionId -> 가중치)

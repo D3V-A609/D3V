@@ -2,9 +2,9 @@ package com.ssafy.d3v.backend.question.controller;
 
 import com.ssafy.d3v.backend.bookmark.service.BookmarkService;
 import com.ssafy.d3v.backend.member.service.MemberService;
-import com.ssafy.d3v.backend.question.dto.JobDto;
 import com.ssafy.d3v.backend.question.dto.QuestionDto;
 import com.ssafy.d3v.backend.question.dto.QuestionResponse;
+import com.ssafy.d3v.backend.question.dto.SearchQuestionResponse;
 import com.ssafy.d3v.backend.question.dto.SkillDto;
 import com.ssafy.d3v.backend.question.dto.Top10QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Question;
@@ -38,7 +38,7 @@ public class QuestionController {
 
     @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<QuestionResponse>> getQuestions(
+    public ResponseEntity<Page<SearchQuestionResponse>> getQuestions(
             @RequestParam(required = false) List<String> jobs, // job 필터
             @RequestParam(required = false) List<String> skills, // skill 필터
             @RequestParam(required = false) String solved, // solved 필터
@@ -50,7 +50,7 @@ public class QuestionController {
     ) {
         Long memberId = memberService.getMemberId();
         return ResponseEntity.ok(questionService.getQuestions(jobs, skills, solved, order, sort, page, size, keyword)
-                .map(QuestionDto::from).map(question -> getQuestionResponse(memberId, question)));
+                .map(QuestionDto::from).map(question -> getSearchQuestionResponse(memberId, question)));
     }
 
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
@@ -88,14 +88,22 @@ public class QuestionController {
         Boolean bookmarked = bookmarkService.isBookmarkedQuestion(question.id());
         String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
         List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
-        List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
-        return QuestionResponse.of(question, solved, skills, jobs, bookmarked);
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return QuestionResponse.of(question, solved, skills, bookmarked);
     }
 
     private Top10QuestionResponse getTop10QuestionResponse(QuestionDto question) {
         List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
-        List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
-        return Top10QuestionResponse.of(question, skills, jobs);
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return Top10QuestionResponse.of(question, skills);
+    }
+
+    private SearchQuestionResponse getSearchQuestionResponse(Long memberId, QuestionDto question) {
+        //Boolean bookmarked = bookmarkService.isBookmarkedQuestion(question.id());
+        //String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
+        List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return SearchQuestionResponse.of(question, skills);
     }
 }
 
