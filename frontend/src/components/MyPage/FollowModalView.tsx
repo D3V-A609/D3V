@@ -35,7 +35,7 @@ const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFoll
   const hasFetched = useRef(false);
 
   useEffect(() =>{
-    if(memberId !== null && memberId !== 0 && !hasFetched.current){
+    if(memberId && !hasFetched.current){
       hasFetched.current = true;
       Promise.all([
         dispatch(fetchUserFollowers(memberId)),

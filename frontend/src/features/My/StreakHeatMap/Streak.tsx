@@ -18,7 +18,7 @@ const Streak:React.FC<StreakProp> = ({className, memberId}) => {
   const realStreak = Number(todayStreak)
 
   useEffect(() => {
-    if(memberId !== null && memberId !== 0){
+    if(memberId){
       dispatch(fetchTodayStreak(memberId));
     }
   }, [dispatch, memberId])

@@ -141,7 +141,7 @@ const OtherPage: React.FC = () => {
   };
 
   const memoizedBookmarks = useCallback(() => {
-    if (memberId !== null) {
+    if (memberId) {
         dispatch(fetchAllBookmarks(Number(memberId)));
     }
   }, [dispatch, memberId]);

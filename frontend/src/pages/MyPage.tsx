@@ -72,7 +72,7 @@ const MyPage:React.FC = () => {
     // API 중복 호출 방지
     const hasFetched = useRef(false);
     useEffect(() => {
-        if(memberId !== null && memberId !== 0 && !hasFetched.current){   
+        if(memberId && !hasFetched.current){   
             hasFetched.current = true;
             Promise.all([
                 // 답변(푼, 못푼) 로드
@@ -158,7 +158,7 @@ const MyPage:React.FC = () => {
 
         // 콜백 함수를 사용하여 bookmarks 상태 업데이트
     const memoizedBookmarks = useCallback(() => {
-        if (memberId !== null) {
+        if (memberId) {
             dispatch(fetchAllBookmarks(memberId));
         }
     }, [dispatch, memberId]);
