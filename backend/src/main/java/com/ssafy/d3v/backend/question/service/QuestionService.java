@@ -129,19 +129,18 @@ public class QuestionService {
             long weight = 0;
             long unSolvedQWeight = 20; // 못 푼 문제 가중치 상수
             long solvedQWeight = 4; // 푼 문제 가중치 상수, 25일(한달) 지나면 100(기본값)
-            long Qid = servedQuestion.getQuestion().getId();
 
             if (servedQuestion.getIsSolved()) {
                 // 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * solvedQWeight
                 if (daysSinceServed > 7) { // 7일이 지난 질문만 가중치 부여
-                    weight = questionWeights.get(Qid) + daysSinceServed * solvedQWeight;
+                    weight = daysSinceServed * solvedQWeight;
                 }
             } else {
                 // 못 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * notSolvedQWeight + 100
-                weight = questionWeights.get(Qid) + daysSinceServed * unSolvedQWeight + 100;
+                weight = daysSinceServed * unSolvedQWeight + 100;
             }
             // 7일 이내에 푼 문제는 가중치 0 (나올 확률 없음)
-            questionWeights.put(Qid, weight);
+            questionWeights.put(servedQuestion.getQuestion().getId(), weight);
         }
 
         // 모든 Question 가져오기
