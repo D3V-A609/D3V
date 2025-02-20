@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import FireFalse from '../../../assets/images/navbar/fire-false.png';
 import FireTrue from '../../../assets/images/navbar/fire-true.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux';
@@ -17,11 +17,19 @@ const Streak:React.FC<StreakProp> = ({className, memberId}) => {
   const todayStreak = useAppSelector((state) => state.historys.todayStreak[memberId], shallowEqual);
   const realStreak = Number(todayStreak)
 
+  const hasFetched = useRef(false); // API 중복 요청 방지
+
   useEffect(() => {
-    if(memberId){
+    if (!hasFetched.current && todayStreak === 0) {
       dispatch(fetchTodayStreak(memberId));
+      hasFetched.current = true; // API 요청을 한 번만 실행
     }
-  }, [dispatch, memberId])
+  }, [dispatch, memberId, todayStreak]);
+
+  // memberId가 변경될 때 hasFetched 리셋 (새로운 사용자일 경우 다시 요청)
+  useEffect(() => {
+    hasFetched.current = false;
+  }, [memberId]);
 
 
   return (

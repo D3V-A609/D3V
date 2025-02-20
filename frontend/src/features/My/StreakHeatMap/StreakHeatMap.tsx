@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef} from 'react'
 import HeatMap from './HeatMap';
 import './StreakHeatMap.css'
 
@@ -19,18 +19,18 @@ const StreakHeatMap: React.FC<StreakHeatMapProp> = ({memberId}) => {
   const history = useAppSelector((state) => state.historys.history[memberId], shallowEqual);
   const uploading = useAppSelector((state) => state.historys.uploading)
 
-  const [hasFetched, setHasFetched] = useState(false); // API 요청 중복 실행 방지지
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    if(!uploading && !hasFetched){
+    if(!uploading && !hasFetched.current){
       dispatch(fetchHistory(memberId));
-      setHasFetched(true);
+      hasFetched.current = true;
     }
   }, [dispatch, memberId, uploading])  
 
   // memberId가 변경될 때 Redux 상태 초기화
   useEffect(() => {
-    setHasFetched(false); // 새로운 사용자일 경우 다시 데이터를 불러오도록 변경
+    hasFetched.current = false;
   }, [memberId]);
 
   // 전달받는 데이터 내에서 날짜 데이터 중복 핸들링

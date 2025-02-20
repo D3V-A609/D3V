@@ -137,24 +137,32 @@ const MyPage:React.FC = () => {
     const [isFollowModalOpen, setIsFollowModalOpen ] = useState(false);
     const [FollowMode, setFollowMode] = useState("follower")
 
-    const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
+    // const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
 
     const openFollowModal = (mode: string) => { 
         setFollowMode(mode);
         setIsFollowModalOpen(true)
     };
 
-    const onUnfollow = (memberId: number) => {
-        dispatch(unFollow(memberId));
-    }
-    
-    const onFollow = (memberId: number) => {
-        dispatch(follow(memberId));
-    }
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    useEffect(()=>{
-        dispatch(fetchUserInfo(Number(memberId)));
-    }, [followings, followers])
+    const onUnfollow = async (memberId: number) => {
+        await dispatch(unFollow(memberId));
+        setRefreshKey(prev => prev + 1); // 리렌더링 트리거
+    };
+
+    const onFollow = async (memberId: number) => {
+        await dispatch(follow(memberId));
+        setRefreshKey(prev => prev + 1); // 리렌더링 트리거
+    };
+
+    // refreshKey가 변경될 때마다 사용자 정보 다시 불러오기
+    useEffect(() => {
+        if (memberId) {
+            dispatch(fetchUserInfo(memberId));
+        }
+    }, [memberId, refreshKey]);
+
 
         // 콜백 함수를 사용하여 bookmarks 상태 업데이트
     const memoizedBookmarks = useCallback(() => {
