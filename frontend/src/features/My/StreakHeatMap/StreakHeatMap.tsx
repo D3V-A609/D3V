@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useState} from 'react'
 import HeatMap from './HeatMap';
 import './StreakHeatMap.css'
 
@@ -8,23 +8,30 @@ import Streak from './Streak';
 import { shallowEqual } from 'react-redux';
 import SecureStorage from '../../../store/services/token/SecureStorage';
 
+interface StreakHeatMapProp {
+  memberId: number | undefined;
+}
 
-
-const StreakHeatMap: React.FC = () => {
-  const memberId = Number(SecureStorage.getMemberId());
+const StreakHeatMap: React.FC<StreakHeatMapProp> = ({memberId}) => {
+  memberId = memberId? memberId : Number(SecureStorage.getMemberId());
   const dispatch = useAppDispatch();
 
-  const history = useAppSelector((state) => state.historys.history[memberId]?.data || [], shallowEqual);
+  const history = useAppSelector((state) => state.historys.history[memberId], shallowEqual);
   const uploading = useAppSelector((state) => state.historys.uploading)
 
-  const hasFetched = useRef(false); // API 요청 중복 실행 방지지
+  const [hasFetched, setHasFetched] = useState(false); // API 요청 중복 실행 방지지
 
   useEffect(() => {
-    if(history.length === 0 && !uploading && !hasFetched.current){
+    if(!uploading && !hasFetched){
       dispatch(fetchHistory(memberId));
+      setHasFetched(true);
     }
-    hasFetched.current = true;
-  }, [dispatch, memberId, history.length, uploading])  
+  }, [dispatch, memberId, uploading])  
+
+  // memberId가 변경될 때 Redux 상태 초기화
+  useEffect(() => {
+    setHasFetched(false); // 새로운 사용자일 경우 다시 데이터를 불러오도록 변경
+  }, [memberId]);
 
   // 전달받는 데이터 내에서 날짜 데이터 중복 핸들링
   const processData = (data: { date: string; count: number }[]): AnswerHistory[] => {

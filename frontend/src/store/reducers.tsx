@@ -44,7 +44,6 @@ const rootReducer = combineReducers({
   aifeedbacks: ReturnType<typeof aifeedbackReducer>;
 }>;
 
-
 export default rootReducer;
 
 // RootState 타입 정의

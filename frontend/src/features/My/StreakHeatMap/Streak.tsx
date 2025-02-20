@@ -8,15 +8,13 @@ import { fetchTodayStreak } from '../../../store/actions/historyActions';
 
 interface StreakProp {
   className?: string;
+  memberId?: number;
 }
-const Streak:React.FC<StreakProp> = ({className}) => {
+const Streak:React.FC<StreakProp> = ({className, memberId}) => {
   const dispatch = useAppDispatch();
-  const memberId = Number(SecureStorage.getMemberId());
-  // const streak = useAppSelector((state) => state.historys.streak[memberId] || 0);
+  memberId = memberId ? memberId : Number(SecureStorage.getMemberId());
   
-  const {todayStreak} = useAppSelector((state) => state.historys, shallowEqual);
-
-  // const realStreak = className === 'home-streak' ? Number(todayStreak) : streak;
+  const todayStreak = useAppSelector((state) => state.historys.todayStreak[memberId], shallowEqual);
   const realStreak = Number(todayStreak)
 
   useEffect(() => {
@@ -30,8 +28,8 @@ const Streak:React.FC<StreakProp> = ({className}) => {
     <div className={`streak-container ${className}`}>
       <div className={`streak-img-div ${className}`}>
         {realStreak>0 ? 
-        <img src={FireTrue} className='fire-img'  /> : 
-        <img src={FireFalse} className='fire-img' />}
+        <img src={FireTrue} className='fire-img'  loading="lazy"/> : 
+        <img src={FireFalse} className='fire-img' loading="lazy"/>}
       </div>
       <div className={`streak-text-div ${className}`}>
         {realStreak>0 ?(

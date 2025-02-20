@@ -28,7 +28,7 @@ const Profile: React.FC<ProfileProps> = ({ profileImg, favoriteJob, nickname, us
       {/* 프로필 이미지 */}
       <div className="profile-avatar">
         {profileImg ? (
-          <img src={profileImg} alt="프로필" />
+          <img src={profileImg} alt="프로필" loading="lazy"/>
         ) : (
           <div className="avatar-fallback">{nicknameInitial}</div>
         )}

@@ -56,7 +56,6 @@ const MyPage:React.FC = () => {
         post_answer: <GoComment size={28} color='#40C463' />
     };
     
-
     //========== 데이터 불러오기===========
     const { MySolvedQuestions, MyUnsolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
     const { myArticles, myArticleComments } = useAppSelector((state) => state.articles as ArticleState, shallowEqual)
@@ -64,17 +63,11 @@ const MyPage:React.FC = () => {
 
     const { me } = useAppSelector((state) => state.user as UserState)
 
-    // const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
-
     const memberId = SecureStorage.getMemberId();
 
     const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
     const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
     const [isOpenBookmark, setIsOpenBookmark] = useState(false);
-    // const isOpenBookmark = useRef<boolean>(false)
-    // const setIsOpenBookmark = () =>{
-    //     isOpenBookmark.current = false
-    // }
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
@@ -194,7 +187,7 @@ const MyPage:React.FC = () => {
         
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
             <div className="my-streak">
-                <StreakHeatMap />
+                <StreakHeatMap memberId={Number(memberId)} />
             </div>
             <div className='my-answer-commu-activity'>
                 <div className='my-answer-info-container'>

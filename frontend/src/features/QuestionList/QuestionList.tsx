@@ -65,12 +65,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
     setSelectedQuestions([]);
   };
 
-  // 질문 클릭 핸들러: 상세 페이지로 이동
-  // const handleQuestionClick = (id: number) => {
-  //   dispatch(setSelectedQuestionId(id));
-  //   navigate(`/question`);
-  // };
-
   return (
     <div className="question-list">
       <div className="table-container">

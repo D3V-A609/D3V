@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import "./OtherPage.css"
 import { useAppDispatch, useAppSelector } from '../store/hooks/useRedux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -30,14 +30,25 @@ const OtherPage: React.FC = () => {
 
   const { id } = useParams();
 
-  let memberId: unknown;
-  try{
-    memberId = atob(id || ''); 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch(_error){
-    alert('잘못된 접근입니다.')
-    navigate(-1);
-  }
+  // 🔹 memberId를 useState로 관리 (초기값 null)
+  const [memberId, setMemberId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      try {
+        const decodedId = parseInt(atob(id));
+        if (!isNaN(decodedId)) {
+          setMemberId(decodedId);
+        } else {
+          throw new Error("Invalid ID");
+        }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        alert('잘못된 접근입니다.');
+        navigate(-1);
+      }
+    }
+  }, [id, navigate]);
 
   const { other } = useAppSelector((state) => state.user as UserState, shallowEqual)
   const { MySolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
@@ -48,11 +59,12 @@ const OtherPage: React.FC = () => {
 
 
   // API 중복 호출 방지
-  const hasFetched = useRef(false);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if(memberId !== null && memberId !== undefined && !hasFetched.current){   
-      hasFetched.current = true;
+    if(memberId && !hasFetched){   
+      // hasFetched.current = true;
+      setHasFetched(true)
       Promise.all([
         // 사용자가 푼 답변 로드
         dispatch(fetchMyLastedQuestions({isSolved: true, memberId: Number(memberId)})),
@@ -66,10 +78,14 @@ const OtherPage: React.FC = () => {
 
         // 북마크 불러오기
         dispatch(fetchAllBookmarks(Number(memberId))),
-
       ]);
     }
-  }, [dispatch, memberId])
+  }, [dispatch, memberId, hasFetched])
+
+  // memberId가 변경될 때마다 다시 데이터 불러오도록 hasFetched 리셋
+  useEffect(()=>{
+    setHasFetched(false)
+  }, [memberId])
 
 
 
@@ -106,7 +122,6 @@ const OtherPage: React.FC = () => {
   };
 
   const [refreshKey, setRefreshKey] = useState(0); // 🔄 리렌더링 트리거용 상태 추가
-
 
   const onUnfollow = async (memberId: number) => {
     await dispatch(unFollow(memberId)); // 언팔로우 실행
@@ -167,7 +182,7 @@ const OtherPage: React.FC = () => {
         
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
             <div className="my-streak">
-                <StreakHeatMap />
+                <StreakHeatMap memberId={Number(memberId)} />
             </div>
         </SectionContainerMemo>
 

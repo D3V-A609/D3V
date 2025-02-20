@@ -62,7 +62,7 @@ const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFoll
               <div className={styles["follow-item-left"]} onClick={() =>moveToOtherProfile(navigate, user.memberId)}>
                 <div className="profile-avatar">
                   {user.profileImg && user.profileImg !== '' ? (
-                    <img src={user.profileImg} alt="프로필" />
+                    <img src={user.profileImg} alt="프로필" loading="lazy"/>
                   ) : (
                     <div className="avatar-fallback">{user.nickname[0].toUpperCase()}</div>
                   )}
@@ -73,10 +73,10 @@ const FollowModalView:React.FC<FollowProp> = ({onClose, mode, onUnfollow, onFoll
                     <div className={styles["streak"]}>
                       {user.ongoningStreak > 0 ? 
                       <>
-                      <img src={fire_true} className={styles['streak-img']} />
+                      <img src={fire_true} className={styles['streak-img']} loading="lazy"/>
                       <div className={styles['text-red']}>+ {user.ongoningStreak}일</div>
                       </> : 
-                      <img src={fire_false} className={styles['streak-img']} />}
+                      <img src={fire_false} className={styles['streak-img']} loading="lazy" />}
                     </div>
                   </div>
                   {user.favoriteJob ? <div className={styles["user-job"]}>[{user.favoriteJob}] Developer</div> : <div className={styles["user-job"]}>Developer</div>}

@@ -47,6 +47,8 @@
   border-radius: 50%;
   border: 2px solid #ddd;
   font-size: 28px;
+  background-color: white;
+  align-content: center;
 }
 
 .user-info-content {
