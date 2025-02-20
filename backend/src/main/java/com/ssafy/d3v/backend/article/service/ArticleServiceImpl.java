@@ -121,10 +121,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public ArticleDetailResponse getDetail(long articleId) {
         Article article = getArticle(articleId);
-        Article updated = articleRepository.saveAndFlush(
-                article.toBuilder()
-                        .view(article.getView() + 1)
-                        .build());
+        article.updateView(article.getView() + 1);
+        Article updated = articleRepository.saveAndFlush(article);
 
         return getArticleResponse(updated);
     }
@@ -162,13 +160,17 @@ public class ArticleServiceImpl implements ArticleService {
 
         article.getImageUrls().addAll(newImageEntities);
 
-        Article updated = article.toBuilder()
-                .category(category)
-                .title(title)
-                .content(content)
-                .build();
+        if (category != null) {
+            article.updateCategory(category);
+        }
+        if (title != null) {
+            article.updateTitle(title);
+        }
+        if (content != null) {
+            article.updateContent(content);
+        }
 
-        return getArticleResponse(articleRepository.saveAndFlush(updated));
+        return getArticleResponse(articleRepository.saveAndFlush(article));
     }
 
     private static ArticleDetailResponse getArticleResponse(Article article) {
