@@ -1,8 +1,14 @@
 package com.ssafy.d3v.backend.gpt.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.ssafy.d3v.backend.gpt.dto.GptResponse;
 import com.ssafy.d3v.backend.question.entity.Question;
 import com.ssafy.d3v.backend.question.repository.QuestionRepository;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +30,7 @@ public class GptService {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
-    public String getGptResponse(Long questionId, String answer) {
+    public GptResponse getGptResponse(Long questionId, String answer) {
         Question quesiton = questionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("getGptResponse: questionId에 해당하는 질문이 없습니다."));
 
@@ -41,11 +47,14 @@ public class GptService {
                         "질문: %s\n" +
                         "답변: %s\n\n" +
                         "당신은 기술 면접관의 입장에서 위 내용을 평가해주세요. 아래 항목에 따라 답변하세요:\n" +
-                        "1. 칭찬할 점\n" +
-                        "2. 부족한 점\n" +
-                        "3. 피드백을 반영한 추천 답변\n\n" +
-                        "결과는 마크다운 형식으로 이모지를 사용해서 깔끔하게 정리해서 제공해주세요.\n" +
-                        "제목은 h4 태그로, 그 안의 요소들은 ul, li 태그를 사용하고 마지막 피드백을 반영한 추천 답변에 대한 내용만 p태그를 사용해주세요.",
+                        "다음 <출력형식>으로 답변하세요.:\n\n" +
+                        "<출력형식>\n" +
+                        "{\n" +
+                        "  \"good\": [\"칭찬할 점1\", \"칭찬할 점2\", ...],\n" +
+                        "  \"bad\": [\"부족한 점1(피드백1)\", \"부족한 점2(피드백2)\", ...],\n" +
+                        "  \"feedback\": [\"부족한 점(피드백)을 반영한 추천 답안\"]\n" +
+                        "}\n" +
+                        "반드시 위 <출력형식>을 유지하세요.\n",
                 quesiton.getContent(), answer
         );
 
@@ -75,8 +84,19 @@ public class GptService {
         Map<String, Object> firstChoice = ((Map<String, Object>) ((java.util.List<?>) response.getBody()
                 .get("choices")).get(0));
         Map<String, Object> message = (Map<String, Object>) firstChoice.get("message");
-
-        return (String) message.get("content");
+        String content = (String) message.get("content");
+        return parseJsonResponse(content);
     }
+
+    private GptResponse parseJsonResponse(String jsonResponse){
+        try{
+            Gson gson = new Gson();
+            Map<String, List<String>> jsonMap = gson.fromJson(jsonResponse, new TypeToken<Map<String, List<String>>>() {}.getType());
+            return new GptResponse(jsonMap.get("good"), jsonMap.get("bad"), jsonMap.get("feedback"));
+        } catch(Exception e){
+            throw new RuntimeException("JSON 파싱 에러");
+        }
+    }
+
 }
 
