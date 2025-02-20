@@ -62,7 +62,7 @@ const Step3: React.FC = () => {
           draggable: false,
           toastId: 'signup-success',
         });
-        navigate('/', { replace: true });
+        navigate('/auth/login', { replace: true });
       }
     } catch (error: unknown) {
       dispatch(setError('회원가입에 실패했습니다.'));

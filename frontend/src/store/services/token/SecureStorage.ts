@@ -70,7 +70,6 @@ class SecureStorage {
   private async fetchMemberIdFromServer(): Promise<number | null> {
     if (!this.isAuthenticated) return null; // ✅ 로그인 상태가 아닐 때 API 호출 X
     try{
-      console.trace("id가 어디서 호출되는 것일까..")
       const response = await api.get<number | null>(`/member/id`);
       return response.data;
     }catch(error){

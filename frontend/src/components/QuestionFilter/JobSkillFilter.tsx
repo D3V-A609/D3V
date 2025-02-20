@@ -71,6 +71,13 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
     onSkillFilterChange(newSkillFilter);
   };
 
+  // 유틸리티 함수 추가
+  const formatDisplayText = (text: string): string => {
+    return text?.split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ') ?? "Code";
+  };
+
   /**
    * 필터 초기화 핸들러
    * 모든 직무와 기술 필터를 초기화
@@ -90,7 +97,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
               className={`filter-button ${jobFilter.includes(job) ? "active" : ""}`}
               onClick={() => handleJobClick(job)}
             >
-              {job}
+              {formatDisplayText(job)}
             </button>
           ))}
         </div>
@@ -107,7 +114,7 @@ const JobSkillFilter: React.FC<JobSkillFilterProps> = ({
                 className={`filter-button ${skillFilter.includes(skill) ? "active" : ""}`}
                 onClick={() => handleSkillClick(skill)}
               >
-                {skill}
+                {formatDisplayText(skill)}
               </button>
             ))}
           </div>

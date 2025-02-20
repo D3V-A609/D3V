@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './UserInfoComp.css'
 // import UserProfileImg from '../../components/header/UserProfileImg';
 import { FaGithub } from "react-icons/fa";
@@ -12,6 +13,7 @@ interface UserInfoProps {
   onFollow?: (memberId: number) => void;
 }
 const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfollow, onFollow }) => {
+  const navigate = useNavigate();
 
   useEffect(() => {}, [user])
 
@@ -25,6 +27,10 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
 
   const nicknameInitial = user?.nickname?.[0]?.toUpperCase() ?? "D3V";
 
+  // 프로필 수정 버튼 클릭 핸들러
+  const handleEditProfile = () => {
+    navigate('/my/edit');
+  };
 
   return (
     <div className='user-detail-info-container'>
@@ -73,7 +79,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
       </div>
       <div className='update-user-info-btn'>
         {user.isFollow === null ?
-        <button className="edit-button">프로필 수정</button> :(
+        <button className="edit-button" onClick={handleEditProfile}>프로필 수정</button> :(
       user.isFollow === true ? 
       <button className='edit-button' onClick={() => onUnfollow?.(user.memberId)}>Unfollow</button> :
       <button className='edit-button' onClick={() => onFollow?.(user.memberId)}>Follow</button>)

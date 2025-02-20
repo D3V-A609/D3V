@@ -44,7 +44,19 @@ interface DuplicationResponse {
 }
 
 interface UpdateProfileResponse {
-  message: string;
+  memberId: number;
+  nickname: string;
+  email: string;
+  profileImg: string;
+  githubUrl: string;
+  maxStreak: number;
+  ongoingStreak: number;
+  providerType: string;
+  createdAt: string | null;
+  favoriteJob: string;
+  followerCount: number;
+  followingCount: number;
+  isFollow: boolean | null;
 }
 
 
@@ -95,6 +107,17 @@ export const authApi = {
       },
     });
     return response.data;
+  },
+
+  // 회원 탈퇴
+  deleteMember: async (): Promise<void> => {
+    try {
+      await api.delete('/member');
+      // 응답 데이터를 반환하지 않음
+    } catch (error: any) {
+      console.error('회원 탈퇴 처리 실패:', error.response?.data);
+      throw error;
+    }
   },
 
   // 임시 비밀번호 요청 코드 요청
@@ -164,7 +187,7 @@ export const authApi = {
     }
   }
 
-  // CORS 부분 해결하면 아래 코드로 대체하고자 함
+  // // CORS 부분 해결하면 아래 코드로 대체하고자 함
   // // 이메일 중복 확인
   // checkEmailDuplication: async (email: string): Promise<DuplicationResponse> => {
   //   try {

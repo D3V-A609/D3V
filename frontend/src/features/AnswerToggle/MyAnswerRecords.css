@@ -1,0 +1,67 @@
+.my-answer-records-container{
+  justify-items: start;
+}
+
+.my-answer-records-container .records-timeline{
+  width: 100%;
+  justify-content: start;
+}
+
+.timeline-custom-text-div .today-text{
+  font-weight: normal;
+  padding-left: 1em;
+  color: #ff9374;
+}
+
+.timeline-custom-text-div .card-title{
+  color: dodgerblue;
+  font-size: 1.2em;
+}
+
+.timeline-custom-text-div .subtitle-text{
+  color: #CEC7C7;
+}
+
+.timeline-custom-card-div{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timeline-custom-card-div .timeline-custom-text-div{
+  width: 87%;
+  border: 1.5px solid #e7e7e7;
+  padding: 0 2em 1rem 2em;
+  border-radius: 12px;
+}
+
+.timeline-custom-detail-text {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: keep-all;
+  white-space: pre-wrap;
+}
+
+.timeline-custom-card-div .timeline-custom-btn-div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.TimelineItemContentWrapper-sc-d7qjm1-0{
+  background: none !important;
+  filter: none !important;
+  max-height: none !important;
+  height: fit-content !important;
+}
+
+.TriangleIconWrapper-sc-d7qjm1-11{
+  background: none !important;
+  filter: none !important;
+}
+
+.ToolbarWrapper-sc-exupb5-0{
+  display: none !important;
+}
