@@ -170,7 +170,7 @@ const questionSlice = createSlice({
       })
       .addCase(fetchMyLastedQuestions.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || '내 최신 기록록을 불러오는데 실패했습니다.';
+        state.error = action.error.message || '내 최신 기록을 불러오는데 실패했습니다.';
         const key = action.meta.arg ? "MySolvedQuestions" : "MyUnsolvedQuestions";
         state[key] = [];
       })

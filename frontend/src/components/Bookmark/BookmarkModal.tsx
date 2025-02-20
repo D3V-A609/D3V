@@ -78,15 +78,19 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
           })
         ).unwrap();
       } else if (localSelectedBookmarks.length > 0) {
+        console.log(questionIds)
         await dispatch(
-          addQuestionsToBookmarks({ bookmarkIds: localSelectedBookmarks, questionIds })
+          addQuestionsToBookmarks({
+            bookmarkIds: localSelectedBookmarks, 
+            questionIds: questionIds 
+          })
         ).unwrap();
       }
-      alert('북마크에 질문이 추가/제거되었습니다.');
+      alert('북마크에 질문이 추가되었습니다.');
       onClose();
     } catch (error) {
-      console.error('북마크 추가/제거 실패:', error);
-      alert('북마크에 질문을 추가/제거하는데 실패했습니다.');
+      console.error('북마크 추가 실패:', error);
+      alert('북마크에 질문을 추가하는데 실패했습니다.');
       onClose();
     }
   };

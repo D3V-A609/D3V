@@ -58,11 +58,11 @@ const QuestionList: React.FC<QuestionListProps> = ({
 
   const handleAddToBookmarks = () => {
     setBookmarkModalOpen(true);
-    setSelectedQuestions([]);
   };
 
   const handleBookmarkModalClose = () => {
     setBookmarkModalOpen(false);
+    setSelectedQuestions([]);
   };
 
   // 질문 클릭 핸들러: 상세 페이지로 이동

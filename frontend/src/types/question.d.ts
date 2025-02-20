@@ -12,6 +12,7 @@ interface Question {
   status: "solved" | "unSolved" | "notSolved";  // 질문 상태
   skillList: string[];         // 기술 스택 목록 (예: "REACT", "DOCKER" 등)
   jobList: string[];          // 직무 목록 (예: "FRONTEND", "DEVOPS" 등)
+  isBookmarked: boolean;      // 북마크된 적이 있는지지
 }
 
 // 일일 질문 목록 타입
