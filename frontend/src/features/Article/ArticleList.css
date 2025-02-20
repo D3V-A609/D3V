@@ -12,7 +12,6 @@
 /* 상단 탭 스타일 */
 .article-list th {
   background-color: #ffffff;
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
   font-weight: bold;
   color: #535353;
@@ -60,7 +59,6 @@
 }
 
 .article-list td {
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 16px;
 }
 

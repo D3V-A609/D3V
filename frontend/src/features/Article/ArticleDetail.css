@@ -58,14 +58,12 @@
 }
 
 .detail-info .category {
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 18px;
   font-weight: bold;
   color: #00518d;
 }
 
 .detail-info .title {
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 22px;
   font-weight: bold;
   text-align: left;
@@ -94,7 +92,6 @@
 }
 
 .date {
-  font-family: 'Inter', sans-serif;
   font-size: 14px;
   margin-bottom: 10px;
 }
@@ -135,7 +132,6 @@
 }
 
 .detail-content p {
-  font-family: 'Noto Sans KR', sans-serif;
   font-size: 14px;
   font-weight: 300; /* 얇은 글씨체 */
   line-height: 20px; /* 줄 간격 */
