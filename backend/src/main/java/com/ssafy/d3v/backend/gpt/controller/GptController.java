@@ -17,7 +17,7 @@ public class GptController {
 
     @PostMapping("/AIFeedback")
     public String aiFeedback(@RequestBody GptRequest request) {
-        return gptService.getGptResponse(request.question(), request.answer());
+        return gptService.getGptResponse(request.questionId(), request.answer());
     }
 }
 
