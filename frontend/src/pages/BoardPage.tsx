@@ -40,7 +40,6 @@ const BoardPage: React.FC = () => {
 
   const fetchArticlesData = useCallback(() => {
     const apiCategory = categoryMap[params.category];
-    console.log("선택 : ", params.category, "API : ", apiCategory);
     dispatch(fetchArticles({ 
       category: apiCategory, 
       keyword: params.searchQuery, 
