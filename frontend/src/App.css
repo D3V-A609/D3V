@@ -1,6 +1,5 @@
 * {
   box-sizing: border-box;
-  font-family: 'NotoSansKR-VariableFont', sans-serif;
 }
 
 body {
@@ -11,7 +10,6 @@ body {
 }
 
 .App {
-  font-family: sans-serif;
   text-align: center;
 }
 
@@ -22,8 +20,8 @@ body {
 }
 
 
-@font-face {
+/* @font-face {
   font-family: 'NotoSansKR-VariableFont';
   src: url('./assets/fonts/NotoSansKR-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
-}
+} */

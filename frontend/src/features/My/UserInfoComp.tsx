@@ -70,7 +70,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
             </span>
 
             <p >
-              {user.githubUrl && <a href={`https://${user.githubUrl}`} target="_blank" rel="noopener noreferrer" className='github-info'>
+              {user.githubUrl && <a href={`${user.githubUrl}`} target="_blank" rel="noopener noreferrer" className='github-info'>
                 <IoLogoGithub className='github-icon' /> <span style={{ color: '#0072EF' }}>{user.githubUrl}</span>
               </a>}
             </p>
