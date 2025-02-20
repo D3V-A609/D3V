@@ -49,8 +49,8 @@ const ContentPreviewList: React.FC<ContentPreviewProps> = ({title, titleIcon, co
               if(content !== null && typeof content === 'object'){
               if(handleDetail === 'answer-detail' && "questionId" in content) { moveToQuestionDetail(navigate, dispatch, content.questionId)}
               else if(handleDetail === 'answer-commu' && "questionId" in content) { moveToQuestionDetail(navigate, dispatch, content.questionId, true)}
-              else if(handleDetail === 'article' && "articleId" in content) { moveToArticleDetail(navigate, content.articleId)}
-              else if(handleDetail === 'article' && "id" in content) { moveToArticleDetail(navigate, content.id)}
+              else if(handleDetail === 'article' && "articleId" in content) { moveToArticleDetail(navigate, content.articleId, '/my')}
+              else if(handleDetail === 'article' && "id" in content) { moveToArticleDetail(navigate, content.id, '/my')}
               }
             }}
             >

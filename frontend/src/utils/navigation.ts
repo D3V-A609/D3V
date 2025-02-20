@@ -48,14 +48,17 @@ export const moveToAllQuesitons = (
  * 게시글 상세 페이지로 이동
  * @param navigate - react route navagate 함수
  * @param id - 게시글 ID
+ * @param state - mypage에서 이동했는지를 체크하는 변수.. true일 경우 state에 /my를 담아서 이동
  */
 export const moveToArticleDetail = (
   navigate: NavigateFunction,
-  id: number
+  id: number,
+  state?: string
 ) => {
   navigateTo(navigate, `/board`, {
     selectedArticleId: id,
-    currentView: 'detail'
+    currentView: 'detail',
+    ...(state ? {prevPath: state} : {})
   })
 }
 
