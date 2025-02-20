@@ -58,6 +58,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
 
   const handleAddToBookmarks = () => {
     setBookmarkModalOpen(true);
+    setSelectedQuestions([]);
   };
 
   const handleBookmarkModalClose = () => {

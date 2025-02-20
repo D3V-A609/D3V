@@ -216,9 +216,10 @@ const MyPage:React.FC = () => {
         {isOpenBookmark && selectedBookmarkId && (
             <div className="modal-overlay">
                 <BookmarkDetailModal
-                bookmarkId={selectedBookmarkId}
-                onClose={() => setIsOpenBookmark(false)}
-                onBookmarksChanged={memoizedBookmarks}
+                    bookmarkId={selectedBookmarkId}
+                    onClose={() => setIsOpenBookmark(false)}
+                    onBookmarksChanged={memoizedBookmarks}
+                    isOwner={true}
                 />
             </div>
         )}
