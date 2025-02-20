@@ -16,12 +16,12 @@ public interface BookmarkQuestionRepository extends JpaRepository<BookmarkQuesti
             "AND bq.bookmark.member.id = :memberId")
     List<Long> findBookmarkIdsByQuestionIdAndMemberId(@Param("questionId") Long questionId,
                                                       @Param("memberId") Long memberId);
+    
 
-    @Query("SELECT bq.bookmark.id FROM BookmarkQuestion bq " +
-            "WHERE bq.bookmark.id = :bookmarkId " +
-            "AND bq.bookmark.member.id = :memberId")
-    List<Long> findQuestionIdsByBookmarkIdAndMemberId(@Param("bookmarkId") Long bookmarkId,
-                                                      @Param("memberId") Long memberId);
+    @Query(value = "INSERT INTO bookmark_question (bookmark_id, question_id) VALUES (:bookmarkId, :questionId) ON CONFLICT (bookmark_id, question_id) DO NOTHING", nativeQuery = true)
+    @Modifying
+    void upsertBookmarkQuestion(@Param("bookmarkId") Long bookmarkId, @Param("questionId") Long questionId);
+
 
     @Query("SELECT bq.bookmark.id FROM BookmarkQuestion bq " +
             "WHERE bq.question.id = :questionId")

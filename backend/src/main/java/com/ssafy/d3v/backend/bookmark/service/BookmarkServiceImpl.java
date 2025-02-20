@@ -187,23 +187,9 @@ public class BookmarkServiceImpl implements BookmarkService {
         if (!bookmark.getMember().getId().equals(member.getId())) {
             throw new RuntimeException("본인의 북마크에만 질문을 추가할 수 있습니다.");
         }
-        List<Long> existingQuestionIds = bookmarkQuestionRepository.findQuestionIdsByBookmarkIdAndMemberId(bookmarkId,
-                member.getId());
-
-        List<Question> questionsToAdd = questionRepository.findAllById(
-                questionIds.stream().filter(id -> !existingQuestionIds.contains(id)).toList()
-        );
-
-        List<BookmarkQuestion> newEntries = new ArrayList<>();
-        for (Question question : questionsToAdd) {
-            newEntries.add(BookmarkQuestion.builder()
-                    .bookmark(bookmark)
-                    .question(question)
-                    .build());
-        }
-
-        if (!newEntries.isEmpty()) {
-            bookmarkQuestionRepository.saveAll(newEntries);
+        // 기존 질문 조회 로직 제거 (DB에서 직접 처리)
+        for (Long questionId : questionIds) {
+            bookmarkQuestionRepository.upsertBookmarkQuestion(bookmarkId, questionId);
         }
     }
 
