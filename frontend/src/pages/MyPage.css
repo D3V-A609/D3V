@@ -1,6 +1,7 @@
-.my-page-container{
+.my-page-container {
   /* width: 100%; */
   width: 1200px;
+  max-width: 100%; /* 모바일에서 화면 크기에 맞게 조절 */
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -10,29 +11,61 @@
   margin: 0 auto;
 }
 
-.my-learning-info-container{
+.my-learning-info-container {
   display: flex;
   flex-direction: column;
 }
 
-.my-detail-info-container{
-  justify-items: anchor-center;
+.my-detail-info-container {
+  justify-items: center; /* anchor-center -> center */
 }
 
-.my-answer-info-container{
+.my-answer-info-container {
   display: flex;
   justify-content: space-between;
   gap: 50px;
 }
 
-.my-answer-commu-activity{
+.my-answer-commu-activity {
   width: 100%;
 }
 
-.my-commu-info-container{
-  gap: 50px
+.my-commu-info-container {
+  gap: 50px;
 }
 
-.my-streak{
+.my-streak {
   padding-bottom: 1rem;
+}
+
+/* ✅ iPhone 12 Pro (390px × 844px) 대응 반응형 */
+@media screen and (max-width: 420px) {
+  .my-page-container {
+    width: 100%;
+    padding: 20px; /* 모바일에서 패딩 축소 */
+    gap: 1.5rem; /* 간격 줄이기 */
+  }
+
+  .my-answer-info-container {
+    flex-direction: column; /* 모바일에서 세로 정렬 */
+    gap: 20px; /* 모바일에서 간격 줄이기 */
+  }
+
+  .my-commu-info-container {
+    flex-direction: column; /* 모바일에서 세로 정렬 */
+    gap: 20px;
+  }
+
+  .my-learning-info-container {
+    gap: 15px; /* 모바일에서 여백 줄이기 */
+  }
+
+  .my-detail-info-container {
+    justify-items: center;
+    text-align: center; /* 모바일에서 텍스트 중앙 정렬 */
+  }
+
+  .my-streak {
+    text-align: center; /* streak 정보 중앙 정렬 */
+  }
 }

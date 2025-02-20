@@ -3,13 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchMyAiFeedback } from "../actions/aiFeedbackActions";
 
 export interface AiFeedbackState {
-  aifeedback: string[];
+  aifeedback: Record<number, AiResponse>;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: AiFeedbackState = {
-  aifeedback: [],
+  aifeedback: {},
   loading: false,
   error: null,
 };
@@ -27,7 +27,10 @@ const aiFeedbackSlice = createSlice({
       .addCase(fetchMyAiFeedback.fulfilled, (state, action) => {
         state.loading = false;
         const answerId = action.meta.arg.answerId;
-        state.aifeedback[answerId] = action.payload;
+        const aifeedback: AiResponse = action.payload;
+
+        state.aifeedback[answerId] = aifeedback;
+        console.log("in slice:", state.aifeedback[answerId])
       })
       .addCase(fetchMyAiFeedback.rejected, (state, action) => {
         state.loading = false;

@@ -8,7 +8,7 @@ interface AiModalContextType {
   closeAiModal: () => void;
   selectAnswer: Answer | null;
   setSelectAnswer: (answer: Answer) => void;
-  aifeedback: string;
+  aifeedback: AiResponse|null;
 }
 
 const AiModalContext = createContext<AiModalContextType | undefined>(undefined);
@@ -20,14 +20,14 @@ export const AiModalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [selectAnswer, setSelectAnswer] = useState<Answer | null>(null);
 
-  const [aifeedback, setAiFeedback] = useState<string>("");
+  const [aifeedback, setAiFeedback] = useState<AiResponse| null>(null);
 
   const openAiModal = () => {
     setIsAiModalOpen(true);
   }
   const closeAiModal = () => {
     setSelectAnswer(null)
-    setAiFeedback('');
+    setAiFeedback(null);
     setIsAiModalOpen(false)
   };
 
@@ -36,7 +36,7 @@ export const AiModalProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (selectAnswer !== null) {
       const feedback = aiFeedbacks[selectAnswer.answerId];
 
-      if (typeof feedback === "string" && feedback.trim().length > 0) {
+      if (typeof feedback === "object" && feedback !== undefined) {
         // Redux 상태에 이미 데이터가 있으면, API 호출 없이 바로 할당
         setAiFeedback(feedback);
       } else {
@@ -49,7 +49,7 @@ export const AiModalProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     if(selectAnswer !== null ){
       const feedback = aiFeedbacks[selectAnswer.answerId];
-      if(typeof feedback === "string" && feedback.trim().length > 0) {
+      if(typeof feedback === "object" && feedback !== undefined) {
         setAiFeedback(feedback)
       }
     }

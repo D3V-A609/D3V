@@ -11,3 +11,8 @@ interface Answer {
   isLiked?: boolean; // 내가 추천했는지 여부
 };
 
+interface AiResponse {
+  good: string[];
+  bad: string[];
+  feedback: string[];
+}

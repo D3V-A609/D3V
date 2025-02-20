@@ -35,7 +35,7 @@ const Streak:React.FC<StreakProp> = ({className}) => {
       </div>
       <div className={`streak-text-div ${className}`}>
         {realStreak>0 ?(
-        <><div>핫 뜨거!</div><div> 연속 <span style={{ color: '#FF4C4C', fontWeight: 'bold' }}>{realStreak}</span>일 째 타오르고 있어요</div></>) : (
+        <><div>핫 뜨거!</div><div> 연속 <span style={{ color: '#FF4C4C', fontWeight: 'bold' }}>{realStreak}</span>일 째</div><div> 타오르고 있어요</div></>) : (
         <><div>불꽃이 잠시 꺼졌어요... </div><div>다시 점화해볼까요?🔥</div></>
       )}
       </div>

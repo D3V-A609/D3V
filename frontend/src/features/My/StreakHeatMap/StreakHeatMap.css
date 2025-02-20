@@ -93,6 +93,50 @@
   fill: #0F4D27
 }
 
-.__react_component_tooltip {
+/* .__react_component_tooltip {
   z-index: 9999 !important;
+} */
+@media screen and (max-width: 420px) {
+  .streak-heatmap-container {
+    flex-direction: column; /* 모바일에서 세로 배치 */
+    gap: 1.5rem;
+    padding: 20px; /* 패딩 조정 */
+  }
+
+  .streak-heatmap-container .streak-container {
+    width: 100%; /* 모바일에서는 꽉 차게 */
+    flex-direction: row; /* 모바일에서 가로 정렬 */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .streak-heatmap-container .heatmap-container {
+    width: 100%; /* 모바일에서 꽉 차게 */
+  }
+
+  .streak-img-div img {
+    width: 60px; /* 모바일에서 크기 줄이기 */
+    height: 60px;
+  }
+
+  .streak-text-div {
+    text-align: center;
+    font-size: 14px; /* 모바일에서 폰트 크기 줄이기 */
+  }
+
+  /* 홈 streak 반응형 */
+  .streak-container.home-streak {
+    justify-content: center;
+  }
+
+  .home-streak.streak-img-div img {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Heatmap 조정 */
+  .react-calendar-heatmap {
+    transform: scale(0.9); /* 모바일에서 살짝 축소 */
+  }
 }
