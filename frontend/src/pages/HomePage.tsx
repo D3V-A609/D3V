@@ -11,7 +11,7 @@ import { BsFillTrophyFill, BsFillCalendarCheckFill } from "react-icons/bs";
 import './HomePage.css';
 // import LoadingPage from '../components/ErrorHandling/LoadingPage';
 import ErrorPage from '../components/ErrorHandling/ErrorPage';
-import { format, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 import { fetchJobs } from '../store/actions/jobActions';
 import serviceInfo from "../assets/images/service-info.png";
 import serviceScreen from "../assets/images/service-screen.png";
@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
   
   const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
 
-  const previousMonth = useMemo(() => format(subMonths(new Date(), 1), 'yyyy-MM'), []);
+  const previousMonth = useMemo(() => format(new Date(), 'yyyy-MM'), []);
 
   const prevSelectedJob = useRef<JobType | null>(null);
   // selectedJob 변경 시 실행
@@ -90,7 +90,7 @@ const HomePage: React.FC = () => {
         dispatch(fetchJobs()).unwrap().then((jobs: JobType[]) => {
           setJobCategories(
             jobs.reduce((acc, job) => {
-              acc[job] = job.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+              acc[job] = job?.replace(/_/g, ' ')?.replace(/\b\w/g, char => char?.toUpperCase());
               return acc;
             }, {} as { [key: string]: string })
           );
@@ -201,7 +201,7 @@ const HomePage: React.FC = () => {
       <section className="top10-section">
         <div className="section-header">
           <PageHeader           
-            title={`${jobCategories[selectedJob] || selectedJob} 주간 TOP 10`}
+            title={`${jobCategories[selectedJob] || selectedJob} 일간 TOP 10`}
             icon={<BsFillTrophyFill />}
             iconStyle="trophy-icon"
           />
@@ -238,7 +238,7 @@ const HomePage: React.FC = () => {
               />
             ))
           ) : (
-            <p>No questions available.</p>
+            <p>질문이 없습니다.</p>
           )}
           </div>
         </div>

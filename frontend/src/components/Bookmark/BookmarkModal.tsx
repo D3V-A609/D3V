@@ -118,7 +118,7 @@ const BookmarkModal: React.FC<BookmarkModalProps> = ({ questionIds, onClose }) =
       <div className="modal-overlay">
         <div className="bookmark-modal">
           <div className="bookmark-header">
-            <h2>북마크</h2>
+            <span className="bookmark-bookmark">북마크</span>
             <button className="bookmark-close-btn" onClick={onClose}>
               ×
             </button>

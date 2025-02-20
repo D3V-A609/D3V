@@ -27,7 +27,7 @@ const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({ onClose, onSave }) 
       <div className="add-bookmark-modal">
         {/* 모달 헤더 */}
         <div className="add-bookmark-modal-header">
-          <h2>새 북마크 추가</h2>
+          <span className="bookmark-bookmark">새 북마크 추가</span>
           <button className="add-bookmark-close-btn" onClick={onClose}>
             ×
           </button>

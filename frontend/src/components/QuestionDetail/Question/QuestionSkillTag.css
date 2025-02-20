@@ -1,3 +1,11 @@
+.skill-tags-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .skill-tag-container {
   border-radius: 6px;
   display: flex;

@@ -1,7 +1,4 @@
-import React, { useEffect, useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "../../store/hooks/useRedux";
-import { fetchArticles } from "../../store/actions/articleActions";
-import { fetchMultipleUserInfo } from "../../store/actions/userActions";
+import React from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import "./ArticleList.css";
 
@@ -13,6 +10,9 @@ const categoryNameMap: Record<string, string> = {
 };
 
 interface ArticleListProps {
+  articles: Article[];
+  users: Record<number, User>;
+  pagination: ArticlePagination;
   params: {
     category: string;
     searchQuery: string;
@@ -21,42 +21,20 @@ interface ArticleListProps {
     page: number;
     size: number;
   };
+  error: string | null;
   onParamChange: (newParams: Partial<ArticleListProps['params']>) => void;
   onArticleClick: (articleId: number) => void;
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({
+  articles,
+  users,
+  pagination,
   params,
+  error,
   onParamChange,
   onArticleClick,
 }) => {
-  const dispatch = useAppDispatch();
-  const { articles, error, pagination } = useAppSelector(
-    (state) => state.articles || { articles: [], error: null, pagination: undefined }
-  );
-  const { users } = useAppSelector((state) => state.user);
-
-  const fetchArticlesData = useCallback(() => {
-    const apiCategory = categoryNameMap[params.category] || "";
-    dispatch(fetchArticles({ 
-      category: apiCategory, 
-      keyword: params.searchQuery, 
-      sort: params.sortField, 
-      order: params.sortOrder,
-      page: params.page,
-      size: params.size
-    })).then((action) => {
-      if (fetchArticles.fulfilled.match(action)) {
-        const userIds = [...new Set(action.payload.data.map((article: Article) => article.memberId))] as number[];
-        dispatch(fetchMultipleUserInfo(userIds));
-      }
-    });
-  }, [dispatch, params]);
-
-  useEffect(() => {
-    fetchArticlesData();
-  }, [fetchArticlesData, params]);
-  
   const handleSort = (field: string) => {
     const newOrder = params.sortField === field && params.sortOrder === 'DESC' ? 'ASC' : 'DESC';
     onParamChange({ sortField: field, sortOrder: newOrder });
@@ -97,17 +75,25 @@ const ArticleList: React.FC<ArticleListProps> = ({
               <td>{article.commentCount}</td>
               <td>{article.view}</td>
               <td className="author-cell">
-                {users[article.memberId] && (
+                {users[article.memberId] ? (
                   <>
-                    <img 
-                      src={users[article.memberId].profileImg || '/default-profile.png'} 
-                      alt={users[article.memberId].nickname} 
-                      className="author-profile-image"
-                    />
+                    {users[article.memberId].profileImg ? (
+                      <img 
+                        src={users[article.memberId].profileImg} 
+                        alt={users[article.memberId].nickname} 
+                        className="author-profile-image"
+                      />
+                    ) : (
+                      <div className="article-avatar-fallback">
+                        {users[article.memberId].nickname?.[0]?.toUpperCase() ?? "D"}
+                      </div>
+                    )}
                     <span title={users[article.memberId].nickname}>
                       {users[article.memberId].nickname || '알 수 없음'}
                     </span>
                   </>
+                ) : (
+                  <span>알 수 없음</span>
                 )}
               </td>
             </tr>

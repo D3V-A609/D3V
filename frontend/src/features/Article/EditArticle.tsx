@@ -101,7 +101,7 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
   return (
     <div className="edit-article">
 
-<form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="article-form-group">
           <label htmlFor="category" className="article-form-label">
             카테고리<span className="article-required">*</span>
@@ -112,6 +112,7 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
             onChange={(e) => setCategoryId(Number(e.target.value))}
             required
             className={`article-form-select ${errors.category ? "article-error-border" : ""}`}
+            style={{ cursor: "pointer" }}
           >
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -164,6 +165,7 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
               accept=".jpg,.jpeg,.png,.gif"
               multiple
               onChange={handleImageChange}
+              style={{ cursor: "pointer" }}
             />
             <small className="article-image-description">
               * 허용된 확장자: jpg, jpeg, png, gif / 파일 최대 크기: {MAX_FILE_SIZE_MB}MB
@@ -172,11 +174,11 @@ const EditArticle: React.FC<EditArticleProps> = ({ article, onCancel }) => {
           </div>
         </div>
 
-        <div className="form-buttons">
-          <button type="button" className="cancel-button" onClick={onCancel}>
+        <div className="article-form-buttons">
+          <button type="button" className="article-cancel-button" onClick={onCancel} style={{ cursor: "pointer" }}>
             취소
           </button>
-          <button type="submit" className="submit-button">
+          <button type="submit" className="article-submit-button" style={{ cursor: "pointer" }}>
             수정
           </button>
         </div>
