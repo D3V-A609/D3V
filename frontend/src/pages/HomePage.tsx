@@ -147,6 +147,7 @@ const HomePage: React.FC = () => {
               title={question.content}
               category={question.skillList?.[0] || 'General'}
               status={question.status}
+              isBookmarked={question.isBookmarked}
               onClick={() => QuestionCardClick(question.id)}
             />
           ))) : (
@@ -156,6 +157,7 @@ const HomePage: React.FC = () => {
                 title={question.content}
                 category={question.skillList?.[0] || 'General'}
                 status={question.status}
+                isBookmarked={false}
                 onClick={() => QuestionCardClick(question.id)}
               />
             ))

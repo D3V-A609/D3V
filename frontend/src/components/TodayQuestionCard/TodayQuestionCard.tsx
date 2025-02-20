@@ -3,7 +3,7 @@
 // 필요한 리액트 훅과 외부 라이브러리 임포트
 import React, { useEffect, useState } from "react";
 import { format } from 'date-fns';
-import { RiBookmarkLine } from "react-icons/ri";
+import { RiBookmarkLine, RiBookmarkFill } from "react-icons/ri";
 import { MdCalendarToday } from "react-icons/md";
 import { HiArrowRight } from "react-icons/hi";
 import TechIcon from "../TechIcon/TechIcon";
@@ -14,6 +14,7 @@ interface QuestionCardProps {
   title: string;          // 질문 제목
   category: string;       // 기술 카테고리
   status?: string;
+  isBookmarked: boolean;
   onClick?: () => void;   // 클릭 이벤트 핸들러
 }
 
@@ -22,6 +23,7 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
   title,
   category,
   status,
+  isBookmarked,
   onClick,
 }) => {
   // 현재 날짜 포맷팅
@@ -73,7 +75,11 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
           {TODAY_DATE}
         </div>
         <div className="bookmark-icon">
-          <RiBookmarkLine size={20} />
+          {isBookmarked ? (
+            <RiBookmarkFill size={20} style={{ cursor:'pointer', color: '#0072EF'}} />
+            ) : (
+            <RiBookmarkLine size={20}  style={{ cursor: 'pointer', color: '#0072EF' }} />
+          )}
         </div>
       </div>
       
