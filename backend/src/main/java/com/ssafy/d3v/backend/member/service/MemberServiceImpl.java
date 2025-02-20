@@ -104,10 +104,12 @@ public class MemberServiceImpl implements MemberService {
         }
 
         Member updated = memberRepository.saveAndFlush(member.toBuilder()
-                .nickname(memberRequest.nickname())
-                .password(passwordEncoder.encode(memberRequest.password()))
-                .githubUrl(memberRequest.githubUrl())
-                .favoriteJob(memberRequest.favoriteJob())
+                .nickname(memberRequest.nickname() == null ? member.getNickname() : memberRequest.nickname())
+                .password(memberRequest.password() == null ? member.getPassword()
+                        : passwordEncoder.encode(memberRequest.password()))
+                .githubUrl(memberRequest.githubUrl() == null ? member.getGithubUrl() : memberRequest.githubUrl())
+                .favoriteJob(
+                        memberRequest.favoriteJob() == null ? member.getFavoriteJob() : memberRequest.favoriteJob())
                 .build());
 
         return MemberResponse.builder()
