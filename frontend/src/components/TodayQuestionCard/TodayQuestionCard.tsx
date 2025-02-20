@@ -29,10 +29,17 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
   // 카테고리 배경색 상태 관리
   const [bgColor, setBgColor] = useState<string>('rgba(102, 102, 102, 0.1)');
 
+  // 카테고리 텍스트 포맷팅 함수
+  const formatDisplayText = (text: string): string => {
+    return text?.split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ') ?? "Code";
+  };
+
   // 카테고리에 따른 배경색 설정 효과
   useEffect(() => {
     // 카테고리 문자열 정규화
-    const normalizedTech = category.trim().toLowerCase().replace(/[_-]/g, '.');
+    const normalizedTech = category?.trim()?.toLowerCase()?.replace(/[_-]/g, '.') ?? "code";
     
     // 임시 스타일 요소 생성
     const techIconStyle = document.createElement('style');
@@ -87,7 +94,7 @@ const TodayQuestionCard: React.FC<QuestionCardProps> = ({
           }}
         >
           <TechIcon tech={category} className="category-tech-icon" />
-          {category.toLowerCase()}
+          {formatDisplayText(category)}
         </div>
         {/* 답변 링크 (로그인 상태에 따라 다른 텍스트 표시) */}
         <div className="answer-link">

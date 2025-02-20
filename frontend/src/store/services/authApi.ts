@@ -44,7 +44,19 @@ interface DuplicationResponse {
 }
 
 interface UpdateProfileResponse {
-  message: string;
+  memberId: number;
+  nickname: string;
+  email: string;
+  profileImg: string;
+  githubUrl: string;
+  maxStreak: number;
+  ongoingStreak: number;
+  providerType: string;
+  createdAt: string | null;
+  favoriteJob: string;
+  followerCount: number;
+  followingCount: number;
+  isFollow: boolean | null;
 }
 
 

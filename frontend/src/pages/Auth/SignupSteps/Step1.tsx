@@ -1,3 +1,4 @@
+// Step1.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
@@ -26,6 +27,12 @@ const Step1: React.FC = () => {
     agreeToTerms: ''
   });
 
+  // 이메일 인증 관련 상태
+  const [verificationCode, setVerificationCode] = useState('');
+  const [showVerificationInput, setShowVerificationInput] = useState(false);
+  const [isEmailVerificationSent, setIsEmailVerificationSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
   // 이메일 중복 검사
   const handleEmailBlur = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,14 +42,53 @@ const Step1: React.FC = () => {
   
     try {
       const response = await authApi.checkEmailDuplication(formData.email);
-      if (response.result) { // true면 중복
+      if (response.result) {
         setErrors(prev => ({...prev, email: response.message}));
-      } else { // false면 사용 가능
+      } else {
         setErrors(prev => ({...prev, email: '사용 가능한 이메일입니다.'}));
       }
     } catch (error) {
       console.error('이메일 중복 확인 실패:', error);
       setErrors(prev => ({...prev, email: '이메일 중복 확인에 실패했습니다.'}));
+    }
+  };
+
+  const sendEmailVerification = async () => {
+    if (!formData.email) {
+      setErrors(prev => ({...prev, email: '이메일을 입력해주세요'}));
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrors(prev => ({...prev, email: '유효한 이메일 주소를 입력해주세요'}));
+      return;
+    }
+
+    try {
+      await authApi.sendEmailVerification(formData.email);
+      setShowVerificationInput(true);
+      setIsEmailVerificationSent(true);
+      alert('인증 이메일이 발송되었습니다. 이메일을 확인해주세요.');
+    } catch (error) {
+      console.error('이메일 인증 발송 실패:', error);
+      alert('이메일 인증 발송에 실패했습니다.');
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    try {
+      const response = await authApi.verifyEmailCode(formData.email, verificationCode);
+      if (response) {
+        setIsEmailVerified(true);
+        setShowVerificationInput(false);
+        alert('이메일 인증이 완료되었습니다.');
+      } else {
+        alert('잘못된 인증 코드입니다.');
+      }
+    } catch (error) {
+      console.error('인증 코드 확인 실패:', error);
+      alert('인증 코드 확인에 실패했습니다.');
     }
   };
 
@@ -61,7 +107,6 @@ const Step1: React.FC = () => {
       newErrors.email = '유효한 이메일 주소를 입력해주세요';
       isValid = false;
     } else {
-      // 이메일 중복 검사
       try {
         const response = await authApi.checkEmailDuplication(formData.email);
         if (response.result) {
@@ -72,6 +117,11 @@ const Step1: React.FC = () => {
         newErrors.email = '이메일 중복 확인에 실패했습니다.';
         isValid = false;
       }
+    }
+
+    if (!isEmailVerified) {
+      newErrors.email = '이메일 인증이 필요합니다';
+      isValid = false;
     }
 
     // 비밀번호 유효성 검사
@@ -100,37 +150,6 @@ const Step1: React.FC = () => {
     return isValid;
   };
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
-      setFormData({...formData, password: value});
-      // 비밀번호가 일치하면 에러 메시지 제거
-      if (value === formData.confirmPassword) {
-        setErrors(prev => ({...prev, confirmPassword: '', password: ''}));
-      }
-    }
-  };
-
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^[A-Za-z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value) || value === '') {
-      setFormData({...formData, confirmPassword: value});
-      
-      // 비밀번호 확인이 비어있지 않은 경우에만 검증
-      if (value !== '') {
-        if (value === formData.password) {
-          setErrors(prev => ({...prev, confirmPassword: '비밀번호가 일치합니다'}));
-        } else {
-          setErrors(prev => ({...prev, confirmPassword: '비밀번호가 일치하지 않습니다'}));
-        }
-      } else {
-        // 입력값이 비어있으면 에러 메시지 제거
-        setErrors(prev => ({...prev, confirmPassword: ''}));
-      }
-    }
-  };
-
-
   const handleNext = async (e: React.FormEvent) => {
     e.preventDefault();
     if (await validateForm()) {
@@ -152,27 +171,65 @@ const Step1: React.FC = () => {
       <form className="signup-from" onSubmit={handleNext}>
         <div className="signup-form-group">
           <label>이메일</label>
-          <input 
-            type="email" 
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            onBlur={handleEmailBlur}
-            placeholder="이메일 주소 *" 
-            required 
-          />
+          <div className="email-input-wrapper">
+            <input 
+              type="email" 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              onBlur={handleEmailBlur}
+              placeholder="이메일 주소 *" 
+              required 
+            />
+            <button 
+              type="button"
+              className={`verify-email-button ${isEmailVerified ? 'verified' : ''}`}
+              onClick={sendEmailVerification}
+              disabled={isEmailVerified}
+            >
+              {isEmailVerified ? '인증완료' : '이메일 인증'}
+            </button>
+          </div>
+          
+          {/* 인증 코드 입력 폼 */}
+          {showVerificationInput && !isEmailVerified && (
+            <div className="verification-code-wrapper">
+              <input
+                type="text"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="인증 코드 입력"
+                className="verification-code-input"
+              />
+              <button 
+                type="button"
+                className="verify-code-button"
+                onClick={handleVerifyCode}
+              >
+                확인
+              </button>
+            </div>
+          )}
+
+          {isEmailVerificationSent && !isEmailVerified && (
+            <span className="signup-info-message">
+              인증 이메일이 발송되었습니다. 이메일을 확인해주세요.
+            </span>
+          )}
+
           {errors.email && (
             <span className={errors.email === '사용 가능한 이메일입니다.' ? 'signup-success-message' : 'signup-error-message'}>
               {errors.email}
             </span>
           )}
         </div>
+
         <div className="signup-form-group">
           <label>비밀번호</label>
           <div className="password-input-wrapper">
             <input 
               type={showPassword ? "text" : "password"}
               value={formData.password}
-              onChange={handlePasswordChange}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
               placeholder="비밀번호 (영문, 숫자, 특수문자) *"
               required
             />
@@ -186,13 +243,14 @@ const Step1: React.FC = () => {
           </div>
           {errors.password && <span className="error-message">{errors.password}</span>}
         </div>
+
         <div className="signup-form-group">
           <label>비밀번호 확인</label>
           <div className="password-input-wrapper">
             <input 
               type={showConfirmPassword ? "text" : "password"}
               value={formData.confirmPassword}
-              onChange={handleConfirmPasswordChange}
+              onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
               placeholder="비밀번호 확인 *"
               required
             />
@@ -210,6 +268,7 @@ const Step1: React.FC = () => {
             </span>
           )}
         </div>
+
         <div className="terms-group">
           <label className="terms-label">
             <input
@@ -221,6 +280,7 @@ const Step1: React.FC = () => {
           </label>
           {errors.agreeToTerms && <span className="error-message">{errors.agreeToTerms}</span>}
         </div>
+
         <button type="submit" className="next-button">
           다음
         </button>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './EditProfile.css';
-import { IoIosEyeOff, IoMdEye, IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux'
 // import { fetchUserInfo } from '../../../store/actions/userActions';
 import authApi from '../../../store/services/authApi';
@@ -28,16 +27,8 @@ const EditProfile: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [nicknameError, setNicknameError] = useState('');
   const [nicknameMessage, setNicknameMessage] = useState('');
-
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [showVerificationInput, setShowVerificationInput] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [timeLeft, setTimeLeft] = useState(300);
-  const [isTimerActive, setIsTimerActive] = useState(false);
- 
   const { jobs } = useAppSelector((state: RootState) => state.jobs);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { me, loading, error } = useAppSelector(state => state.user);
 
   // 원본 데이터 상태
@@ -67,25 +58,44 @@ const EditProfile: React.FC = () => {
     }
   }, [me]);
 
+  useEffect(() => {
+    return () => {
+      if (profileImage instanceof File) {
+        URL.revokeObjectURL(URL.createObjectURL(profileImage));
+      }
+    };
+  }, [profileImage]);
+
   const hasChanges = () => {
-    const isPasswordValid = !password || (password && confirmPassword && password === confirmPassword);
-    const hasPasswordChange = password !== '' && confirmPassword !== '' && password === confirmPassword;
+    // 비밀번호 필드 검증
+    const isPasswordValid = (!password && !confirmPassword) || 
+                          (password && confirmPassword && password === confirmPassword);
     
-    return (
+    // 다른 필드들의 변경사항 확인
+    const hasOtherChanges = 
       nickname !== originalData.nickname ||
       githubUrl !== originalData.githubUrl ||
       profileImage !== originalData.profileImage ||
-      favoriteJob !== originalData.favoriteJob ||
-      hasPasswordChange
-    ) && isPasswordValid;
-  };
+      favoriteJob !== originalData.favoriteJob;
 
+    return (hasOtherChanges || (password && confirmPassword)) && isPasswordValid;
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setProfileImage(e.target.files[0]);
+      const file = e.target.files[0];
+      // 미리보기 URL 생성
+      const previewUrl = URL.createObjectURL(file);
+      setProfileImage(file);  // 실제 파일 저장
+      
+      // 이미지 미리보기 업데이트
+      const imageElement = document.querySelector('.profile-image') as HTMLImageElement;
+      if (imageElement) {
+        imageElement.src = previewUrl;
+      }
     }
-  };
+  }
+
 
   const isValidGithubUrl = (url: string): boolean => {
     if (!url) return true; // 빈 값은 허용
@@ -94,20 +104,31 @@ const EditProfile: React.FC = () => {
   };
 
   const validatePassword = () => {
+    // password와 confirmPassword가 모두 입력되지 않은 경우
     if (!password && !confirmPassword) {
       setPasswordError('');
       return true;
     }
 
-    if (password !== confirmPassword) {
-      setPasswordError('비밀번호가 일치하지 않습니다.');
-      return false;
+    // password만 입력되고 confirmPassword가 입력되지 않은 경우
+    if (password && !confirmPassword) {
+      setPasswordError('');
+      return true;
     }
 
-    setPasswordError('비밀번호가 일치합니다.');
+    // 둘 다 입력된 경우에만 검증
+    if (password && confirmPassword) {
+      if (password === confirmPassword) {
+        setPasswordError('비밀번호가 일치합니다.');
+        return true;
+      } else {
+        setPasswordError('비밀번호가 일치하지 않습니다.');
+        return false;
+      }
+    }
+
     return true;
   };
-
 
   const checkNicknameAvailability = async (nickname: string) => {
     try {
@@ -131,84 +152,8 @@ const EditProfile: React.FC = () => {
     }
   };
 
-  const handleStartVerification = async (e: React.MouseEvent) => {
-    e.preventDefault(); // 이벤트 전파 방지
-    try {
-      if (!me?.email) {
-        alert('이메일 정보를 찾을 수 없습니다.');
-        return;
-      } 
-      const response = await authApi.sendEmailVerification(me.email);
-      if (response.result) {
-        setShowVerificationInput(true);
-        setVerificationCode('');
-        setTimeLeft(300); // 5분 타이머 설정
-        setIsTimerActive(true);
-        alert('인증 코드가 이메일로 전송되었습니다.');
-      } else {
-        alert('인증 코드 전송에 실패했습니다.');
-      }
-    } catch (error) {
-      console.error('이메일 인증 코드 전송 실패:', error);
-      alert('인증 코드 전송에 실패했습니다.');
-    }
-  };
-  
-  const handleVerifyCode = async (e: React.MouseEvent) => {
-    e.preventDefault(); // 이벤트 전파 방지
-    
-    try {
-      if (!me?.email) {
-        alert('이메일 정보를 찾을 수 없습니다.');
-        return;
-      } 
-      const response = await authApi.verifyEmailCode(me.email, verificationCode);
-      if (response.result) {
-        // dispatch(updateEmailVerification(true));
-        setIsEmailVerified(true);
-        setShowVerificationInput(false);
-        setIsTimerActive(false);
-        alert('이메일 인증이 완료되었습니다.');
-      } else {
-        alert('잘못된 인증 코드입니다.');
-      }
-    } catch (error) {
-      console.error('이메일 인증 실패:', error);
-      alert('이메일 인증에 실패했습니다.');
-    }
-  };
-
-  // 타이머 관련 useEffect
-  useEffect(() => {
-    if (!isTimerActive || timeLeft <= 0) {
-      if (timeLeft === 0) {
-        setShowVerificationInput(false);
-        setIsTimerActive(false);
-      }
-      return;
-    }
-
-    const intervalId = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          setShowVerificationInput(false);
-          setIsTimerActive(false);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [isTimerActive, timeLeft]);
-
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // const token = TokenService.getAccessToken();
-    // console.log('Current token:', token);
 
     if (!isValidGithubUrl(githubUrl)) {
       alert('올바른 GitHub 프로필 URL을 입력해주세요.');
@@ -221,7 +166,6 @@ const EditProfile: React.FC = () => {
     }
 
     if (!validatePassword()) {
-      alert('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -239,7 +183,7 @@ const EditProfile: React.FC = () => {
       formData.append('favoriteJob', favoriteJob);
     }
     
-    if (profileImage) {
+    if (profileImage instanceof File) {  // File 타입 체크 추가
       formData.append('profile_image', profileImage);
     }
     
@@ -249,9 +193,9 @@ const EditProfile: React.FC = () => {
 
     try {
       const response = await authApi.updateProfile(formData);
-      if (response.message === '정보 수정에 성공했습니다.') {
+      if (response.memberId) {
         alert('회원 정보가 수정되었습니다.');
-        navigate('/');
+        window.location.reload();
       } else {
         alert('회원 정보 수정에 실패했습니다.');
       }
@@ -303,42 +247,7 @@ const EditProfile: React.FC = () => {
                   value={me.email || "이메일 정보 없음"}
                   readOnly
                 />
-                {isEmailVerified ? (
-                  <span className="email-verified">
-                    <IoMdCheckmarkCircleOutline /> 인증됨
-                  </span>
-                ) : (
-                  <button
-                    type="button" 
-                    className="verify-email-button"
-                    onClick={handleStartVerification}
-                    disabled={showVerificationInput}
-                  >
-                    이메일 인증
-                  </button>
-                )}
               </div>
-              {showVerificationInput && (
-                <div className="verification-input-wrapper">
-                  <input
-                    type="text"
-                    placeholder="인증 코드를 입력하세요"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault(); // Enter 키 기본 동작 방지
-                      }
-                    }}
-                  />
-                  <button 
-                    type="button"  // type을 명시적으로 지정
-                    onClick={handleVerifyCode}
-                  >
-                    확인
-                  </button>
-                </div>
-              )}
             </div>
 
             <div className="form-group">

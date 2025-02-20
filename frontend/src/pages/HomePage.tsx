@@ -138,7 +138,7 @@ const HomePage: React.FC = () => {
       {isAuthenticated && <Streak className='home-streak' />}
       </div>
       <section className="today-questions">
-        {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>}
+        {/* {!isAuthenticated && <span className="unlogin-text --unLogined">로그인 후 사용해주세요.</span>} */}
         <div className={`question-cards ${isAuthenticated? "" : "--unLogined"}`}>
           {isAuthenticated ? 
           (Array.isArray(dailyQuestions) && dailyQuestions.map((question) => (
