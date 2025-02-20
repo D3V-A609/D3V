@@ -59,4 +59,19 @@ public class Article extends BaseTimeEntity {
         image.setArticle(this);
     }
 
+    public void updateView(Integer view) {
+        this.view = view;
+    }
+
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
