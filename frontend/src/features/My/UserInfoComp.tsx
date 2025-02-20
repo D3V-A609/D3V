@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserInfoComp.css'
 // import UserProfileImg from '../../components/header/UserProfileImg';
-import { FaGithub } from "react-icons/fa";
+import { IoLogoGithub } from "react-icons/io";
 import { CiMail } from "react-icons/ci";
 // import Profile from '../../components/Profile/Profile';
 
@@ -71,7 +71,7 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
 
             <p >
               {user.githubUrl && <a href={`https://${user.githubUrl}`} target="_blank" rel="noopener noreferrer" className='github-info'>
-                <FaGithub /> <span style={{ color: '#0072EF' }}>{user.githubUrl}</span>
+                <IoLogoGithub className='github-icon' /> <span style={{ color: '#0072EF' }}>{user.githubUrl}</span>
               </a>}
             </p>
           </div>
