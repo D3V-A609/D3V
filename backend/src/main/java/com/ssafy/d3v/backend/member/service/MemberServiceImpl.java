@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse update(MemberRequest memberRequest, MultipartFile profileImage) {
         Member member = getMember();
 
-        if (!profileImage.isEmpty()) {
+        if (profileImage != null && !profileImage.isEmpty()) {
             s3ImageUploader.deleteImageFromS3(member.getProfileImg());
             String profileImg = s3ImageUploader.upload(profileImage);
             member.setProfileImg(profileImg);

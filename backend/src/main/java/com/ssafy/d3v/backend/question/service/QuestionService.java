@@ -135,7 +135,7 @@ public class QuestionService {
                 // 푼 문제: 가중치 = (현재 날짜 - 푼 날짜)
                 weight = daysSinceServed * solvedQWeight;
             } else {
-                // 못 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * A + 100
+                // 못 푼 문제: 가중치 = (현재 날짜 - 푼 날짜) * notSolvedQWeight + 100
                 weight = daysSinceServed * notSolvedQWeight + 100;
             }
 
