@@ -136,7 +136,7 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
             </div>
           </div>
 
-          <div className="detail-content">
+          <div className="article-detail-content">
             {currentArticle.images?.length ? (
               currentArticle.images.map((image) => (
                 <img key={image.id} src={image.imageUrl} alt={image.originImageName} />
@@ -151,17 +151,20 @@ const ArticleDetail: React.FC<ArticleDetailProps> = ({ articleId, onBackClick, u
               readOnly={true}
               theme="bubble"
               modules={{ toolbar: false }}
+              className="article-detail-quill"
             />
           </div>
+          
+          <div className="comment-section">
+            <div className="comment-header">
+              <p className="comment-count">
+                총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
+              </p>
+            </div>
 
-          <div className="comment-header">
-            <p className="comment-count">
-              총 댓글 <span className="count-number">{currentArticle.commentCount}</span>개가 있습니다.
-            </p>
+            <CommentList articleId={articleId} />
+            <CommentInput articleId={articleId} />
           </div>
-
-          <CommentList articleId={articleId} />
-          <CommentInput articleId={articleId} />
         </>
       )}
     </div>

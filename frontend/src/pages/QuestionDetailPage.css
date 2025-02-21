@@ -63,12 +63,11 @@
 .question-content_question-card-body .question-text {
   font-weight: bolder;
   padding: 0 2.5em;
-  padding-bottom: 0.8rem;
+  padding-bottom: 0.8rem !important;
   width: 100%;
-  word-wrap: break-word; /* 단어가 끊기지 않도록 설정 */
   white-space: normal;
-  overflow-wrap: break-word;
   font-size: 24px;
+  word-break: keep-all !important;
 }
 
 .question-content_question-card-body .skill-tags-group{

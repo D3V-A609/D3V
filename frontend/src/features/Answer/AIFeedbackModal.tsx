@@ -17,7 +17,7 @@ const AIFeedbackModal: React.FC<AiProps> = ({ question }) => {
 
   return(
   <div className='ai-feedback-modal-overlay' onClick={closeAiModal}>
-    <div className='ai-feedback-content'>
+    <div className='ai-feedback-content' onClick={(e) => e.stopPropagation()}>
       <div className='close-btn'>
         <span className='close' onClick={closeAiModal}>X</span>
       </div>
@@ -30,15 +30,6 @@ const AIFeedbackModal: React.FC<AiProps> = ({ question }) => {
       </div>
       
         {!loading ? <div className='ai-feedback-text'>
-          {/* <Markdown components={{
-            h4: ({ children }) => {
-              // 📌 "부족한 점"이 포함된 경우 `data-section="bad"` 속성 추가
-              const text = String(children);
-              const isBadSection = text.includes("부족한 점");
-              return <h4 className="feedback-heading" data-section={isBadSection ? "bad" : undefined}>{children}</h4>;
-            },  
-                      
-          }}>{aifeedback}</Markdown> */}
           <h4 className='ai-feedback-title'>잘한 점 👍</h4>
           {aifeedback !== null && aifeedback?.good && aifeedback.good.length > 0 ? (
             <ul>
@@ -70,10 +61,10 @@ const AIFeedbackModal: React.FC<AiProps> = ({ question }) => {
 
           </div> :
           <div className='ai-loading-div'>
+            <div className='text'>AI 면접관이 채점 중이에요!✍️</div>
             <div className='gif'>
-              <img src={AiLoading} />
+              <img src={AiLoading} className='loading-ai-img'/>
             </div>
-            <div className='text'>AI 면접관이 채점 중이에요!</div>
           </div>}
     </div>
   </div>)

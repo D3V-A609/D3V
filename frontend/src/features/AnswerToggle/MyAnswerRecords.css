@@ -26,6 +26,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .timeline-custom-card-div .timeline-custom-text-div{
@@ -48,6 +49,31 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+
+  /*background-color: #ffeb99; /* 귀여운 노란색 */
+  border: 1px solid #fff0b2;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 50%; /* 둥근 버튼 */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  /* box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15); */
+  text-align: center;
+  gap: 4px;
+  height: 90px;
+  width: 100px;
+}
+
+.timeline-custom-card-div .timeline-custom-btn-div:hover {
+  background-color: #fff0b2;
+  transform: translateY(-2px);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-custom-card-div .timeline-custom-btn-div:active {
+  transform: translateY(1px);
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .TimelineItemContentWrapper-sc-d7qjm1-0{

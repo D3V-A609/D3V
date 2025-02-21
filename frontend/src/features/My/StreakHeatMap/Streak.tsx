@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import FireFalse from '../../../assets/images/navbar/fire-false.png';
 import FireTrue from '../../../assets/images/navbar/fire-true.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks/useRedux';
@@ -8,30 +8,36 @@ import { fetchTodayStreak } from '../../../store/actions/historyActions';
 
 interface StreakProp {
   className?: string;
+  memberId?: number;
 }
-const Streak:React.FC<StreakProp> = ({className}) => {
+const Streak:React.FC<StreakProp> = ({className, memberId}) => {
   const dispatch = useAppDispatch();
-  const memberId = Number(SecureStorage.getMemberId());
-  // const streak = useAppSelector((state) => state.historys.streak[memberId] || 0);
+  memberId = memberId ? memberId : Number(SecureStorage.getMemberId());
   
-  const {todayStreak} = useAppSelector((state) => state.historys, shallowEqual);
-
-  // const realStreak = className === 'home-streak' ? Number(todayStreak) : streak;
+  const todayStreak = useAppSelector((state) => state.historys.todayStreak[memberId], shallowEqual);
   const realStreak = Number(todayStreak)
 
+  const hasFetched = useRef(false); // API 중복 요청 방지
+
   useEffect(() => {
-    if(memberId !== null && memberId !== 0){
+    if (!hasFetched.current && todayStreak === 0) {
       dispatch(fetchTodayStreak(memberId));
+      hasFetched.current = true; // API 요청을 한 번만 실행
     }
-  }, [dispatch, memberId])
+  }, [dispatch, memberId, todayStreak]);
+
+  // memberId가 변경될 때 hasFetched 리셋 (새로운 사용자일 경우 다시 요청)
+  useEffect(() => {
+    hasFetched.current = false;
+  }, [memberId]);
 
 
   return (
     <div className={`streak-container ${className}`}>
       <div className={`streak-img-div ${className}`}>
         {realStreak>0 ? 
-        <img src={FireTrue} className='fire-img'  /> : 
-        <img src={FireFalse} className='fire-img' />}
+        <img src={FireTrue} className='fire-img'  loading="lazy"/> : 
+        <img src={FireFalse} className='fire-img' loading="lazy"/>}
       </div>
       <div className={`streak-text-div ${className}`}>
         {realStreak>0 ?(

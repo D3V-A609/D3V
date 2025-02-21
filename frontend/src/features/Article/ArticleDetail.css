@@ -1,5 +1,7 @@
 .article-detail {
   width: 100%;
+  display: flex;
+  flex-direction: column;
   border-collapse: collapse; /* 테두리 중복 제거 */
 }
 
@@ -114,32 +116,52 @@
   margin-right: 5px; /* 아이콘과 숫자 간격 */
 }
 
-.detail-content {
+.article-detail-content {
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  padding: 30px 30px; /* 상하좌우 여백 */
-  gap: 10px; /* 요소 간 간격 */
-  width: 100%; /* 전체 너비 */
-  background-color: #ffffff; /* 배경색 */
-  border-bottom: 3px solid #d9e9ff; /* 하단 테두리 */
+  align-items: stretch;
+  padding: 30px 30px;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 3px solid #d9e9ff;
+  min-height: 300px;
+  height: auto;
 }
 
-.detail-content img {
-  max-width: 70%; /* 이미지 너비를 컨테이너의 70%로 제한 */
-  height: auto; /* 비율 유지 */
-  display: block; /* 적절한 정렬을 위해 블록 레벨 요소로 설정 */
-  margin: 0 auto; /* 이미지를 가로로 중앙 정렬 */
+.article-detail-quill {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
-.detail-content p {
-  font-size: 14px;
-  font-weight: 300; /* 얇은 글씨체 */
-  line-height: 20px; /* 줄 간격 */
-  color: #000000; /* 글씨 색상 */
+.article-detail-quill .ql-container {
+  border: none;
+  height: auto !important;
+}
+
+.article-detail-quill .ql-editor {
+  padding: 0;
+  height: auto !important;
+  min-height: 200px;
   font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: visible;
 }
+
+.article-detail-quill .ql-editor p {
+  margin-bottom: 1em;
+}
+
+.article-detail-quill .ql-editor img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
 
 .comment-header {
   display: flex;

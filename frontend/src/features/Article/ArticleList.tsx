@@ -82,6 +82,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
                         src={users[article.memberId].profileImg} 
                         alt={users[article.memberId].nickname} 
                         className="author-profile-image"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="article-avatar-fallback">

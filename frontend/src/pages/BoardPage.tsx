@@ -9,6 +9,8 @@ import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
 import { useLocation } from "react-router-dom";
+import { fetchMultipleUserInfo } from "../store/actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -19,6 +21,7 @@ const categoryMap: Record<string, string> = {
 };
 
 const BoardPage: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { users } = useAppSelector(state => state.user);
   const { articles, pagination, error } = useAppSelector(state => state.articles || { articles: [], pagination: undefined, error: null });
@@ -38,41 +41,59 @@ const BoardPage: React.FC = () => {
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">(state?.currentView || "list");
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(state?.selectedArticleId || null);
 
-  const fetchArticlesData = useCallback(() => {
+  const fetchArticlesData = useCallback(async () => {
     const apiCategory = categoryMap[params.category];
-    dispatch(fetchArticles({ 
-      category: apiCategory, 
-      keyword: params.searchQuery, 
-      sort: params.sortField, 
-      order: params.sortOrder,
-      page: params.page,
-      size: params.size
-    }));
+    try {
+      const result = await dispatch(fetchArticles({ 
+        category: apiCategory, 
+        keyword: params.searchQuery, 
+        sort: params.sortField, 
+        order: params.sortOrder,
+        page: params.page,
+        size: params.size
+      })).unwrap();
+  
+      // ✅ 변경된 응답 구조 반영
+      if (result && result.data) {
+        const userIds = [...new Set(result.data.map((article: Article) => article.memberId))];
+  
+        if (userIds.length > 0) {
+          await dispatch(fetchMultipleUserInfo(userIds as number[]));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching articles or user info:", error);
+    }
   }, [dispatch, params]);
+  
   
   useEffect(() => {
     fetchArticlesData();
   }, [fetchArticlesData, params]);
 
+  const prevPath = location.state?.prevPath;
+  
   // detail 페이지에서 뒤로가기 시 list로 currentView 수정정
   useEffect(() => {
     const handlePopState = () => {
-      if (currentView === "detail") {
-        setCurrentView("list"); // ✅ currentView가 detail이면 list로 변경
-        window.history.pushState(null, "", location.pathname); // ✅ 뒤로 가기 무력화 (현재 페이지 유지)
+      if(prevPath){
+        navigate(prevPath);
+      } else if (currentView === "detail") {
+        setCurrentView("list"); // currentView가 detail이면 list로 변경
+        window.history.pushState(null, "", location.pathname); // 뒤로 가기 무력화 (현재 페이지 유지)
       } else {
-        window.history.back(); // ✅ currentView가 list이면 정상적인 뒤로 가기 수행
+        window.history.back(); // currentView가 list이면 정상적인 뒤로 가기 수행
       }
     };
   
-    // ✅ "뒤로 가기"를 막기 위해 현재 상태를 저장
+    // "뒤로 가기"를 막기 위해 현재 상태를 저장
     window.history.pushState(null, "", location.pathname);
     window.addEventListener("popstate", handlePopState);
   
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [currentView, location.pathname]); // ✅ location.pathname 추가
+  }, [currentView, location.pathname]); // location.pathname 추가
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => {

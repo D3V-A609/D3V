@@ -58,6 +58,7 @@
   line-height: 1.2;
   color: #333;
   padding: 10px 20px;
+  text-align: left;
 }
 
 .answer-footer {
@@ -158,6 +159,7 @@
   color: #333;
   padding: 0px 15px !important;
   margin: 0px !important;
+  text-align: left;
 }
 
 .feedback-footer {

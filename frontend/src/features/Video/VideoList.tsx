@@ -19,7 +19,7 @@ const VideoList: React.FC<VideoListProps> = ({ videos }) => {
     <div className="video-list">
       {videos.map((video) => (
         <Link to={`/video/${video.id.videoId}`} key={video.id.videoId} className="video-item">
-          <img src={video.snippet.thumbnails.medium.url} alt={video.snippet.title} />
+          <img src={video.snippet.thumbnails.medium.url} alt={video.snippet.title} loading="lazy"/>
           <h3>{video.snippet.title}</h3>
           <p>{video.snippet.channelTitle}</p>
         </Link>
