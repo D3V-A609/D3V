@@ -19,7 +19,7 @@ const UserProfileImg: React.FC<UserInfoProps> = ({className}) => {
 
 
   useEffect(()=>{
-    if(memberId !== null && memberId !== 0){
+    if(memberId){
       dispatch(fetchUserInfo(memberId))
     }
   }, [dispatch, memberId])

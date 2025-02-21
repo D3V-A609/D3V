@@ -8,7 +8,7 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -19,6 +19,7 @@ const categoryMap: Record<string, string> = {
 };
 
 const BoardPage: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { users } = useAppSelector(state => state.user);
   const { articles, pagination, error } = useAppSelector(state => state.articles || { articles: [], pagination: undefined, error: null });
@@ -54,25 +55,29 @@ const BoardPage: React.FC = () => {
     fetchArticlesData();
   }, [fetchArticlesData, params]);
 
+  const prevPath = location.state?.prevPath;
+  
   // detail 페이지에서 뒤로가기 시 list로 currentView 수정정
   useEffect(() => {
     const handlePopState = () => {
-      if (currentView === "detail") {
-        setCurrentView("list"); // ✅ currentView가 detail이면 list로 변경
-        window.history.pushState(null, "", location.pathname); // ✅ 뒤로 가기 무력화 (현재 페이지 유지)
+      if(prevPath){
+        navigate(prevPath);
+      } else if (currentView === "detail") {
+        setCurrentView("list"); // currentView가 detail이면 list로 변경
+        window.history.pushState(null, "", location.pathname); // 뒤로 가기 무력화 (현재 페이지 유지)
       } else {
-        window.history.back(); // ✅ currentView가 list이면 정상적인 뒤로 가기 수행
+        window.history.back(); // currentView가 list이면 정상적인 뒤로 가기 수행
       }
     };
   
-    // ✅ "뒤로 가기"를 막기 위해 현재 상태를 저장
+    // "뒤로 가기"를 막기 위해 현재 상태를 저장
     window.history.pushState(null, "", location.pathname);
     window.addEventListener("popstate", handlePopState);
   
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [currentView, location.pathname]); // ✅ location.pathname 추가
+  }, [currentView, location.pathname]); // location.pathname 추가
 
   const handleParamChange = (newParams: Partial<typeof params>) => {
     setParams(prev => {

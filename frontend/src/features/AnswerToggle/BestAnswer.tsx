@@ -11,7 +11,7 @@ const BestAnswer:React.FC<BestAnswerProps> = ({bestAnswer}) => {
   <div >
     <div className="best-answer-container">
           <div className="best-answer-title">
-            <img src={ThugUpImg} alt="thug-up-img" style={{width: '35px', height: '35px'}} />
+            <img src={ThugUpImg} alt="thug-up-img" style={{width: '35px', height: '35px'}} loading="lazy" />
             해설 
           </div>
           <div className="best-answer-content">

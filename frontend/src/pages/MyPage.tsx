@@ -56,7 +56,6 @@ const MyPage:React.FC = () => {
         post_answer: <GoComment size={28} color='#40C463' />
     };
     
-
     //========== 데이터 불러오기===========
     const { MySolvedQuestions, MyUnsolvedQuestions } = useAppSelector((state) => state.questions as QuestionState, shallowEqual)
     const { myArticles, myArticleComments } = useAppSelector((state) => state.articles as ArticleState, shallowEqual)
@@ -64,22 +63,16 @@ const MyPage:React.FC = () => {
 
     const { me } = useAppSelector((state) => state.user as UserState)
 
-    // const { isAuthenticated } = useAppSelector((state) => state.auth, shallowEqual);
-
     const memberId = SecureStorage.getMemberId();
 
     const { bookmarks } = useAppSelector((state) => state.bookmarks, shallowEqual);
     const [selectedBookmarkId, setSelectedBookmarkId] = useState<number | null>(null);
     const [isOpenBookmark, setIsOpenBookmark] = useState(false);
-    // const isOpenBookmark = useRef<boolean>(false)
-    // const setIsOpenBookmark = () =>{
-    //     isOpenBookmark.current = false
-    // }
 
     // API 중복 호출 방지
     const hasFetched = useRef(false);
     useEffect(() => {
-        if(memberId !== null && memberId !== 0 && !hasFetched.current){   
+        if(memberId && !hasFetched.current){   
             hasFetched.current = true;
             Promise.all([
                 // 답변(푼, 못푼) 로드
@@ -144,28 +137,36 @@ const MyPage:React.FC = () => {
     const [isFollowModalOpen, setIsFollowModalOpen ] = useState(false);
     const [FollowMode, setFollowMode] = useState("follower")
 
-    const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
+    // const { followings, followers } = useAppSelector((state) => state.user, shallowEqual)
 
     const openFollowModal = (mode: string) => { 
         setFollowMode(mode);
         setIsFollowModalOpen(true)
     };
 
-    const onUnfollow = (memberId: number) => {
-        dispatch(unFollow(memberId));
-    }
-    
-    const onFollow = (memberId: number) => {
-        dispatch(follow(memberId));
-    }
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    useEffect(()=>{
-        dispatch(fetchUserInfo(Number(memberId)));
-    }, [followings, followers])
+    const onUnfollow = async (memberId: number) => {
+        await dispatch(unFollow(memberId));
+        setRefreshKey(prev => prev + 1); // 리렌더링 트리거
+    };
+
+    const onFollow = async (memberId: number) => {
+        await dispatch(follow(memberId));
+        setRefreshKey(prev => prev + 1); // 리렌더링 트리거
+    };
+
+    // refreshKey가 변경될 때마다 사용자 정보 다시 불러오기
+    useEffect(() => {
+        if (memberId) {
+            dispatch(fetchUserInfo(memberId));
+        }
+    }, [memberId, refreshKey]);
+
 
         // 콜백 함수를 사용하여 bookmarks 상태 업데이트
     const memoizedBookmarks = useCallback(() => {
-        if (memberId !== null) {
+        if (memberId) {
             dispatch(fetchAllBookmarks(memberId));
         }
     }, [dispatch, memberId]);
@@ -194,7 +195,7 @@ const MyPage:React.FC = () => {
         
         <SectionContainerMemo className='my-learning-info-container' title='학습 활동' icon={icons.BookIcon}>
             <div className="my-streak">
-                <StreakHeatMap />
+                <StreakHeatMap memberId={Number(memberId)} />
             </div>
             <div className='my-answer-commu-activity'>
                 <div className='my-answer-info-container'>
