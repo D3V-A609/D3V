@@ -1,6 +1,7 @@
 import { NavigateFunction } from "react-router-dom";
 import { AppDispatch } from "../store"; // Redux Dispatch 타입
 import { setSelectedQuestionId } from '../store/slices/questionSlice';
+import SecureStorage from "../store/services/token/SecureStorage";
 
 /**
  * 특정 페이지로 이동하는 공통 함수
@@ -47,14 +48,17 @@ export const moveToAllQuesitons = (
  * 게시글 상세 페이지로 이동
  * @param navigate - react route navagate 함수
  * @param id - 게시글 ID
+ * @param state - mypage에서 이동했는지를 체크하는 변수.. true일 경우 state에 /my를 담아서 이동
  */
 export const moveToArticleDetail = (
   navigate: NavigateFunction,
-  id: number
+  id: number,
+  state?: string
 ) => {
   navigateTo(navigate, `/board`, {
     selectedArticleId: id,
-    currentView: 'detail'
+    currentView: 'detail',
+    ...(state ? {prevPath: state} : {})
   })
 }
 
@@ -67,6 +71,10 @@ export const moveToOtherProfile = (
   navigate: NavigateFunction,
   memberId: number
 ) => {
-  const encodedId = btoa(memberId.toString());
-  navigateTo(navigate, `/profile/${encodedId}`)
+  if(memberId === Number(SecureStorage.getMemberId())){
+    navigateTo(navigate, `/my`);
+  }else{
+    const encodedId = btoa(memberId.toString());
+    navigateTo(navigate, `/profile/${encodedId}`)
+  }
 }

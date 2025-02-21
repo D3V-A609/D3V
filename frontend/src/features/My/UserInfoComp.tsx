@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserInfoComp.css'
 // import UserProfileImg from '../../components/header/UserProfileImg';
@@ -15,7 +15,7 @@ interface UserInfoProps {
 const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfollow, onFollow }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {}, [user])
+  // useEffect(() => {}, [user])
 
   if(!user){
     return <div style={{padding: "1rem 0"}}>사용자 정보를 불러오는 중입니다..</div>
@@ -36,15 +36,13 @@ const UserInfoComp: React.FC<UserInfoProps> = ({ user, openFollowModal, onUnfoll
     <div className='user-detail-info-container'>
       {/* 왼쪽 프로필 이미지 */}
       <div className="profile-image-container">
-        {/* <img src={user.profileImage} alt="프로필" className="profile-image" /> */}
-        {/* <UserProfileImg className="profile-image" /> */}
-        {/* <div className="profile-avatar"> */}
         {user.profileImg ? (
           <img src={user.profileImg} className='profile-image' alt="프로필" />
         ) : (
-          <div className="avatar-fallback">{nicknameInitial}</div>
+          <div className="profile-image">
+            <div className="avatar-fallback">{nicknameInitial}</div>
+          </div>
         )}
-      {/* </div> */}
       </div>
 
       {/* 오른쪽 유저 정보 */}

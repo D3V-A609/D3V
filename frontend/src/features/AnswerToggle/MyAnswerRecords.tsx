@@ -102,7 +102,7 @@ const MyAnswerRecords: React.FC<MyAnswerRecordsProps> = ({myAnswers}) => {
                   </div>
                 </div>
                 {!item.hasUnknownText && <div className='timeline-custom-btn-div' onClick={() =>handleAIFeedback(item)}>
-                  <span>AI</span>
+                  <span>🤖 AI💡</span>
                   <span>피드백</span>
                 </div>}
               </div>
