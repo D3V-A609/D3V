@@ -10,6 +10,7 @@ import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
 import { useLocation } from "react-router-dom";
 import { fetchMultipleUserInfo } from "../store/actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 const categoryMap: Record<string, string> = {
   전체: "",
