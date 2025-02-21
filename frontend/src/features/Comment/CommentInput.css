@@ -1,0 +1,33 @@
+.comment-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 20px 30px;
+  }
+  
+  .comment-textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #d9e9ff;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .comment-textarea::placeholder {
+    color: #cccccc;
+  }
+  
+  .comment-submit {
+    padding: 8px 16px;
+    background-color: #00518d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .comment-submit:hover {
+    background-color: #003f6b;
+  }

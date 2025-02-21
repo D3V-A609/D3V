@@ -1,0 +1,147 @@
+.article-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.article-list th {
+  padding: 14px 5px;
+  text-align: center;
+  position: relative;
+}
+
+/* 상단 탭 스타일 */
+.article-list th {
+  background-color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  color: #535353;
+  border-top: 2px solid #d9e9ff;
+  border-bottom: 2px solid #d9e9ff;
+  cursor: pointer;
+}
+
+.article-list th:hover {
+  background-color: #f8f9fa;
+}
+
+/* 게시글 목록 스타일 */
+.article-list td {
+  padding: 13px 5px;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #d9e9ff;
+  cursor: pointer;
+}
+
+.author-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* 간격을 좁힘 */
+  padding: 0 5px; /* 좌우 패딩 추가 */
+}
+
+.author-profile-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover; 
+  border: 0.3px solid #00518d;
+}
+
+.article-avatar-fallback {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  border: 0.3px solid #00518d;
+}
+
+
+.author-cell span {
+  max-width: 70px; /* 닉네임 최대 너비 설정 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-list tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+.article-list td {
+  font-size: 16px;
+}
+
+/* 제목은 왼쪽 정렬 */
+.article-list td:nth-child(2) {
+  text-align: left;
+}
+
+.article-list td:nth-child(1) {
+  width: 120px;
+}
+
+/* 작성자 칼럼 (6번째 칼럼) 너비 조정 */
+.article-list th:nth-child(6),
+.article-list td:nth-child(6) {
+  width: 120px; 
+  max-width: 120px; 
+  padding-right: 20px;
+}
+
+.article-list td:nth-child(3) {
+  width: 110px;
+  text-align: center;
+}
+
+.article-list td:nth-child(4),
+.article-list td:nth-child(5) {
+  width: 100px;
+  text-align: center;
+}
+
+/* 카테고리 색상 (남색) */
+.article-list td:first-child {
+  color: #00518d;
+  font-weight: bold;
+}
+
+.article-list th.active::after {
+  content: '▼';
+  color: #000; /* 활성화 상태 색상 */
+}
+
+.article-list th.active[data-order="asc"]::after {
+  content: '▲';
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px;
+  margin: 0px 4px;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+}
+
+/* 게시글 없음 메시지 스타일 */
+.no-articles-message {
+  text-align: center;
+  font-size: 16px;
+  color: #7d7d7e;
+  margin-top: 20px;
+}

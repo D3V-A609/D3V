@@ -1,0 +1,39 @@
+/* === 상태 필터 컨테이너 스타일 === */
+.status-filter {
+  padding-top: 16px;
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 8px; /* 요소들 사이 간격 */
+  max-width: 100%; /* 최대 너비 설정 */
+}
+
+/* === 필터 텍스트 공통 스타일 === */
+.status-filter span {
+  cursor: pointer;
+  color: #535353;
+  font-size: 14px;
+  transition: all 0.2s ease; /* 부드러운 상태 변화 효과 */
+  font-weight: normal;
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  overflow: hidden; /* 넘치는 텍스트 숨김 */
+  text-overflow: ellipsis; /* 말줄임표 표시 */
+}
+
+/* === 구분자(•) 스타일 === */
+.status-filter .separator {
+  color: #e0e0e0;
+  cursor: default;
+  flex-shrink: 0; /* 구분자는 크기가 줄어들지 않도록 설정 */
+}
+
+/* === 활성화된 필터 스타일 === */
+.status-filter span.active {
+  color: #535353;
+  font-weight: bold;
+}
+
+/* === 호버 효과 (구분자 제외) === */
+.status-filter span:not(.separator):hover {
+  color: #535353;
+  font-weight: bold;
+}

@@ -1,0 +1,52 @@
+/* === 검색바 컨테이너 스타일 === */
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  overflow: hidden; 
+  height: 40px;
+  width: 100%; 
+  margin: 0;
+}
+
+/* === 검색 입력창 스타일 === */
+.search-bar-input {
+  width: calc(100% - 44px);
+  padding: 12px 16px;
+  border: none;
+  font-size: 14px;
+  color: #535353;
+  background-color: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0; 
+  line-height: 1;
+}
+
+/* 플레이스홀더 스타일 */
+.search-bar-input::placeholder {
+  color: #9aa6b2;
+}
+
+/* 포커스 시 아웃라인 제거 */
+.search-bar-input:focus {
+  outline: none;
+}
+
+/* === 검색 아이콘 스타일 === */
+.search-bar-icon {
+  flex-shrink: 0; 
+  height: 100%;
+  width: 44px;
+  color: white;
+  background-color: var(--color-dark-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+}

@@ -1,0 +1,213 @@
+/* 모달 배경 */
+.ai-feedback-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-x: hidden; /* 🔹 가로 스크롤 방지 */
+}
+
+/* 모달 본체 */
+.ai-feedback-content {
+  background-color: white;
+  padding: 30px;
+  width: 70%;
+  max-width: 800px; /* 🔹 최대 가로 크기 제한 */
+  border-radius: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: left;
+  position: relative;
+  padding-bottom: 2rem;
+  
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word; /* 🔹 긴 단어 자동 줄바꿈 */
+  white-space: normal; /* 🔹 텍스트가 한 줄로 길게 늘어나는 문제 방지 */
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 반응형: 화면이 작아질 경우 크기 조정 */
+@media screen and (max-width: 1024px) {
+  .ai-feedback-content {
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .ai-feedback-content {
+    width: 95%;
+    max-width: 500px;
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ai-feedback-content {
+    width: 95%;
+    max-width: 400px;
+    padding: 10px;
+  }
+}
+
+/* 질문 스타일 */
+.ai-feedback-quesiton {
+  font-weight: bold;
+  font-size: 24px;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  text-align: start;
+  border-bottom: 2px solid #0072EF;
+}
+
+/* 사용자의 답변 */
+.ai-feedback-myanswer {
+  text-align: start;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  padding: 20px 10px;
+  background: #fffefd;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ai-feedback-myanswer .me {
+  font-weight: bold;
+  padding: 0 0.5em;
+  font-size: 24px;
+  color: #0072EF;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.ai-feedback-myanswer .answer {
+  color: #333;
+  line-height: 1.5;
+}
+
+/* AI 피드백 섹션 */
+.ai-feedback-text {
+  font-size: 20px;
+  padding: 15px;
+  background: #f9fcff;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ai-feedback-text .ai-feedback-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #0072EF;
+  /* color: black; */
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* 리스트 스타일 */
+.ai-feedback-text ul {
+  display: table;
+  padding-left: 2em;
+  list-style: none;
+  font-size: 22px;
+}
+
+.ai-feedback-text ul li {
+  padding: 8px 0;
+  position: relative;
+  font-size: 18px;
+  line-height: 1.8;
+  word-break: break-word; /* 🔹 긴 단어 자동 줄바꿈 */
+}
+
+/* 리스트 앞에 아이콘 추가 */
+.ai-feedback-text ul li:before {
+  content: "⭐"; /* 별 아이콘 */
+  color: #ffcc00;
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+/* 부족한 점 리스트 아이콘 변경 */
+.ai-feedback-text h4[data-section="bad"] + ul li:before {
+  content: "⚠️";
+  color: #ff6b6b;
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+/* 피드백 본문 스타일 */
+.ai-feedback-text .p {
+  background: white;
+  padding: 15px;
+  font-size: 20px;
+  line-height: 1.8;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 400;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word; /* 🔹 긴 단어 자동 줄바꿈 */
+  white-space: normal; /* 🔹 텍스트가 한 줄로 길게 늘어나는 문제 방지 */
+}
+
+/* ✨ 스크롤바 스타일 (심플한 디자인) */
+.ai-feedback-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ai-feedback-content::-webkit-scrollbar-thumb {
+  background: #0072EF;
+  border-radius: 10px;
+}
+
+.ai-feedback-content::-webkit-scrollbar-track {
+  background: none;
+  border-radius: 10px;
+}
+
+/* 닫기 버튼 */
+.ai-feedback-content .close-btn {
+  display: flex;
+  justify-content: end;
+  align-items: start;
+}
+
+.ai-feedback-content .close-btn .close {
+  cursor: pointer;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+
+/* 로딩 애니메이션 */
+.ai-loading-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-loading-div img {
+  height: 30%;
+  width: 30%;
+}
+
+.ai-loading-div .text {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10px;
+}

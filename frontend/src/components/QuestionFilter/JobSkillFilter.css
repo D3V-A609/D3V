@@ -1,0 +1,140 @@
+/* ===========================
+   1. 기본 레이아웃 스타일
+=========================== */
+/* 필터 컨테이너 */
+.filter-container {
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  gap: 24px;
+}
+
+/* 필터 섹션 */
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 필터 헤더 */
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* 필터 푸터 */
+.filter-footer {
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+/* ===========================
+   2. 직무 선택 영역 스타일
+=========================== */
+/* 직무 버튼 컨테이너 */
+.filter-container .filter-section:first-child .filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px;
+}
+
+/* 직무 선택 버튼 */
+.filter-container .filter-section:first-child .filter-buttons .filter-button {
+  border: 1px solid var(--color-light-blue);
+}
+
+/* 직무 선택 버튼 active 상태 */
+.filter-container
+.filter-section:first-child
+.filter-buttons
+.filter-button.active {
+  background-color: var(--color-light-blue);
+  color: #333;
+  border-color: var(--color-light-blue);
+}
+
+/* ===========================
+   3. 기술 선택 영역 스타일
+=========================== */
+/* 기술 선택란 전체 컨테이너 */
+.filter-section.has-selected-job {
+  gap: 4px;
+}
+
+/* 기술 섹션 제목 */
+.skill-section-title {
+  margin: 0 0 8px 0;
+  text-align: left;
+  font-size: 14px;
+}
+
+/* 기술 선택란 제목 */
+.filter-section.has-selected-job h3 {
+  color: #666;
+  margin: 0 0 4px 2px;
+}
+
+/* 기술 선택 버튼 컨테이너 */
+.filter-section.has-selected-job .filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: var(--color-light-blue);
+  padding: 20px;
+  margin-top: 0;
+}
+
+/* 기술 선택 버튼 */
+.filter-section.has-selected-job .filter-buttons .filter-button {
+  border: 0.5px solid #9AA6B2;
+  background-color: white;
+  color: #666;
+}
+
+/* 기술 선택 버튼 active 상태 */
+.filter-section.has-selected-job .filter-buttons .filter-button.active {
+  background-color: #9aa6b2;
+  color: white;
+  border-color: #9aa6b2;
+}
+
+/* ===========================
+   4. 공통 버튼 스타일
+=========================== */
+/* 기본 필터 버튼 */
+.filter-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  color: #666;
+}
+
+/* 필터 버튼 호버 효과 */
+.filter-button:hover {
+  background-color: var(--color-gray);
+}
+
+/* 초기화 버튼 */
+.reset-button {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: black;
+  background-color: white;
+  border: 1px solid var(--color-light-blue);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 초기화 버튼 호버 효과 */
+.reset-button:hover {
+  color: var(--color-blue);
+  border-color: var(--color-blue);
+  background-color: var(--color-card-bg);
+}

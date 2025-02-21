@@ -1,0 +1,171 @@
+/* 모달 전체 스타일 */
+.bookmark-detail-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  max-height: 600px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 모달 헤더 */
+.bookmark-detail-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bookmark-detail-name {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.bookmark-detail-close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* 설명 스타일 */
+.bookmark-detail-modal-description {
+  font-size: 18px;
+  color: #777;
+  margin: 8px 0 0 3px;
+  text-align: left;
+}
+
+/* 구분선 */
+.bookmark-detail-divider {
+  width: 100%;
+  height: 1px;
+  background: #7D7D7E;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+/* 질문 리스트 스타일 */
+.bookmark-detail-questions-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin: 5px 0;
+  border: 0.2px solid #7D7D7E;
+  border-radius: 8px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+  width: 100%; /* Ensure it fills the available width */
+  max-height: 300px; /* Optionally, limit the height */
+}
+
+.bookmark-detail-questions-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.bookmark-detail-question-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-top: 1px solid #7D7D7E;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%; /* Full width within the parent */
+  text-align: left;
+}
+
+/* 첫 번째 질문 아이템은 border-top 제거 */
+.bookmark-detail-question-item:first-child {
+  border-top: none;
+}
+
+.bookmark-detail-question-item:hover {
+  background: #f3f3f3;
+}
+
+/* 질문 아이콘 */
+.bookmark-detail-question-skill {
+  margin-right: 10px;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.bookmark-detail-question-content {
+  width: 100%; /* Or set a fixed width, e.g., 80% or a fixed pixel width like 400px */
+  max-width: 100%; /* Ensure it doesn't exceed the container width */
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis when text overflows */
+  font-size: 16px;
+  color: #333;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* 버튼 그룹 */
+/* 버튼 그룹 */
+.bookmark-detail-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.bookmark-detail-modal-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* 삭제 버튼 */
+.bookmark-detail-delete-btn {
+  background: #7D7D7E;
+  color: white;
+}
+
+.bookmark-detail-delete-btn:hover {
+  background: #6a6a6b;
+}
+
+/* 수정 버튼 */
+.bookmark-detail-edit-btn {
+  background: white;
+  color: #7D7D7E;
+  border: 1px solid #7D7D7E !important;
+  margin: 0 5px;
+}
+
+.bookmark-detail-edit-btn:hover {
+  background: #f5f5f5;
+}
+
+/* 질문 추가 버튼 */
+.bookmark-detail-add-questions-btn {
+  background: #7D7D7E;
+  color: white;
+}
+
+.bookmark-detail-add-questions-btn:hover {
+  background: #6a6a6b;
+}
+
+/* 로딩 상태 */
+.bookmark-detail-loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  color: #555;
+}

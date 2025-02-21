@@ -1,0 +1,110 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50em;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.content-header {
+  display: flex;
+  align-items: end;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.content-title-icon {
+  width: 24px;
+  height: 24px;
+  align-self: anchor-center;
+}
+
+.content-title-text{
+  padding-left: 0.5em;
+}
+
+.modal-close-btn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-self: flex-end;
+}
+
+.content-item {
+  padding: 10px;
+  background-color: white;
+  border: 2px solid #D9E9FF;
+  font-size: 16px;
+  color: black;
+  text-align: start;
+
+  display: flex; /* ✅ 요소들을 한 줄에 정렬 */
+  align-items: center; /* ✅ 세로 중앙 정렬 */
+  gap: 8px; /* ✅ 아이콘과 텍스트 간격 */
+  
+  text-overflow: ellipsis; /* ✅ 텍스트가 넘칠 경우 ... 표시 */
+  overflow: hidden; /* ✅ 넘치는 텍스트 숨기기 */
+  height: 3rem;
+
+  cursor: pointer;
+}
+
+.text-container {
+  display: -webkit-box; /* ✅ 플렉스 기반의 줄 제한 설정 */
+  -webkit-line-clamp: 2; /* ✅ 최대 1줄 제한 */
+  -webkit-box-orient: vertical; /* ✅ 세로 방향 박스 설정 */
+  overflow: hidden; /* ✅ 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis;
+  flex: 1; /* ✅ 텍스트가 남은 공간을 차지하도록 설정 */
+}
+
+.content-item.middle-item{
+  border-top: none;
+}
+
+.content-item.first-item {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.content-item.last-item {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+
+.no-answer {
+  text-align: center;
+  font-size: 14px;
+  color: gray;
+}

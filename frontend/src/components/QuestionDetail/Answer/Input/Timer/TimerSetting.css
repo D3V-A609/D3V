@@ -1,0 +1,72 @@
+.timer-setting-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.timer-initial {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 2px solid #e63946;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 130px;
+}
+
+.timer-icon {
+  font-size: 24px;
+  color: #e63946;
+}
+
+.timer-dropdown {
+  padding: 8px 12px;
+  border: 2px solid #e63946;
+  border-radius: 8px;
+  width: 130px;
+  background-color: white;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 130px;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.play-icon {
+  font-size: 24px;
+  color: #e63946;
+  cursor: pointer;
+}
+
+.play-icon.disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.no-answers-message {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+  font-size: 16px;
+  margin-top: 20px;
+}
