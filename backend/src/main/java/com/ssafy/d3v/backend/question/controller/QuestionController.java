@@ -1,26 +1,30 @@
 package com.ssafy.d3v.backend.question.controller;
 
-import com.ssafy.d3v.backend.question.controller.dto.QuestionResponse;
-import com.ssafy.d3v.backend.question.entity.Job;
+import com.ssafy.d3v.backend.bookmark.service.BookmarkService;
+import com.ssafy.d3v.backend.member.service.MemberService;
+import com.ssafy.d3v.backend.question.dto.QuestionDto;
+import com.ssafy.d3v.backend.question.dto.QuestionResponse;
+import com.ssafy.d3v.backend.question.dto.SearchQuestionResponse;
+import com.ssafy.d3v.backend.question.dto.SkillDto;
+import com.ssafy.d3v.backend.question.dto.Top10QuestionResponse;
 import com.ssafy.d3v.backend.question.entity.Question;
-import com.ssafy.d3v.backend.question.entity.Skill;
-import com.ssafy.d3v.backend.question.service.QuestionQueryService;
 import com.ssafy.d3v.backend.question.service.QuestionService;
+import com.ssafy.d3v.backend.question.service.ServedQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/question")
@@ -28,74 +32,78 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuestionQueryService questionQueryService;
+    private final ServedQuestionService servedQuestionService;
+    private final MemberService memberService;
+    private final BookmarkService bookmarkService;
+
+    @Operation(summary = "질문 카테고리 조회", description = "전체 질문 중 주어진 필터, 정렬, 페이지, 키워드로 검색한 질문들을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<Page<SearchQuestionResponse>> getQuestions(
+            @RequestParam(required = false) List<String> jobs, // job 필터
+            @RequestParam(required = false) List<String> skills, // skill 필터
+            @RequestParam(required = false) String solved, // solved 필터
+            @RequestParam(defaultValue = "desc") String order, // 정렬 순서 (기본값: desc)
+            @RequestParam(defaultValue = "acnt") String sort, // 정렬 기준 (기본값: acnt)
+            @RequestParam(defaultValue = "0") int page, // 페이지 번호 (기본값: 0)
+            @RequestParam(defaultValue = "15") int size, // 페이지 크기 (기본값: 15)
+            @RequestParam(required = false) String keyword // 키워드 검색
+    ) {
+        Long memberId = memberService.getMemberId();
+        return ResponseEntity.ok(questionService.getQuestions(jobs, skills, solved, order, sort, page, size, keyword)
+                .map(QuestionDto::from).map(question -> getSearchQuestionResponse(memberId, question)));
+    }
+
     @Operation(summary = "질문 상세 조회", description = "주어진 질문 ID에 해당하는 질문의 상세 정보를 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공적으로 질문을 조회함",
-                    content = @Content(schema = @Schema(implementation = Question.class))),
-            @ApiResponse(responseCode = "404", description = "질문을 찾을 수 없음")
-    })
     @GetMapping("/{question_id}")
     public ResponseEntity<QuestionResponse> getQuestionDetail(
             @Parameter(description = "조회할 질문의 ID") @PathVariable("question_id") Long questionId) {
         Question question = questionService.getById(questionId);
-        List<Skill> skills = questionQueryService.getSkillsByQuestionId(question.getId());
-        List<Job> jobs = questionQueryService.getJobsByQuestionId(question.getId());
-        QuestionResponse questionResponse =  QuestionResponse.builder()
-                .questionId(question.getId())
-                .content(question.getContent())
-                .standardAnswer(question.getStandardAnswer())
-                .skillList(skills.stream().map(Skill::getName).toList())
-                .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                .build();
-
-        return ResponseEntity
-                .ok()
-                .body(questionResponse);
+        Long memberId = memberService.getMemberId();
+        return ResponseEntity.ok(getQuestionResponse(memberId, QuestionDto.from(question)));
     }
-    @GetMapping()
-    @Operation(summary = "질문 전체 조회", description = "전체 질문을 조회합니다")
-    public ResponseEntity<List<QuestionResponse>> getAllQuestions() {
-        List<Question> questions = questionService.getAllQuestions();
 
-        // QuestionResponse를 만드는 로직이 겹쳐서 from 메소드로 따로 빼면 좋을듯
-        List<QuestionResponse> questionResponseList = questions.stream()
-                .map(q ->{
-                    List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
-                    List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.builder()
-                            .questionId(q.getId())
-                            .content(q.getContent())
-                            .standardAnswer(q.getStandardAnswer())
-                            .skillList(skills.stream().map(Skill::getName).toList())
-                            .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                            .build();
-                })
-                .toList();
-        return ResponseEntity
-                .ok()
-                .body(questionResponseList);
-    }
     @GetMapping("/daily")
     @Operation(summary = "데일리 질문 조회", description = "3개 데일리 질문을 조회합니다. 없을 경우 새로 생성해서 제공합니다.")
     public ResponseEntity<List<QuestionResponse>> getDailyQuestions() {
-        List<Question> questions = questionService.getDailyQuestions();
+        Long memberId = memberService.getMemberId();
+        return ResponseEntity.ok(getListResponse(memberId, questionService.getDailyQuestions()));
+    }
 
-        List<QuestionResponse> questionResponseList = questions.stream()
-                .map(q ->{
-                    List<Skill> skills = questionQueryService.getSkillsByQuestionId(q.getId());
-                    List<Job> jobs = questionQueryService.getJobsByQuestionId(q.getId());
-                    return QuestionResponse.builder()
-                            .questionId(q.getId())
-                            .content(q.getContent())
-                            .standardAnswer(q.getStandardAnswer())
-                            .skillList(skills.stream().map(Skill::getName).toList())
-                            .jobList(jobs.stream().map(Job::getDevelopmentRole).toList())
-                            .build();
-                })
+    // /api/question/top10?month={month}&job={job}
+    @GetMapping("/top10")
+    @Operation(summary = "월간 TOP10 질문을 조회합니다", description = "선택한 직무에 대한 저번 달의 답변수 TOP10 질문을 조회합니다.")
+    public ResponseEntity<List<Top10QuestionResponse>> getTop10Questions(@RequestParam("month") String month,
+                                                                         @RequestParam("job") String job) {
+        return ResponseEntity.ok(questionService.getTop10Questions(month, job)
+                .stream().map(this::getTop10QuestionResponse).toList());
+    }
+
+    private List<QuestionResponse> getListResponse(Long memberId, List<QuestionDto> questions) {
+        return questions.stream()
+                .map(question -> getQuestionResponse(memberId, question))
                 .toList();
-        return ResponseEntity
-                .ok()
-                .body(questionResponseList);
+    }
+
+    private QuestionResponse getQuestionResponse(Long memberId, QuestionDto question) {
+        Boolean bookmarked = bookmarkService.isBookmarkedQuestion(question.id());
+        String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
+        List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return QuestionResponse.of(question, solved, skills, bookmarked);
+    }
+
+    private Top10QuestionResponse getTop10QuestionResponse(QuestionDto question) {
+        List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return Top10QuestionResponse.of(question, skills);
+    }
+
+    private SearchQuestionResponse getSearchQuestionResponse(Long memberId, QuestionDto question) {
+        //Boolean bookmarked = bookmarkService.isBookmarkedQuestion(question.id());
+        //String solved = servedQuestionService.getIsSolvedStatus(memberId, question.id());
+        List<SkillDto> skills = questionService.getSkillsByQuestionId(question.id());
+        //List<JobDto> jobs = questionService.getJobsByQuestionId(question.id());
+        return SearchQuestionResponse.of(question, skills);
     }
 }
+

@@ -1,28 +1,38 @@
 package com.ssafy.d3v.backend.bookmark.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.d3v.backend.bookmark.entity.Bookmark;
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class BookmarkResponse {
-    @JsonProperty("bookmarks")
-    private List<BookmarkDto> bookmarks;
+public record BookmarkResponse(
+        @JsonProperty("bookmarks")
+        List<BookmarkDto> bookmarks,
 
-    @Getter
-    @Builder
-    public static class BookmarkDto {
-        @JsonProperty("bookmarkId")
-        private Long id;
+        @JsonProperty("selectedBookmarks")
+        List<Long> selectedBookmarks
+) {
+    public static BookmarkResponse from(List<Bookmark> bookmarks) {
+        List<BookmarkDto> bookmarkDtos = bookmarks.stream()
+                .map(bookmark -> BookmarkDto.from(bookmark, bookmark.getBookmarkQuestions().size()))
+                .toList();
 
-        private String name;
+        return BookmarkResponse.builder()
+                .bookmarks(bookmarkDtos)
+                .build();
+    }
 
-        @JsonProperty("access_level")
-        private String accessLevel;
+    public static BookmarkResponse from(List<Bookmark> bookmarks, List<Long> selectedBookmarks) {
+        List<BookmarkDto> bookmarkDtos = bookmarks.stream()
+                .map(BookmarkDto::from)
+                .toList();
 
-        @JsonProperty("question_count")
-        private int questionCount;
+        return BookmarkResponse.builder()
+                .bookmarks(bookmarkDtos)
+                .selectedBookmarks(selectedBookmarks)
+                .build();
     }
 }

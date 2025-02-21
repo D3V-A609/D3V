@@ -1,8 +1,9 @@
 package com.ssafy.d3v.backend.like.service;
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
-import com.ssafy.d3v.backend.like.dto.LikesRequest;
 import com.ssafy.d3v.backend.answer.repository.AnswerRepository;
+import com.ssafy.d3v.backend.common.util.SecurityUtil;
+import com.ssafy.d3v.backend.like.dto.LikesRequest;
 import com.ssafy.d3v.backend.like.entity.Likes;
 import com.ssafy.d3v.backend.like.repository.LikesRepository;
 import com.ssafy.d3v.backend.member.entity.Member;
@@ -17,7 +18,6 @@ public class LikesServiceImpl implements LikesService {
     private final LikesRepository likesRepository;
     private final MemberRepository memberRepository;
     private final AnswerRepository answerRepository;
-    private final Long memberId = 1L;
 
     @Override
     @Transactional
@@ -42,8 +42,9 @@ public class LikesServiceImpl implements LikesService {
     @Override
     @Transactional
     public void delete(long answerId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 ID: " + memberId));
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 입니다. 회원 Email: " + memberEmail));
 
         Answer answer = answerRepository.findById(answerId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 답변 입니다. 답변 ID: " + answerId));

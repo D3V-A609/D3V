@@ -1,7 +1,7 @@
 package com.ssafy.d3v.backend.feedback.entity;
 
 import com.ssafy.d3v.backend.answer.entity.Answer;
-import com.ssafy.d3v.backend.common.BaseEntity;
+import com.ssafy.d3v.backend.common.util.BaseTimeEntity;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +24,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Feedback extends BaseEntity {
+public class Feedback extends BaseTimeEntity {
     @Id
     @Column(name = "feedback_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +40,8 @@ public class Feedback extends BaseEntity {
 
     @NotBlank
     private String content;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

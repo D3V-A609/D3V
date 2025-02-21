@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -26,6 +28,8 @@ import lombok.ToString;
 })
 @Getter
 @ToString
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkQuestion {
 
@@ -43,13 +47,4 @@ public class BookmarkQuestion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
-
-    // 북마크 안에서 질문의 정렬 순서를 저장할 필드
-    @Column(name = "sort_order")
-    private int sortOrder;
-
-    // 정렬 순서 변경용
-    public void updateSortOrder(int newOrder) {
-        this.sortOrder = newOrder;
-    }
 }

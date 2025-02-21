@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.answer.entity;
 
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import com.ssafy.d3v.backend.question.entity.Question;
 import jakarta.persistence.Column;
@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,14 +43,29 @@ public class Answer {
     private Question question;
 
     @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    @NotBlank
+    @NotNull
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
+
+    @Builder
+    public Answer(Member member, Question question, String content, LocalDateTime createdAt,
+                  AccessLevel accessLevel) {
+        this.member = member;
+        this.question = question;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.accessLevel = accessLevel;
+    }
+
+    public void updateAccessLevel(AccessLevel accessLevel) {
+        this.accessLevel = accessLevel;
+    }
 }

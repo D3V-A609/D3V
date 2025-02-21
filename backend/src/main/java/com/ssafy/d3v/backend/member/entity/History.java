@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class History {
@@ -32,9 +32,9 @@ public class History {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @NotBlank
+    @NotNull
     private LocalDate date;
 
-    @NotBlank
+    @NotNull
     private Integer count;
 }

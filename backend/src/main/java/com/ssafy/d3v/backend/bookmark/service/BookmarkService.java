@@ -3,6 +3,9 @@ package com.ssafy.d3v.backend.bookmark.service;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkCreateDto;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkDetailResponse;
 import com.ssafy.d3v.backend.bookmark.dto.BookmarkResponse;
+import com.ssafy.d3v.backend.bookmark.dto.BookmarkSelectionResponse;
+import com.ssafy.d3v.backend.member.entity.Member;
+import java.util.List;
 
 public interface BookmarkService {
 
@@ -16,10 +19,16 @@ public interface BookmarkService {
 
     BookmarkResponse getAll(Long userId);
 
-    // 2차 MVP 때 개발
-//    BookmarkDetailResponse addQuestion(Long bookmarkId, Long questionId);
-//
-//    BookmarkDetailResponse deleteQuestion(Long bookmarkId, Long questionId);
-//
-//    BookmarkDetailResponse updateQuestionOrder(Long bookmarkId, Long questionId, int order);
+    BookmarkSelectionResponse getQuestionBookmarks(Long questionId);
+
+    BookmarkSelectionResponse updateQuestionBookmarks(Long questionId, List<Long> bookmarkIds);
+
+    void addQuestions(Long bookmarkId, List<Long> questionIds);
+
+    void deleteQuestion(Long bookmarkId, Long questionId);
+
+    void createDefault(Member member);
+
+    boolean isBookmarkedQuestion(Long questionId);
+
 }

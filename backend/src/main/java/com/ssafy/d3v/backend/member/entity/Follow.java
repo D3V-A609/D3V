@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +21,7 @@ import lombok.ToString;
 @Getter
 @Builder
 @AllArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"}))
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Follow {
     @Id
@@ -28,9 +31,9 @@ public class Follow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id", nullable = false)
-    private Member followingId;
+    private Member following;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "follower_id", nullable = false)
-    private Member followerId;
+    private Member follower;
 }

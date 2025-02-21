@@ -1,6 +1,6 @@
 package com.ssafy.d3v.backend.bookmark.entity;
 
-import com.ssafy.d3v.backend.common.AccessLevel;
+import com.ssafy.d3v.backend.common.util.AccessLevel;
 import com.ssafy.d3v.backend.member.entity.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,7 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
-import java.util.ArrayList;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,14 +44,13 @@ public class Bookmark {
 
     private String description;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
 
     @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookmarkQuestion> bookmarkQuestions = new ArrayList<>();
-
+    private List<BookmarkQuestion> bookmarkQuestions;
 
     public void update(String name, String description, AccessLevel accessLevel) {
         this.name = name;
