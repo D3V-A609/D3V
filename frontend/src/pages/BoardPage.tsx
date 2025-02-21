@@ -8,7 +8,8 @@ import SearchBar from "../components/SearchBar/SearchBar";
 import "./BoardPage.css";
 import { BsChatSquareText } from "react-icons/bs";
 import { fetchArticles } from "../store/actions/articleActions";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { fetchMultipleUserInfo } from "../store/actions/userActions";
 
 const categoryMap: Record<string, string> = {
   전체: "",
@@ -39,17 +40,31 @@ const BoardPage: React.FC = () => {
   const [currentView, setCurrentView] = useState<"list" | "detail" | "create" | "edit">(state?.currentView || "list");
   const [selectedArticleId, setSelectedArticleId] = useState<number | null>(state?.selectedArticleId || null);
 
-  const fetchArticlesData = useCallback(() => {
+  const fetchArticlesData = useCallback(async () => {
     const apiCategory = categoryMap[params.category];
-    dispatch(fetchArticles({ 
-      category: apiCategory, 
-      keyword: params.searchQuery, 
-      sort: params.sortField, 
-      order: params.sortOrder,
-      page: params.page,
-      size: params.size
-    }));
+    try {
+      const result = await dispatch(fetchArticles({ 
+        category: apiCategory, 
+        keyword: params.searchQuery, 
+        sort: params.sortField, 
+        order: params.sortOrder,
+        page: params.page,
+        size: params.size
+      })).unwrap();
+  
+      // ✅ 변경된 응답 구조 반영
+      if (result && result.data) {
+        const userIds = [...new Set(result.data.map((article: Article) => article.memberId))];
+  
+        if (userIds.length > 0) {
+          await dispatch(fetchMultipleUserInfo(userIds as number[]));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching articles or user info:", error);
+    }
   }, [dispatch, params]);
+  
   
   useEffect(() => {
     fetchArticlesData();
