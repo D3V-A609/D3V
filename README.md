@@ -50,10 +50,17 @@
    - `개인별 학습 이력`과 `관심 직무`를 기반으로 문제를 추천해드립니다
    - `7일 주기`의 `복습 알고리즘`으로 효율적인 학습을 도와드립니다
 
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875632-5445cd84-b15c-4b05-a926-87d8e0b1bd4e.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI0MzEsIm5iZiI6MTc0MTA3MjEzMSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1NjMyLTU0NDVjZDg0LWIxNWMtNGIwNS1hOTI2LTg3ZDhlMGIxYmQ0ZS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzA4NTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04MDE5ODc2NTJjOGE2ODYyMDMyODM5ZmJiNWFjNzhjNjQ4OGI3MjlkZWI4NjBiMDg3N2M5NWE0YTU0NDMwZmQwJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.AR2p0msTDOo-su2TZPau9tIh6Fsp6wrfF4odc4p_dzU' width="500" style="margin:1rem">
+   
 2. **스마트 학습 관리** 📊
    - 미해결 문제(모르겠음을 체크한 문제)를 자동으로 관리하고 다시 출제해드립니다
    - 중요한 문제는 `북마크`로 저장하여 스터디 자료로 활용하실 수 있습니다
    - ⚡️ STREAK 시스템으로 학습 성과를 한눈에 확인하실 수 있습니다
+
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875421-faeabc30-7201-4977-92bd-6beaaa630a15.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI2OTEsIm5iZiI6MTc0MTA3MjM5MSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1NDIxLWZhZWFiYzMwLTcyMDEtNDk3Ny05MmJkLTZiZWFhYTYzMGExNS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzEzMTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04YjI1NzIwZmMzMmNmOWM1M2FlZDNmYjBkYjgyMjVkZjRhOTIyODMyYmY1MTY1YmE2ODg2MWE1YzMxNzBiZDBiJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.US97VBpd3p5gqpEY4jnRfv84Q7B2qWBh2Ia6SqUBWLc' width="500" style="margin:1rem">
+   
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875385-5522c77c-6a00-4abd-be52-7ce6a70e3c85.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI2OTEsIm5iZiI6MTc0MTA3MjM5MSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1Mzg1LTU1MjJjNzdjLTZhMDAtNGFiZC1iZTUyLTdjZTZhNzBlM2M4NS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzEzMTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1hNTRiNzkwY2JhMTE5MGIwZmNiMDNkM2E0ZjlhZDRjNTI3NzhhYjkwODk4OThmN2JmODBjZGQ0OTczNWQ2ODRlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.fFnW3qKqMnazjluB98MM5SeAQqFIK_009s1xI4_Q2fQ' width="500" style="margin:1rem">
+   
 
 ### 🎤 답변 연구소
 1. **실전 면접 시뮬레이션** 
@@ -61,11 +68,15 @@
    - ⏱️ 타이머 기능으로 실전 면접을 연습하실 수 있습니다
    - 🔒 답변 공개 범위를 자유롭게 설정하실 수 있습니다
 
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875153-4894611c-46c9-48be-81e2-d1cca1dcb45d.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI0MzEsIm5iZiI6MTc0MTA3MjEzMSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1MTUzLTQ4OTQ2MTFjLTQ2YzktNDhiZS04MWUyLWQxY2NhMWRjYjQ1ZC5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzA4NTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zYTc2NWNiOTc3ZGRmYWU3NDllMjg1OTQ2MDk0ZDQxZjdjODgwYWY2YzdjOWJmZWFlOWRiYjZlMGQwNjdkMDhiJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.-ok2rZ_yeQs-JPhCBt8Bgx6l-DhFReg75eIsFzhyTok' width="500" style="margin:1rem">
+
 ### 🤖 AI 피드백 시스템
 1. **24/7 AI 코칭 서비스**
    - 📝 AI가 답변의 `강점`과 `개선점`을 분석해드립니다
    - ✅ 맞춤형 모범 답안을 제시해드립니다
    - ⚡️ 실시간으로 피드백을 받아보실 수 있습니다
+
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875591-78ad35b5-eff0-4cc3-be20-a2d16c0fd11e.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI0MzEsIm5iZiI6MTc0MTA3MjEzMSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1NTkxLTc4YWQzNWI1LWVmZjAtNGNjMy1iZTIwLWEyZDE2YzBmZDExZS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzA4NTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05N2E4MWQ2OGUyYTYzZjg0YWQ5YjhlMDliZjJhYTIzYjQ2ZWFkYmMwMjQ4YzU1NTk2YjQxNzgxMDg3MzEwYmI0JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.gLJnrz4mEMML3Q9eRcxdtmxzPchINafHpdIXs6UqLUg' width="500" style="margin:1rem">
 
 2. **커뮤니티 피드백** 👥
    - 다른 사용자들과 답변을 공유하고 피드백을 주고받으실 수 있습니다
@@ -77,11 +88,16 @@
    - 📊 실시간 인기 질문과 출제 빈도를 확인하실 수 있습니다
    - 🔄 최신 트렌드를 반영한 콘텐츠를 지속적으로 업데이트해드립니다
 
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875516-15aec0cb-110e-412a-a21c-4cd00cb16f7a.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI2OTEsIm5iZiI6MTc0MTA3MjM5MSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1NTE2LTE1YWVjMGNiLTExMGUtNDEyYS1hMjFjLTRjZDAwY2IxNmY3YS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzEzMTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zODM2NjdjZmUyYzQxZDQwNDQ0NTE3MWI3ZmUxNTUzMGE2ODNkZDMyOWJjNzFjNDliYTE3YzZjMzcyMjMzZjVhJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.ckGWov7hHB4Rft8IpoIfkK5a504YsI_8gQ3PvHgjrN8' width="500" style="margin:1rem">
+   
+
 ### 👥 커뮤니티
 1. **소셜 네트워킹**
    - 🤝 팔로우 시스템으로 관심 있는 사용자와 소통하실 수 있습니다
    - ✍️ 합격 후기와 질문을 자유롭게 공유하실 수 있습니다
    - 💬 개발자 커뮤니티에서 실시간으로 소통하실 수 있습니다
+
+   <img src ='https://private-user-images.githubusercontent.com/102157897/418875543-43679703-6426-4df0-a09c-67de60076329.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEwNzI2OTEsIm5iZiI6MTc0MTA3MjM5MSwicGF0aCI6Ii8xMDIxNTc4OTcvNDE4ODc1NTQzLTQzNjc5NzAzLTY0MjYtNGRmMC1hMDljLTY3ZGU2MDA3NjMyOS5naWY_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzA0JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMwNFQwNzEzMTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT01M2FlNjkzMThjN2VlMGU2NmU0ZGJhNGIwMmI5ODAxMmIxYmFiZDM5YTA2ZmRkMDcyODYwZTUzNDM2OGRiOTA5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.fUbTGXvmNdXjj3JKq_RD5CrT_0eczBt-Bs2gaZb1gwE' width="500" style="margin:1rem">
 
 
 
@@ -280,7 +296,7 @@
 
 ## 팀 회고
 ### 번다운 차트
- <img src ='Image/burndown-chart.png' width="500" style="margin:1rem">
+ 
 
 <br>
 
@@ -295,3 +311,4 @@
 백엔드와 프론트엔드 멤버들은 각자의 자리에서 최선을 다했고, 00아, 할 수 있어!라는 따뜻한 한마디가 서로에 대한 믿음이 되었습니다.   
 인프라 구축부터 UI 개발까지 모든 과정이 조화롭게 진행되었고, 그 속에서 우리는 함께 성장하는 소중한 시간을 보냈습니다.  
 서로의 강점을 살리고 긍정적인 에너지를 나누며, 함께 성장할 수 있었던 값진 시간이었습니다.  
+<img src ='Image/burndown-chart.png' width="500" style="margin:1rem">
